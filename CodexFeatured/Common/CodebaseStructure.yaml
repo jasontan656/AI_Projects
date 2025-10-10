@@ -15,7 +15,10 @@ content: |-
         - logger.py
         - styles.toml
         - traceback_setup.py
+        - logs/
+          - index.yaml
         - tests/
+          - index.yaml
           - test_basic.py
       - TaskQueue/
         - __init__.py
@@ -26,14 +29,16 @@ content: |-
         - schemas.py
         - tasks.py
         - repository/
+          - index.yaml
           - mongo.py
+    - SimulationTest/
+      - RichLogger.md
+      - index.yaml
     - TempUtility/
       - index.yaml
       - VisaDBOperation/
         - index.yaml
-    - mango_db/
-      - index.yaml
-      - readme.md
     - routers/
       - __init__.py
+      - index.yaml
       - task.py

@@ -118,10 +118,11 @@ steps:
   - id: load_policies
     name: 规范加载与调研
     actions:
-      - 读取 io.dev_constitution
-        - 目的：加载宪法限制需求规范
-      - 读取 io.best_practices 并浏览其中官方链接
-        - 目的：调研社区最佳实践（GitHub/StackOverflow/开发者博客）避免自己造轮子
+      - 读取 io.dev_constitution 理解并严格遵守
+      - 读取 io.best_practices 并浏览其中任务相关官方链接
+      - 调研社区最佳实践（GitHub/StackOverflow/开发者博客）
+    purpose: 加载开发规范,学习官方推荐实现,学习当前任务最佳实践
+
    
    
 
