@@ -1,0 +1,31 @@
+module:
+  summary: 数据库相关的说明与素材（目录内 readme 为主）
+  responsibilities:
+  - 存放与数据库相关的说明文档
+  name: mango_db
+  entry_points: []
+  non_goals:
+  - 不包含目录外数据库配置或脚本
+relations:
+  used_by:
+  - Kobe
+  provides_apis: []
+  depends_on: []
+  reasons:
+  - 将数据库相关说明与代码解耦
+meta:
+  owners:
+  - kobe-db
+  path: Kobe/mango_db
+  version: "1.0"
+  schema_version: "1"
+  last_updated: 2025-10-10
+  stability: alpha
+sub_indexes: 
+files:
+  test_locations: []
+  key_files:
+  - readme.md
+notes:
+- 仅描述 Kobe/mango_db 目录内事实
+

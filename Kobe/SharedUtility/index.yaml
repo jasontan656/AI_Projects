@@ -1,0 +1,37 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility"
+  last_updated: "2025-10-10"
+  owners: ["kobe-core"]
+  stability: "beta"
+
+module:
+  name: "SharedUtility"
+  summary: "共享工具聚合目录，提供通用能力（日志、任务队列等）"
+  responsibilities:
+    - "承载跨模块可复用的通用组件"
+  non_goals:
+    - "不存放具体业务逻辑"
+  entry_points: []
+
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe"
+  provides_apis: []
+  reasons:
+    - "集中管理通用能力，便于复用与维护"
+
+files:
+  key_files: []
+  test_locations: []
+
+sub_indexes:
+  - "RichLogger/index.yaml"
+  - "TaskQueue/index.yaml"
+
+notes:
+  - "仅描述 SharedUtility/ 目录内部内容"
+
+

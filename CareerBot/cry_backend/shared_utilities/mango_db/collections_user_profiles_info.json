@@ -1,0 +1,27 @@
+{
+  "collection": "user_profiles",
+  "required": ["user_id"],
+  "allow_extra": false,
+  "allowed_ops": [
+    "update.$set",
+    "update.$setOnInsert"
+  ],
+  "fields": {
+    "user_id": "string",
+    "profile.email": "email?",
+    "mbti.assessment.type": "string?",
+    "mbti.assessment.raw_scores": "object?",
+    "mbti.assessment.percentages": "object?",
+    "mbti.assessment.dimension_details": "object?",
+    "mbti.assessment.completed_at": "number?",
+    "mbti.assessment.request_id": "string?",
+    "mbti.assessment.flow_id": "string?",
+    "mbti.final.type": "string?",
+    "mbti.final.report": "object?",
+    "mbti.final.dimension_scores": "object?",
+    "mbti.final.completed_at": "number?",
+    "mbti.final.request_id": "string?",
+    "mbti.final.version": "string?"
+  }
+}
+

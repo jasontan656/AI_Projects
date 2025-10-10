@@ -1,0 +1,20 @@
+{
+  "generalScoringRules": {
+    "scoringMethod": "Each question choosing A gets 1 point, choosing B gets 0 points.",
+    "scoreRange": "Each dimension has 3 questions, total score is 0-3 points.",
+    "scoreInterpretation": [
+      {
+        "range": "0-1 points",
+        "interpretation": "Typical preference for this dimension, relatively lacking reverse ability."
+      },
+      {
+        "range": "2 points",
+        "interpretation": "Has preference for this dimension, but can call upon reverse ability."
+      },
+      {
+        "range": "3 points",
+        "interpretation": "Possesses outstanding reverse ability beyond preference, approaching the level of reverse type."
+      }
+    ]
+  }
+}

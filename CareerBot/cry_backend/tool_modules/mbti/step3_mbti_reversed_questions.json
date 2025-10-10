@@ -1,0 +1,258 @@
+{
+    "purpose": "This document is the sole authoritative definition of internal rules for mbti_followup. It details the complete question bank for eight dimensions, scoring rules, and standard interpretation templates corresponding to scores.",
+    "testCoreLogic": {
+      "title": "Eight-Dimensional Reverse Ability Assessment",
+      "description": "The system will select the four 'reverse' or 'shadow' dimension abilities for assessment based on the user's primary MBTI type.",
+      "example": {
+        "userType": "INTJ",
+        "evaluatedAbilities": [
+          "Extraversion (Extraversion)",
+          "Sensing (Sensing)",
+          "Feeling (Feeling)",
+          "Perceiving (Perceiving)"
+        ]
+      }
+    },
+    "dimensionAssessments": [
+      {
+        "targetUserType": "E (Extraverted) users",
+        "assessedAbility": "I (Introverted) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "After finishing a day's work, you tend to:",
+            "reverse_questions_options": {
+              "A": "Take a walk alone or read a book, organize your thoughts",
+              "B": "Go to social venues with colleagues to relax"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When facing major decisions, you usually:",
+            "reverse_questions_options": {
+              "A": "First think deeply alone, write down key points",
+              "B": "Discuss with several people to gain inspiration"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When you have no plans for the weekend, you will:",
+            "reverse_questions_options": {
+              "A": "Quietly spend time alone, recharge yourself",
+              "B": "Actively contact friends, arrange group activities"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "I (Introverted) users",
+        "assessedAbility": "E (Extraverted) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "In unfamiliar team meetings, you are more likely to:",
+            "reverse_questions_options": {
+              "A": "Speak first, propose agenda",
+              "B": "Wait for others to speak, then supplement opinions"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When attending large industry exhibitions, you usually:",
+            "reverse_questions_options": {
+              "A": "Actively socialize, exchange business cards",
+              "B": "Stay with acquaintances, avoid active socializing"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When the team needs a host, you:",
+            "reverse_questions_options": {
+              "A": "Immediately volunteer to take on the role",
+              "B": "Hope others will take on the role, you cooperate"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "S (Sensing) users",
+        "assessedAbility": "N (Intuitive) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "When making department quarterly plans, you will:",
+            "reverse_questions_options": {
+              "A": "First draft a five-year roadmap, then work backwards to this quarter's tasks",
+              "B": "First list tasks that can be executed now"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When a new technology trend appears but data is insufficient, you are more likely to:",
+            "reverse_questions_options": {
+              "A": "Imagine future scenarios, plan ahead",
+              "B": "Wait for more empirical data before deciding whether to pivot"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When facing a complex problem, you usually:",
+            "reverse_questions_options": {
+              "A": "First draw the overall structure, then break down details",
+              "B": "Start from the clearest details, gradually piece together"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "N (Intuitive) users",
+        "assessedAbility": "S (Sensing) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "When starting a new project, you:",
+            "reverse_questions_options": {
+              "A": "Create detailed task lists and timelines",
+              "B": "First conduct free-wheeling brainstorming"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When reading a professional article, you focus more on:",
+            "reverse_questions_options": {
+              "A": "Data and processes",
+              "B": "Theoretical frameworks and trends"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "Before traveling, you will:",
+            "reverse_questions_options": {
+              "A": "Check transportation, backup plans and print vouchers",
+              "B": "Only set general direction, adjust anytime"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "T (Thinking) users",
+        "assessedAbility": "F (Feeling) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "When a colleague is emotionally down, you are more likely to:",
+            "reverse_questions_options": {
+              "A": "Actively listen, show concern",
+              "B": "Propose solutions, return to work focus"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When a friend confides worries, you usually:",
+            "reverse_questions_options": {
+              "A": "First empathize, acknowledge their feelings",
+              "B": "Immediately analyze reasons, give advice"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When team conflicts intensify, you will:",
+            "reverse_questions_options": {
+              "A": "Focus on both sides' feelings, seek emotional reconciliation",
+              "B": "Focus on clarifying facts and logic"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "F (Feeling) users",
+        "assessedAbility": "T (Thinking) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "When asked to evaluate project feasibility, you first:",
+            "reverse_questions_options": {
+              "A": "Collect data, conduct cost-benefit analysis",
+              "B": "Feel the team atmosphere, then give intuitive judgment"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "In debates, you rely more on:",
+            "reverse_questions_options": {
+              "A": "Objective evidence and logical reasoning",
+              "B": "Personal values and human relationships"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When needing to make choices, you:",
+            "reverse_questions_options": {
+              "A": "List pros and cons, quantify scoring",
+              "B": "Tend to follow feelings"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "J (Judging) users",
+        "assessedAbility": "P (Perceiving) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "When planning a long trip, you:",
+            "reverse_questions_options": {
+              "A": "Only book main transportation, details go with the flow",
+              "B": "Book flights and hotels in advance, prepare itinerary"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When project progress is disrupted, you:",
+            "reverse_questions_options": {
+              "A": "Flexibly allocate resources, embrace changes",
+              "B": "Stick to original plan, try to catch up"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When receiving urgent tasks, you:",
+            "reverse_questions_options": {
+              "A": "Quickly re-prioritize, allow original tasks to be delayed",
+              "B": "Try to complete everything within the original timeframe"
+            }
+          }
+        ]
+      },
+      {
+        "targetUserType": "P (Perceiving) users",
+        "assessedAbility": "J (Judging) ability",
+        "questions": [
+          {
+            "reverse_questions_id": 1,
+            "reverse_questions_text": "For your weekly task list, you:",
+            "reverse_questions_options": {
+              "A": "Put each task in calendar and set reminders",
+              "B": "Keep in mind, don't make rigid arrangements"
+            }
+          },
+          {
+            "reverse_questions_id": 2,
+            "reverse_questions_text": "When the team needs process documentation, you:",
+            "reverse_questions_options": {
+              "A": "Actively write SOPs and track execution",
+              "B": "Explain verbally, avoid paperwork"
+            }
+          },
+          {
+            "reverse_questions_id": 3,
+            "reverse_questions_text": "When approaching deadlines, you:",
+            "reverse_questions_options": {
+              "A": "Set daily milestones, monitor progress",
+              "B": "Believe final sprint can handle it, don't break down tasks"
+            }
+          }
+        ]
+      }
+    ]
+  }

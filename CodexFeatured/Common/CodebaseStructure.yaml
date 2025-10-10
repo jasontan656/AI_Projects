@@ -1,0 +1,39 @@
+---
+content: |-
+  # **必读且遵守**：`Kobe\`为代码库根目录，该目录及其子目录为唯一代码库工作目录，禁止跨越该代码库访问其他路径或者工作
+
+  - Kobe/
+    - SharedUtility/
+      - index.yaml
+      - RichLogger/
+        - README.md
+        - __init__.py
+        - cli.py
+        - console.py
+        - example_usage.py
+        - index.yaml
+        - logger.py
+        - styles.toml
+        - traceback_setup.py
+        - tests/
+          - test_basic.py
+      - TaskQueue/
+        - __init__.py
+        - app.py
+        - config.py
+        - index.yaml
+        - readme.md
+        - schemas.py
+        - tasks.py
+        - repository/
+          - mongo.py
+    - TempUtility/
+      - index.yaml
+      - VisaDBOperation/
+        - index.yaml
+    - mango_db/
+      - index.yaml
+      - readme.md
+    - routers/
+      - __init__.py
+      - task.py

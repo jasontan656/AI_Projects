@@ -1,0 +1,51 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility/RichLogger"
+  last_updated: "2025-10-10"
+  owners: ["kobe-logging"]
+  stability: "ga"
+
+module:
+  name: "RichLogger"
+  summary: "统一日志初始化与富文本控制台、异常栈美化能力"
+  responsibilities:
+    - "提供 init_logging 统一初始化日志"
+    - "提供 install_traceback 统一异常渲染"
+    - "提供 Console 初始化与获取接口"
+  non_goals:
+    - "不负责业务日志持久化或集中式日志采集"
+  entry_points:
+    - "__init__.py"
+
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe"
+    - "SharedUtility/TaskQueue"
+  provides_apis:
+    - "__init__.py: init_logging"
+    - "__init__.py: install_traceback"
+    - "__init__.py: init_console"
+    - "__init__.py: get_console"
+  reasons:
+    - "统一接入点，隐藏内部实现细节，保证外部契约稳定"
+
+files:
+  key_files:
+    - "__init__.py"
+    - "logger.py"
+    - "console.py"
+    - "traceback_setup.py"
+    - "cli.py"
+  test_locations:
+    - "tests/"
+
+sub_indexes:
+  - "logs/index.yaml"
+  - "tests/index.yaml"
+
+notes:
+  - "仅描述 Kobe/SharedUtility/RichLogger 目录内事实"
+
+

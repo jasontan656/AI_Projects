@@ -1,0 +1,116 @@
+{
+  "outputTemplates": {
+    "E_to_I": [
+      {
+        "scoreRange": "0-1 points (Typical E type)",
+        "template": "You mainly rely on human interaction to gain energy and inspiration, emotions are easily affected by external environment. It's recommended to regularly schedule alone time and deep thinking time, avoid over-focusing on interpersonal relationships while ignoring the essence of things."
+      },
+      {
+        "scoreRange": "2 points (Has I ability)",
+        "template": "You tend to be extraverted, but can actively detach from crowds for reflection when needed. While maintaining social advantages, strengthen introspection through writing, meditation, etc."
+      },
+      {
+        "scoreRange": "3 points (Has strong I ability)",
+        "template": "You are comfortable in both social and alone situations, able to switch freely. Continue using alone time to calibrate direction, avoid energy depletion from excessive socializing."
+      }
+    ],
+    "I_to_E": [
+      {
+        "scoreRange": "0-1 points (Typical I type)",
+        "template": "You prefer deep processing in quiet, may miss opportunities for immediate communication. Try setting 'social small goals', gradually improve public expression and networking building abilities."
+      },
+      {
+        "scoreRange": "2 points (Has E ability)",
+        "template": "You mostly think in quiet, but can actively speak up in key situations. Maintain thinking advantages, while regularly participating in external activities to expand resources."
+      },
+      {
+        "scoreRange": "3 points (Has strong E ability)",
+        "template": "You have both deep thinking and outgoing communication abilities, can flexibly switch according to situations. Manage the balance between socializing and alone time, prevent energy imbalance."
+      }
+    ],
+    "S_to_N": [
+      {
+        "scoreRange": "0-1 points (Typical S type)",
+        "template": "You are good at executing details and processes, but may be limited by current information. Practice scenario deduction and trend prediction, expand strategic vision."
+      },
+      {
+        "scoreRange": "2 points (Has N ability)",
+        "template": "While focusing on details, you can also look up and plan long-term. Continue using tools like roadmaps to combine macro vision with daily tasks."
+      },
+      {
+        "scoreRange": "3 points (Has strong N ability)",
+        "template": "You can seamlessly switch between macro layout and micro execution. Maintain dual perspective, while ensuring information doesn't overload."
+      }
+    ],
+    "N_to_S": [
+      {
+        "scoreRange": "0-1 points (Typical N type)",
+        "template": "You are enthusiastic about grand concepts and future visions, but may ignore execution steps. Use checklists and milestone tools to improve execution efficiency."
+      },
+      {
+        "scoreRange": "2 points (Has S ability)",
+        "template": "You can conceive blueprints while verifying the feasibility of details. Continue using prototypes or pilots to shorten the cycle from concept to implementation."
+      },
+      {
+        "scoreRange": "3 points (Has strong S ability)",
+        "template": "You can switch freely between abstract insights and data implementation. Be alert to decision delays caused by excessive pursuit of perfection."
+      }
+    ],
+    "T_to_F": [
+      {
+        "scoreRange": "0-1 points (Typical T type)",
+        "template": "You are logically rigorous, make objective decisions, but may ignore emotional factors. Practice active empathy and emotional feedback to enhance team cohesion."
+      },
+      {
+        "scoreRange": "2 points (Has F ability)",
+        "template": "While valuing facts, you can also care about others' feelings. Maintain data-driven approach, while using emotional insights to improve persuasiveness."
+      },
+      {
+        "scoreRange": "3 points (Has strong F ability)",
+        "template": "You can balance rational analysis and emotional care. Pay attention to the degree of emotional investment to prevent energy depletion."
+      }
+    ],
+    "F_to_T": [
+      {
+        "scoreRange": "0-1 points (Typical F type)",
+        "template": "You focus on harmony and values, but may lack calm analysis. Before decisions, add data evaluation steps."
+      },
+      {
+        "scoreRange": "2 points (Has T ability)",
+        "template": "You are good at empathy, can also cite objective evidence. Continue using logical frameworks to support caring actions, improve persuasiveness."
+      },
+      {
+        "scoreRange": "3 points (Has strong T ability)",
+        "template": "You have both emotional and rational sides, can both unite people and focus on results. Be alert to emotional alienation caused by excessive rationalization."
+      }
+    ],
+    "J_to_P": [
+      {
+        "scoreRange": "0-1 points (Typical J type)",
+        "template": "You plan thoroughly, execute orderly, but have low tolerance for changes. Practice 'flexible time blocks' to deal with uncertainty."
+      },
+      {
+        "scoreRange": "2 points (Has P ability)",
+        "template": "You can adjust strategies on top of plans. Maintain review mechanisms to align plans with reality."
+      },
+      {
+        "scoreRange": "3 points (Has strong P ability)",
+        "template": "You can switch between rigor and flexibility, balance goals and path optimization. Avoid decision fatigue from excessive switching."
+      }
+    ],
+    "P_to_J": [
+      {
+        "scoreRange": "0-1 points (Typical P type)",
+        "template": "You respond quickly, like open options, but may lack persistence and structure. Set key checkpoints to prevent procrastination."
+      },
+      {
+        "scoreRange": "2 points (Has J ability)",
+        "template": "You like exploration, can also make plans when necessary. Maintain iteration rhythm, use simplified processes to solidify results."
+      },
+      {
+        "scoreRange": "3 points (Has strong J ability)",
+        "template": "You maintain both high agility and clear frameworks. Pay attention to collaboration friction caused by over-planning or frequent changes."
+      }
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block header %}Welcome to Career Bot!{% endblock %}
+
+{% block content %}
+<p>{{ greeting or 'Dear' }} {{ user_name or 'User' }},</p>
+
+<p>Welcome to the Career Bot platform! We are glad you chose us to help with your career development.</p>
+
+<div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
+    <h2 style="color: #4f46e5; margin-top: 0;">Your career journey starts here</h2>
+    <p style="margin-bottom: 0;">We will provide professional career guidance and job services.</p>
+</div>
+
+<h3>Get started:</h3>
+<ol style="padding-left: 20px;">
+    <li><strong>Complete your profile</strong> - Help us understand your background and needs</li>
+    <li><strong>Take the MBTI assessment</strong> - Discover your personality strengths</li>
+    <li><strong>Upload your resume</strong> - Get professional optimization suggestions</li>
+    <li><strong>Explore job opportunities</strong> - Match the best positions for you</li>
+</ol>
+
+{% if next_steps %}
+<h3>Recommended actions:</h3>
+<ul style="padding-left: 20px;">
+    {% for step in next_steps %}
+    <li style="margin-bottom: 8px;">{{ step }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ dashboard_link or '#' }}" class="btn" style="font-size: 16px;">
+        Get started
+    </a>
+</div>
+
+<p><strong>Need help?</strong></p>
+<p>If you encounter any issues, please contact our support team. We are here to help.</p>
+
+<p>Thank you for choosing Career Bot. We look forward to supporting your career success!</p>
+{% endblock %}
+
+{% block footer %}
+<p>This is a welcome email. You will receive more useful career information.</p>
+<p>Career Bot Team | Registration time: {{ registration_time or send_time or now() }}</p>
+{% endblock %}

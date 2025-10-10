@@ -1,0 +1,64 @@
+{
+  "active_profile": "balanced",
+  "profiles": {
+    "balanced": {
+      "enabled": true,
+      "connection": {
+        "uri": "mongodb://localhost:27017/",
+        "database": "careerbot_mongodb"
+      },
+      "pool": {
+        "maxPoolSize": 256
+      },
+      "queue": {
+        "workers": 32,
+        "maxsize": 10000,
+        "read_via_queue": true
+      },
+      "bcrypt": {
+        "max_workers": 32
+      },
+      "notes": "默认配置：适中并发与连接池"
+    },
+    "low_traffic": {
+      "enabled": false,
+      "connection": {
+        "uri": "mongodb://localhost:27017/",
+        "database": "careerbot_mongodb"
+      },
+      "pool": {
+        "maxPoolSize": 128
+      },
+      "queue": {
+        "workers": 16,
+        "maxsize": 5000,
+        "read_via_queue": true
+      },
+      "bcrypt": {
+        "max_workers": 16
+      },
+      "notes": "小流量/开发笔记本配置"
+    },
+    "high_traffic": {
+      "enabled": false,
+      "connection": {
+        "uri": "mongodb://localhost:27017/",
+        "database": "careerbot_mongodb"
+      },
+      "pool": {
+        "maxPoolSize": 512
+      },
+      "queue": {
+        "workers": 64,
+        "maxsize": 20000,
+        "read_via_queue": true
+      },
+      "bcrypt": {
+        "max_workers": 48
+      },
+      "notes": "高并发压测/生产型主机"
+    }
+  }
+}
+
+

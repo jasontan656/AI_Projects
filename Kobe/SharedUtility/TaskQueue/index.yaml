@@ -1,0 +1,52 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility/TaskQueue"
+  last_updated: "2025-10-10"
+  owners: ["kobe-taskqueue"]
+  stability: "alpha"
+
+module:
+  name: "TaskQueue"
+  summary: "基于 Celery 的任务队列封装：应用对象、任务定义与数据模型"
+  responsibilities:
+    - "提供 Celery app 对象（用于 worker 与调用）"
+    - "内置演示任务 demo_long_io / demo_sharded_job"
+    - "提供 Pydantic 请求/响应模型"
+  non_goals:
+    - "不负责外部消息中间件运维，仅封装接入"
+  entry_points:
+    - "__init__.py"
+    - "app.py"
+    - "tasks.py"
+
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe"
+    - "Kobe/routers"
+  provides_apis:
+    - "__init__.py: app"
+    - "tasks.py: demo_long_io"
+    - "tasks.py: demo_sharded_job"
+    - "schemas.py: TaskStart"
+    - "schemas.py: TaskStatus"
+    - "schemas.py: TaskResult"
+  reasons:
+    - "为路由层提供统一的任务提交与查询能力"
+
+files:
+  key_files:
+    - "__init__.py"
+    - "app.py"
+    - "tasks.py"
+    - "schemas.py"
+    - "config.py"
+    - "readme.md"
+  test_locations: []
+
+sub_indexes:
+  - "repository/index.yaml"
+
+notes:
+  - "如需启用结果后端，请在 .env 中配置并更新 celery app 设置"

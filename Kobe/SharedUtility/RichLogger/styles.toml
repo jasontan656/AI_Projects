@@ -1,0 +1,20 @@
+# Action-narrative commented style tokens for Rich themes (documentation file)
+
+# [styles.default]
+# 提供默认主题的令牌样式映射，满足通用可读性需求
+[styles.default]
+info = "cyan"
+success = "green"
+warning = "yellow"
+error = "bold red"
+debug = "dim white"
+
+# [styles.high_contrast]
+# 提供高对比度主题，力求在昏暗/亮色背景下维持良好可辨识度
+[styles.high_contrast]
+info = "bold bright_cyan"
+success = "bold bright_green"
+warning = "bold bright_yellow"
+error = "bold bright_red"
+debug = "bold bright_white"
+

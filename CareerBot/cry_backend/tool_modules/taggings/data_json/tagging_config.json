@@ -1,0 +1,175 @@
+
+{
+  "allowed_tag_types": ["user", "company", "job"],
+  "tagging_schema": {
+    "layer_0_background": {
+      "description": "Layer 0: Industry, culture, growth background, workplace exposure. Distinguish by source to clarify information certainty.",
+      "output_format": {
+        "observed_tags": "Explicitly mentioned industries, growth backgrounds, organizational structures, such as \"BPO Industry\", \"Local University Graduate\", \"Overseas Family Support\"",
+        "inferred_tags": "Industry exposure derived from job types, customer groups, language behavior, etc., such as \"Customer-Oriented Culture\", \"Flat Organizational Structure\"",
+        "extended_context_tags": "Contextually reasonable supplements, such as \"Digital Adaptation Culture\", \"High Geographic Migration Initiative\", \"Tool-Based Organizational Experience\""
+      },
+      "examples": {
+        "observed_tags": ["BPO Industry", "Local University Graduate", "Fluent English"],
+        "inferred_tags": ["Customer-Oriented Culture", "Process Standardization Environment"],
+        "extended_context_tags": ["Remote Work Adaptation", "Cross-Regional Migration Experience"]
+      }
+    },
+    "layer_1_adaptable_positions": {
+      "description": "Layer 1: Position compatibility structure. Clearly distinguish actual positions, extension possibilities, upward challenge and downward compatible roles.",
+      "output_format": {
+        "observed_positions": "Actual positions clearly derived from resume",
+        "extended_positions": "Adjacent positions supported by behavior/skills/industry characteristics",
+        "upward_challenge_roles": "Challenging management or multi-functional positions",
+        "downward_compatible_roles": "Simplified version positions that can be handled even in difficult situations"
+      },
+      "examples": {
+        "observed_positions": ["Customer Service Representative", "Sales Assistant"],
+        "extended_positions": ["Remote Support Specialist", "Travel Customer Service", "Medical Ticket Coordinator"],
+        "upward_challenge_roles": ["Customer Operations Manager", "Cross-Department Coordination PM"],
+        "downward_compatible_roles": ["Chat Customer Service", "Reception Clerk"]
+      }
+    },
+    "layer_2_skills": {
+      "description": "Layer 2: Capability structure. Includes basic skills, technical skills, soft skills, tool skills and latent skills, distinguishing explicit and implicit capabilities.",
+      "output_format": {
+        "basic_skills": "Basic language, computer operation, time management and other basic skills, including skill and level",
+        "technical_skills": "Professional technical and business skills, including skill and level",
+        "soft_skills": "Communication, collaboration, management and other soft skills, including skill and level",
+        "tool_specific_skills": "Mentioned systems, methods, frameworks, including skill and level",
+        "latent_skills": "Implicit capabilities inferred through task completion methods, language patterns, project patterns, including skill and level"
+      },
+      "skill_identification_guidance": {
+        "basic_skills_focus": [
+          "Language abilities (English, Chinese, etc.)",
+          "Computer operation skills",
+          "Time management abilities",
+          "Remote work skills",
+          "Basic office software usage"
+        ],
+        "technical_skills_focus": [
+          "Business development skills",
+          "Customer service skills",
+          "Sales skills",
+          "Marketing skills",
+          "Project management skills"
+        ],
+        "soft_skills_focus": [
+          "Communication abilities",
+          "Team collaboration",
+          "Problem solving",
+          "Adaptability",
+          "Leadership"
+        ],
+        "tool_skills_focus": [
+          "CRM systems",
+          "Project management tools",
+          "Data analysis tools",
+          "Marketing tools",
+          "Office software"
+        ]
+      },
+      "examples": {
+        "basic_skills": [
+          {"skill": "English", "level": "Fluent"},
+          {"skill": "Computer Operation", "level": "Proficient"},
+          {"skill": "Time Management", "level": "Proficient"},
+          {"skill": "Remote Work", "level": "Proficient"}
+        ],
+        "technical_skills": [
+          {"skill": "Business Development", "level": "Proficient"},
+          {"skill": "Customer Service", "level": "Proficient"},
+          {"skill": "Sales Skills", "level": "Proficient"},
+          {"skill": "Marketing Management", "level": "Intermediate"}
+        ],
+        "soft_skills": [
+          {"skill": "Cross-Cultural Communication", "level": "Intermediate"},
+          {"skill": "Team Collaboration", "level": "Intermediate"},
+          {"skill": "Problem Solving", "level": "Intermediate"}
+        ],
+        "tool_specific_skills": [
+          {"skill": "CRM Systems", "level": "Proficient"},
+          {"skill": "Project Management Tools", "level": "Intermediate"},
+          {"skill": "Office Software", "level": "Proficient"}
+        ],
+        "latent_skills": [
+          {"skill": "Conflict Resolution", "level": "Intermediate"},
+          {"skill": "Upward Management", "level": "Beginner"},
+          {"skill": "Strategic Thinking", "level": "Intermediate"}
+        ]
+      }
+    },
+    "layer_3_geography": {
+      "description": "Layer 3: Geographic compatibility and regional structure. Distinguish core work locations, migration paths and remote work adaptability.",
+      "output_format": {
+        "core_locations": "Residence or work location, including city and rank",
+        "migrated_locations": "Original residence → Current residence, including city and rank",
+        "remote_adaptability": "Adaptability judgment based on remote experience (yes/no/mixed)"
+      },
+      "city_ranking_system": {
+        "center_point": "Metro Manila",
+        "rank_0": "Core Metropolitan Area",
+        "rank_1": "Adjacent Commuting Area",
+        "rank_2": "Same Island Cross-City",
+        "rank_3": "Cross-Island Major Cities"
+      },
+      "examples": {
+        "core_locations": [{"city": "Makati", "rank": 0}],
+        "migrated_locations": [{"city": "Cebu City", "rank": 3}, {"city": "Makati", "rank": 0}],
+        "remote_adaptability": "yes"
+      }
+    },
+    "layer_4_positive_attributes": {
+      "description": "Layer 4: Advantage traits and psychological structure tags. Describe positive traits from three dimensions: assessment, behavioral inference and growth patterns.",
+      "output_format": {
+        "trait_tags": "Positive traits appearing in MBTI/ability assessments/descriptions",
+        "inferred_drive_patterns": "Internal/external drive styles inferred through behavior, choices, and paths",
+        "growth_dynamics": "Long-term growth patterns"
+      },
+      "examples": {
+        "trait_tags": ["Systematic Thinking", "Goal-Oriented", "MBTI-INTJ"],
+        "inferred_drive_patterns": ["Pressure-Avoidance Migration Type", "Structure-Feedback Type"],
+        "growth_dynamics": ["Trial-and-Error Expander", "Feedback-Responsive Corrector"]
+      }
+    },
+    "layer_5_negative_attributes": {
+      "description": "Layer 5: Weaknesses, personality constraints, attention blind spots. Identify potential weaknesses from assessments, behaviors and failure patterns in specific situations.",
+      "output_format": {
+        "explicit_weaknesses": "Weaknesses derived from direct assessments",
+        "behavioral_limits": "Behavioral limitations already demonstrated in specific tasks or workplace scenarios",
+        "contextual_fail_patterns": "Failure tendencies in specific types of organizations/tasks"
+      },
+      "examples": {
+        "explicit_weaknesses": ["Weak Empathy", "Low Emotional Coping Ability"],
+        "behavioral_limits": ["Efficiency decline in multi-task parallel processing"],
+        "contextual_fail_patterns": ["Anxiety in high-feedback requirement teams", "Behavioral stagnation in ambiguous environments"]
+      }
+    },
+    "layer_6_potential_risks": {
+      "description": "Layer 6: Potential risks and systematic mismatch points. Assess growth path, organizational structure compatibility and long-term psychological risks.",
+      "output_format": {
+        "trajectory_risks": "Growth path interruption, fragmentation, idling, etc.",
+        "structural_risks": "Systematic mismatches constituted by organizational or position structures",
+        "psychological_risks": "Internal friction, motivation breakdown, feedback-free collapse, perfectionism execution barriers, etc."
+      },
+      "examples": {
+        "trajectory_risks": ["Frequent career path hopping", "Single skill stack aging"],
+        "structural_risks": ["Inadaptable to strong competitive ranking culture", "Negative reaction to micromanagement"],
+        "psychological_risks": ["High internal friction", "Easily broken motivation", "Perfectionism tendency"]
+      }
+    }
+  },
+  "processing_config": {
+    "keyword_extraction": {
+      "stop_words": ["the", "is", "in", "has", "and", "with", "or", "but", "while", "if", "because", "so", "this", "that", "these", "those"],
+      "max_keywords": 10,
+      "regex_pattern": "[a-zA-Z]+"
+    },
+    "location_extraction": {
+      "location_fields": ["location", "city", "current_location", "residence", "home_location", "work_location"]
+    },
+    "concept_extraction": {
+      "max_concepts": 20
+    }
+  }
+}

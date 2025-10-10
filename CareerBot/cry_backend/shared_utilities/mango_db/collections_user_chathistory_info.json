@@ -1,0 +1,29 @@
+{
+  "collection": "user_chathistory",
+  "placeholder": false,
+  "note": "MBTI 批次作答事件写入：允许 $setOnInsert/$set 以及对 meta_history 的 $push。",
+  "required": ["user_id"],
+  "allow_extra": true,
+  "fields": {
+    "user_id": "string",
+    "flow_id": "string?",
+    "batch": "number?",
+    "question_id": "string?",
+    "event_type": "string?",
+    "answer": "string?",
+    "ts": "number?",
+    "meta_history[]": "array",
+    "meta_history[].message_id": "string?",
+    "content": "string?",
+    "meta": "object?",
+    "created_at": "number?"
+  },
+  "allowed_ops": [
+    "insert",
+    "update.$set",
+    "update.$setOnInsert",
+    "update.$push(meta_history)"
+  ]
+}
+
+

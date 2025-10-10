@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "updated_at": "2025-09-28T12:35:00Z",
+  "__machine_note": "本文件仅用于文档与全局说明，不用于运行时严格校验。严格校验请参考每个集合的 collections_{collection}_info.json。",
+  "collections": {
+    "auth_login_index": {
+      "description": "登录名到 user_id 的映射；用于热路径登录解析与并发唯一兜底。",
+      "schema_ref": "utilities/mango_db/collections_auth_login_index_info.json",
+      "pydantic_model": "utilities.mango_db.schemas_auth.AuthLoginIndexDoc",
+      "required_fields": ["auth_username", "user_id"],
+      "optional_fields": [],
+      "allowed_ops": ["insert", "update.$set", "update.$setOnInsert"],
+      "indexes": [
+        { "name": "auth_username_unique", "keys": [["auth_username", 1]], "unique": true, "ttl_seconds": null },
+        { "name": "user_id_index", "keys": [["user_id", 1]], "unique": false, "ttl_seconds": null }
+      ],
+      "write_modules": ["applications/auth/email_register.py"],
+      "read_modules": ["applications/auth/email_login.py", "applications/auth/reset_password.py", "applications/auth/email_register.py"]
+    },
+    "user_profiles": {
+      "description": "用户静态画像（邮箱等）；与登录名解耦。",
+      "schema_ref": "utilities/mango_db/collections_user_profiles_info.json",
+      "pydantic_model": "utilities.mango_db.schemas_auth.UserProfilesDoc",
+      "required_fields": ["user_id", "profile.email"],
+      "optional_fields": [],
+      "allowed_ops": ["insert", "update.$set", "update.$setOnInsert"],
+      "indexes": [
+        { "name": "user_id_unique", "keys": [["user_id", 1]], "unique": true, "ttl_seconds": null },
+        { "name": "profile_email_index", "keys": [["profile.email", 1]], "unique": false, "ttl_seconds": null }
+      ],
+      "write_modules": ["applications/auth/email_register.py"],
+      "read_modules": ["applications/auth/email_register.py"]
+    },
+    "user_status": {
+      "description": "用户动态状态（密码哈希、登录名、OAuth 绑定、邮箱验证码历史）。",
+      "schema_ref": "utilities/mango_db/collections_user_status_info.json",
+      "pydantic_model": "utilities.mango_db.schemas_auth.UserStatusDoc",
+      "required_fields": ["user_id"],
+      "optional_fields": [
+        "auth_user_password",
+        "auth.auth_username",
+        "oauth_google_id",
+        "oauth_facebook_id",
+        "email_verification.history[]",
+        "login_history.history[]",
+        "login_history.history[].provider"
+      ],
+      "allowed_ops": [
+        "update.$set",
+        "update.$push(email_verification.history)",
+        "update.$push(login_history.history)",
+        "update.$setOnInsert"
+      ],
+      "indexes": [
+        { "name": "user_id_unique", "keys": [["user_id", 1]], "unique": true, "ttl_seconds": null },
+        { "name": "auth_username_index", "keys": [["auth.auth_username", 1]], "unique": false, "ttl_seconds": null },
+        { "name": "user_verif_code", "keys": [["user_id", 1], ["email_verification.history.code", 1]], "unique": false, "ttl_seconds": null },
+        { "name": "user_flow_unique", "keys": [["user_id", 1], ["flow_id", 1]], "unique": true, "ttl_seconds": null }
+      ],
+      "write_modules": ["applications/auth/email_register.py", "applications/auth/reset_password.py", "applications/auth/oauth_google.py", "applications/auth/oauth_facebook.py", "applications/auth/email_login.py"],
+      "read_modules": ["applications/auth/email_login.py", "applications/auth/email_register.py", "applications/auth/reset_password.py", "applications/auth/oauth_google.py", "applications/auth/oauth_facebook.py"]
+    },
+    "user_chathistory": {
+      "description": "用户对话历史，用于行为分析与画像。永不过期。",
+      "schema_ref": null,
+      "pydantic_model": null,
+      "required_fields": ["user_id", "created_at"],
+      "optional_fields": ["content", "meta"],
+      "allowed_ops": ["insert"],
+      "indexes": [
+        { "name": "user_createdat_desc", "keys": [["user_id", 1], ["created_at", -1]], "unique": false, "ttl_seconds": null },
+        { "name": "user_id_index", "keys": [["user_id", 1]], "unique": false, "ttl_seconds": null },
+        { "name": "created_at_index", "keys": [["created_at", 1]], "unique": false, "ttl_seconds": null }
+      ],
+      "write_modules": ["hub/*"],
+      "read_modules": ["hub/*"]
+    },
+    "user_archive": {
+      "description": "字段变更归档（按字段名_时间戳）。由连接器更新时自动写入；只读。",
+      "schema_ref": null,
+      "pydantic_model": null,
+      "required_fields": ["user_id"],
+      "optional_fields": ["<old_field>_<ts>"],
+      "allowed_ops": ["update.$set (connector-internal)"],
+      "indexes": [
+        { "name": "user_id_index", "keys": [["user_id", 1]], "unique": false, "ttl_seconds": null }
+      ],
+      "write_modules": ["utilities/mango_db/mongodb_connector.py"],
+      "read_modules": ["admin/tools"]
+    }
+  }
+}
+
+

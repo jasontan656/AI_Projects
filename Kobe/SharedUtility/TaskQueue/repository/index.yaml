@@ -1,0 +1,44 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility/TaskQueue/repository"
+  last_updated: "2025-10-10"
+  owners: ["kobe-taskqueue"]
+  stability: "alpha"
+
+module:
+  name: "repository"
+  summary: "任务队列的 MongoDB 访问与索引初始化"
+  responsibilities:
+    - "提供集合句柄获取函数"
+    - "建立最小运行所需的索引"
+  non_goals:
+    - "不定义业务层数据模型"
+  entry_points:
+    - "mongo.py"
+
+relations:
+  depends_on: []
+  used_by:
+    - "SharedUtility/TaskQueue"
+  provides_apis:
+    - "mongo.py: get_client"
+    - "mongo.py: get_db"
+    - "mongo.py: coll_task_dedup"
+    - "mongo.py: coll_task_checkpoint"
+    - "mongo.py: coll_pending_tasks"
+    - "mongo.py: coll_task_error_log"
+    - "mongo.py: coll_raw_payload"
+    - "mongo.py: ensure_indexes"
+  reasons:
+    - "集中管理 Mongo 访问与索引，便于维护"
+
+files:
+  key_files:
+    - "mongo.py"
+  test_locations: []
+
+sub_indexes: []
+
+notes:
+  - "需在环境变量中配置 MONGODB_URI / MONGODB_DATABASE（可选）"

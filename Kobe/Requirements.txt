@@ -1,0 +1,20 @@
+# ASGI 服务器（官方推荐使用 uvicorn 标准额外依赖，含更快可选件）
+# Auto-generated dependency list for Kobe project
+# FastAPI Web 框架（最小可运行入口闭环所需）
+# 可选依赖：用于在日志渲染/脱敏中直接处理 Pydantic 模型（代码兼容 v2）
+# 必需依赖
+celery
+chromadb
+fastapi
+hiredis
+motor
+pika
+pydantic>=2.0
+pymongo
+redis
+rich>=13.0.0
+uvicorn[standard]
+python-dotenv
+prometheus-fastapi-instrumentator
+opentelemetry-api
+opentelemetry-sdk

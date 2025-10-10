@@ -1,0 +1,82 @@
+{
+  "mbti_types": {
+    "ISTJ": {
+      "label": "Logistician",
+      "detail": "- **Core Description**: Meticulous and reliable, values practicality, emphasizes order and responsibility.\n- **Strengths**: High execution ability, strong memory and detail management, follows processes to ensure quality.\n- **Blind Spots**: Sensitive to sudden changes; may appear overly conservative or inflexible.\n- **Suitable Positions**: Financial auditing, quality management, supply chain, project coordination.\n- **Growth Suggestions**: Practice flexibility in rapidly changing situations; proactively express appreciation instead of just pointing out issues."
+    },
+    "ISFJ": {
+      "label": "Defender",
+      "detail": "- **Core Description**: Thoughtful and considerate, oriented towards service and stability as a behind-the-scenes supporter.\n- **Strengths**: Patient and meticulous, reliable execution, high interpersonal sensitivity, strong loyalty.\n- **Blind Spots**: Over-accommodating to others leading to neglect of self-needs; resists intense conflict and drastic changes.\n- **Suitable Positions**: Administrative support, customer service, human resources management, nursing, and education.\n- **Growth Suggestions**: Practice saying \"no\" and setting boundaries; actively propose improvement ideas in teams."
+    },
+    "INFJ": {
+      "label": "Advocate",
+      "detail": "- **Core Description**: Idealist with insight into human nature, skilled at inspiring others with vision and empathy.\n- **Strengths**: Deep thinking, keen intuition, strong sense of mission, skilled in coaching and vision communication.\n- **Blind Spots**: Perfectionism and emotional burnout; easily fatigued by long-term conflict or noisy environments.\n- **Suitable Positions**: Organizational development, human resources coaching, brand storytelling, public welfare, and cultural projects.\n- **Growth Suggestions**: Validate ideals in stages to avoid bottlenecks; cultivate realistic partners for implementation."
+    },
+    "INTJ": {
+      "label": "Architect",
+      "detail": "- **Core Description**: Independent system architect, driven by logic to strategize and innovate.\n- **Strengths**: Macro planning, abstract modeling, quickly identifying efficiency bottlenecks, deep learning ability.\n- **Blind Spots**: Expression may be sharp; lacks patience for lengthy communication or emotional details.\n- **Suitable Positions**: Corporate strategy, product architecture, research analysis, consulting, and investment research.\n- **Growth Suggestions**: Actively seek diverse feedback; incorporate \"human factors\" checkpoints before major decisions."
+    },
+    "ISTP": {
+      "label": "Virtuoso",
+      "detail": "- **Core Description**: Calm and pragmatic solution expert, enjoys hands-on exploration.\n- **Strengths**: Quick on-the-spot reactions, logical and objective, strong technical hands-on ability.\n- **Blind Spots**: Low-key emotional expression; lacks interest in long-term planning and trivial procedures.\n- **Suitable Positions**: Engineering operations, mechanical maintenance, data forensics, emergency handling.\n- **Growth Suggestions**: Establish lightweight planning frameworks; regularly share progress and needs with the team."
+    },
+    "ISFP": {
+      "label": "Adventurer",
+      "detail": "- **Core Description**: Seeker of beauty and freedom, easygoing and true to inner values.\n- **Strengths**: Keen aesthetic sense, strong adaptability, values present experiences, warm in interpersonal relations.\n- **Blind Spots**: Insufficient planning and easily influenced by external emotions; struggles with high pressure and deadlines.\n- **Suitable Positions**: Visual design, photography, artistic creation, tourism, and experience planning.\n- **Growth Suggestions**: Add time frames to creativity; practice distinguishing between personal and work feedback."
+    },
+    "INFP": {
+      "label": "Mediator",
+      "detail": "- **Core Description**: Idealistic storyteller, driven by values and rich in empathy.\n- **Strengths**: Abundant creativity, deep empathy, excellent verbal and artistic expression.\n- **Blind Spots**: Avoids conflict; indecisive in decision-making; prone to procrastination due to perfectionism.\n- **Suitable Positions**: Content writing, psychological counseling, brand storytelling, culture, and public welfare.\n- **Growth Suggestions**: Break down goals, use small steps to combat procrastination; practice constructive conflict techniques."
+    },
+    "INTP": {
+      "label": "Logician",
+      "detail": "- **Core Description**: Curious theoretical explorer, constantly deconstructing and reorganizing concepts.\n- **Strengths**: Abstract thinking, systematic analysis, quickly learns new areas of interest.\n- **Blind Spots**: Weak in project execution and completion; overly theoretical in communication.\n- **Suitable Positions**: Research and development, algorithm engineering, academic research, strategic planning.\n- **Growth Suggestions**: Collaborate with execution-oriented partners; set feasibility checks before output."
+    },
+    "ESTP": {
+      "label": "Entrepreneur",
+      "detail": "- **Core Description**: Action-oriented opportunity catcher, enjoys taking risks and integrating resources.\n- **Strengths**: Bold decision-making, adept at real-world interactions, strong problem-solving ability for sudden issues.\n- **Blind Spots**: Impulsive, overlooks long-term risks; lacks patience for long-term documentation and details.\n- **Suitable Positions**: Sales, trading, crisis management, entrepreneurship, and business development.\n- **Growth Suggestions**: Equip fast actions with financial and compliance advisors; establish review mechanisms."
+    },
+    "ESFP": {
+      "label": "Entertainer",
+      "detail": "- **Core Description**: Energetic social star, infects the team with experiences and joy.\n- **Strengths**: Extroverted and approachable, strong live performance skills, talent for resource allocation and promotion.\n- **Blind Spots**: Lacks long-term planning; easily distracted; sensitive to conflict.\n- **Suitable Positions**: Performing arts host, brand promotion, customer relations, event execution.\n- **Growth Suggestions**: Use visualization tools to set short- and medium-term goals; practice financial discipline."
+    },
+    "ENFP": {
+      "label": "Campaigner",
+      "detail": "- **Core Description**: Idea engine combining creativity and inspiration, passionate and skilled at interpersonal motivation.\n- **Strengths**: Quickly perceives human potential, excels in multi-threaded creativity, natural speaker.\n- **Blind Spots**: Weak in execution follow-up; jumps between interests; easily exhausted by excessive enthusiasm.\n- **Suitable Positions**: Creative planning, public relations, education and training, innovative entrepreneurship.\n- **Growth Suggestions**: Pair with operational partners; set milestones and review rhythms for projects."
+    },
+    "ENTP": {
+      "label": "Debater",
+      "detail": "- **Core Description**: Quick-thinking idea challenger, enjoys deconstructing authority and reshaping rules.\n- **Strengths**: Insight into cross-domain opportunities, sharp logic, strong impromptu persuasion ability.\n- **Blind Spots**: Lacks patience for execution; prone to argument addiction; overlooks organizational processes.\n- **Suitable Positions**: Strategic consulting, innovative R&D, business model design, speaking, and media.\n- **Growth Suggestions**: Set ROI evaluations for creativity; practice empathetic listening and deepening in one field."
+    },
+    "ESTJ": {
+      "label": "Executive",
+      "detail": "- **Core Description**: Pragmatic and efficient organizer, drives teams with systems and results.\n- **Strengths**: Establishing and implementing processes, goal management, resource allocation, execution supervision.\n- **Blind Spots**: May appear stubborn; insufficient focus on emotional aspects; low tolerance for innovation.\n- **Suitable Positions**: Operations management, administrative coordination, sales management, project director.\n- **Growth Suggestions**: Invite different perspectives before change; regularly practice providing feedback in a human-centered way."
+    },
+    "ESFJ": {
+      "label": "Consul",
+      "detail": "- **Core Description**: Team atmosphere creator, focuses on collective well-being and smooth collaboration.\n- **Strengths**: Communication and coordination, relationship maintenance, adherence to norms, execution of activity details.\n- **Blind Spots**: Overly concerned with evaluation, resists conflict; may overlook long-term strategies.\n- **Suitable Positions**: HR, customer success, community operations, event planning.\n- **Growth Suggestions**: Develop data-driven decision-making; practice solitude and self-recharging."
+    },
+    "ENTJ": {
+      "label": "Commander",
+      "detail": "- **Core Description**: Goal-oriented leader, excels in systematic problem-solving and resource integration.\n- **Strengths**: Decisive decision-making, comprehensive planning, logical persuasion, driving high-performance teams.\n- **Blind Spots**: May appear domineering; limited patience for details; low emotional sensitivity.\n- **Suitable Positions**: Senior management, business planning, entrepreneurial CEO, strategic mergers and acquisitions.\n- **Growth Suggestions**: Include \"team emotional assessment\" in decision-making processes; practice patient listening."
+    },
+    "ENFJ": {
+      "label": "Protagonist",
+      "detail": "- **Core Description**: Charismatic mentor-type leader, skilled at motivating and integrating groups.\n- **Strengths**: Excellent oratory skills, vision-driven, excels in nurturing and conflict mediation.\n- **Blind Spots**: High self-expectations; may overlook detail execution; overly assumes others' emotions.\n- **Suitable Positions**: Training instructor, organizational development, marketing and public relations, social enterprise leadership.\n- **Growth Suggestions**: Set healthy boundaries; delegate detail tasks and trust professional partners."
+    }
+  },
+  "scoring_guide": {
+    "dimensions": {
+      "E": {"name": "Extraversion-Introversion", "high_preference": "Extraversion", "low_preference": "Introversion"},
+      "S": {"name": "Sensing-Intuition", "high_preference": "Sensing", "low_preference": "Intuition"},
+      "T": {"name": "Thinking-Feeling", "high_preference": "Thinking", "low_preference": "Feeling"},
+      "J": {"name": "Judging-Perceiving", "high_preference": "Judging", "low_preference": "Perceiving"}
+    },
+    "scoring_rules": {
+      "max_score": 120,
+      "threshold": 60,
+      "reverse_scoring": "score = 6 - raw_score for reverse questions",
+      "percentage_calculation": "percentage = round(score / 120 * 100)"
+    }
+  }
+}

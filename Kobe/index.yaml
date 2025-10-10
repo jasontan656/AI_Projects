@@ -1,0 +1,45 @@
+module:
+  summary: Kobe 项目根目录，聚合后端应用入口与共享能力
+  responsibilities:
+  - 提供 FastAPI 应用入口 app
+  - 集中初始化统一日志与异常美化
+  - 聚合共享工具能力（日志、任务队列）
+  name: Kobe
+  entry_points:
+  - main.py
+  non_goals:
+  - 不包含 Kobe/ 之外的规范、部署或命令说明
+relations:
+  used_by: []
+  provides_apis:
+  - 'main.py: app'
+  depends_on:
+  - SharedUtility/RichLogger
+  - SharedUtility/TaskQueue
+  reasons:
+  - 统一日志组件，便于上层模块一致接入
+  - 提供任务队列能力支撑异步作业
+meta:
+  owners:
+  - kobe-core
+  path: Kobe
+  version: "1.0"
+  schema_version: "1"
+  last_updated: 2025-10-10
+  stability: beta
+sub_indexes:
+- mango_db/index.yaml
+- routers/index.yaml
+- SharedUtility/index.yaml
+- SimulationTest/index.yaml
+- TempUtility/index.yaml
+files:
+  test_locations: []
+  key_files:
+  - main.py
+  - Requirements.txt
+  - Readme.md
+notes:
+- 本索引仅描述 Kobe/ 内部结构与关系，不引用目录外内容
+- 所有路径使用相对 Kobe 的正斜杠形式
+

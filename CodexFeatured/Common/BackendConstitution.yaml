@@ -1,0 +1,93 @@
+---
+meta:
+  name: "Backend Constitution"
+  version: "2.0"
+  last_updated: "2025-10-10"
+  language: "zh-CN"
+
+mandates:
+  runtime:
+    python: "3.10"
+    venv: "Kobe/.venv"           # 必须使用此虚拟环境；禁止新增并行 venv
+    env_file: "Kobe/.env"        # 必须从此文件加载环境；禁止分散 env 文件
+
+  app:
+    framework: "FastAPI"         # 必须使用 FastAPI；禁止自造 HTTP 框架
+    app_entry: "Kobe.main:app"   # 唯一项目启动真源；禁止新增入口
+    start_dev: "python -m Kobe.main"   # 开发启动唯一命令
+    start_prod: "uvicorn Kobe.main:app --host 0.0.0.0 --port 8000"
+    validation: "Pydantic v3"     # 请求/响应校验必须使用 Pydantic v3
+    async_io: true                 # I/O 必须使用 async/await；禁止阻塞 I/O
+
+  logging:
+    module: "Kobe\\SharedUtility\\RichLogger"
+    rule: "统一使用 logging；禁止 print() 输出日志"
+
+  background_tasks:
+    orchestrator: "Celery"        # 必须使用 Celery；禁止以 FastAPI BackgroundTasks 承载长任务
+    broker: "RabbitMQ"
+    cache_store: "Redis"
+    prohibit:
+     
+      - "以 Redis 充当主库"
+
+  messaging:
+    semantics: "at-least-once"    # 投递至少一次；业务处理必须幂等
+    publisher_confirm: true
+    durable_persistent: true
+    retry_policy: "指数退避+抖动"
+
+  api:
+    prohibit:
+      - "阻塞等待长任务结果"
+    long_flow: "使用 chain/group/chord 或调度器"
+
+  cache:
+    strategy: "Write→Invalidate"
+    keys: "分层命名+统一 TTL"
+    strict: "强一致场景优先使用 Transactional Outbox/CDC"
+
+  observability:
+    expose: ["Metrics", "Logs", "Traces"]
+    stack: ["Prometheus", "OpenTelemetry"]
+    secrets: "密钥禁入仓库；使用配置中心；最小权限"
+
+  infrastructure_local:
+    docker_network: "ai_services_net"
+    services:
+      redis: { name: "svc-redis", ports: ["6379:6379"] }
+      mongodb: { name: "svc-mongo", ports: ["27017:27017"] }
+      rabbitmq: { name: "svc-rabbitmq", ports: ["5672:5672", "15672:15672"] }
+      chromadb: { name: "svc-chromadb", ports: ["8001:8001"] }
+
+  env_defaults:
+    REDIS_URL:
+      host: "redis://localhost:6379/0"
+      container: "redis://svc-redis:6379/0"
+    MONGODB_URI:
+      host: "mongodb://localhost:27017"
+      container: "mongodb://svc-mongo:27017"
+    RABBITMQ_URL:
+      host: "amqp://guest:guest@localhost:5672/"
+      container: "amqp://guest:guest@svc-rabbitmq:5672/"
+    CHROMADB_URL:
+      host: "http://localhost:8001"
+      container: "http://svc-chromadb:8001"
+    production: "必须覆盖默认凭据与主机名；严禁提交明文密码"
+
+  dependencies:
+    requirements_file: "Kobe/requirements.txt"
+    libs: ["celery", "redis", "hiredis", "pymongo", "motor", "pika", "chromadb"]
+
+  index_spec:
+    root_index: "Kobe/index.yaml"   # 必须存在并作为入口
+    sub_index: "需要说明的子目录必须包含 index.yaml"
+    path_style: "路径统一相对 Kobe/ 且使用正斜杠"
+    bounds: "索引文件禁止引用 Kobe/ 外路径或外链"
+
+prohibitions:
+  - "自造轮子替代框架或基础库"
+  - "新增平行 app 入口或服务启动命令"
+  - "长任务阻塞请求线程"
+  - "无幂等、无重试、无 DLQ 的消息处理"
+  - "把敏感信息提交到仓库"

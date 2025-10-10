@@ -1,0 +1,484 @@
+{
+  "mbti_questions": [
+    {
+      "mbti_questions_text": "When I'm at a friend's birthday party and see someone standing alone, I usually go over and start a friendly chat to make them feel welcome.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "After spending a whole day with friends, I look forward to some quiet time alone at home to relax and recharge my energy.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "During a group discussion at work, I often share my thoughts out loud as they come to me, rather than keeping them inside.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I feel most comfortable and focused when I have long stretches of quiet time to work without interruptions.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "At family gatherings, I enjoy being the one who gets everyone laughing and involved in conversations.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "On Friday evenings, I'd rather join friends at a lively restaurant than spend the night quietly at home.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "During team brainstorming sessions, talking through ideas with others usually sparks my best creative thoughts.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Even when a meeting topic is really interesting, after two hours I start feeling drained and ready to leave.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "At work, I usually speak up with my opinions during team meetings rather than waiting to be asked.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "When I need to discuss something important, I'd rather send a text or email than have a face-to-face conversation.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "While traveling on a bus or train, I often strike up conversations with fellow passengers.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "In group discussions, I prefer to listen quietly and only speak when someone directly asks for my input.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When working on creative projects, I get more excited about ideas when I can brainstorm with a team rather than alone.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "For hobbies and free time activities, I usually choose things I can do by myself rather than in groups.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I feel most energized when working on big projects that involve lots of collaboration with other people.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "During meetings, I often share my ideas right away, even if they're not fully formed yet.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Networking events and meeting new business contacts usually leave me feeling excited rather than tired.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "After a busy week of social activities, I make sure to schedule quiet days to rest and recharge.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When I'm feeling emotional about something, I usually talk it through with friends to help me understand my feelings.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I find that having background noise like music or conversation actually helps me focus better on my work.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I usually make new friends quickly and easily when I meet people in social situations.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Noisy environments like busy coffee shops make it hard for me to concentrate on what I'm doing.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I prefer studying or working in places with other people around, like cafes, rather than completely quiet rooms.",
+      "dimension": "E",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I rarely share personal stories about myself unless someone specifically asks me about them.",
+      "dimension": "E",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When learning a new skill, I prefer clear, step-by-step instructions that I can follow exactly.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I get more excited about imagining future inventions and technologies than researching how current tools work.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When making decisions, I rely heavily on facts and data that I can observe and measure.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I often notice patterns and symbols in everyday things that other people might overlook.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When trying to understand a new concept, concrete examples help me grasp it better than abstract theories.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I get bored when conversations focus too long on small everyday details.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I can clearly remember specific details like the smell of my grandmother's kitchen or the sound of rain on the roof.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I often daydream about how the world might look ten years from now.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I trust hands-on experience and what I've personally seen more than theories or speculation.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I enjoy exploring \"what if\" scenarios and imagining different possibilities.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I have a good memory for conversations and can usually remember exactly what people have said.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I often find myself thinking about the deeper meaning behind people's words and actions.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I prefer using methods that have been proven to work rather than trying new experimental approaches.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I can easily connect ideas that seem unrelated and see how they fit together in a bigger picture.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I notice small changes in my surroundings, like a new painting on the wall or someone's new haircut.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Sometimes I get so caught up in my thoughts that I miss obvious details around me.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When learning something new, I like to start with basic facts before moving to more complex theories.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Artistic works that are abstract and imaginative appeal to me more than realistic paintings.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I prefer using clear, direct language rather than fancy words or complicated expressions.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I can often predict trends by noticing small changes and clues that others miss.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I enjoy activities that involve using my hands and working with physical objects.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I naturally think in creative ways, using comparisons and word pictures to express ideas.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I focus more on what's happening right now than on distant future possibilities.",
+      "dimension": "S",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I get more excited about exploring new ideas than perfecting things that already work well.",
+      "dimension": "S",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When making important choices, I focus on logical reasons rather than how I feel about them.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Sometimes I choose options based on caring about others, even when the facts point to a different choice.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "In conversations, I value being clear and accurate more than keeping everyone happy.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I try to avoid arguments that might hurt people's feelings.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When solving problems, I like to make lists of pros and cons to help me decide.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I believe that doing the right thing for people is sometimes more important than being efficient.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I'm willing to give honest feedback, even if it might sound harsh.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Before giving criticism, I always consider how the other person might feel.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I believe rules exist to make things fair for everyone.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Sometimes being kind is more important to me than being completely right.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "In discussions, I think facts and evidence should be more important than personal experiences.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I rely heavily on my gut feelings and instincts when making choices.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I try to set aside my emotions when I need to think clearly about an issue.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Sometimes caring too much about others' feelings makes it hard for me to make decisions.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I admire people who think logically and consistently.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I feel guilty when my choices might make other people unhappy.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I enjoy exploring the basic principles and rules behind how things work.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "To keep the team working well together, I sometimes agree with ideas even if they don't seem logical to me.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "When judging results, I focus on numbers and measurements I can count.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I trust my emotional reactions as good guides for making decisions.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I can handle criticism objectively without taking it personally.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I care more about people's well-being than about performance numbers.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I see disagreements as chances to improve ideas rather than create conflict.",
+      "dimension": "T",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "To keep conversations friendly, I sometimes avoid pointing out mistakes.",
+      "dimension": "T",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I like to set clear deadlines for my projects and stick to them.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I prefer keeping my schedule flexible so I can decide what to do as I go.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "Before going on a trip, I plan out every detail of the itinerary in advance.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I get excited when plans change unexpectedly and I have to adapt.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "Having unclear deadlines makes me feel anxious and uncomfortable.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I think being flexible is often better than sticking to a strict schedule.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I break big goals into smaller tasks with specific dates attached to them.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I like to explore all the possibilities before making a final decision.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I usually finish my work well before the deadline.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I work best when priorities and tasks are constantly changing.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I like making quick decisions so I can start taking action right away.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I prefer to gather more information before making important decisions.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "Having clear processes and steps makes everything run more smoothly.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Sometimes strict rules feel too limiting and unnecessary.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I keep my workspace neat and organized so I can find things easily.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I prefer spontaneous adventures over carefully planned activities.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I use checklists and to-do lists to track my progress on tasks.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I like to try things out and experiment before settling on a final plan.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I set monthly goals for myself and regularly check on my progress.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Making long-term commitments makes me feel uncomfortable.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "Having predictable daily routines gives me a sense of peace and security.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "I leave some extra time in my schedule for unexpected opportunities.",
+      "dimension": "J",
+      "reverse": true
+    },
+    {
+      "mbti_questions_text": "I like to finish one task completely before starting something new.",
+      "dimension": "J",
+      "reverse": false
+    },
+    {
+      "mbti_questions_text": "Having strict schedules sometimes feels like it crushes my creativity.",
+      "dimension": "J",
+      "reverse": true
+    }
+  ]
+}

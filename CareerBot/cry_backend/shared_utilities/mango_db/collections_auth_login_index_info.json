@@ -1,0 +1,14 @@
+{
+  "collection": "auth_login_index",
+  "required": ["auth_username", "user_id"],
+  "allow_extra": false,
+  "allowed_ops": [
+    "update.$set",
+    "update.$setOnInsert"
+  ],
+  "fields": {
+    "auth_username": "email",
+    "user_id": "string"
+  }
+}
+

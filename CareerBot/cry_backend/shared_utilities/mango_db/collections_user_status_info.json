@@ -1,0 +1,34 @@
+{
+  "collection": "user_status",
+  "required": ["user_id"],
+  "allow_extra": false,
+  "allowed_ops": [
+    "update.$set",
+    "update.$setOnInsert",
+    "update.$push(email_verification.history)",
+    "update.$push(login_history.history)"
+  ],
+  "fields": {
+    "user_id": "string",
+    "auth_user_password": "string?",
+    "auth.auth_username": "email?",
+    "oauth_google_id": "string?",
+    "oauth_facebook_id": "string?",
+    "email_verification.history[]": "array",
+    "email_verification.history[].email": "email",
+    "email_verification.history[].code": "string",
+    "email_verification.history[].created_at": "number",
+    "email_verification.history[].used": "boolean",
+    "email_verification.history[].test_user": "boolean",
+    "email_verification.failed_attempts.count": "number",
+    "email_verification.failed_attempts.lock_until": "number",
+    "login_history.history[]": "array",
+    "login_history.history[].ts": "number",
+    "login_history.history[].ip": "string?",
+    "login_history.history[].user_agent": "string?",
+    "login_history.history[].success": "boolean",
+    "login_history.history[].auth_username": "email",
+    "login_history.history[].provider": "string?"
+  }
+}
+
