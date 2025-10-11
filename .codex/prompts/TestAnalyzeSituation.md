@@ -1,6 +1,6 @@
 workflow:
   name: TestSituationCoverageDiscovery
-  description: 执行开发任务列表 Tasks.md 
+  description: 测试计划前置输入文档生成（为 TestPipelineGeneration 提供可执行依据）
   language: zh-CN
 
 
@@ -10,7 +10,14 @@ workflow:
 objectives:
   - 理解项目开发意图和使用方式
   - 明确任务依赖、验收标准
-  - 调研该模块可被测试的各类场景 (可能但不限于: 压力测试, 功能测试, 故意制造错误测试, 设计意图使用方式测试, 交互测试, 数据库读写结果验证, 预期效果验证, 功能最佳实践)
+  - 调研该模块的 HTTP 端点列表、依赖服务（RabbitMQ/Redis/MongoDB）及其管理接口
+  - 调研真实功能验证场景：
+      * 从官方入口调用（HTTP端点/CLI命令/消息队列），禁止直接import内部函数
+      * 验证真实服务状态变化（数据库记录/队列消息/缓存键的实际增删改查）
+      * 逐步加压测试（小数据量→大数据量、单进程→多进程、正常并发→高并发）
+      * 异常恢复测试（中断重试、超时处理、资源不足场景）
+  - 调研服务状态查询方法（RabbitMQ Management API、redis-cli、pymongo）
+  - 调研适用的测试工具栈：pytest生态、HTTP客户端库、超时控制库、报告生成库
 
 repo_root: `D:/AI_Projects`
 
@@ -43,7 +50,7 @@ steps:
       - 读取 io.simulation_testing_constitution 并严格遵守
       - 读取 io.best_practices 并浏览其中任务相关官方链接
       - 调研社区最佳实践（GitHub/StackOverflow/开发者博客）
-    purpose: 加载开发规范, 学习官方推荐实现, 学习当前任务最佳实践
+    purpose: 加载开发规范, 学习官方推荐实现, 学习测试工具最佳实践（pytest/requests/structlog）
 
   - id: codebase_scan
     name: 目标代码库扫描
@@ -55,8 +62,24 @@ steps:
     name: 写入目标目录
     path: ${OUTPUT_DIR_PATH}
     filename: ${file_name}
+    format: "可执行测试计划输入（非建议报告）"
+    tone: "指令性（必须测试X）而非描述性（可选配置X）"
+    coverage_rule: "列出所有配置分支的测试要求（如：测试 Redis 开启场景 + Redis 关闭场景）"
     acceptance:
       - 符合 io.dev_constitution 与官方最佳实践
-      - 符合 io.code_comment_standard 的注释要求
-      - 符合 io.dev_constitution 的技术栈约束
       - 符合 io.simulation_testing_constitution 的规范
+      - **所有测试场景必须从模块官方入口发起，禁止直接导入内部函数**
+      - **所有测试必须验证真实服务状态变化（不使用mock）**
+      - **必须包含逐步加压的测试场景设计（数据量递增、并发递增）**
+      - 所有可配置项必须明确测试覆盖方案（不能只说"可选"）
+      - 工具栈为指定项（不能用"建议"一词）
+
+  - id: self_check
+    name: 规范对齐验证
+    actions:
+      - 读取当前流程的所有约束源（io 声明的规范文件）
+      - 读取上一步输出的文件
+      - 对比发现偏差（语气/路径/约束/覆盖）
+      - 发现偏差立即修正并重写文件
+      - 验证修正结果，最多3轮
+    acceptance: 生成物与约束源完全对齐

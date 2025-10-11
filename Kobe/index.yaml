@@ -28,7 +28,6 @@ meta:
   last_updated: 2025-10-10
   stability: beta
 sub_indexes:
-- mango_db/index.yaml
 - routers/index.yaml
 - SharedUtility/index.yaml
 - SimulationTest/index.yaml

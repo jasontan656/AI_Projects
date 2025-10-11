@@ -50,10 +50,20 @@ io:
       - id: write_comments
     name: 攥写注释
     actions:
-        - 为每个代码文件攥写注释
-        - 按 acceptance 验证结果
+      - 为每个代码文件攥写注释
+      - 按 acceptance 验证结果
 
     acceptance:
 
       - 符合 io.code_comment_standard 的注释要求
       - 符合 io.code_comment_standard 的示例规范
+
+     - id: self_check
+    name: 规范对齐验证
+    actions:
+      - 读取当前流程的所有约束源（io 声明的规范文件）
+      - 读取上一步输出的文件
+      - 对比发现偏差（语气/路径/约束/覆盖）
+      - 发现偏差立即修正并重写文件
+      - 验证修正结果，最多3轮
+    acceptance: 生成物与约束源完全对齐

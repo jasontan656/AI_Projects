@@ -17,9 +17,6 @@ content: |-
         - traceback_setup.py
         - logs/
           - index.yaml
-        - tests/
-          - index.yaml
-          - test_basic.py
       - TaskQueue/
         - __init__.py
         - app.py
@@ -32,8 +29,51 @@ content: |-
           - index.yaml
           - mongo.py
     - SimulationTest/
-      - RichLogger.md
       - index.yaml
+      - RichLogger_testplan/
+        - README.md
+        - RichLogger.md
+        - RichLogger_testplan.md
+        - demo_beautiful_styles.py
+        - index.yaml
+        - run_demo.py
+        - run_local_simulation_tests.py
+        - logs/
+          - index.yaml
+        - results/
+          - index.yaml
+          - performance_report.json
+          - report.json
+        - test_cases/
+          - index.yaml
+        - tests/
+          - index.yaml
+          - stress_richlogger.py
+          - test_basic.py
+          - test_cli.py
+          - test_console_options.py
+          - test_logging_handlers.py
+          - test_notty.py
+          - test_progress_live_updates.py
+          - test_traceback_setup.py
+      - TaskQueue_testplan/
+        - TaskQueue.md
+        - TaskQueue_testplan.md
+        - index.yaml
+        - requirements.txt
+        - run_local_simulation_tests.py
+        - logs/
+          - index.yaml
+        - results/
+          - index.yaml
+          - report.html
+          - report.json
+        - test_cases/
+          - conftest.py
+          - index.yaml
+          - test_http_task_lifecycle.py
+          - test_mongo_indexes.py
+          - test_service_readiness.py
     - TempUtility/
       - index.yaml
       - VisaDBOperation/

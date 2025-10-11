@@ -18,3 +18,4 @@ python-dotenv
 prometheus-fastapi-instrumentator
 opentelemetry-api
 opentelemetry-sdk
+gevent

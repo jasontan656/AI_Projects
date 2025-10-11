@@ -10,7 +10,7 @@ test_strategy:
   principles:
     - 默认所有依赖服务已在本地启动。
     - 测试行为完全基于真实使用场景模拟。
-    - 是否允许外部API调用由业务场景自动判断。
+    - 允许外部API调用由业务场景。
     - 所有测试执行于固定路径：`D:\AI_Projects\Kobe\SimulationTest`
     - 每次执行自动创建隔离子目录，测试日志、结果与报告独立存放。
     - 所有命令均受强制超时保护（默认10秒）。
@@ -26,10 +26,19 @@ test_environment:
     - 每次执行创建带时间戳的结果子目录
     - 默认保留最近10轮完整结果集
   service_expectation:
-    - 测试开始前验证本地依赖服务端口状态
-    - 服务缺失时标记“失败”
+    - 测试前验证依赖服务可访问（RabbitMQ/Redis/MongoDB）
+    - 测试中验证服务状态变化（队列消息数/缓存键/文档插入）
+    - 服务不可用或状态异常时标记失败
   isolation_policy: "每次执行均隔离运行，防止结果污染"
   data_cleanup: "自动清理旧结果，仅保留10轮记录"
+
+test_toolstack:
+  framework: "pytest + pytest-asyncio"
+  timeout_control: "pytest-timeout（全局）+ timeout-decorator（局部）"
+  reporting: "pytest-json-report（结构化）+ pytest-html（可视化）"
+  monitoring: "psutil（资源）+ pytest-benchmark（性能）"
+  interaction: "click（CLI参数）+ readchar（倒计时输入）"
+  dependency_manifest: "requirements.txt 必须包含所有测试依赖"
 
 test_scope:
   categories:
@@ -37,8 +46,8 @@ test_scope:
         description: >
           从模块官方入口或系统公开端点发起测试，确保模块完整加载、执行与关闭。
         entry_rule:
-          - 禁止直接调用内部函数或绕过初始化
-          - 仅可通过公开接口、API、CLI或触发点调用
+          - 禁止 import 被测模块的任何函数或类
+          - 仅可通过 HTTP 端点、CLI 命令或消息队列调用
     - RealScenarioSimulation:
         description: >
           模拟真实使用流程，包括输入、处理中断、重试、异常、状态恢复。
@@ -124,6 +133,17 @@ reporting:
     - "error_trace.log"
   summary_output: "终端输出与JSON报告并行生成"
   retention_policy: "保留最近10次测试结果"
+  report_format:
+    json:
+      generator: "pytest-json-report"
+      required_fields: ["tests", "summary", "duration", "exit_code"]
+      custom_fields: ["resource_usage", "service_status", "timeout_events"]
+    html:
+      generator: "pytest-html"
+      include: "screenshots（如有）, logs excerpts, failure traces"
+  performance_metrics:
+    tool: "pytest-benchmark + psutil"
+    collect: ["execution_time", "cpu_percent", "memory_rss", "io_counters"]
 
 execution_notes:
   - 统一执行入口文件：`run_local_simulation_tests.py`

@@ -38,12 +38,13 @@ files:
     - "console.py"
     - "traceback_setup.py"
     - "cli.py"
-  test_locations:
-    - "tests/"
+    - "example_usage.py"
+    - "README.md"
+    - "styles.toml"
+  test_locations: []
 
 sub_indexes:
   - "logs/index.yaml"
-  - "tests/index.yaml"
 
 notes:
   - "仅描述 Kobe/SharedUtility/RichLogger 目录内事实"

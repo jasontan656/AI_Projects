@@ -30,7 +30,11 @@ pip install -r D:/AI_Projects/Kobe/Requirements.txt
 - 使用 uvicorn CLI（官方推荐，生产/开发统一）：
   ```powershell
   python -m uvicorn Kobe.main:app --host 127.0.0.1 --port 8000
+
+  celery -A Kobe.SharedUtility.TaskQueue:app worker -l info --pool=gevent --concurrency=100
   # 开发热重载（仅本地开发 run from D:\AI_Projects>）：
+
+
   python -m uvicorn Kobe.main:app --host $env:UVICORN_HOST --port $env:UVICORN_PORT --reload --log-level debug
   ```
 

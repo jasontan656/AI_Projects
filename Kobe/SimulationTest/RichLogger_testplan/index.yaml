@@ -1,0 +1,35 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SimulationTest/RichLogger_testplan"
+  last_updated: "2025-10-10"
+  owners:
+    - kobe-core
+  stability: "alpha"
+module:
+  name: "RichLogger_testplan"
+  summary: "占位目录索引"
+  responsibilities:
+    - "占位"
+  non_goals:
+    - "仅占位，不含实现"
+  entry_points:
+    - "run_local_simulation_tests.py"
+    - "run_demo.py"
+relations:
+  depends_on:
+    - "SharedUtility/RichLogger"
+  used_by: []
+  provides_apis: []
+  reasons:
+    - "目录存在性记录"
+files:
+  key_files:
+    - "demo_beautiful_styles.py"
+    - "RichLogger_testplan.md"
+    - "RichLogger.md"
+    - "README.md"
+  test_locations: []
+sub_indexes: []
+notes:
+  - "自动生成最小骨架"

@@ -2,6 +2,15 @@ meta:
   task: "Kobe 全库 index.yaml 占位创建 与 全量更新（分离流程）"
   date: "2025-10-10"
 
+exclude_patterns:
+  virtual_envs: ["venv", ".venv", "env", ".env", "virtualenv"]
+  dependencies: ["node_modules", "vendor", "packages", "bower_components"]
+  cache: ["__pycache__", ".pytest_cache", ".cache", ".ruff_cache", ".mypy_cache"]
+  build_output: ["dist", "build", "out", ".output", "target", "bin", "obj"]
+  ide_config: [".vscode", ".idea", ".vs", ".fleet"]
+  version_control: [".git", ".svn", ".hg"]
+  temp: [".temp", "tmp", ".tmp"]
+
 workflows:
   - name: "占位创建（仅补缺）"
     steps:
@@ -9,7 +18,9 @@ workflows:
         do: "切换到 D:\\AI_Projects 作为当前工作目录"
 
       - name: "扫描 Kobe 目录结构"
-        do: "遍历 Kobe/ 下的所有子目录（包含空目录），收集目录清单并包含 Kobe 根目录"
+        do: |
+          遍历 Kobe/ 下的所有子目录（包含空目录），收集目录清单并包含 Kobe 根目录。
+          扫描时显式排除 exclude_patterns 中定义的所有目录名称（任意层级匹配）。
 
       - name: "为缺失的 index.yaml 生成最小骨架"
         do: |
@@ -45,7 +56,9 @@ workflows:
         do: "切换到 D:\\AI_Projects 作为当前工作目录"
 
       - name: "收集所有 index.yaml"
-        do: "在 Kobe/** 中查找所有 index.yaml，形成文件清单"
+        do: |
+          在 Kobe/** 中查找所有 index.yaml，形成文件清单。
+          查找时应排除 exclude_patterns 定义的目录（避免扫描虚拟环境、依赖、缓存等无效区域）。
 
       - name: "更新 index.yaml"
         do: "语义理解并逐个读写将每个 index.yaml 的 内容同步至代码库现状(禁止一次性脚本)"

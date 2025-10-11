@@ -23,6 +23,8 @@ relations:
 files:
   key_files: []
   test_locations: []
-sub_indexes: []
+sub_indexes:
+  - "RichLogger_testplan/index.yaml"
+  - "TaskQueue_testplan/index.yaml"
 notes:
   - "当前无实现文件，仅占位"

@@ -31,7 +31,8 @@ class Settings:
     # Broker & backends
     rabbitmq_url: str = os.getenv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/")  # 使用环境变量 RABBITMQ_URL，缺省为本地 guest（libraries）
     redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")  # 使用环境变量 REDIS_URL，缺省第 0 库（libraries）
-    enable_result_backend: bool = _get_bool("ENABLE_RESULT_BACKEND", False)  # 使用模块函数 _get_bool 解析布尔开关（modules）
+    # 默认开启结果后端（可被环境变量覆盖为 false），便于开箱即用
+    enable_result_backend: bool = _get_bool("ENABLE_RESULT_BACKEND", True)  # 使用模块函数 _get_bool 解析布尔开关（modules）
 
     # Celery worker & message semantics
     default_queue: str = os.getenv("CELERY_DEFAULT_QUEUE", "q.tasks.default")  # 默认队列名（assignment）

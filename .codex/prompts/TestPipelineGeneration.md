@@ -5,9 +5,10 @@ workflow:
 
 
 objectives:
-  - 将测试计划开发文档内容功能需求拆解为最小可执行开发步骤的YAML格式指令集
-  - 确保测试计划开发内容都在D:/AI_Projects/Kobe/SimulationTest/${foldername}中创建保存
-
+  - 读取并解析测试计划开发文档内容
+  - 编写包含服务验证、HTTP调用、状态查询、结果断言的完整测试步骤的YAML指令集
+  - 在生成文件内声明 "严格禁止在 SimulationTest 外部目录创建任何测试相关文件"
+  - 在生成文件内声明 "所有测试脚本、结果、日志必须在 ${foldername} 子目录的规范结构内"
 repo_root: 'D:/AI_Projects'
 
 params:
@@ -60,47 +61,63 @@ steps:
     path: ${OUTPUT_DIR_PATH}
     target: ${target_file_name} 
     actions:
-      - 写入完整最小可执行开发步骤的YAML格式指令集
+      - 写入完整原子级可执行开发测试步骤的YAML格式指令集
     acceptance:
       - "任务文件路径对齐"
       - "输出为合法 UTF-8 YAML（无 BOM）"
       - "内容符合 io.dev_constitution io.simulation_testing_constitution 规范、与官方最佳实践一致"
       - "须包含需求文档解析得到的功能、结构、接口与 DoD"
       - 可直接接入 Codex CLI / Cursor AGENTS / Cognitive Workflow
+      - "所有文件创建路径必须以 D:/AI_Projects/Kobe/SimulationTest/${foldername}/ 开头"
+      - "禁止在 SimulationTest 外部创建任何测试文件"
+      - "子目录结构必须包含: test_cases/, results/, logs/"
     示例输出:
-        Step 1:
-          title: 初始化用户模块目录结构
-          sub_steps:
-           - 创建 backend/modules/auth 目录
-           - 创建 frontend/components/LoginForm.vue 文件
-           - 创建 shared/utils/token.js 工具模块
+      Step 1:
+      title: 初始化仿真测试工作区
+      sub_steps:
+       - 创建目录 D:/AI_Projects/Kobe/SimulationTest/${foldername}
+       - 创建目录 D:/AI_Projects/Kobe/SimulationTest/${foldername}/test_cases
+       - 创建目录 D:/AI_Projects/Kobe/SimulationTest/${foldername}/results
+       - 创建目录 D:/AI_Projects/Kobe/SimulationTest/${foldername}/logs
+       - 写入 README.md 到工作区说明测试目的
 
-        Step 2:
-          title: 实现邮箱验证码注册逻辑
-          sub_steps:
-           - 在 backend/modules/auth/service.py 中定义 send_verification_code(email)
-           - 实现验证码生成逻辑，使用 random + redis 存储
-           - 在 controller 中添加 POST /auth/send-code 接口
+      Step 1.5:
+      title: 生成测试依赖清单
+      sub_steps:
+       - 新建 D:/AI_Projects/Kobe/SimulationTest/${foldername}/requirements.txt
+       - 包含: pytest, pytest-asyncio, pytest-timeout, pytest-json-report, pytest-html
+       - 包含: requests, redis, pymongo, psutil, click, structlog, pyyaml
+       - 包含: timeout-decorator, pytest-benchmark（按需）
 
-        Step 3:
-          title: 实现密码登录接口
-          sub_steps:
-           - 定义 login_user(email, password) 方法
-           - 验证用户身份，返回 JWT token
-           - 添加 POST /auth/login 接口并接入验证逻辑
+      Step 2:
+      title: 编写基础测试用例
+      sub_steps:
+       - 新建 test_basic.py: 禁止 import 被测模块，使用 requests 调用 HTTP 端点
+       - 新建 test_integration.py: 使用 redis/pymongo 客户端验证中间件状态变化
+       - 新建 test_stress.py: 并发调用 HTTP 端点并统计响应时间
+      Step 3:
+      title: 实现测试执行器
+      sub_steps:
+       - 新建文件 D:/AI_Projects/Kobe/SimulationTest/${foldername}/run_local_simulation_tests.py
+       - 使用 pytest 作为测试运行器，支持 --scenario（pytest -k）、--all（pytest）
+       - 使用 click 实现 CLI 参数解析
+       - 使用 readchar + threading.Timer 实现30秒倒计时询问
+       - 使用 pytest-json-report 输出到 results/report.json
+       - 使用 pytest-html 输出到 results/report.html
 
-        Step 4:
-          title: 构建登录态验证中间件
-          sub_steps:
-           - 在 shared/middleware/token_auth.py 中定义 auth_required 装饰器
-           - 在需要保护的接口上添加装饰器
-           - 在错误情况下统一返回 401 Unauthorized
+      Step 4:
+      title: 配置日志记录
+      sub_steps:
+       - 配置 debug.log 输出到 D:/AI_Projects/Kobe/SimulationTest/${foldername}/logs/debug.log
+       - 配置 error.log 输出到 D:/AI_Projects/Kobe/SimulationTest/${foldername}/logs/error.log
+       - 确保所有日志为 UTF-8 编码
 
-        Step 5:
-          title: 构建前端登录交互逻辑
-          sub_steps:
-           - 在 LoginForm.vue 中添加 email、password 输入框
-           - 添加验证码输入框与发送按钮
-           - 使用 axios 向后端发起登录请求
-           - 登录成功后将 token 存入 localStorage
-           - 登录失败展示错误信息
+  - id: self_check
+    name: 规范对齐验证
+    actions:
+      - 读取当前流程的所有约束源（io 声明的规范文件）
+      - 读取上一步输出的文件
+      - 对比发现偏差（语气/路径/约束/覆盖）
+      - 发现偏差立即修正并重写文件
+      - 验证修正结果，最多3轮
+    acceptance: 生成物与约束源完全对齐

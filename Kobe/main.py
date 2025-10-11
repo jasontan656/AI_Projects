@@ -69,6 +69,19 @@ def _bootstrap_logging_once() -> None:
 # Perform bootstrap on import so both CLI and worker modes benefit uniformly.
 _bootstrap_logging_once()
 
+# Pydantic v1/v2 compatibility shim: ensure BaseModel.model_dump exists
+try:
+    from pydantic import BaseModel as _PydBase  # type: ignore
+
+    if not hasattr(_PydBase, "model_dump"):
+        def _model_dump(self, *args, **kwargs):  # type: ignore[no-redef]
+            return self.dict(*args, **kwargs)
+
+        setattr(_PydBase, "model_dump", _model_dump)  # type: ignore[attr-defined]
+except Exception:
+    # Keep app importable even if pydantic is missing or incompatible
+    pass
+
 # Include API routers after logging is ready so route import side-effects are logged
 try:
     from .routers.task import router as task_router  # noqa: WPS433 - local import intended
