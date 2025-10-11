@@ -78,6 +78,9 @@ content: |-
     - TempUtility/
       - index.yaml
       - VisaDBOperation/
+        - VisaDatabseDietPlan.md
+        - field_ops.py
+        - field_samples.json
         - index.yaml
     - routers/
       - __init__.py

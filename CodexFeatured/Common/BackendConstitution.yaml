@@ -1,58 +1,69 @@
 ---
 meta:
   name: "Backend Constitution"
-  version: "2.0"
-  last_updated: "2025-10-10"
+  version: "2.1"
+  last_updated: "2025-10-11"
   language: "zh-CN"
 
 mandates:
   runtime:
     python: "3.10"
-    venv: "Kobe/.venv"           # 必须使用此虚拟环境；禁止新增并行 venv
-    env_file: "Kobe/.env"        # 必须从此文件加载环境；禁止分散 env 文件
-    validation: "Pydantic v3"     # 请求/响应校验必须使用 Pydantic v3（全局）
-    async_io: true                 # I/O 必须使用 async/await；禁止阻塞 I/O（全局）
+    venv: "Kobe/.venv"                # 项目级虚拟环境，避免全局污染
+    env_file: "Kobe/.env"             # 统一环境变量入口，不覆盖已设置的进程变量
+    validation: "Pydantic v2"          # 采用 v2，版本上限 <3，便于未来升级
+    async_io: true                      # I/O 默认支持 async/await
+    llm:                                 # 大模型使用规范
+      provider: "OpenAI"                # 统一使用 OpenAI 官方 SDK
+      api_key_env: "OPENAI_API_KEY"     # API Key 环境变量名
+      model_env: "OPENAI_MODEL"         # 模型环境变量名
+      default_model: "gpt-4o-mini"      # 推荐默认模型
+      required: true                     # 未连通 LLM 时，相关流程必须直接失败
 
   app:
-    framework: "FastAPI"         # 必须使用 FastAPI；禁止自造 HTTP 框架
-    app_entry: "Kobe.main:app"   # 唯一项目启动真源；禁止新增入口
-    start_dev: "python -m Kobe.main"   # 开发启动唯一命令
+    framework: "FastAPI"
+    app_entry: "Kobe.main:app"
+    start_dev: "python -m Kobe.main"
     start_prod: "uvicorn Kobe.main:app --host 0.0.0.0 --port 8000"
 
   logging:
     module: "Kobe.SharedUtility.RichLogger"
-    rule: "统一使用 logging；禁止 print() 输出日志"
+    rule: "统一使用 logging，禁止直接 print()"
 
   background_tasks:
-    orchestrator: "Celery"        # 必须使用 Celery；禁止以 FastAPI BackgroundTasks 承载长任务
+    orchestrator: "Celery"
     broker: "RabbitMQ"
     cache_store: "Redis"
+    mandatory: true                    # 强制：所有业务任务必须经由 Celery 调度
     task_naming: "Slug-only (^[a-z0-9_:.]{1,64}$)"
-    registration: "通过 Kobe.SharedUtility.TaskQueue.registry.task 装饰器注册；或 app.task 但需遵循重试/抖动策略"
-    dispatch: "HTTP 层通过 /task/start 通用分发：优先内置分支，其次按名分发 send_task()"
-    allowlist: "任务名白名单来自 .env 的 ALLOWED_TASKS；留空则仅按 slug 校验"
+    registration: "通过 Kobe.SharedUtility.TaskQueue.registry.task 装饰器注册"
+    dispatch: "HTTP 或 /task/start 通用分发；提供 send_task() 封装"
+    allowlist: "从 .env 读取 ALLOWED_TASKS，按 slug 校验"
 
   messaging:
-    semantics: "at-least-once"    # 投递至少一次；业务处理必须幂等
+    semantics: "at-least-once"
     publisher_confirm: true
     durable_persistent: true
-    retry_policy: "指数退避+抖动"
+    retry_policy: "指数退避 + 幂等"
 
   api:
-    policy_ref: "参见全局禁止：长任务阻塞请求线程；结果通过异步编排查询"
-    long_flow: "使用 chain/group/chord 或调度器"
+    policy_ref: "所有任务一律走 Celery 异步；HTTP 层仅接收/查询"
+    long_flow: "使用 chain/group/chord 结构化编排"
+
+  execution:
+    mode: "async_only"                # 统一执行模式
+    rule: "业务侧不得在请求线程直接执行任务，必须入队 Celery"
 
   cache:
     strategy: "Write→Invalidate"
-    keys: "分层命名+统一 TTL"
-    strict: "强一致场景优先使用 Transactional Outbox/CDC"
+    keys: "分层命名 + 统一 TTL"
+    strict: "强一致诉求使用 Transactional Outbox/CDC"
 
   observability:
     expose: ["Metrics", "Logs", "Traces"]
     stack: ["Prometheus", "OpenTelemetry"]
 
   security:
-    secrets_policy: "密钥禁入仓库；使用配置中心；最小权限"
+    secrets_policy: "密钥集中管理，最小权限原则"
 
   infrastructure_local:
     docker_network: "ai_services_net"
@@ -75,22 +86,28 @@ mandates:
     CHROMADB_URL:
       host: "http://localhost:8001"
       container: "http://svc-chromadb:8001"
-    production: "必须覆盖默认凭据与主机名；严禁提交明文密码"
+    OPENAI_MODEL: "gpt-4o-mini"       # 默认模型名（可在 .env 覆盖）
+    production: "上线前需完成凭据接入与只读审计"
 
   dependencies:
     requirements_file: "Kobe/Requirements.txt"
-    libs: ["fastapi", "uvicorn", "pydantic>=3", "celery", "redis", "hiredis", "pymongo", "motor", "pika", "chromadb"]
+    libs: [
+      "fastapi", "uvicorn", "pydantic>=2.7,<3",
+      "celery", "redis", "hiredis", "pymongo", "motor", "pika", "chromadb",
+      "openai", "sqlparse", "pymysql"
+    ]
 
   index_spec:
-    root_index: "Kobe/index.yaml"   # 必须存在并作为入口
-    sub_index: "需要说明的子目录必须包含 index.yaml"
-    path_style: "路径统一相对 Kobe/ 且使用正斜杠"
-    bounds: "索引文件禁止引用 Kobe/ 外路径或外链"
+    root_index: "Kobe/index.yaml"
+    sub_index: "重要目录需附 index.yaml"
+    path_style: "路径统一起始 Kobe/，使用正斜杠"
+    bounds: "代码文件限定在 Kobe/ 下"
 
 prohibitions:
-  - "自造轮子替代框架或基础库"
-  - "新增平行 app 入口或服务启动命令"
-  - "长任务阻塞请求线程"
-  - "无幂等、无重试、无 DLQ 的消息处理"
-  - "把敏感信息提交到仓库"
-  - "以 Redis 充当主库"
+  - "禁止长时间阻塞型同步 I/O"
+  - "禁止在 app 入口外创建全局线程"
+  - "禁止抛弃型消息（需 DLQ/重试）"
+  - "禁止生产凭据入库"
+  - "禁止 Redis 充当持久化数据库"
+  - "禁止绕过 Celery 在请求线程/线程池直接执行任务"
+

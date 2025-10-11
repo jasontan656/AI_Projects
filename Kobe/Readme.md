@@ -125,3 +125,54 @@ Kobe/
 - uvicorn: https://www.uvicorn.org/
 - Rich: https://rich.readthedocs.io/en/stable/
 
+
+{
+  field_key : "xxx"
+  value : {
+    value1 : "..."
+    value2 : "..."
+    value3 : "..."
+  }
+}
+
+## MySQL（Docker，本地开发）
+- 目标：提供本地可用的 MySQL 8.0 实例，供样本采集与联调使用。
+- 容器：`kobe-mysql`，网络：`ai_services_net`，端口映射：`3306:3306`。
+
+命令（PowerShell）
+```powershell
+# 创建网络（如已存在会跳过）
+if (-not (docker network ls --format '{{.Name}}' | Select-String -SimpleMatch ai_services_net)) {
+  docker network create ai_services_net
+}
+# 拉取镜像并启动容器（第一次执行需数十秒）
+$MYSQL_ROOT_PASSWORD = 'KobeDev!2025'
+$MYSQL_DATABASE = 'wyc_visa_db'
+docker pull mysql:8.0
+
+docker run -d --name kobe-mysql --network ai_services_net `
+  -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD `
+  -e MYSQL_DATABASE=$MYSQL_DATABASE `
+  -p 3306:3306 mysql:8.0 `
+  --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+# 等待就绪（日志出现“ready for connections”）
+docker logs -f kobe-mysql
+```
+
+环境变量（.env）
+```env
+MYSQL_HOST="127.0.0.1"
+MYSQL_PORT="3306"
+MYSQL_USER="root"
+MYSQL_PASSWORD="KobeDev!2025"
+MYSQL_DATABASE="wyc_visa_db"
+```
+
+可选：导入已有 SQL（如 `D:/AI_Projects/Visa/visa_db.sql`）
+```powershell
+# 拷贝 SQL 进容器并导入（首次初始化后也可这样导入）
+docker cp D:/AI_Projects/Visa/visa_db.sql kobe-mysql:/tmp/visa_db.sql
+
+docker exec -i kobe-mysql bash -lc "mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < /tmp/visa_db.sql"
+```

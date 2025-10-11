@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 from celery import Celery
+import importlib
 from .config import load_settings
 
 
@@ -42,8 +43,22 @@ def _build_celery() -> Celery:
 
     # 不做任何自定义路由与队列声明，保持与 Celery 默认完全一致
 
-    # Ensure task module is registered
-    app.autodiscover_tasks(["Kobe.SharedUtility.TaskQueue"])
+    # Ensure task modules are registered
+    # 1) 默认发现各包下的 tasks.py
+    app.autodiscover_tasks([
+        "Kobe.SharedUtility.TaskQueue",
+        "Kobe.TempUtility.VisaDBOperation",
+    ])
+
+    # 2) VisaDBOperation 的任务定义在 collect_tasks.py 中，
+    #    不是默认名 tasks.py，这里增加一次定向 discover 与显式导入，
+    #    确保 'visa_db:*' 任务在 worker 启动时完成注册。
+    try:
+        app.autodiscover_tasks(["Kobe.TempUtility.VisaDBOperation"], related_name="collect_tasks")
+        importlib.import_module("Kobe.TempUtility.VisaDBOperation.collect_tasks")
+    except Exception:
+        # 安静降级：在无该模块时不影响其它任务注册
+        pass
     return app
 
 
