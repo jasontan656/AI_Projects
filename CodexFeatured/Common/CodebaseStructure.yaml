@@ -78,10 +78,17 @@ content: |-
     - TempUtility/
       - index.yaml
       - VisaDBOperation/
+        - README.md
+        - README_collect.md
         - VisaDatabseDietPlan.md
+        - collect_tasks.py
+        - collect_values.py
         - field_ops.py
         - field_samples.json
         - index.yaml
+        - run_collect_values.py
+        - run_field_ops.py
+        - tasks.py
     - routers/
       - __init__.py
       - index.yaml
