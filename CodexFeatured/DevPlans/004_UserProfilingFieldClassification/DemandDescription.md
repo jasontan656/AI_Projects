@@ -16,7 +16,7 @@
   - 业务梳理：帮助业务人员理解各类字段与画像、服务、群组运营的关系。
 - 输入与输出
   - 输入：本地 SQL 转储文件（路径固定为 D:/AI_Projects/Visa/visa_db.sql），无需连接真实数据库。
-  - 输出：一份可审计、可复用的 Markdown 文档，附带字段清单、分类结果与文字理由；可选生成中间 JSON（字段采样与判定原始数据）。
+  - 输出：一份可审计、可复用的 Markdown 文档，附带字段清单、分类结果与文字理由；必须生成中间 JSON（字段采样与判定原始数据）。
 - 运行方式与频率
   - 运行方式：按需手动触发，完成一次性扫描与判定。
   - 频率：在数据结构发生较大变更时再次运行；不要求长期常驻。
@@ -105,11 +105,13 @@
   - 输入：D:/AI_Projects/Visa/visa_db.sql
   - 中间与输出建议根路径：D:/AI_Projects/Kobe/TempUtility/VisaDBOperation
   - 需求文档输出路径：D:/AI_Projects/CodexFeatured/DevPlans/004_UserProfilingFieldClassification/DemandDescription.md
+  - 最终归档文档路径：D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/VisaDatabseDietPlan.md
 
 ## 11. 交付与验收标准
 - 交付物
   - Markdown 文档（本文件）：包含字段分类目录、统计概览、明细判定与理由、需审核清单、运行报告。
-  - 可选：中间 JSON 文件，记录每字段的代表性值与原始判定结果，用于审计复核。
+  - 中间 JSON 文件（必有）：记录每字段的代表性值与原始判定结果，用于审计复核与断点续作。
+  - 最终归档 Markdown 文档：写入至 D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/VisaDatabseDietPlan.md，用于后续业务复核与归档。
 - 验收清单（可测试/可验证）
   - 文档覆盖所有可解析字段，字段覆盖率 ≥ 98%。
   - 每个字段具备明确的分类结论与 30-50 字中文理由。
@@ -120,41 +122,59 @@
 
 
 
-## 12. 异步判定流程与 JSON 落库（新增）
-- 流程概述
-  - 触发：按“字段键名”收集 30–50 条最小脱敏样本，构造成请求负载。
-  - 提交：调用 REST 接口创建任务，后台通过 Celery 执行判定。
-  - 查询：客户端轮询或回调获取任务状态与结果，落库指的是存储分析结果到D:\AI_Projects\Kobe\TempUtility\VisaDBOperation\DatabaseDietPlan.md。
-- 相关模块与接口
-  - 提交接口：`Kobe/routers/task.py` 提供 `POST /task/start`（创建任务，返回 task_id）。
-  - 查询接口：`GET /task/status/{task_id}`、`GET /task/result/{task_id}`。
-  - 异步执行：`Kobe/SharedUtility/TaskQueue/tasks.py` 定义判定任务；`app.py` 提供 Celery 实例。
-  - 数据持久化：`Kobe/SharedUtility/TaskQueue/repository/mongo.py` 提供 `coll_raw_payload`、`coll_task_result` 集合与索引。
-- 判定负载（请求）
-  - 键名：`field_key`（string，必填，PascalCase 或 snake_case 原样保留）。
-  - 样本：`samples`（array[object|string]，长度 30–50，已脱敏的代表性取值或结构体）。
-  - 约束：不得包含姓名、身份证号、手机号、邮箱、详细地址等可识别信息（PII）。
-- 结果 JSON 模式（示例）
+## 12. 字段抽取 JSON 与 4o mini 校验流程（新增与强化）
+- 流程总览
+  - 步骤 A（解析）：解析 D:/AI_Projects/Visa/visa_db.sql，枚举“库-表-字段”。
+  - 步骤 B（采样）：为每字段采样 0–20 条最小、已脱敏代表性值，尽量覆盖多样化/边界值。
+  - 步骤 C（落 JSON）：将抽取结果写入中间 JSON 文件，作为统一判定输入与审计凭据。
+  - 步骤 D（调用 4o mini）：按“字段键名 + 样本字段内容”构造请求，调用大模型 4o mini 完成“是否属于画像字段”的校验。
+  - 步骤 E（归并与出库）：按字段回收 4o mini 返回的 `verify` 字段值（"true"|"false"|"verify"），连同简短理由回写最终文档 D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/VisaDatabseDietPlan.md。
+  - 步骤 F（断点续作）：对已判定的 `field_key + sample_hash` 进行缓存复用，避免重复请求与费用浪费。
+- 中间 JSON（输入/审计）
+  - 文件路径：D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/field_samples.json
+  - 文件结构（每行一条，或单文件数组，二选一）
+  ```json
+  {
+    "database": "visa_db",
+    "table": "users",
+    "field_key": "UserHomeAddress",
+    "field_path": "visa_db.users.UserHomeAddress",
+    "samples": ["xx省xx市xx区…", "路名…门牌…"],
+    "sample_count": 2,
+    "pii_masked": true,
+    "sampling_method": "topk_diverse|random_boundaries",
+    "sample_hash": "sha256:...",
+    "created_at": "2025-10-10T12:00:00Z",
+    "trace_id": "..."
+  }
+  ```
+- 4o mini 请求与响应
+  - 请求负载（按字段逐条发送）
   ```json
   {
     "field_key": "UserHomeAddress",
-    "label": "True|Boundary|False",
-    "confidence": 0.92,
-    "reasoning": "简要判定依据（不含原始PII）",
-    "samples_used": 40,
-    "sample_hash": "sha256:...",
-    "created_at": "2025-10-10T12:00:00Z",
-    "trace_id": "...",
-    "task_id": "..."
+    "samples": ["xx省xx市xx区…", "路名…门牌…"],
+    "context": "判断该键名是否属于用户画像字段，仅返回 verify= true|false|verify，以及<=40字中文理由。禁止输出PII。"
   }
   ```
-- 幂等与重试
-  - 去重：同一 `field_key` + `sample_hash` 的重复请求复用历史结论（阈值可配置）。
-  - 重试：遵循“至少一次投递”语义与退避策略；任务超时自动标记并可人工重试。
-- 可观测性
-  - 统一日志：使用 `Kobe/SharedUtility/RichLogger` 初始化与异常堆栈渲染。
-  - 指标追踪：暴露任务计数、耗时分位、失败原因 TopN；兼容 Prometheus/OpenTelemetry。
-- 安全与合规
-  - 最小化采样：仅保留完成判定所需的最小字段与取值摘要。
-  - 数据留存：结果与样本摘要分别设置 TTL；支持按 `trace_id` 全链路审计。
+  - 响应规范（严格约定）
+  ```json
+  {
+    "verify": "true|false|verify",
+    "reason": "中文简要判定依据（不含原始PII）",
+    "confidence": 0.0
+  }
+  ```
+  - 说明：`verify` 为字符串枚举——true=与画像相关、false=无关、verify=需人工复核。
+- 最终文档回写
+  - 目标文件：D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/VisaDatabseDietPlan.md（若不存在则新建）。
+  - 写入内容（按表聚合）：字段名、`verify`、简要理由、示例样本（已脱敏、可选）。
+  - 统计输出：各分类占比（true/verify/false）、解析与判定用时、失败与重试次数。
+- 幂等、重试与并发
+  - 缓存键：`field_key + sample_hash` 命中即复用历史结论。
+  - 退避重试：调用 4o mini 超时/限流时指数退避，最大重试次数可配置。
+  - 并发速率：控制每分钟请求量，优先保证稳定性与成本可控。
+- 可观测与合规
+  - 日志：接入 `Kobe/SharedUtility/RichLogger`，记录 trace_id、耗时、错误与重试。
+  - 隐私：所有样本在入模前必须脱敏；最终文档禁止展示原始 PII。
 

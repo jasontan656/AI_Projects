@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Demo Celery tasks used by the initial setup.
+"""Baseline Celery tasks used by the initial setup.
 
-These showcase long-running I/O and a sharded job pattern with retries.
+Showcases long-running I/O and a sharded job pattern with retries.
+Names are generic to serve as reusable templates.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from .app import app
     retry_jitter=True,
     max_retries=5,
 )
-def demo_long_io(self, duration_sec: int = 2, fail_rate: float = 0.0, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:  # 使用函数定义声明任务入口并返回字典（builtins）
+def long_io(self, duration_sec: int = 2, fail_rate: float = 0.0, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:  # 使用函数定义声明任务入口并返回字典（builtins）
     """Simulate long I/O with optional transient errors.
 
     Args:
@@ -38,7 +39,7 @@ def demo_long_io(self, duration_sec: int = 2, fail_rate: float = 0.0, payload: D
 
     time.sleep(max(0, int(duration_sec)))  # 使用标准库函数 time.sleep 休眠指定秒数；确保非负（libraries/builtins）
     return {
-        "kind": "demo_long_io",
+        "kind": "long_io",
         "slept": int(duration_sec),
         "payload": payload,
     }
@@ -51,7 +52,7 @@ def demo_long_io(self, duration_sec: int = 2, fail_rate: float = 0.0, payload: D
     retry_jitter=True,
     max_retries=3,
 )
-def demo_sharded_job(self, shard_key: str, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:  # 使用函数定义声明任务入口（builtins）
+def sharded_job(self, shard_key: str, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:  # 使用函数定义声明任务入口（builtins）
     """Simulate a small sharded job using a deterministic shard key.
 
     This is a single-task demo; full frontier/lease orchestration is a later step.
@@ -62,7 +63,7 @@ def demo_sharded_job(self, shard_key: str, payload: Dict[str, Any] | None = None
     # Do pseudo work
     time.sleep(1)  # 模拟一小段 I/O（libraries）
     return {
-        "kind": "demo_sharded_job",
+        "kind": "sharded_job",
         "shard_key": shard_key,
         "partition": int(partition),
         "payload": payload,

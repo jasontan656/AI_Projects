@@ -23,6 +23,7 @@ content: |-
         - config.py
         - index.yaml
         - readme.md
+        - registry.py
         - schemas.py
         - tasks.py
         - repository/

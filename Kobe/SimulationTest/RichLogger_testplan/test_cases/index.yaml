@@ -2,7 +2,7 @@ meta:
   version: "1.0"
   schema_version: "1"
   path: "Kobe/SimulationTest/RichLogger_testplan/test_cases"
-  last_updated: "2025-10-10"
+  last_updated: "2025-10-11"
   owners:
     - kobe-core
   stability: "alpha"
@@ -26,4 +26,3 @@ files:
 sub_indexes: []
 notes:
   - "自动生成最小骨架"
-

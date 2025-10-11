@@ -2,13 +2,13 @@ meta:
   version: "1.0"
   schema_version: "1"
   path: Kobe/routers
-  last_updated: 2025-10-10
+  last_updated: 2025-10-11
   owners:
     - kobe-core
   stability: alpha
 module:
   name: routers
-  summary: 任务编排相关的 FastAPI 路由集合
+  summary: 任务编排相关的 FastAPI 路由集合（支持按名通用分发）
   responsibilities:
     - 提供任务启动、状态、结果查询等 REST 接口
   non_goals:
@@ -24,6 +24,9 @@ relations:
     - "task.py: POST /task/start"
     - "task.py: GET /task/status/{task_id}"
     - "task.py: GET /task/result/{task_id}"
+  config:
+    env:
+      - "ALLOWED_TASKS: 逗号分隔的允许任务名；留空表示仅按 slug 校验"
   reasons:
     - 暴露通过 Celery 执行异步任务的统一接口
 files:

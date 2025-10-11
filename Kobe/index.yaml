@@ -18,14 +18,14 @@ relations:
   - SharedUtility/TaskQueue
   reasons:
   - 统一日志组件，便于上层模块一致接入
-  - 提供任务队列能力支撑异步作业
+  - 提供任务队列能力支撑异步作业（通过通用注册/按名分发实现插件化扩展）
 meta:
   owners:
   - kobe-core
   path: Kobe
   version: "1.0"
   schema_version: "1"
-  last_updated: 2025-10-10
+  last_updated: 2025-10-11
   stability: beta
 sub_indexes:
 - routers/index.yaml
@@ -41,4 +41,5 @@ files:
 notes:
 - 本索引仅描述 Kobe/ 内部结构与关系，不引用目录外内容
 - 所有路径使用相对 Kobe 的正斜杠形式
+ - 环境文件位置固定为 `Kobe/.env`，关键项：`ALLOWED_TASKS` 控制任务名白名单（可留空）
 

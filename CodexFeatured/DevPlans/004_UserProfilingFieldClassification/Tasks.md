@@ -1,181 +1,147 @@
-meta:
+Tech_Decisions:
+  intent: "UserProfilingFieldClassification"
   count_3d: "004"
-  intent_title_2_4: "UserProfilingFieldClassification"
   target_dir: "D:/AI_Projects/CodexFeatured/DevPlans/004_UserProfilingFieldClassification"
-  target_demand_path: "D:/AI_Projects/CodexFeatured/DevPlans/004_UserProfilingFieldClassification/DemandDescription.md"
-  generated_at: "2025-10-11T00:00:00Z"
-  author: "DevPipelineGeneration"
-
-tech_decisions:
-  复用模块清单:
+  standards:
+    - "遵循 CodexFeatured/Common/BackendConstitution.yaml（Python 3.10，异步 I/O 优先，统一日志 RichLogger）"
+    - "遵循 CodexFeatured/Common/CodeCommentStandard.yaml（模块 docstring + 叙事式行内注释）"
+    - "参考 CodexFeatured/Common/BestPractise.yaml 官方链接进行依赖选型与验证"
+  reuse_modules:
     - module: "Kobe/SharedUtility/RichLogger"
-      provides:
-        - "__init__.py: init_logging()"
-        - "__init__.py: install_traceback()"
-        - "__init__.py: get_console()"
-      usage: "统一初始化日志与异常堆栈渲染，用于扫描与判定流程。"
-      调用方式示例: "from Kobe.SharedUtility.RichLogger import init_logging, install_traceback; init_logging(); install_traceback()"
+      apis: ["init_logging", "install_traceback", "get_console"]
+      usage_example: |
+        from Kobe.SharedUtility.RichLogger import init_logging, install_traceback
+        install_traceback()
+        init_logging(level="INFO")
     - module: "Kobe/SharedUtility/TaskQueue"
-      provides:
-        - "app.py: app (Celery 应用实例)"
-        - "tasks.py: demo_long_io, demo_sharded_job (参考示例)"
-        - "schemas.py: TaskStart/TaskStatus/TaskResult (Pydantic v3)"
-      usage: "复用 Celery 应用与任务路由模式，新增本需求的判定任务。"
-      调用方式示例: "from Kobe.SharedUtility.TaskQueue.app import app as celery_app; r=celery_app.AsyncResult(task_id); r.ready()"
-    - module: "Kobe/SharedUtility/TaskQueue/repository/mongo.py"
-      provides:
-        - "coll_raw_payload()"
-        - "coll_task_result()"
-        - "ensure_indexes()"
-      usage: "落库存放原始提交载荷与判定结果，构建必要索引。"
-      调用方式示例: "from Kobe.SharedUtility.TaskQueue.repository.mongo import coll_raw_payload, coll_task_result; coll_raw_payload().insert_one({...})"
-    - module: "Kobe/routers/task.py"
-      provides:
-        - "POST /task/start"
-        - "GET  /task/status/{task_id}"
-        - "GET  /task/result/{task_id}"
-      usage: "复用现有任务提交/查询接口，扩展支持本需求 task 类型。"
-
-  新增依赖清单:
-    - name: "sqlglot"
-      version: ">=23"
-      reason: "跨方言 SQL 解析（DDL/INSERT），可靠提取表/列与样本值。官方文档与社区活跃度验证。"
-    - name: "orjson"
-      version: ">=3.9"
-      reason: "高性能 JSON 编解码，用于大体量字段样本的序列化与落库。"
-
-  架构决策:
-    - "同步解析 + 异步判定：本地一次性解析 SQL 转储产出字段与样本（同步 I/O），分类判定与落库通过 Celery 异步执行，符合 BackendConstitution 的后台任务约束。"
-    - "I/O 模型：遵循 BackendConstitution，HTTP 层 FastAPI；后台 Celery + RabbitMQ；可选 Redis 作为 result backend。"
-    - "数据存储：MongoDB 用于存放原始提交与判定结果集合（RawPayload/TaskResult），结果文档与可审计 JSON 保留样本哈希与摘要（不落原始 PII）。"
-    - "注释与风格：代码内遵循 CodeCommentStandard.yaml 的顺序化可读注释规范；接口模型使用 Pydantic v2（与现有代码一致，若宪章升级至 v3 再评估迁移）。"
-
-scope:
-  功能:
-    - "解析 D:/AI_Projects/Visa/visa_db.sql，枚举库-表-字段并抽取 30-50 个代表性样本"
-    - "对字段进行 True|Boundary|False 判定，输出理由、置信度与样本摘要"
-    - "生成统一结构的 Markdown 说明文档与可审计 JSON（可选）"
-    - "提供异步提交/查询能力：复用 /task/start|/task/status|/task/result 接口"
-  结构:
-    - "新增工具代码位于: Kobe/TempUtility/VisaDBOperation/*.py（目录已存在，禁止新建编号目录）"
-    - "复用队列与仓储: Kobe/SharedUtility/TaskQueue/*"
-  接口:
-    - submit: "POST /task/start (task='user_profile_classify', payload={sql_path, options...})"
-    - query:  "GET /task/status/{task_id}, GET /task/result/{task_id}"
-  DoD:
-    - "在目标目录生成 Markdown 文档，包含字段清单、分类结果、理由、样本摘要"
-    - "在 Mongo 中可查询到 RawPayload 与 TaskResult 两类文档，索引生效"
-    - "异步任务可通过现有路由提交与查询，错误可观测（日志/指标）"
-    - "无原始 PII 落库；仅存样本散列与去标识摘要"
+      decision: "本需求为一次性离线工具，默认不引入队列。若后续需要批量/长流程，可复用 registry.send_task 提交分类作业。"
+      usage_example: |
+        from Kobe.SharedUtility.TaskQueue.registry import send_task
+        send_task("visa.field_classify", payload={"field_key": "UserHomeAddress"})
+  new_dependencies:
+    - name: "openai"
+      version: ">=1.50.0"
+      reason: "官方 Python SDK，支持 gpt-4o-mini 等模型，用于小样本字段画像真/假/人工复核(verify)三值分类。"
+      official_refs:
+        - "https://platform.openai.com/docs/api-reference"
+        - "https://github.com/openai/openai-python"
+    - name: "sqlparse"
+      version: ">=0.5.0"
+      reason: "解析 SQL DDL（CREATE TABLE）以提取表/字段结构，纯 Python、零依赖。"
+      official_refs:
+        - "https://sqlparse.readthedocs.io/"
+    - name: "pydantic"
+      version: ">=3.0.0"
+      reason: "输入/输出与中间 JSON 的数据模型校验，满足 BackendConstitution 对 v3 的约束。"
+  architecture:
+    - "同步脚本为主 + 受控并发（后续可无缝切换为异步 aio+队列）。"
+    - "输入固定为 D:/AI_Projects/Visa/visa_db.sql（只读），输出固定路径 JSON/Markdown。"
+    - "幂等性：以 field_key+sample_hash 去重，避免重复 LLM 调用。"
+    - "安全：日志屏蔽原始 PII，Markdown 仅展示脱敏样本。"
 
 Step 1:
-  title: 环境与路径校验（只读输入、受控输出）
+  title: 文档状态检查与目标定位
   sub_steps:
-    - "校验输入 SQL 转储存在: D:/AI_Projects/Visa/visa_db.sql"
-    - "校验 venv: BackendConstitution.runtime.venv=Kobe/.venv 已创建并可激活"
-    - "校验 .env 包含 MONGODB_URI、MONGODB_DATABASE、RABBITMQ_URL、REDIS_URL（按 constitution 默认值可用）"
-    - "校验 RabbitMQ/Redis/Mongo 本地容器可连通（仅当执行异步与落库时需要）"
+    - "运行: python CodexFeatured/Scripts/CodebaseStructure.py（写回 CodexFeatured/Common/CodebaseStructure.yaml）"
+    - "读取: CodexFeatured/Common/CodebaseStructure.yaml，确认 Kobe/ 目录结构生成成功"
+    - "在 D:/AI_Projects/CodexFeatured/DevPlans 下查找包含 DemandDescription.md 的子目录，按修改时间倒序选择最新"
+    - "从目标 DemandDescription.md 首行解析 INTENT_TITLE_2_4=UserProfilingFieldClassification, COUNT_3D=004"
+    - "设置 target_dir=D:/AI_Projects/CodexFeatured/DevPlans/004_UserProfilingFieldClassification"
+    - "设置 target_tasks_path=D:/AI_Projects/CodexFeatured/DevPlans/004_UserProfilingFieldClassification/Tasks.md"
+    - "读取 Kobe/index.yaml 及其 sub_indexes（SharedUtility/*, TempUtility/*）构建可复用模块清单"
   acceptance:
-    - "存在可读取的 SQL 文件；不可写入输入路径"
-    - "pip 冻结输出包含 fastapi、celery、pydantic>=2、pymongo、redis 等基础依赖"
-    - ".env 变量解析成功，Celery 能获取 broker 与（可选）result backend"
+    - "已生成/更新 CodebaseStructure.yaml 且包含根条目 Kobe/"
+    - "成功锁定 004_UserProfilingFieldClassification 作为目标目录"
+    - "解析得到 COUNT_3D=004 与 INTENT_TITLE_2_4=UserProfilingFieldClassification 并记录到 Tech_Decisions"
 
 Step 2:
-  title: SQL 解析与字段枚举（同步工具）
+  title: 规范加载与技术选型确认
   sub_steps:
-    - "在 Kobe/TempUtility/VisaDBOperation 新增 sql_scan.py，实现 parse_schema(sql_path) 返回 [ {table, column, type} ]"
-    - "在 sql_scan.py 实现 extract_samples(sql_path, limit_per_column=50) 从 INSERT/VALUES 抽取样本"
-    - "使用模块: sqlglot 解析 DDL/DML；Kobe/SharedUtility/RichLogger 初始化日志"
-    - "输出中间产物 fields_samples.json（仅本地/可选），不包含原始 PII，仅存样本 hash 与摘要"
+    - "通读 CodexFeatured/Common/BackendConstitution.yaml：运行时 Python3.10、Pydantic v3、异步优先、统一日志 RichLogger"
+    - "通读 CodexFeatured/Common/CodeCommentStandard.yaml：为后续脚本补充模块 docstring 与关键行注释"
+    - "通读 CodexFeatured/Common/BestPractise.yaml 中官方链接，确认 openai 与 sqlparse 选型"
+    - "将本文件 Tech_Decisions 章节与上述规范对齐（必要时修订本文件）"
   acceptance:
-    - "随机抽取每字段 30–50 个样本（可配置为 >=20），结构包含 table、column、type、samples_used、sample_hash"
-    - "异常 SQL 能被跳过并记录日志；总流程不中断"
+    - "Tech_Decisions 与三份规范一致（版本/依赖/注释要求明确）"
+    - "如有修订，已在本文件更新并保存"
 
 Step 3:
-  title: 业务判定器实现（True|Boundary|False）
+  title: 依赖清单更新（独立步骤）
   sub_steps:
-    - "新增 classifier.py，提供 classify_field(field_key, samples, column_type)->{label, confidence, reasoning}"
-    - "内置规则：名称/类型/样本模式综合判定（如 phone/email/id/address），边界情形给 Boundary"
-    - "输出不含原始 PII，仅含样本摘要（长度、字符集、掩码片段）与 sha256 样本哈希"
+    - "打开: Kobe/Requirements.txt"
+    - "追加如下行（如已存在则跳过）：openai>=1.50.0, sqlparse>=0.5.0, pydantic>=3.0.0"
+    - "执行: python -m venv Kobe/.venv; 激活后 pip install -r Kobe/Requirements.txt"
   acceptance:
-    - "对典型字段（手机号/邮箱/身份证/姓名/地址）给出稳定判定；为混合/弱信号给 Boundary"
-    - "判定包含可解释理由与置信度，便于审计复核"
+    - "Kobe/Requirements.txt 成功包含三项新依赖"
+    - "pip 安装成功，无冲突（pydantic 主版本为 3）"
 
 Step 4:
-  title: 文档生成器与目录结构（Markdown/JSON）
+  title: 复用统一日志模块并创建工作脚本骨架
   sub_steps:
-    - "新增 doc_writer.py，生成 DatabaseDietPlan.md（统一模板）"
-    - "章节包含：项目概述、字段清单、分类结果表、理由与样本摘要、附录（约束/边界/数据源）"
-    - "可选生成 JSON（每字段一条记录）用于审计复核"
+    - "在 Kobe/TempUtility/VisaDBOperation/ 下新建脚本: field_ops.py"
+    - "脚本顶部接入: from Kobe.SharedUtility.RichLogger import init_logging, install_traceback; install_traceback(); init_logging('INFO')"
+    - "定义 Pydantic v3 数据模型: SchemaField, SampleItem, FieldDecision, FieldRecord（含字段与 verify/reason/confidence）"
   acceptance:
-    - "Markdown 可直接阅读；结构与需求文档相符；表格字段不少于：表、字段、类型、判定、置信度、理由摘要"
-    - "若开启 JSON 产出，严格不含原始 PII"
+    - "field_ops.py 存在并可被 python 直接运行（不报错）"
+    - "日志初始化后异常栈为统一渲染样式"
 
 Step 5:
-  title: 异步任务实现与落库（Celery + Mongo）
+  title: SQL 结构解析器（提取库/表/字段）
   sub_steps:
-    - "在 Kobe/TempUtility/VisaDBOperation 新增 tasks.py，定义 celery 任务 user_profile_classify(payload)"
-    - "任务流程：解析->抽样->判定->生成 Markdown/JSON；调用 repository.mongo.coll_raw_payload/coll_task_result 落库"
-    - "在 Kobe/SharedUtility/TaskQueue/app.py 扩展 autodiscover 至 [\"Kobe.SharedUtility.TaskQueue\", \"Kobe.TempUtility.VisaDBOperation\"]"
-    - "调用 repository.mongo.ensure_indexes() 初始化索引"
-    - "统一日志：Kobe/SharedUtility/RichLogger.init_logging()"
+    - "实现函数 parse_schema_from_sql(sql_path) -> list[SchemaField]，使用 sqlparse 解析 CREATE TABLE 语句"
+    - "解析到的字段以 'database.table.column' 形式生成 field_path，规范化为 PascalCase 的 field_key"
+    - "将结构初稿打印到控制台并统计字段总数"
   acceptance:
-    - "提交一次任务，可在 Mongo DB 查询到 RawPayload 与 TaskResult 文档；字段含 trace_id、created_at、sample_hash"
-    - "任务失败自动重试（参考 demo_long_io 的策略）且错误原因写入 TaskErrorLog"
+    - "从 D:/AI_Projects/Visa/visa_db.sql 成功提取出 >=1 个表与字段"
+    - "field_key 与 field_path 均非空且数量一致"
 
 Step 6:
-  title: 扩展任务路由与数据契约（Pydantic v3）
+  title: 样本采样与脱敏（生成中间 JSON）
   sub_steps:
-    - "修改 Kobe/SharedUtility/TaskQueue/schemas.py：将 TaskStart.task 的正则扩展为 ^(demo_long_io|demo_sharded_job|user_profile_classify)$（保持 Pydantic v2 用法）"
-    - "修改 Kobe/routers/task.py：在 /task/start 增加对 user_profile_classify 的分支与 payload 透传"
-    - "示例调用：POST /task/start {\"task\":\"user_profile_classify\", \"payload\":{\"sql_path\": \"D:/AI_Projects/Visa/visa_db.sql\"}}"
+    - "若可连接真实数据库，则针对每个字段采样至多 20 条代表性值；否则构造占位样本并注明 'pii_masked=true'"
+    - "实现脱敏规则：邮箱/手机号/证件号做掩码；地址取前后片段 + 占位符"
+    - "输出中间文件: D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/field_samples.json（UTF-8, 无 BOM）"
   acceptance:
-    - "通过现有路由提交新任务成功返回 task_id；状态/结果查询正常"
+    - "field_samples.json 存在，符合需求文档示例结构，任意样本不暴露原始 PII"
+    - "每字段 samples 条数 1..20 之间，含 sample_hash 与 created_at"
 
 Step 7:
-  title: 依赖与配置变更（最小化）
+  title: 三值分类器（LLM 驱动）
   sub_steps:
-    - "在 Kobe/requirements.txt 追加: sqlglot, orjson（保持与现有版本兼容）"
-    - "更新 README/环境说明：标注需本地 RabbitMQ/Redis/Mongo 容器（按 BackendConstitution.infrastructure_local）"
-    - "在 .env 示例中补充/确认 MONGODB_URI、MONGODB_DATABASE、RABBITMQ_URL、REDIS_URL"
+    - "在 field_ops.py 中实现 classify_field(sample: SampleItem) -> FieldDecision，模型默认从环境变量 OPENAI_MODEL（默认 gpt-4o-mini）读取"
+    - "并发控制：同一进程内限制同时请求数<=5，重复 (field_key+sample_hash) 命中本地缓存直接返回"
+    - "对每个字段聚合 samples 的投票结果，生成最终 verify=true|false|verify 及 reason/avg_confidence"
   acceptance:
-    - "pip 安装成功且不破坏现有模块；uvicorn + Celery worker 可启动"
+    - "对 10 个示例字段运行分类，产生稳定的三值结论"
+    - "缓存生效：重复运行时 API 调用次数显著减少（日志可见）"
 
 Step 8:
-  title: 端到端验证（功能/性能/鲁棒性）
+  title: 结果汇总与 Markdown 报告生成
   sub_steps:
-    - "新增脚本 Kobe/SimulationTest/visa_db_field_classification_smoke.py：构造一次 e2e 调用并输出结果摘要（不含 PII）"
-    - "性能记录：在本机 1 个 worker，限制样本 30/列；记录解析/判定/落库用时与内存峰值"
-    - "鲁棒性：对异常 SQL/空表/空列/极端长字段名进行回归"
+    - "生成 D:/AI_Projects/Kobe/TempUtility/VisaDBOperation/VisaDatabseDietPlan.md"
+    - "报告结构：概要统计（true/verify/false 计数与占比）+ 按表归档的字段明细（含 samples 脱敏片段与最终判定）"
+    - "在报告页首注明输入/输出路径、运行时间、版本信息"
   acceptance:
-    - "脚本执行成功并生成 DatabaseDietPlan.md；性能报告包含各阶段耗时；异常路径不中断且有日志"
+    - "VisaDatabseDietPlan.md 存在且可读，包含统计小结与字段明细两部分"
+    - "报告中不包含任何可反向识别的 PII"
 
 Step 9:
-  title: 安全与合规校验（PII 最小化）
+  title: 性能与稳定性验证
   sub_steps:
-    - "检查任务结果中不包含原始 PII；仅保存样本长度分布/字符集/掩码与 hash"
-    - "为结果集合设置 TTL 或归档策略（如仅保留摘要 30 天）"
-    - "补充日志与指标（Prometheus/OpenTelemetry）埋点：任务耗时、失败率、样本计数"
+    - "以 50 个字段为基准集进行一次完整跑通，记录总耗时与平均每字段耗时"
+    - "校验并发上限与速率限制未触发服务端限流（无 429/5xx），失败自动重试<=3 次"
+    - "验证幂等性：删除本地缓存后与保留缓存分别跑一次，比较调用次数差异>=50%"
   acceptance:
-    - "静态抽查结果文档未见 PII；TTL/归档策略在集合上生效；指标可导出"
+    - "50 字段完整运行<=10 分钟；零未处理异常；失败率<1% 且均已重试覆盖"
+    - "缓存命中显著减少 API 次数（对比日志）"
 
 Step 10:
-  title: 交付与归档（DoD 对齐）
+  title: 交付与 DoD 确认
   sub_steps:
-    - "交付 Markdown 文档与（可选）JSON 审计文件至需求目录"
-    - "在仓库提交包含：新增 *.py、requirements、.env 示例变更"
-    - "在 DevPlans/004_*/Tasks.md 标注完成时间与版本号"
+    - "确认输出文件：field_samples.json 与 VisaDatabseDietPlan.md 路径与编码符合要求"
+    - "脚本内包含模块 docstring 与关键路径行注释，遵循 CodeCommentStandard"
+    - "如未来扩展为批量任务：在 Kobe/SharedUtility/TaskQueue/registry.py 基础上编写 task 包装（可选）"
   acceptance:
-    - "目标目录存在最终文档；Mongo 落库可复查；任务可重复运行且幂等"
+    - "DoD 满足：功能（解析/采样/分类/汇总）、结构（数据模型/缓存/并发）、接口（可参数化模型名/采样数）、与交付物（JSON/Markdown）"
+    - "本 Tasks.md 与 Tech_Decisions 一致；路径均为正斜杠风格"
 
-self_check:
-  覆盖度:
-    - "功能点全部映射至步骤 2–6（解析/抽样/判定/文档/异步/落库）"
-    - "交付物（Markdown/JSON）在步骤 4/10 明确产出；接口契约在步骤 6 对齐"
-  技术对齐:
-    - "新增依赖与 Python 3.10、Pydantic v3、Celery/RabbitMQ 兼容；参考官方文档"
-    - "复用模块路径与接口与 Kobe/index.yaml 一致"
-  修正策略:
-    - "若发现与 BackendConstitution/BestPractise 冲突，优先以 constitution 为准并回写本文件"
-  轮次:
-    - "最多 3 轮：偏差→修正→复核（本文件覆盖更新）"
