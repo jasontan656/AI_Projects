@@ -317,6 +317,8 @@ $ARGUMENTS
    - 读取 Tech_Decisions.md 第7节"实现路径映射"
    - 确定每个函数使用什么技术（如 sqlparse、大模型）
    
+   **重要**：如果函数涉及大模型提示词，在任务步骤中只注明"使用 Tech_Decisions.md §X.X 定义的提示词模板"，不要复制完整的中文提示词内容。
+   
    **生成任务步骤**：
    ```yaml
    Step 3.1: 实现核心服务逻辑
@@ -372,9 +374,9 @@ $ARGUMENTS
              """
              logger.info(f"开始分类字段: {field_key}")
              
-             # 构造提示词（从技术决策文档复制完整提示词模板）
+             # 构造提示词（完整模板见 Tech_Decisions.md 第2.1节）
              prompt = f"""
-             [从 Tech_Decisions.md 第2.1节复制完整的提示词模板]
+             （此处使用 Tech_Decisions.md §2.1 定义的完整提示词模板）
              
              字段键名: {field_key}
              示例值: {samples}

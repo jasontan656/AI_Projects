@@ -80,6 +80,13 @@ except Exception:  # pragma: no cover - keep app importable when partial deps mi
     # In early bootstrap or minimal environments we still want /health to work.
     pass
 
+# TelegramCuration feature router
+try:
+    from .TelegramCuration.routers import router as telegram_router  # type: ignore
+    app.include_router(telegram_router)
+except Exception:
+    logging.getLogger(__name__).debug("TelegramCuration router not loaded", exc_info=False)
+
 # Expose Prometheus metrics at /metrics when available
 if Instrumentator is not None:
     try:

@@ -16,6 +16,7 @@ relations:
   depends_on:
   - SharedUtility/RichLogger
   - SharedUtility/TaskQueue
+  - TelegramCuration/index.yaml
   reasons:
   - 统一日志组件，便于上层模块一致接入
   - 提供任务队列能力支撑异步作业（通过通用注册/按名分发实现插件化扩展）

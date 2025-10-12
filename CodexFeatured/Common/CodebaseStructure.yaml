@@ -75,6 +75,22 @@ content: |-
           - test_http_task_lifecycle.py
           - test_mongo_indexes.py
           - test_service_readiness.py
+    - TelegramCuration/
+      - README.md
+      - __init__.py
+      - index.yaml
+      - models.py
+      - routers.py
+      - services.py
+      - tasks.py
+      - utils.py
+      - prompts/
+        - classifier.md
+        - qa_generator.md
+        - slice_summarizer.md
+      - tests/
+        - test_models.py
+        - test_services.py
     - TempUtility/
       - index.yaml
       - VisaDBOperation/
