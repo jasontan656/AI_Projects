@@ -1,0 +1,28 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/MongoDB"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "MongoDB"
+  summary: "预留的 MongoDB 架构与迁移脚本目录，当前仅占位。"
+  responsibilities:
+    - "未来存放 Mongo 数据模型定义、索引与脚本"
+  non_goals:
+    - "尚未包含任何配置或备份文件"
+  entry_points: []
+relations:
+  depends_on: []
+  used_by: []
+  provides_apis: []
+  reasons:
+    - "标记 MongoDB 支持在仓库中的落位"
+files:
+  key_files: []
+  test_locations: []
+sub_indexes: []
+notes:
+  - "与 ChatTerminal/tools/mongodb_tools 保持配套，等待后续实现"

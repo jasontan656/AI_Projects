@@ -2,29 +2,27 @@ meta:
   version: "1.0"
   schema_version: "1"
   path: "Kobe/SimulationTest"
-  last_updated: "2025-10-11"
+  last_updated: "2025-10-15"
   owners:
     - "kobe-core"
   stability: "alpha"
 module:
   name: "SimulationTest"
-  summary: "仿真/集成测试场景占位"
+  summary: "计划中的对话模拟与回归测试场景，占位目录。"
   responsibilities:
-    - "用于端到端或集成测试的场景与脚本"
+    - "保留未来端到端脚本、mock 数据的位置"
   non_goals:
-    - "不包含生产代码"
+    - "当前阶段不包含任何自动化脚本"
   entry_points: []
 relations:
   depends_on: []
   used_by: []
   provides_apis: []
   reasons:
-    - "目录存在性记录"
+    - "记录测试体系规划的目录结构"
 files:
   key_files: []
   test_locations: []
-sub_indexes:
-  - "RichLogger_testplan/index.yaml"
-  - "TaskQueue_testplan/index.yaml"
+sub_indexes: []
 notes:
-  - "当前无实现文件，仅占位"
+  - "截至 2025-10-15 尚未提交测试资源"

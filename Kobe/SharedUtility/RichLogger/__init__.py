@@ -1,18 +1,4 @@
-"""
-RichLogger
-简要: 统一初始化日志与异常堆栈展示的轻量封装。
+"""RichLogger 门面模块：导出 RichLoggerManager 供全局复用。"""  # 使用模块级文档字符串解释本文件职责；提醒调用者这里仅做门面暴露【文档（Docstring）】
+from .logger import RichLoggerManager  # 使用同项目模块导入 RichLoggerManager 类；便于外部直接引用【模块（Module）】
 
-导出函数
-- init_logging(level: str = "INFO"): 配置根 logger、控制台与文件处理器。
-- install_traceback(): 安装统一异常钩子，保证未捕获异常以一致格式输出到日志。
-- get_console(): 返回一个简易的控制台输出函数，用于结构化打印信息。
-
-说明
-- 仅依赖 Python 标准库 logging，不额外引入三方库，满足 BackendConstitution 约束。
-- 格式化中携带时间、级别、模块/行号，便于排查。
-"""
-
-from .logger import init_logging, install_traceback, get_console
-
-__all__ = ["init_logging", "install_traceback", "get_console"]
-
+__all__ = ["RichLoggerManager"]  # 定义 __all__ 列表限制公开 API；确保 from RichLogger import * 仅暴露门面类【导出（Export）】

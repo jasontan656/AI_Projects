@@ -1,0 +1,46 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/scripts"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "scripts"
+  summary: "运维脚本集合，辅助验证环境与管理 Chroma/MCP 服务。"
+  responsibilities:
+    - "初始化或清理本地/HTTP Chroma collections"
+    - "校验 .env 中的数据服务配置"
+    - "提供 Windows 下启动 MCP stdio server 的批处理"
+  non_goals:
+    - "作为主应用的一部分自动执行"
+    - "替代 CI 部署流程"
+  entry_points:
+    - "python scripts/init_chroma_collections.py"
+    - "python scripts/init_chroma_local.py"
+    - "python scripts/drop_test_collections.py"
+    - "python scripts/verify_env_config.py"
+    - "scripts/run_mcp_stdio.bat"
+relations:
+  depends_on:
+    - "Kobe/chroma_data"
+    - "Kobe/ChatTerminal/tools/vector_tools"
+    - "Kobe/ChatTerminal/tools/mongodb_tools"
+    - "Kobe/ChatTerminal/tools/redis_tools"
+  used_by: []
+  provides_apis: []
+  reasons:
+    - "集中记录底层数据服务相关的维护工具"
+files:
+  key_files:
+    - "init_chroma_collections.py"
+    - "init_chroma_local.py"
+    - "drop_test_collections.py"
+    - "verify_env_config.py"
+    - "run_mcp_stdio.bat"
+  test_locations: []
+sub_indexes: []
+notes:
+  - "Chroma 初始化脚本依赖 chromadb 包，使用前需确保服务器可达"
+  - "verify_env_config.py 会读取项目根目录 .env 并尝试导入工具模块"

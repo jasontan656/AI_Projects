@@ -1,46 +1,54 @@
-module:
-  summary: Kobe 项目根目录，聚合后端应用入口与共享能力
-  responsibilities:
-  - 提供 FastAPI 应用入口 app
-  - 集中初始化统一日志与异常美化
-  - 聚合共享工具能力（日志、任务队列）
-  name: Kobe
-  entry_points:
-  - main.py
-  non_goals:
-  - 不包含 Kobe/ 之外的规范、部署或命令说明
-relations:
-  used_by: []
-  provides_apis:
-  - 'main.py: app'
-  depends_on:
-  - SharedUtility/RichLogger
-  - SharedUtility/TaskQueue
-  - TelegramCuration/index.yaml
-  reasons:
-  - 统一日志组件，便于上层模块一致接入
-  - 提供任务队列能力支撑异步作业（通过通用注册/按名分发实现插件化扩展）
 meta:
-  owners:
-  - kobe-core
-  path: Kobe
   version: "1.0"
   schema_version: "1"
-  last_updated: 2025-10-11
-  stability: beta
-sub_indexes:
-- routers/index.yaml
-- SharedUtility/index.yaml
-- SimulationTest/index.yaml
-- TempUtility/index.yaml
+  path: "Kobe"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "Kobe"
+  summary: "FastAPI 后端服务主入口，集成 LangChain 聊天能力与终端客户端脚本"
+  responsibilities:
+    - "初始化 FastAPI 应用、全局日志和中间件配置"
+    - "注册聊天相关 API 路由并暴露服务健康检查"
+    - "维护命令行终端客户端与运行所需的依赖说明"
+  non_goals:
+    - "不负责前端界面的实现"
+    - "不直接定义 LangChain 工具细节"
+  entry_points:
+    - "python app.py"
+    - "uvicorn app:app --reload"
+relations:
+  depends_on:
+    - "Kobe/SharedUtility/RichLogger"
+    - "Kobe/api"
+    - "Kobe/tools"
+  used_by:
+    - "Kobe/chat_terminal_v3.py"
+  provides_apis:
+    - "GET /"
+    - "GET /health"
+    - "POST /api/chat_langchain"
+  reasons:
+    - "集中项目配置并向外提供统一服务入口"
 files:
-  test_locations: []
   key_files:
-  - main.py
-  - Requirements.txt
-  - Readme.md
+    - "app.py"
+    - "chat_terminal_v3.py"
+    - "Requirements.txt"
+  test_locations: []
+sub_indexes:
+  - "Kobe/api/index.yaml"
+  - "Kobe/ChatTerminal/index.yaml"
+  - "Kobe/SharedUtility/index.yaml"
+  - "Kobe/TempUtility/index.yaml"
+  - "Kobe/SimulationTest/index.yaml"
+  - "Kobe/tools/index.yaml"
+  - "Kobe/MongoDB/index.yaml"
+  - "Kobe/mcpServer/index.yaml"
+  - "Kobe/chroma_data/index.yaml"
+  - "Kobe/scripts/index.yaml"
 notes:
-- 本索引仅描述 Kobe/ 内部结构与关系，不引用目录外内容
-- 所有路径使用相对 Kobe 的正斜杠形式
- - 环境文件位置固定为 `Kobe/.env`，关键项：`ALLOWED_TASKS` 控制任务名白名单（可留空）
-
+  - "运行前需在 .env 中配置 OPENAI_API_BASE 与 OPENAI_MODEL 等环境变量"
+  - "终端客户端依赖后端 API 正常响应以完成聊天功能"

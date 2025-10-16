@@ -1,10 +1,10 @@
 # ==================== 核心模型配置 ====================
 # 默认使用 GPT-5 模型
-model = "gpt-5"
+model = "gpt-5-codex"
 model_provider = "openai"
 
 # 推理配置
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 model_reasoning_summary = "detailed"
 model_verbosity = "medium"
 model_supports_reasoning_summaries = true
@@ -65,3 +65,33 @@ trust_level = "trusted"
 
 [projects.'\\?\D:\AI_Projects']
 trust_level = "trusted"
+
+# ==================== MCP 服务器配置 ====================
+# Kobe MCP Server HTTP - 整合到主应用
+
+[mcp_servers.kobe-tools]
+type = "stdio"
+command = "D:\\AI_Projects\\Kobe\\.venv\\Scripts\\python.exe"
+args = ["D:\\AI_Projects\\Kobe\\mcp_server_codex.py"]
+startup_timeout_ms = 180000
+
+[mcp_servers.kobe-tools.env]
+APPDATA = "C:\\Users\\HP\\AppData\\Roaming"
+LOCALAPPDATA = "C:\\Users\\HP\\AppData\\Local"
+HOME = "C:\\Users\\HP"
+SystemRoot = "C:\\Windows"
+PYTHONPATH = "D:\\AI_Projects\\Kobe"
+# 可选：添加自定义请求头
+# [mcp_servers.kobe-tools.headers]
+# X-Agent-Id = "codex"
+# Authorization = "Bearer your_token_here"
+
+# 说明：
+# - 改为 stdio：Codex 直接以子进程启动 `mcp_stdio_server.py`
+# - 无需 HTTP/SSE；避免握手中 initialized 通知引发的通道关闭
+# - 支持的工具: web_search, fetch_webpage, read_file, write_file,
+#               list_directory, search_files, execute_command,
+#               exa_search, playwright_capture, add_vectors, 
+#               semantic_search, delete_vectors
+# - 启动命令: cd D:\AI_Projects\Kobe && uvicorn app:app --host 0.0.0.0 --port 8000
+

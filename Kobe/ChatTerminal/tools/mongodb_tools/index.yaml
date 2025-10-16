@@ -1,0 +1,41 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/ChatTerminal/tools/mongodb_tools"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "mongodb_tools"
+  summary: "MongoDB 操作模型与 Motor 客户端封装。"
+  responsibilities:
+    - "定义面向聊天与知识缺口记录的 MongoDB Pydantic 模型"
+    - "提供 AsyncIOMotorClient 的单例获取入口"
+    - "预留常用 CRUD 协议（save/query/update/batch_insert）供 MCP 工具使用"
+  non_goals:
+    - "直接实现所有 MongoDB 业务逻辑或权限控制"
+    - "维护 MongoDB 集群部署与性能调优"
+  entry_points: []
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe/ChatTerminal/tools/mongodb_tools.py"
+  provides_apis:
+    - "mongodb_tools.operations.get_mongo_db"
+    - "mongodb_tools.operations.save_document"
+    - "mongodb_tools.operations.query_documents"
+    - "mongodb_tools.operations.update_document"
+    - "mongodb_tools.operations.batch_insert"
+  reasons:
+    - "为 ChatTerminal MCP 扩展预先准备 MongoDB 数据通路"
+files:
+  key_files:
+    - "__init__.py"
+    - "models.py"
+    - "operations.py"
+  test_locations: []
+sub_indexes: []
+notes:
+  - "CRUD 实现仍为 TODO，占位函数会在对接真实数据库后填充"
+  - "连接参数通过环境变量 MONGODB_URI 与 MONGODB_DATABASE 提供"

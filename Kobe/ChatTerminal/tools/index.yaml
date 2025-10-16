@@ -1,0 +1,50 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/ChatTerminal/tools"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "tools"
+  summary: "终端与 LangChain 共用的工具实现集合，覆盖文件、网络与代码执行能力"
+  responsibilities:
+    - "提供文件读写、目录浏览与模式搜索能力"
+    - "封装 DuckDuckGo 搜索、网页抓取以及常见下载流程"
+    - "支持本地命令执行与 Python/PowerShell 代码运行"
+    - "为 LangChain 工具包装层提供原子实现"
+  non_goals:
+    - "不直接暴露 FastAPI 路由"
+    - "不处理鉴权或限流策略"
+  entry_points: []
+relations:
+  depends_on:
+    - "Kobe/ChatTerminal/downloads"
+  used_by:
+    - "Kobe/tools/langchain_tools.py"
+  provides_apis: []
+  reasons:
+    - "整合终端可调用的工具函数"
+files:
+  key_files:
+    - "__init__.py"
+    - "file_operations.py"
+    - "web_tools.py"
+    - "download_tools.py"
+    - "code_runner.py"
+    - "command_executor.py"
+    - "document_tools.py"
+    - "exa_tools.py"
+    - "playwright_tools.py"
+    - "mongodb_tools.py"
+    - "redis_tools.py"
+    - "vector_tools.py"
+  test_locations: []
+sub_indexes:
+  - "Kobe/ChatTerminal/tools/mongodb_tools/index.yaml"
+  - "Kobe/ChatTerminal/tools/redis_tools/index.yaml"
+  - "Kobe/ChatTerminal/tools/vector_tools/index.yaml"
+notes:
+  - "部分功能依赖三方库（requests、ddgs、PyPDF2、pytesseract 等），需在运行环境预装"
+  - "下载文件默认写入 downloads 目录，命令执行输出有限制避免冗长日志"

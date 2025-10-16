@@ -5,7 +5,9 @@ description: Create or update the project constitution from interactive or provi
 ## User Input
 
 ```text
-$ARGUMENTS
+Load file and read for user constitution content prompt : 
+D:\AI_Projects\CodexFeatured\Common\BackendConstitution.yaml
+D:\AI_Projects\CodexFeatured\Common\SimulationTestingConstitution.yaml
 ```
 
 You **MUST** consider the user input before proceeding (if not empty).

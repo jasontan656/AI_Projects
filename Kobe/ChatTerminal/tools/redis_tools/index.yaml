@@ -1,0 +1,40 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/ChatTerminal/tools/redis_tools"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "redis_tools"
+  summary: "Redis 缓存工具封装，预留与 MongoDB 的数据同步逻辑。"
+  responsibilities:
+    - "封装 redis.asyncio Redis 客户端初始化与连接参数管理"
+    - "定义缓存写入、读取、删除与转存 MongoDB 的接口占位"
+    - "面向终端 MCP 工具提供统一的缓存访问入口"
+  non_goals:
+    - "直接负责业务层缓存策略或命名规范设计"
+    - "实现 MongoDB 持久化的具体写入逻辑"
+  entry_points: []
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe/ChatTerminal/tools/redis_tools.py"
+  provides_apis:
+    - "redis_tools.cache_manager.get_redis_client"
+    - "redis_tools.cache_manager.cache_data"
+    - "redis_tools.cache_manager.get_cached"
+    - "redis_tools.cache_manager.delete_cache"
+    - "redis_tools.cache_manager.flush_to_mongodb"
+  reasons:
+    - "为 ChatTerminal 聊天流程预留高频缓存支持"
+files:
+  key_files:
+    - "__init__.py"
+    - "cache_manager.py"
+  test_locations: []
+sub_indexes: []
+notes:
+  - "缓存接口仍为 TODO，待确认具体 Redis schema 后补充实现"
+  - "连接配置经由 REDIS_HOST/REDIS_PORT/REDIS_DB/REDIS_PASSWORD 环境变量提供"

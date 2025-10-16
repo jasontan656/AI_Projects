@@ -1,0 +1,33 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/chroma_data"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "chroma_data"
+  summary: "Chroma 向量库持久化数据目录。"
+  responsibilities:
+    - "保存 ChatTerminal 与工具链持久化的 ChromaDB 向量文件"
+    - "为开发环境提供默认的本地嵌入数据容器"
+  non_goals:
+    - "包含任何 Python 代码或业务逻辑"
+    - "负责同步/备份策略"
+  entry_points: []
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe/ChatTerminal/tools/vector_tools/chroma_ops.py"
+  provides_apis: []
+  reasons:
+    - "记录向量数据库在仓库中的约定落盘位置"
+files:
+  key_files: []
+  test_locations: []
+sub_indexes:
+  - "Kobe/chroma_data/45ffb11a-8b52-4985-b30f-aa1d9af87a7c/index.yaml"
+notes:
+  - "默认路径可通过环境变量 CHROMADB_DATA_PATH 覆盖"
+  - "目录文件由 Chroma 客户端自动生成，不建议手工编辑"

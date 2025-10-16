@@ -1,0 +1,43 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/ChatTerminal/tools/vector_tools"
+  last_updated: "2025-10-15"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "vector_tools"
+  summary: "Chroma 向量存储与检索工具，占位支持嵌入生成。"
+  responsibilities:
+    - "管理本地或 HTTP Chroma 客户端并根据环境变量选择模式"
+    - "提供向量写入、语义搜索、删除等操作接口"
+    - "预留文本转向量的 embedding 辅助函数"
+  non_goals:
+    - "内置具体的 embedding 供应商实现"
+    - "承担大规模向量库的批量导入/清理任务"
+  entry_points: []
+relations:
+  depends_on:
+    - "Kobe/chroma_data"
+  used_by:
+    - "Kobe/ChatTerminal/tools/vector_tools.py"
+  provides_apis:
+    - "vector_tools.chroma_ops.get_chroma_client"
+    - "vector_tools.chroma_ops.add_vectors"
+    - "vector_tools.chroma_ops.semantic_search"
+    - "vector_tools.chroma_ops.delete_vectors"
+    - "vector_tools.embeddings.create_embeddings"
+    - "vector_tools.embeddings.batch_create_embeddings"
+  reasons:
+    - "为 ChatTerminal 提供可扩展的语义检索底座"
+files:
+  key_files:
+    - "__init__.py"
+    - "chroma_ops.py"
+    - "embeddings.py"
+  test_locations: []
+sub_indexes: []
+notes:
+  - "CHROMADB_MODE/CHROMADB_HOST/CHROMADB_PORT/CHROMADB_DATA_PATH 影响客户端的连接方式和存储位置"
+  - "embedding 模块仍为 TODO，等待与向量服务集成"

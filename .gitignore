@@ -20,6 +20,9 @@
 .codex/auth.json
 .codex/history.jsonl
 
+# Kobe 文件夹中的排除项
+Kobe/TelegramChatHistory/
+
 # ====================================
 # 通用忽略规则（适用于所有跟踪的文件夹）
 # ====================================
@@ -132,3 +135,8 @@
 # Windows
 **/ehthumbs.db
 **/ehthumbs_vista.db
+
+# Added by /speckit.tasks on 2025-10-12
+*.pyc
+
+# Universal

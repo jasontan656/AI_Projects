@@ -1,0 +1,15 @@
+# API 响应日志
+logs/
+*.log
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 环境变量
+.env
+
+# IDE
+.vscode/
+.idea/

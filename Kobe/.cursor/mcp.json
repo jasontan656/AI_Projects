@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "kobe-tools": {
+      "command": "D:\\AI_Projects\\Kobe\\.venv\\Scripts\\python.exe",
+      "args": ["-u", "D:\\AI_Projects\\Kobe\\mcp_minimal_server.py"],
+      "cwd": "D:\\AI_Projects\\Kobe",
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
+
