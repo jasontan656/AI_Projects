@@ -74,13 +74,14 @@ type = "stdio"
 command = "D:\\AI_Projects\\Kobe\\.venv\\Scripts\\python.exe"
 args = ["D:\\AI_Projects\\Kobe\\mcp_server_codex.py"]
 startup_timeout_ms = 180000
-
 [mcp_servers.kobe-tools.env]
 APPDATA = "C:\\Users\\HP\\AppData\\Roaming"
 LOCALAPPDATA = "C:\\Users\\HP\\AppData\\Local"
 HOME = "C:\\Users\\HP"
 SystemRoot = "C:\\Windows"
 PYTHONPATH = "D:\\AI_Projects\\Kobe"
+
+
 # 可选：添加自定义请求头
 # [mcp_servers.kobe-tools.headers]
 # X-Agent-Id = "codex"
@@ -94,4 +95,48 @@ PYTHONPATH = "D:\\AI_Projects\\Kobe"
 #               exa_search, playwright_capture, add_vectors, 
 #               semantic_search, delete_vectors
 # - 启动命令: cd D:\AI_Projects\Kobe && uvicorn app:app --host 0.0.0.0 --port 8000
+
+# Playwright MCP Server - 浏览器自动化
+[mcp_servers.playwright]
+type = "stdio"
+command = "cmd"
+args = ["/c","npx","-y","@playwright/mcp@latest"]
+startup_timeout_ms = 180000
+[mcp_servers.playwright.env]
+APPDATA = "C:\\Users\\HP\\AppData\\Roaming"
+LOCALAPPDATA = "C:\\Users\\HP\\AppData\\Local"
+HOME = "C:\\Users\\HP"
+SystemRoot = "C:\\Windows"
+PYTHONPATH = "D:\\AI_Projects\\Kobe"
+
+
+# PLAYWRIGHT_BROWSERS_PATH = "自定义浏览器缓存目录"  # 可选配置
+
+# Context7 MCP Server - 上下文管理
+[mcp_servers.context7]
+type = "stdio"
+command = "cmd"
+args = ["/c","npx","-y", "@upstash/context7-mcp"]
+startup_timeout_ms = 180000
+
+[mcp_servers.context7.env]
+CONTEXT7_API_KEY = "ctx7sk-8f0a1825-d3dc-46e4-af34-e72a554d6084"
+APPDATA = "C:\\Users\\HP\\AppData\\Roaming"
+LOCALAPPDATA = "C:\\Users\\HP\\AppData\\Local"
+HOME = "C:\\Users\\HP"
+SystemRoot = "C:\\Windows"
+
+# Exa MCP Server - 搜索引擎
+[mcp_servers.exa]
+type = "stdio"
+command = "cmd"
+args = ["/c","npx","-y","exa-mcp"]
+startup_timeout_ms = 180000
+
+[mcp_servers.exa.env]
+EXA_API_KEY = "515a2661-5fbc-458a-be88-b9dd7e6b2458"
+APPDATA = "C:\\Users\\HP\\AppData\\Roaming"
+LOCALAPPDATA = "C:\\Users\\HP\\AppData\\Local"
+HOME = "C:\\Users\\HP"
+SystemRoot = "C:\\Windows"
 
