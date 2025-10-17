@@ -92,9 +92,11 @@ async def trace_id_middleware(request, call_next):
 # 导入并注册路由
 from api.chat_langchain import router as chat_langchain_router
 from api.bridge_logger import router as bridge_logger_router
+from TelegramBot.webhook import router as telegram_webhook_router
 
 app.include_router(chat_langchain_router, prefix="/api", tags=["聊天"])
 app.include_router(bridge_logger_router, prefix="/api", tags=["桥接日志"])
+app.include_router(telegram_webhook_router, prefix="/telegram", tags=["Telegram Bot"])
 
 # MCP HTTP 集成版已移除：本项目仅保留两个 stdio 版本（Cursor/Codex 客户端各自启动）
 
@@ -108,6 +110,7 @@ async def root():
         "version": "2.0.0",
         "features": {
             "chat": True,
+            "telegram_bot": True,
             "mcp_server": True,
             "mcp_transport": "RMCP (POST /mcp + GET /mcp/stream)",
             "mcp_endpoints": {"rpc": "POST /mcp", "stream": "GET /mcp/stream"},

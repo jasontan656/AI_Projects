@@ -34,16 +34,12 @@ except Exception:
     pass
 
 # Reuse existing tools
-from ChatTerminal.tools.web_tools import web_search, fetch_webpage
 from ChatTerminal.tools.file_operations import (
     read_file,
     write_file,
     list_directory,
     search_files,
 )
-from ChatTerminal.tools.command_executor import execute_command
-from ChatTerminal.tools.exa_tools import exa_search
-from ChatTerminal.tools.playwright_tools import playwright_capture
 from ChatTerminal.tools.vector_tools import add_vectors, semantic_search, delete_vectors
 
 
@@ -66,42 +62,6 @@ async def list_tools() -> List[Tool]:
     except Exception:
         pass
     return [
-        Tool(
-            name="web_search",
-            description=(
-                "使用DuckDuckGo搜索引擎进行网络搜索。\n"
-                "【适用场景】需要查找实时信息、新闻、价格、天气等\n"
-                "【输入】搜索关键词（字符串）和结果数量（默认5）\n"
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string", "description": "搜索关键词"},
-                    "num_results": {"type": "integer", "description": "返回结果数量", "default": 5},
-                },
-                "required": ["query"],
-            },
-        ),
-        Tool(
-            name="fetch_webpage",
-            description=(
-                "访问并获取网页内容，支持正文抽取与清理。\n"
-                "参数：url、extract_text、follow_links、max_depth、max_links、readability、max_chars。"
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "url": {"type": "string", "description": "要访问的网页URL"},
-                    "extract_text": {"type": "boolean", "default": True},
-                    "follow_links": {"type": "boolean", "default": False},
-                    "max_depth": {"type": "integer", "default": 1},
-                    "max_links": {"type": "integer", "default": 3},
-                    "readability": {"type": "boolean", "default": True},
-                    "max_chars": {"type": "integer", "default": 5000},
-                },
-                "required": ["url"],
-            },
-        ),
         Tool(
             name="read_file",
             description="读取本地文件内容",
@@ -143,47 +103,6 @@ async def list_tools() -> List[Tool]:
                     "recursive": {"type": "boolean", "default": False},
                 },
                 "required": ["pattern"],
-            },
-        ),
-        Tool(
-            name="execute_command",
-            description="执行 Windows PowerShell 或 CMD 命令（小心使用）",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "command": {"type": "string"},
-                    "shell": {"type": "string", "default": "powershell"},
-                },
-                "required": ["command"],
-            },
-        ),
-        Tool(
-            name="exa_search",
-            description="调用 Exa 向量搜索引擎获取高质量结果",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string"},
-                    "num_results": {"type": "integer", "default": 5, "minimum": 1, "maximum": 20},
-                    "search_type": {"type": "string", "default": "auto"},
-                    "include_contents": {"type": "boolean", "default": False},
-                },
-                "required": ["query"],
-            },
-        ),
-        Tool(
-            name="playwright_capture",
-            description="使用 Playwright 访问网页并可选截图",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "url": {"type": "string"},
-                    "wait_selector": {"type": "string"},
-                    "wait_ms": {"type": "integer", "default": 5000, "minimum": 1000, "maximum": 20000},
-                    "screenshot": {"type": "boolean", "default": False},
-                    "screenshot_name": {"type": "string"},
-                },
-                "required": ["url"],
             },
         ),
         Tool(
@@ -236,19 +155,7 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
             logger.debug(f"[codex] call_tool start: {name} args={arguments}")
         except Exception:
             pass
-        if name == "web_search":
-            result = await web_search(arguments.get("query"), arguments.get("num_results", 5))
-        elif name == "fetch_webpage":
-            result = await fetch_webpage(
-                arguments.get("url"),
-                extract_text=arguments.get("extract_text", True),
-                follow_links=arguments.get("follow_links", False),
-                max_depth=arguments.get("max_depth", 1),
-                max_links=arguments.get("max_links", 3),
-                readability=arguments.get("readability", True),
-                max_chars=arguments.get("max_chars", 5000),
-            )
-        elif name == "read_file":
+        if name == "read_file":
             result = read_file(arguments.get("file_path"))
         elif name == "write_file":
             result = write_file(arguments.get("file_path"), arguments.get("content"), arguments.get("mode", "w"))
@@ -256,23 +163,6 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
             result = list_directory(arguments.get("directory", "."))
         elif name == "search_files":
             result = search_files(arguments.get("pattern"), arguments.get("directory", "."), arguments.get("recursive", False))
-        elif name == "execute_command":
-            result = execute_command(arguments.get("command"), arguments.get("shell", "powershell"))
-        elif name == "exa_search":
-            result = await exa_search(
-                arguments.get("query", ""),
-                num_results=arguments.get("num_results", 5),
-                search_type=arguments.get("search_type", "auto"),
-                include_contents=arguments.get("include_contents", False),
-            )
-        elif name == "playwright_capture":
-            result = await playwright_capture(
-                arguments.get("url", ""),
-                wait_selector=arguments.get("wait_selector"),
-                wait_ms=arguments.get("wait_ms", 5000),
-                screenshot=arguments.get("screenshot", False),
-                screenshot_name=arguments.get("screenshot_name"),
-            )
         elif name == "add_vectors":
             result = await add_vectors(
                 collection=arguments.get("collection", ""),
