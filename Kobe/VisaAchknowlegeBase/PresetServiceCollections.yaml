@@ -1,0 +1,54 @@
+# ============================================================================
+# 预设服务集合（固定组合业务）
+# ============================================================================
+
+preset_combinations:
+  # 示例组合结构（在处理过程中识别和填充）
+  
+  # 示例_移民局9G申请:
+  #   description: "移民局9G工作签证申请业务"
+  #   department: "Bureau of Immigration"
+  #   type: "fixed_combination"
+  #   
+  #   documentsRequired: ["护照原件", "现有签证", "公司文件"]
+  #   
+  #   required_tasks: ["9g申请表填写", "证件照拍摄", "申请信准备"]
+  #   required_paths:
+  #     task1: "BearuOfImmigration/9g申请表填写.md"
+  #     task2: "BearuOfImmigration/证件照拍摄.md"
+  #     task3: "BearuOfImmigration/申请信准备.md"
+  
+  # 示例_劳工部AEP申请:
+  #   description: "劳工部AEP工作许可申请业务"
+  #   department: "Department of Labor"
+  #   type: "fixed_combination"
+  #   
+  #   documentsRequired: ["护照原件", "9G工作签证", "公司文件"]
+  #   
+  #   required_tasks: ["宣誓书准备", "AEP申请表填写", "公示发布"]
+  #   required_paths:
+  #     task1: "DepartmentOfLabor/宣誓书准备.md"
+  #     task2: "DepartmentOfLabor/aep申请表填写.md"
+  #     task3: "DepartmentOfLabor/公示发布.md"
+  
+  # 示例_大型组合:
+  #   description: "企业员工工作签证全套办理业务"
+  #   department: "跨部门"
+  #   type: "fixed_combination"
+  #   
+  #   documentsRequired: ["护照原件", "公司文件"]
+  #   
+  #   required_sub_combinations: ["劳工部AEP申请", "移民局9G申请"]
+  #   sub_combination_refs:
+  #     combo1: "PresetServiceCollections.yaml#劳工部AEP申请"
+  #     combo2: "PresetServiceCollections.yaml#移民局9G申请"
+  #   
+  #   required_tasks: ["I-Card办理"]
+  #   required_paths:
+  #     task1: "BearuOfImmigration/i-card办理.md"
+
+notes:
+  - "本文件在处理过程中逐步填充"
+  - "发现固定组合模式时添加新条目"
+  - "参考模板：../.WorkPlan/PresetServiceCollections_template.yaml"
+

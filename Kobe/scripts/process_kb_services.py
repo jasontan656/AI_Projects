@@ -17,10 +17,13 @@ import json
 import yaml
 import time
 import re
+import math
 import signal
+import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Set
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -40,6 +43,7 @@ def signal_handler(sig, frame):
     console = Console()
     console.print("\n\n[bold yellow]收到中断信号，正在终止...[/bold yellow]")
     console.print("[dim]如果 API 调用正在进行，将在超时后终止[/dim]")
+    logger.info("收到用户中断信号，脚本终止")
     sys.exit(0)
 from rich.layout import Layout
 from rich import box
@@ -47,6 +51,44 @@ from rich import box
 # 初始化
 console = Console()
 load_dotenv()
+
+# 配置日志系统
+def setup_logger():
+    """配置日志记录器"""
+    # 日志文件路径（与脚本同目录）
+    script_dir = Path(__file__).parent
+    log_file = script_dir / f"process_kb_services_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    
+    # 创建 logger
+    logger = logging.getLogger('kb_processor')
+    logger.setLevel(logging.DEBUG)
+    
+    # 文件处理器（详细日志）
+    file_handler = RotatingFileHandler(
+        log_file,
+        maxBytes=50*1024*1024,  # 50MB
+        backupCount=5,
+        encoding='utf-8'
+    )
+    file_handler.setLevel(logging.DEBUG)
+    
+    # 详细格式
+    formatter = logging.Formatter(
+        '%(asctime)s | %(levelname)-8s | %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    file_handler.setFormatter(formatter)
+    
+    logger.addHandler(file_handler)
+    
+    # 记录启动信息
+    logger.info("="*80)
+    logger.info(f"知识库处理脚本启动 - 日志文件: {log_file.name}")
+    logger.info("="*80)
+    
+    return logger
+
+logger = setup_logger()
 
 # 配置路径
 BASE_DIR = Path(__file__).parent.parent.parent
@@ -69,6 +111,12 @@ LOG_DIR.mkdir(exist_ok=True)
 # OpenAI 配置
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 MODEL = os.getenv("OPENAI_MODEL_MINI", "gpt-4o-mini-2024-07-18")
+
+# 多轮与Token硬编码限制
+MAX_MULTI_ROUNDS = 3  # 选择→补充（可选）→最终
+SELECTION_LIMIT_PER_ROUND = 5  # 每轮最多可选文件数
+SELECTION_TOTAL_LIMIT = 10     # 全流程最多可选文件总数
+TOKEN_CAP = 390_000            # 发送前估算token上限，超过则报错停止
 
 
 class AnalysisListManager:
@@ -271,7 +319,11 @@ Slug: {slug}
                             "path": str(rel_path)
                         })
             except Exception as e:
-                console.print(f"[red]读取业务文档失败: {rel_path} - {e}[/red]")
+                error_msg = f"读取业务文档失败: {rel_path} - {e}"
+                console.print(f"[red]{error_msg}[/red]")
+                logger.error(error_msg)
+                logger.debug(f"文件路径: {full_path}")
+                logger.debug(f"Slug: {slug}")
         
         return summaries
     
@@ -436,6 +488,15 @@ Slug: {slug}
 - 证据来源保留中文原文
 - 如果是拆分业务，在related_businesses中明确标注依赖关系
 
+**Frontmatter 格式要求（严格遵守）：**
+1. 第1行必须是 `---`（开始标记）
+2. 第2-N行是 YAML 键值对（必须包含所有模板字段）
+3. 最后一行必须是 `---`（结束标记）
+4. 结束标记后必须有空行
+5. 然后才是 Markdown 正文（以 `# 业务名称` 开头）
+6. **禁止在 frontmatter 内出现 Markdown 标题（#）或段落文本**
+7. 如果某个字段为空，使用空数组 `[]` 或空字符串 `""`，不要省略
+
 **命名规范（极其重要）：**
 - name：使用清晰的英文动词+名词结构
   - 好：`"1 Month Extension"`, `"ECC Filing"`, `"Tourist Visa Renewal"`
@@ -465,12 +526,12 @@ Slug: {slug}
   ],
   "actions": [
     {{
-      "action": "create_business_file",  // 注意：改为create_business_file
+      "action": "create_business_file",
       "department": "BureauOfImmigration",
       "slug": "business-1-slug",
       "name": "Business 1 Name",
-      "business_name": "Business 1 Name",  // 添加此字段用于报告
-      "content": "完整的markdown文档内容（包含frontmatter和正文）"
+      "business_name": "Business 1 Name",
+      "content": "---\\nname: \\"Business 1 Name\\"\\nslug: \\"business-1-slug\\"\\ntype: \\"solo_task\\"\\ndepartment: \\"BureauOfImmigration\\"\\n\\ndocuments_must_provide: [\\"file1\\", \\"file2\\"]\\ndocuments_can_produce: []\\ndocuments_output: [\\"output1\\"]\\nrelated_businesses: []\\naliases: []\\nupdated_at: \\"2025-10-18\\"\\n---\\n\\n# Business 1 Name\\n\\n## Summary\\n\\n完整内容..."
     }},
     {{
       "action": "create_business_file",
@@ -529,9 +590,236 @@ Slug: {slug}
 6. 每个action必须包含business_name字段用于终端报告
 7. **所有业务文档内容必须使用英文撰写（除了证据来源的中文引用）**
 
+**Content 字段格式要求（极其重要）：**
+- content 必须是完整的 Markdown 文档字符串
+- 必须以 `---` 开头（frontmatter 开始）
+- frontmatter 必须包含所有模板字段（即使为空也要写 `[]` 或 `""`）
+- frontmatter 必须以 `---` 结尾（不要忘记！）
+- frontmatter 和正文之间必须有空行
+- 正文才开始 `# 业务名称`
+- **绝对禁止在 frontmatter 的两个 `---` 之间出现 Markdown 标题或段落文本**
+
+**正确示例**：
+```
+---
+name: "Example"
+slug: "example"
+type: "solo_task"
+department: "Dept"
+
+documents_must_provide: ["file1"]
+documents_can_produce: []
+documents_output: []
+related_businesses: []
+aliases: []
+updated_at: "2025-10-18"
+---
+
+# Example
+
+## Summary
+完整内容...
+```
+
 请直接输出JSON，不要包含其他文字。
 """
         
+        return prompt
+
+    # 新增：估算token（粗略：约4字符=1token）
+    @staticmethod
+    def estimate_tokens(text: str) -> int:
+        if not text:
+            return 0
+        # 使用简单近似，避免引入额外依赖
+        return max(1, math.ceil(len(text) / 4))
+
+    # 新增：选择阶段提示（仅目录级信息，不拼接所有业务正文）
+    def build_selection_prompt(self, source_file: Path) -> str:
+        source_content = source_file.read_text(encoding="utf-8")
+        template_content = TEMPLATE_FILE.read_text(encoding="utf-8")
+        relation_content = RELATION_FILE.read_text(encoding="utf-8")
+
+        index_content = INDEX_FILE.read_text(encoding="utf-8") if INDEX_FILE.exists() else "# Empty"
+        collections_content = COLLECTIONS_FILE.read_text(encoding="utf-8") if COLLECTIONS_FILE.exists() else "# Empty"
+        ambiguous_content = AMBIGUOUS_FILE.read_text(encoding="utf-8") if AMBIGUOUS_FILE.exists() else "# Empty"
+
+        business_summaries = self.get_business_summaries()
+
+        prompt = f"""# Round 1: Selection and Planning Only
+
+You are a knowledge base construction assistant. Output only valid JSON. Do not create or update files in this round.
+
+Task: Read the source file and the schemas to decide which existing business documents (by path) you need full content for to determine whether to UPDATE existing or CREATE new business documents. You must obey the selection limits strictly.
+
+Limits:
+- max_per_round: {SELECTION_LIMIT_PER_ROUND}
+- max_total: {SELECTION_TOTAL_LIMIT}
+
+Required JSON output format (business_name is required for each future action candidate you have in mind; you are not outputting actions in this round, but you must plan clear names for later use):
+{{
+  "source_file": "{source_file.name}",
+  "decision_overview": {{
+    "tentative_action": "create_or_update_or_split",
+    "businesses_identified_estimate": 1,
+    "notes": "brief rationale"
+  }},
+  "requested_business_files": [
+    {{ "path": "Department/slug.md", "reason": "similarity or dependency" }}
+  ],
+  "limit_ack": {{ "max_files_allowed": {SELECTION_LIMIT_PER_ROUND} }}
+}}
+
+Source file:
+{source_file}
+
+Content:
+{source_content}
+
+Template:
+{template_content}
+
+Relation Rules (StructureRelation.yaml):
+{relation_content}
+
+Global Index (catalog only):
+{index_content}
+
+PresetServiceCollections (optional):
+{collections_content}
+
+AmbiguousTermsDictionary (optional):
+{ambiguous_content}
+
+Existing business summaries (catalog view, no full text):
+{json.dumps(business_summaries, ensure_ascii=False)}
+
+Important:
+- Only return JSON with the fields described above.
+- Do not include any business full content in this round.
+- Choose at most {SELECTION_LIMIT_PER_ROUND} items.
+ - When the source describes multiple independent tasks (e.g. "X and Y" or sequenced dependencies), plan to split into multiple solo_task documents. Use clear English names and slugs.
+"""
+        return prompt
+
+    # 工具：从路径推断部门
+    @staticmethod
+    def _derive_department_from_path(path_str: str) -> Optional[str]:
+        try:
+            parts = Path(path_str).as_posix().split("/")
+            return parts[0] if parts and parts[0] else None
+        except Exception:
+            return None
+
+    # 工具：从content的frontmatter提取department/slug
+    @staticmethod
+    def _extract_frontmatter_fields(content: str) -> Tuple[Optional[str], Optional[str]]:
+        if not content or not content.startswith("---"):
+            return (None, None)
+        try:
+            lines = content.split("\n")
+            end = -1
+            for i in range(1, len(lines)):
+                if lines[i].strip() == "---":
+                    end = i
+                    break
+            if end == -1:
+                return (None, None)
+            fm_text = "\n".join(lines[1:end])
+            fm = yaml.safe_load(fm_text)
+            if isinstance(fm, dict):
+                return (fm.get("department"), fm.get("slug"))
+        except Exception:
+            pass
+        return (None, None)
+
+    # 新增：处理阶段提示（仅拼接第一轮选中的若干业务正文，可在第二轮请求更多）
+    def build_processing_prompt(self, source_file: Path, selected_paths: List[str], current_round: int, total_selected: int) -> str:
+        source_content = source_file.read_text(encoding="utf-8")
+        template_content = TEMPLATE_FILE.read_text(encoding="utf-8")
+        relation_content = RELATION_FILE.read_text(encoding="utf-8")
+
+        index_content = INDEX_FILE.read_text(encoding="utf-8") if INDEX_FILE.exists() else "# Empty"
+        collections_content = COLLECTIONS_FILE.read_text(encoding="utf-8") if COLLECTIONS_FILE.exists() else "# Empty"
+        ambiguous_content = AMBIGUOUS_FILE.read_text(encoding="utf-8") if AMBIGUOUS_FILE.exists() else "# Empty"
+
+        # 读取被选择的业务正文
+        assembled_docs: List[str] = []
+        for rel_path in selected_paths:
+            file_path = OUTPUT_DIR / rel_path
+            if file_path.exists():
+                try:
+                    content = file_path.read_text(encoding="utf-8")
+                    assembled_docs.append(
+                        f"\n{'='*80}\nSelected business file: {rel_path}\n{'='*80}\n\n{content}\n"
+                    )
+                except Exception as e:
+                    assembled_docs.append(f"[读取失败: {rel_path} - {e}]\n")
+            else:
+                assembled_docs.append(f"[未找到: {rel_path}]\n")
+
+        selected_docs_block = "\n".join(assembled_docs)
+
+        # 第2轮允许再要更多；第3轮必须给最终actions。
+        allow_additional = current_round < MAX_MULTI_ROUNDS
+
+        guidance = (
+            "You may request additional files by returning 'additional_requested_files' (list of paths) if essential to decide create vs update, strictly up to the remaining total limit. Do NOT output actions if you request more."
+            if allow_additional else
+            "This is the final round. You MUST output final actions. Do NOT request more files."
+        )
+
+        remaining_total = max(0, SELECTION_TOTAL_LIMIT - total_selected)
+
+        prompt = f"""# Round {current_round}: Processing
+
+You are a knowledge base construction assistant. Output only valid JSON.
+
+Goal: Using the source file and ONLY the selected existing business documents below, decide whether to UPDATE existing business files or CREATE new ones, then output executable actions (create_business_file, update_business_file, update_index, etc.).
+
+If and only if the selected documents are insufficient and this is not the final round, you may ask for more using 'additional_requested_files' with at most {SELECTION_LIMIT_PER_ROUND} items, and respecting the total limit remaining: {remaining_total}. {guidance}
+
+Expected JSON when producing final actions (each action must include a human-readable business_name for reporting):
+{{
+  "source_file": "{source_file.name}",
+  "businesses_identified": 1,
+  "businesses_created": [],
+  "relations_updated": 0,
+  "combinations_detected": [],
+  "actions": [ ... ]
+}}
+
+Source file:
+{source_file}
+
+Content:
+{source_content}
+
+Template:
+{template_content}
+
+Relation Rules (StructureRelation.yaml):
+{relation_content}
+
+Global Index:
+{index_content}
+
+PresetServiceCollections (optional):
+{collections_content}
+
+AmbiguousTermsDictionary (optional):
+{ambiguous_content}
+
+Selected business documents (full text provided, count={len(selected_paths)}):
+{selected_docs_block}
+
+Rules:
+- All generated business documents must be in English (except evidence quotes).
+- Prefer update over create when similarity is high.
+- Respect the frontmatter and content format constraints from the template.
+- If this is the final round, do not request more files.
+ - If the source implies multiple independent businesses, split into multiple solo_task outputs and provide separate actions with distinct business_name and slug.
+"""
         return prompt
     
     def call_ai(self, prompt: str) -> Dict:
@@ -565,7 +853,10 @@ Slug: {slug}
             return result
         
         except Exception as e:
-            console.print(f"[red]AI API 调用失败: {e}[/red]")
+            error_msg = f"AI API 调用失败: {e}"
+            console.print(f"[red]{error_msg}[/red]")
+            logger.error(error_msg)
+            logger.debug(f"Prompt 长度: {len(prompt)} 字符")
             raise
     
     def execute_actions(self, actions: List[Dict]):
@@ -589,7 +880,10 @@ Slug: {slug}
                     console.print(f"[yellow]未知指令类型: {action_type}[/yellow]")
             
             except Exception as e:
-                console.print(f"[red]执行指令失败 ({action_type}): {e}[/red]")
+                error_msg = f"执行指令失败 ({action_type}): {e}"
+                console.print(f"[red]{error_msg}[/red]")
+                logger.error(error_msg)
+                logger.debug(f"Action 详情: {json.dumps(action, ensure_ascii=False)}")
     
     def _validate_and_fix_frontmatter(self, content: str, filename: str) -> str:
         """验证并修复markdown文档的frontmatter格式
@@ -659,23 +953,49 @@ Slug: {slug}
     
     def _create_business(self, action: Dict):
         """创建新业务文档"""
-        dept = action["department"]
-        slug = action["slug"]
         content = action["content"]
-        
-        dept_dir = OUTPUT_DIR / dept
+        dept = action.get("department")
+        slug = action.get("slug")
+        path_in_action = action.get("path")
+
+        # 允许从 path 或 frontmatter 推断部门与slug
+        if not dept and path_in_action:
+            dept = self._derive_department_from_path(path_in_action)
+        if not slug and path_in_action:
+            try:
+                slug = Path(path_in_action).stem
+            except Exception:
+                pass
+        if not dept or not slug:
+            fm_dept, fm_slug = self._extract_frontmatter_fields(content)
+            dept = dept or fm_dept
+            slug = slug or fm_slug
+
+        if not dept:
+            raise KeyError("action missing 'department' and cannot infer from path/frontmatter")
+        if not slug:
+            raise KeyError("action missing 'slug' and cannot infer from path/frontmatter")
+
+        # 目标路径优先使用 action.path，其次使用 dept/slug.md
+        if path_in_action:
+            file_path = OUTPUT_DIR / Path(path_in_action)
+            dept_dir = file_path.parent
+        else:
+            dept_dir = OUTPUT_DIR / dept
+            file_path = dept_dir / f"{slug}.md"
+
         dept_dir.mkdir(exist_ok=True)
-        
-        file_path = dept_dir / f"{slug}.md"
-        
+
         if file_path.exists():
             return
-        
+
         # 验证并修复frontmatter格式
         content = self._validate_and_fix_frontmatter(content, file_path.name)
-        
+
         file_path.write_text(content, encoding="utf-8")
-        self.completed_businesses[slug] = f"{dept}/{slug}.md"
+        # 记录completed_businesses
+        rel_path = str(file_path.relative_to(OUTPUT_DIR)).replace("\\", "/")
+        self.completed_businesses[slug] = rel_path
     
     def _update_business(self, action: Dict):
         """更新已有业务文档"""
@@ -745,8 +1065,27 @@ Slug: {slug}
             }
         else:
             index = yaml.safe_load(INDEX_FILE.read_text(encoding="utf-8"))
-        
-        dept = action["department"]
+
+        # 如果没有提供department，则根据任务条目的path分组后分别处理
+        dept = action.get("department")
+        if not dept:
+            tasks = action.get("add_tasks", []) or []
+            groups: Dict[str, List[Dict]] = {}
+            for t in tasks:
+                p = t.get("path")
+                d = self._derive_department_from_path(p) if p else None
+                if not d:
+                    # 无法推断部门的任务，跳过并记录
+                    logger.warning(f"update_index: 无法从任务路径推断部门，已跳过: {t}")
+                    continue
+                groups.setdefault(d, []).append(t)
+            for d, group_tasks in groups.items():
+                sub_action = dict(action)
+                sub_action["department"] = d
+                sub_action["add_tasks"] = group_tasks
+                # 递归处理带department的子动作
+                self._update_index(sub_action)
+            return
         
         # 确保department_structure存在
         if "department_structure" not in index:
@@ -767,19 +1106,23 @@ Slug: {slug}
                 "DepartmentOfLabor": "劳工部业务，包括工作许可、AEP、外劳证等",
                 "DepartmentOfJustice": "司法部业务，包括NBI清关等"
             }
-            
+
             index["department_structure"][dept] = {
                 "full_name": action.get("department_full_name", dept_full_names.get(dept, dept)),
                 "description": dept_descriptions.get(dept, ""),
                 "folder_path": f"{dept}/",
                 "solo_tasks": []
             }
+        # 兼容：若部门节点已存在但缺少solo_tasks字段，则补齐
+        if "solo_tasks" not in index["department_structure"][dept] or not isinstance(index["department_structure"][dept].get("solo_tasks"), list):
+            index["department_structure"][dept]["solo_tasks"] = []
         
         # 添加或更新业务
-        for task in action.get("add_tasks", []):
+        for task in action.get("add_tasks", []) or []:
             # 检查是否已存在（通过name精确匹配）
             existing_index = None
-            for i, t in enumerate(index["department_structure"][dept]["solo_tasks"]):
+            dept_tasks = index["department_structure"][dept]["solo_tasks"]
+            for i, t in enumerate(dept_tasks):
                 if t.get("name") == task.get("name"):
                     existing_index = i
                     break
@@ -794,10 +1137,10 @@ Slug: {slug}
             
             if existing_index is not None:
                 # 更新已有业务
-                index["department_structure"][dept]["solo_tasks"][existing_index] = full_task
+                dept_tasks[existing_index] = full_task
             else:
                 # 添加新业务
-                index["department_structure"][dept]["solo_tasks"].append(full_task)
+                dept_tasks.append(full_task)
         
         # 更新元信息
         total = sum(len(d["solo_tasks"]) for d in index["department_structure"].values())
@@ -844,6 +1187,11 @@ def main():
         f"[dim]按 Ctrl+C 可立即中断处理[/dim]",
         border_style="cyan"
     ))
+    
+    # 记录启动参数
+    logger.info(f"模型: {MODEL}")
+    logger.info(f"源目录: {KB_SERVICES_DIR}")
+    logger.info(f"输出目录: {OUTPUT_DIR}")
     
     # 初始化
     analysis_list = AnalysisListManager(ANALYSIS_LIST)
@@ -927,51 +1275,136 @@ def main():
             
             console.print(f"  [cyan]→[/cyan] {file_path.name}", end=" ")
             task_start_time = time.time()
+            logger.info(f"开始处理文件: {file_path.name}")
             
             try:
                 # 检查中断
                 if interrupted:
                     break
-                
-                # 构建提示词
-                prompt = kb_builder.build_prompt(file_path)
-                
-                # 检查中断
-                if interrupted:
-                    break
-                
-                # 调用 AI
-                console.print(f"[dim](API请求中...)[/dim]", end=" ")
-                api_start_time = time.time()
-                result = kb_builder.call_ai(prompt)
-                api_elapsed = time.time() - api_start_time
-                
-                # 提取 token 使用信息
-                round_tokens = result.get("usage", {})
-                prompt_tokens = round_tokens.get("prompt_tokens", 0)
-                completion_tokens = round_tokens.get("completion_tokens", 0)
-                round_total_tokens = round_tokens.get("total_tokens", 0)
-                
-                # 计算本轮费用
-                round_cost = (prompt_tokens / 1_000_000 * PRICE_PER_1M_INPUT + 
-                             completion_tokens / 1_000_000 * PRICE_PER_1M_OUTPUT)
-                
-                # 累计统计
-                total_prompt_tokens += prompt_tokens
-                total_completion_tokens += completion_tokens
-                total_tokens += round_total_tokens
-                total_cost += round_cost
-                
-                console.print(
-                    f"[dim]({api_elapsed:.1f}s)[/dim]"
-                )
-                
+
+                # ============ 多轮流程 ============
+                per_file_prompt_tokens = 0
+                per_file_completion_tokens = 0
+                per_file_total_tokens = 0
+                per_file_cost = 0.0
+
+                # Round 1: 选择阶段
+                selection_prompt = kb_builder.build_selection_prompt(file_path)
+                # 发送前token预估
+                if kb_builder.estimate_tokens(selection_prompt) > TOKEN_CAP:
+                    raise RuntimeError("选择阶段提示超出Token上限，已停止以保护会话与日志")
+
+                console.print(f"[dim](选择阶段 API)[/dim]", end=" ")
+                r1_start = time.time()
+                selection_result = kb_builder.call_ai(selection_prompt)
+                r1_elapsed = time.time() - r1_start
+
+                r1_usage = selection_result.get("usage", {})
+                r1_prompt_tokens = r1_usage.get("prompt_tokens", 0)
+                r1_completion_tokens = r1_usage.get("completion_tokens", 0)
+                r1_total_tokens = r1_usage.get("total_tokens", 0)
+                per_file_prompt_tokens += r1_prompt_tokens
+                per_file_completion_tokens += r1_completion_tokens
+                per_file_total_tokens += r1_total_tokens
+                per_file_cost += (r1_prompt_tokens / 1_000_000 * PRICE_PER_1M_INPUT + r1_completion_tokens / 1_000_000 * PRICE_PER_1M_OUTPUT)
+                console.print(f"[dim]({r1_elapsed:.1f}s)[/dim]", end=" ")
+
+                # 写入选择阶段日志
+                sel_log = LOG_DIR / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file_path.stem}_selection.json"
+                sel_log.write_text(json.dumps(selection_result, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                requested = selection_result.get("requested_business_files", [])
+                # 规范化提取路径
+                requested_paths: List[str] = []
+                for item in requested:
+                    if isinstance(item, dict):
+                        p = item.get("path")
+                        if p:
+                            requested_paths.append(p)
+                    elif isinstance(item, str):
+                        requested_paths.append(item)
+
+                # 截断到本轮上限
+                if len(requested_paths) > SELECTION_LIMIT_PER_ROUND:
+                    requested_paths = requested_paths[:SELECTION_LIMIT_PER_ROUND]
+
+                # 记录已选集合
+                selected_total: Set[str] = set(requested_paths)
+
+                # Round 2: 处理（可追加更多）
+                processing_prompt_r2 = kb_builder.build_processing_prompt(file_path, list(selected_total), 2, len(selected_total))
+                if kb_builder.estimate_tokens(processing_prompt_r2) > TOKEN_CAP:
+                    raise RuntimeError("处理阶段R2提示超出Token上限，已停止以保护会话与日志")
+
+                console.print(f"[dim](处理R2 API)[/dim]", end=" ")
+                r2_start = time.time()
+                process_result_r2 = kb_builder.call_ai(processing_prompt_r2)
+                r2_elapsed = time.time() - r2_start
+                r2_usage = process_result_r2.get("usage", {})
+                r2_prompt_tokens = r2_usage.get("prompt_tokens", 0)
+                r2_completion_tokens = r2_usage.get("completion_tokens", 0)
+                r2_total_tokens = r2_usage.get("total_tokens", 0)
+                per_file_prompt_tokens += r2_prompt_tokens
+                per_file_completion_tokens += r2_completion_tokens
+                per_file_total_tokens += r2_total_tokens
+                per_file_cost += (r2_prompt_tokens / 1_000_000 * PRICE_PER_1M_INPUT + r2_completion_tokens / 1_000_000 * PRICE_PER_1M_OUTPUT)
+                console.print(f"[dim]({r2_elapsed:.1f}s)[/dim]", end=" ")
+
+                # 写入处理R2日志
+                r2_log = LOG_DIR / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file_path.stem}_r2.json"
+                r2_log.write_text(json.dumps(process_result_r2, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                actions = process_result_r2.get("actions", [])
+                additional_req = process_result_r2.get("additional_requested_files", [])
+
+                actions_final = actions
+
+                # 如R2未给出actions且请求更多，并且还有额度→R3
+                if (not actions_final or len(actions_final) == 0) and additional_req and len(selected_total) < SELECTION_TOTAL_LIMIT:
+                    # 追加文件（遵守每轮5个、总共10个）
+                    add_paths: List[str] = []
+                    for item in additional_req:
+                        if isinstance(item, dict):
+                            p = item.get("path")
+                            if p:
+                                add_paths.append(p)
+                        elif isinstance(item, str):
+                            add_paths.append(item)
+
+                    remaining = max(0, SELECTION_TOTAL_LIMIT - len(selected_total))
+                    if remaining > 0:
+                        add_paths = add_paths[:min(SELECTION_LIMIT_PER_ROUND, remaining)]
+                        for p in add_paths:
+                            selected_total.add(p)
+
+                        processing_prompt_r3 = kb_builder.build_processing_prompt(file_path, list(selected_total), 3, len(selected_total))
+                        if kb_builder.estimate_tokens(processing_prompt_r3) > TOKEN_CAP:
+                            raise RuntimeError("处理阶段R3提示超出Token上限，已停止以保护会话与日志")
+
+                        console.print(f"[dim](处理R3 API)[/dim]", end=" ")
+                        r3_start = time.time()
+                        process_result_r3 = kb_builder.call_ai(processing_prompt_r3)
+                        r3_elapsed = time.time() - r3_start
+                        r3_usage = process_result_r3.get("usage", {})
+                        r3_prompt_tokens = r3_usage.get("prompt_tokens", 0)
+                        r3_completion_tokens = r3_usage.get("completion_tokens", 0)
+                        r3_total_tokens = r3_usage.get("total_tokens", 0)
+                        per_file_prompt_tokens += r3_prompt_tokens
+                        per_file_completion_tokens += r3_completion_tokens
+                        per_file_total_tokens += r3_total_tokens
+                        per_file_cost += (r3_prompt_tokens / 1_000_000 * PRICE_PER_1M_INPUT + r3_completion_tokens / 1_000_000 * PRICE_PER_1M_OUTPUT)
+                        console.print(f"[dim]({r3_elapsed:.1f}s)[/dim]", end=" ")
+
+                        # 写入处理R3日志
+                        r3_log = LOG_DIR / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file_path.stem}_r3.json"
+                        r3_log.write_text(json.dumps(process_result_r3, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                        actions_final = process_result_r3.get("actions", [])
+
                 # 执行指令（静默执行）
-                actions = result.get("actions", [])
-                for action in actions:
+                for action in actions_final or []:
                     action_type = action.get("action")
                     try:
-                        # 兼容旧格式和新格式
                         if action_type in ["create_business", "create_business_file"]:
                             kb_builder._create_business(action)
                         elif action_type in ["update_business", "update_business_file"]:
@@ -983,45 +1416,93 @@ def main():
                         elif action_type == "update_ambiguous":
                             kb_builder._update_ambiguous(action)
                     except Exception as action_error:
-                        console.print(f"\n[red]指令失败: {action_type} - {action_error}[/red]")
-                
+                        error_msg = f"指令失败: {action_type} - {action_error}"
+                        console.print(f"\n[red]{error_msg}[/red]")
+                        logger.error(error_msg)
+                        logger.debug(f"失败的 Action: {json.dumps(action, ensure_ascii=False, indent=2)}")
+
                 # 标记完成
                 analysis_list.mark_completed(next_file)
-                
-                # 记录日志
-                log_file = LOG_DIR / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file_path.stem}.json"
-                log_file.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-                
-                # 统计
-                success_count += 1
                 task_elapsed = time.time() - task_start_time
-                
-                # 紧凑的报告 - 使用两行表格
-                created_files = [a for a in actions if a.get("action") in ["create_business", "create_business_file"]]
-                updated_files = [a for a in actions if a.get("action") in ["update_business", "update_business_file"]]
-                combinations = result.get("combinations_detected", [])
-                relations = result.get("relations_updated", 0)
-                
-                # 第一行：文件操作和识别
+                logger.info(f"文件处理完成: {file_path.name}, 耗时: {task_elapsed:.2f}s")
+
+                # 累计全局统计
+                total_prompt_tokens += per_file_prompt_tokens
+                total_completion_tokens += per_file_completion_tokens
+                total_tokens += per_file_total_tokens
+                total_cost += per_file_cost
+
+                # 报告汇总（以最终actions为准）
+                created_files = [a for a in (actions_final or []) if a.get("action") in ["create_business", "create_business_file"]]
+                updated_files = [a for a in (actions_final or []) if a.get("action") in ["update_business", "update_business_file"]]
+                combinations = []
+                relations = 0
+                # 尝试从R2/R3结果读到的非关键统计字段（若存在）
+                for r in [locals().get('process_result_r3'), locals().get('process_result_r2')]:
+                    if isinstance(r, dict):
+                        if not combinations:
+                            combinations = r.get("combinations_detected", []) or []
+                        if relations == 0:
+                            relations = r.get("relations_updated", 0) or 0
+
+                success_count += 1
+
+                # 终端小结表格
                 report_table = Table(box=box.MINIMAL, show_header=True, padding=(0, 1), expand=False)
                 report_table.add_column("创建", style="green", no_wrap=True)
                 report_table.add_column("更新", style="yellow", no_wrap=True)
                 report_table.add_column("组合", style="blue", no_wrap=True)
                 report_table.add_column("关联", style="magenta", no_wrap=True)
-                
-                created_names = ", ".join([a.get('business_name', a.get('name', 'Unknown'))[:20] for a in created_files]) or "-"
-                updated_names = ", ".join([a.get('business_name', a.get('name', 'Unknown'))[:20] for a in updated_files]) or "-"
+
+                def _derive_display_name(a: Dict) -> str:
+                    name = a.get('business_name') or a.get('name')
+                    if name:
+                        return str(name)
+                    # 尝试从content frontmatter拉取name
+                    content = a.get('content')
+                    if isinstance(content, str) and content.startswith('---'):
+                        fm_dept, fm_slug = self._extract_frontmatter_fields(content)
+                        # 复用frontmatter解析拿到更多字段
+                        try:
+                            lines = content.split("\n")
+                            end = -1
+                            for i in range(1, len(lines)):
+                                if lines[i].strip() == "---":
+                                    end = i
+                                    break
+                            if end != -1:
+                                fm_text = "\n".join(lines[1:end])
+                                fm = yaml.safe_load(fm_text)
+                                if isinstance(fm, dict):
+                                    nm = fm.get('name')
+                                    if nm:
+                                        return str(nm)
+                        except Exception:
+                            pass
+                    # 再尝试从path/slug推断
+                    p = a.get('path')
+                    if p:
+                        try:
+                            return Path(p).stem.replace('-', ' ').title()
+                        except Exception:
+                            pass
+                    slug = a.get('slug')
+                    if slug:
+                        return str(slug).replace('-', ' ').title()
+                    return 'Unknown'
+
+                created_names = ", ".join([_derive_display_name(a)[:20] for a in created_files]) or "-"
+                updated_names = ", ".join([_derive_display_name(a)[:20] for a in updated_files]) or "-"
                 combo_str = f"{len(combinations)}" if combinations else "-"
                 relation_str = f"{relations}" if relations > 0 else "-"
-                
+
                 report_table.add_row(
                     f"{len(created_files)}: {created_names}",
                     f"{len(updated_files)}: {updated_names}",
                     combo_str,
                     relation_str
                 )
-                
-                # 第二行：Token和费用
+
                 token_table = Table(box=box.MINIMAL, show_header=True, padding=(0, 1), expand=False)
                 token_table.add_column("输入↓", style="cyan", justify="right")
                 token_table.add_column("输出↑", style="yellow", justify="right")
@@ -1030,29 +1511,33 @@ def main():
                 token_table.add_column("时间", style="dim", justify="right")
                 token_table.add_column("累计Token", style="magenta", justify="right")
                 token_table.add_column("累计费用", style="green", justify="right")
-                
+
                 token_table.add_row(
-                    f"{prompt_tokens:,}",
-                    f"{completion_tokens:,}",
-                    f"{round_total_tokens:,}",
-                    f"${round_cost:.4f}",
+                    f"{per_file_prompt_tokens:,}",
+                    f"{per_file_completion_tokens:,}",
+                    f"{per_file_total_tokens:,}",
+                    f"${per_file_cost:.4f}",
                     f"{task_elapsed:.1f}s",
                     f"{total_tokens:,}",
                     f"${total_cost:.4f}"
                 )
-                
+
                 console.print("  [green]✓[/green]", end=" ")
                 console.print(report_table)
                 console.print("    ", end="")
                 console.print(token_table)
-            
+
             except KeyboardInterrupt:
                 raise
             except Exception as e:
-                console.print(f" [bold red]✗[/bold red] {str(e)[:100]}")
+                error_msg = str(e)[:100]
+                console.print(f" [bold red]✗[/bold red] {error_msg}")
+                logger.error(f"处理文件失败: {file_path.name} - {str(e)}")
+                logger.debug(f"完整错误信息: {str(e)}")
                 error_count += 1
                 # 标记为失败但继续，避免无限重试同一个文件
                 analysis_list.mark_completed(next_file)  # 先标记完成，避免卡住
+                logger.warning(f"已标记文件为完成以避免重试: {next_file}")
                 if "--debug" in sys.argv:
                     import traceback
                     console.print(f"[dim]{traceback.format_exc()}[/dim]")
@@ -1066,10 +1551,13 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         console.print("\n\n[bold yellow]用户中断，进度已保存[/bold yellow]")
         console.print("[green]已处理的文件进度已记录到 AnalysisList.md[/green]")
+        logger.info("用户中断，进度已保存")
         sys.exit(0)
     except Exception as e:
         console.print(f"\n\n[red]发生错误: {e}[/red]")
+        logger.critical(f"脚本崩溃: {e}")
         import traceback
+        logger.critical(traceback.format_exc())
         console.print(traceback.format_exc())
         sys.exit(1)
 
