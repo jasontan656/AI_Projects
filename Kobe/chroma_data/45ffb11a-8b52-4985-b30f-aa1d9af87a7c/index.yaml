@@ -1,36 +1,37 @@
 meta:
-  version: "1.0"
-  schema_version: "1"
-  path: "Kobe/chroma_data/45ffb11a-8b52-4985-b30f-aa1d9af87a7c"
-  last_updated: "2025-10-15"
+  version: '1.0'
+  schema_version: '1'
+  path: Kobe/chroma_data/45ffb11a-8b52-4985-b30f-aa1d9af87a7c
+  last_updated: '2025-10-18'
   owners:
-    - "kobe-core"
-  stability: "alpha"
+  - kobe-core
+  stability: alpha
 module:
-  name: "45ffb11a-8b52-4985-b30f-aa1d9af87a7c"
-  summary: "Chroma 持久化 collection 数据分片 (HNSW 图存储)。"
+  name: 45ffb11a-8b52-4985-b30f-aa1d9af87a7c
+  summary: Chroma 持久化 collection 数据分片 (HNSW 图存储)。
   responsibilities:
-    - "存储该 collection 的 HNSW 节点、链接与 header 元数据"
-    - "支撑 vector_tools.chroma_ops 的本地语义检索"
+  - 存储该 collection 的 HNSW 节点、链接与 header 元数据
+  - 支撑 vector_tools.chroma_ops 的本地语义检索
   non_goals:
-    - "作为代码模块被导入执行"
-    - "人工维护或直接修改数据内容"
+  - 作为代码模块被导入执行
+  - 人工维护或直接修改数据内容
   entry_points: []
 relations:
   depends_on:
-    - "Kobe/ChatTerminal/tools/vector_tools/chroma_ops.py"
+  - Kobe/ChatTerminal/tools/vector_tools/chroma_ops.py
   used_by: []
   provides_apis: []
   reasons:
-    - "记录自动生成的向量索引结构及其放置位置"
+  - 记录自动生成的向量索引结构及其放置位置
 files:
   key_files:
-    - "data_level0.bin"
-    - "header.bin"
-    - "length.bin"
-    - "link_lists.bin"
+  - data_level0.bin
+  - header.bin
+  - length.bin
+  - link_lists.bin
   test_locations: []
 sub_indexes: []
 notes:
-  - "文件由 Chroma PersistentClient 自动生成，禁止手动修改"
-  - "删除后将导致对应向量集合丢失，需要重新构建"
+- 文件由 Chroma PersistentClient 自动生成，禁止手动修改
+- 删除后将导致对应向量集合丢失，需要重新构建
+- 自动更新基础元数据 2025-10-18

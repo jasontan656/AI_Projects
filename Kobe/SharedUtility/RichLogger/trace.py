@@ -7,6 +7,7 @@ from typing import Any, Mapping
 from contextvars import ContextVar
 
 from .logger import RichLoggerManager
+from .logger import RichLoggerManager as _RLM
 
 
 _trace_id_var: ContextVar[str | None] = ContextVar("trace_id", default=None)
@@ -48,6 +49,7 @@ class LoggingProgressReporter:
         elif level >= logging.INFO:
             self.logger.info(message)
         else:
+            # DEBUG 级别用于记录 rawdata
             self.logger.debug(message)
 
     # High-level helpers

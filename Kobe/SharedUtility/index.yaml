@@ -1,33 +1,34 @@
 meta:
-  version: "1.0"
-  schema_version: "1"
-  path: "Kobe/SharedUtility"
-  last_updated: "2025-10-15"
+  version: '1.0'
+  schema_version: '1'
+  path: Kobe/SharedUtility
+  last_updated: '2025-10-18'
   owners:
-    - "kobe-core"
-  stability: "alpha"
+  - kobe-core
+  stability: alpha
 module:
-  name: "SharedUtility"
-  summary: "跨模块共享的基础设施集合（日志、队列等）"
+  name: SharedUtility
+  summary: 跨模块共享的基础设施集合（日志、队列等）
   responsibilities:
-    - "提供全局使用的日志封装 RichLogger"
-    - "预留任务队列等公共能力的扩展空间"
+  - 提供全局使用的日志封装 RichLogger
+  - 预留任务队列等公共能力的扩展空间
   non_goals:
-    - "不承载业务领域逻辑"
+  - 不承载业务领域逻辑
   entry_points: []
 relations:
   depends_on: []
   used_by:
-    - "Kobe/app.py"
-    - "Kobe/api/chat_langchain.py"
+  - Kobe/app.py
+  - Kobe/api/chat_langchain.py
   provides_apis: []
   reasons:
-    - "集中管理跨模块可复用的基础组件"
+  - 集中管理跨模块可复用的基础组件
 files:
   key_files: []
   test_locations: []
 sub_indexes:
-  - "Kobe/SharedUtility/RichLogger/index.yaml"
-  - "Kobe/SharedUtility/TaskQueue/index.yaml"
+- RichLogger
+- TaskQueue
 notes:
-  - "RichLogger 已投入使用，TaskQueue 目前为空结构"
+- RichLogger 已投入使用，TaskQueue 目前为空结构
+- 自动更新基础元数据 2025-10-18

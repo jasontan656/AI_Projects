@@ -1,6 +1,6 @@
 # ==================== 核心模型配置 ====================
 # 默认使用 GPT-5 模型
-model = "gpt-5"
+model = "gpt-5-codex"
 model_provider = "openai"
 
 # 推理配置

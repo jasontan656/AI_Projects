@@ -1,43 +1,43 @@
 meta:
-  version: "1.0"
-  schema_version: "1"
-  path: "Kobe/SharedUtility/RichLogger"
-  last_updated: "2025-10-15"
+  version: '1.0'
+  schema_version: '1'
+  path: Kobe/SharedUtility/RichLogger
+  last_updated: '2025-10-18'
   owners:
-    - "kobe-core"
-  stability: "alpha"
+  - kobe-core
+  stability: alpha
 module:
-  name: "RichLogger"
-  summary: "集成 Rich 的结构化日志系统，统一本地与文件落盘。"
+  name: RichLogger
+  summary: 集成 Rich 的结构化日志系统，统一本地与文件落盘。
   responsibilities:
-    - "提供 RichLoggerManager 并初始化全局 logger"
-    - "封装终端与文件 Handler，输出彩色 app/error 日志"
-    - "维护模块级日志目录结构"
+  - 提供 RichLoggerManager 并初始化全局 logger
+  - 封装终端与文件 Handler，输出彩色 app/error 日志
+  - 维护模块级日志目录结构
   non_goals:
-    - "约束具体业务日志格式"
+  - 约束具体业务日志格式
   entry_points:
-    - "SharedUtility.RichLogger.logger:RichLoggerManager.bootstrap"
-    - "SharedUtility.RichLogger.logger:RichLoggerManager.for_node"
+  - SharedUtility.RichLogger.logger:RichLoggerManager.bootstrap
+  - SharedUtility.RichLogger.logger:RichLoggerManager.for_node
 relations:
   depends_on: []
   used_by:
-    - "Kobe/app.py"
-    - "Kobe/api/chat_langchain.py"
+  - Kobe/app.py
+  - Kobe/api/chat_langchain.py
   provides_apis: []
   reasons:
-    - "集中管理日志配置，避免各模块重复创建 Logger"
+  - 集中管理日志配置，避免各模块重复创建 Logger
 files:
   key_files:
-    - "__init__.py"
-    - "logger.py"
-    - "console_handler.py"
-    - "file_handler.py"
-    - "trace.py"
+  - __init__.py
+  - logger.py
+  - console_handler.py
+  - file_handler.py
+  - trace.py
   test_locations: []
 sub_indexes:
-  - "Kobe/SharedUtility/RichLogger/logs/index.yaml"
-  - "Kobe/SharedUtility/RichLogger/logs/modules/index.yaml"
+- logs
 notes:
-  - "日志文件默认写入 logs/app.log 与 logs/error.log"
-  - "依赖 rich 与 rich.logging 提供彩色终端输出"
-  - "trace.py 暴露 trace_id 与结构化进度上报工具"
+- 日志文件默认写入 logs/app.log 与 logs/error.log
+- 依赖 rich 与 rich.logging 提供彩色终端输出
+- trace.py 暴露 trace_id 与结构化进度上报工具
+- 自动更新基础元数据 2025-10-18
