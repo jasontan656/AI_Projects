@@ -1,34 +1,32 @@
 meta:
-  version: '1.0'
-  schema_version: '1'
-  path: Kobe/SharedUtility
-  last_updated: '2025-10-18'
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility"
+  last_updated: "2025-10-20"
   owners:
-  - kobe-core
-  stability: alpha
+    - "kobe-core"
+  stability: "alpha"
 module:
-  name: SharedUtility
-  summary: 跨模块共享的基础设施集合（日志、队列等）
+  name: "SharedUtility"
+  summary: "Common helper layer that currently hosts the RichLogger infrastructure."
   responsibilities:
-  - 提供全局使用的日志封装 RichLogger
-  - 预留任务队列等公共能力的扩展空间
+    - "Provide SharedUtility.RichLogger for application-wide logging"
+    - "Offer an expansion point for future shared utilities"
   non_goals:
-  - 不承载业务领域逻辑
+    - "Does not implement domain-specific business logic"
   entry_points: []
 relations:
   depends_on: []
   used_by:
-  - Kobe/app.py
-  - Kobe/api/chat_langchain.py
+    - "Kobe/app.py"
   provides_apis: []
   reasons:
-  - 集中管理跨模块可复用的基础组件
+    - "Centralize utilities reused by multiple services"
 files:
   key_files: []
   test_locations: []
 sub_indexes:
-- RichLogger
-- TaskQueue
+  - "RichLogger"
 notes:
-- RichLogger 已投入使用，TaskQueue 目前为空结构
-- 自动更新基础元数据 2025-10-18
+  - "Only the RichLogger subtree is populated as of 2025-10-20"
+  - "Metadata refreshed on 2025-10-20"

@@ -16,7 +16,7 @@ workflows:
     steps:
       - name: "进入项目根目录"
         do: "切换到 D:\\AI_Projects 作为当前工作目录"
-
+        awareness: "you're using powershell in windows environment.And working as CODEX CLI remmeber to 设置输出编码为UTF-8"
       - name: "扫描 Kobe 目录结构"
         do: |
           遍历 Kobe/ 下的所有子目录（包含空目录），收集目录清单并包含 Kobe 根目录。
