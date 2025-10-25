@@ -1,17 +1,20 @@
 import os
 import subprocess
+import sys
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
 
 # Ensure .env is loaded from the repo root (Kobe), not only CWD
 # 1) Try walking up from CWD to find the nearest .env
+_repo_root = Path(__file__).resolve().parents[1]  # .../Kobe
 _dotenv = find_dotenv(usecwd=True)
 # 2) Fallback to the Kobe root inferred from this file location
 if not _dotenv:
-    _repo_root = Path(__file__).resolve().parents[1]  # .../Kobe
     _dotenv = str((_repo_root / '.env').resolve())
 
 load_dotenv(_dotenv, override=False)
+if str(_repo_root) not in sys.path:
+    sys.path.append(str(_repo_root))
 
 from utils.i18n import strings
 from datetime import datetime
@@ -26,7 +29,7 @@ from telegram import InlineKeyboardButton
 
 NICK = os.environ.get('NICK', None)
 PORT = int(os.environ.get('PORT', '8080'))
-BOT_TOKEN = os.environ.get('BOT_TOKEN', None)
+BOT_TOKEN = os.environ.get('BOT_TOKEN', None) or os.environ.get('TELEGRAM_BOT_TOKEN', None)
 RESET_TIME = int(os.environ.get('RESET_TIME', '3600'))
 if RESET_TIME < 60:
     RESET_TIME = 60
@@ -34,6 +37,7 @@ if RESET_TIME < 60:
 BASE_URL = os.environ.get('BASE_URL', 'https://api.openai.com/v1/chat/completions')
 API_KEY = os.environ.get('API_KEY', None)
 MODEL = os.environ.get('MODEL', 'gpt-5')
+USE_AGENTS = os.environ.get('USE_AGENTS', 'False').lower() == 'true'
 
 WEB_HOOK = os.environ.get('WEB_HOOK', None)
 CHAT_MODE = os.environ.get('CHAT_MODE', "global")
@@ -120,9 +124,10 @@ def save_user_config(user_id, config):
 
     filename = os.path.join(CONFIG_DIR, f'{user_id}.json')
 
-    with file_lock(filename):
-        with open(filename, 'w') as f:
-            json.dump(config, f, indent=2, ensure_ascii=False)
+    with file_lock(filename) as f:
+        f.seek(0)
+        f.truncate()
+        json.dump(config, f, indent=2, ensure_ascii=False)
 
 def load_user_config(user_id):
     filename = os.path.join(CONFIG_DIR, f'{user_id}.json')
@@ -130,13 +135,13 @@ def load_user_config(user_id):
     if not os.path.exists(filename):
         return {}
 
-    with file_lock(filename):
-        with open(filename, 'r') as f:
-            content = f.read()
-            if not content.strip():
-                return {}
-            else:
-                return json.loads(content)
+    with file_lock(filename) as f:
+        f.seek(0)
+        content = f.read()
+        if not content.strip():
+            return {}
+        else:
+            return json.loads(content)
 
 def update_user_config(user_id, key, value):
     config = load_user_config(user_id)
@@ -304,6 +309,22 @@ Users = UserConfig(mode=CHAT_MODE, api_key=API_KEY, api_url=BASE_URL, engine=MOD
 temperature = float(os.environ.get('temperature', '0.5'))
 
 ChatGPTbot, SummaryBot, whisperBot = None, None, None
+_agents_bridge = None
+
+
+def should_use_agents() -> bool:
+    return USE_AGENTS or MODEL.lower() == 'agents'
+
+
+def _ensure_agents_bridge():
+    global _agents_bridge
+    if _agents_bridge is None:
+        from OpenaiAgents.UnifiedCS import bootstrap
+        from OpenaiAgents.UnifiedCS.bridge import AgentsBridge
+
+        bootstrap.memory_preload(_repo_root)
+        _agents_bridge = AgentsBridge()
+    return _agents_bridge
 def InitEngine(chat_id=None):
     global Users, ChatGPTbot, SummaryBot, whisperBot
     api_key = Users.get_config(chat_id, "api_key")
@@ -372,12 +393,17 @@ def replace_with_asterisk(string):
 def update_info_message(user_id = None):
     api_key = Users.get_config(user_id, "api_key")
     api_url = Users.get_config(user_id, "api_url")
+    robot, _, _, _ = get_active_robot(user_id)
+    tokens = ""
+    if robot and hasattr(robot, "tokens_usage") and user_id is not None:
+        tokens_dict = getattr(robot, "tokens_usage", {})
+        tokens = str(tokens_dict.get(str(user_id), tokens_dict.get(user_id, "")))
     return "".join([
         f"**🤖 Model:** `{Users.get_config(user_id, 'engine')}`\n\n",
         f"**🔑 API_KEY:** `{replace_with_asterisk(api_key)}`\n\n" if api_key else "",
         f"**🔗 BASE URL:** `{api_url}`\n\n" if api_url else "",
         f"**🛜 WEB HOOK:** `{WEB_HOOK}`\n\n" if WEB_HOOK else "",
-        f"**🚰 Tokens usage:** `{get_robot(user_id)[0].tokens_usage[str(user_id)]}`\n\n" if get_robot(user_id)[0] else "",
+        f"**🚰 Tokens usage:** `{tokens}`\n\n" if tokens else "",
         f"**🃏 NICK:** `{NICK}`\n\n" if NICK else "",
         f"**📖 Version:** `{check_for_updates()}`\n\n",
     ])
@@ -401,6 +427,19 @@ def get_robot(chat_id = None):
     api_url = BaseAPI(api_url=api_url).chat_url
 
     return robot, role, api_key, api_url
+
+
+def get_robot_agents(chat_id=None):
+    bridge = _ensure_agents_bridge()
+    role = "user"
+    return bridge, role, API_KEY, BASE_URL
+
+
+def get_active_robot(chat_id=None):
+    if should_use_agents():
+        return get_robot_agents(chat_id)
+    return get_robot(chat_id)
+
 
 whitelist = os.environ.get('whitelist', None)
 if whitelist == "":

@@ -21,6 +21,7 @@ from config import (
     PLUGINS,
     RESET_TIME,
     get_robot,
+    get_active_robot,
     reset_ENGINE,
     get_current_lang,
     update_info_message,
@@ -139,7 +140,7 @@ async def command_bot(update, context, title="", has_command=True):
             and update_message.reply_to_message.from_user.username != bot_info_username:
                 return
 
-            robot, role, api_key, api_url = get_robot(convo_id)
+            robot, role, api_key, api_url = get_active_robot(convo_id)
             engine = Users.get_config(convo_id, "engine")
 
             if Users.get_config(convo_id, "LONG_TEXT"):
@@ -624,7 +625,7 @@ async def button_press(update, context):
 @decorators.APICheck
 async def handle_file(update, context):
     _, _, image_url, chatid, _, _, _, message_thread_id, convo_id, file_url, _, voice_text = await GetMesageInfo(update, context)
-    robot, role, api_key, api_url = get_robot(convo_id)
+    robot, role, api_key, api_url = get_active_robot(convo_id)
     engine = Users.get_config(convo_id, "engine")
 
     if file_url == None and image_url:
@@ -656,7 +657,7 @@ async def inlinequery(update: Update, context) -> None:
     if (query.endswith('.') or query.endswith('。')) and query.strip():
         prompt = "Answer the following questions as concisely as possible:\n\n"
         _, _, _, chatid, _, _, _, _, convo_id, _, _, _ = await GetMesageInfo(update, context)
-        robot, role, api_key, api_url = get_robot(convo_id)
+        robot, role, api_key, api_url = get_active_robot(convo_id)
         result = config.ChatGPTbot.ask(prompt + query, convo_id=convo_id, model=engine, api_url=api_url, api_key=api_key, pass_history=0)
 
         results = [
@@ -781,7 +782,7 @@ async def reset_chat(update, context):
         parse_mode='MarkdownV2',
     )
     if GET_MODELS:
-        robot, role, api_key, api_url = get_robot()
+        robot, role, api_key, api_url = get_active_robot()
         engine = Users.get_config(convo_id, "engine")
         provider = {
             "provider": "openai",

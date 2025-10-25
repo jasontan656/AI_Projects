@@ -1,0 +1,16 @@
+defaults:
+  triage:
+    model: "responses:mini"
+    temperature: 0.2
+    max_tokens: 256
+    tool_use_behavior: "default"
+  intro_frame:
+    model: "responses:mini"
+    temperature: 0.2
+    max_tokens: 256
+    tool_use_behavior: "default"
+  planner:
+    model: "responses:standard"
+    temperature: 0.3
+    max_tokens: 2048
+    tool_use_behavior: "default"

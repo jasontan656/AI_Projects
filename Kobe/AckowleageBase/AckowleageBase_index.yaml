@@ -1,0 +1,26 @@
+version: "v1"
+updated_at: "2025-10-25T00:00:00Z"
+agencies:
+  - agency_id: "bi"
+    agency_name: "BureauOfImmigration"
+    agency_desc: "Philippines Bureau of Immigration public services"
+    agency_folder: "BI"
+    index_rel: "BI_index.yaml"
+agency_synonyms:
+  Bureau of Immigration:
+    - "BI"
+    - "菲律宾移民局"
+  Immigration Bureau:
+    - "Bureau of Immigration"
+routing_table:
+  pricing:
+    tokens: ["价格", "费用", "多少钱", "费用明细"]
+    agencies: ["bi"]
+    l3_candidates: ["special-study-permit"]
+  process:
+    tokens: ["流程", "步骤", "怎么办理", "how"]
+    agencies: ["bi"]
+    l3_candidates: ["special-study-permit"]
+  preconditions:
+    tokens: ["条件", "资格", "requirements"]
+    agencies: ["bi"]
