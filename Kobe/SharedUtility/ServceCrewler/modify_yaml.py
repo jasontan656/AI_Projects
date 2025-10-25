@@ -1,6 +1,7 @@
 from pathlib import Path
+import os
 import re
-path = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/service_yaml_template.yaml")
+path = Path(os.environ.get("SERVICE_CRAWLER_YAML_TEMPLATE", str(Path(__file__).resolve().parent / "service_yaml_template.yaml")))
 text = path.read_text(encoding="utf-8")
 old_semantic = "semantic_profile:\n  intent_id: \"示例占位{visa.downgrade.combined}\"\n  category: \"示例占位{PROCESSING_REQUIREMENT}\"\n  tags:\n    - \"示例占位{9G降签}\"\n    - \"示例占位{旅游身份转换}\"\n    - \"示例占位{I-Card注销}\"\n"
 if old_semantic not in text:

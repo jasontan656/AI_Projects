@@ -15,10 +15,10 @@ from openai import OpenAI
 from rich.console import Console
 from rich.progress import track
 
-BASE_URL = "https://immigration.gov.ph"
+BASE_URL = os.environ.get("SERVICE_CRAWLER_BASE_URL", "https://immigration.gov.ph")
 SERVICES_URL = f"{BASE_URL}/services/"
-ROOT_DIR = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-ENV_PATH = Path("D:/AI_Projects/Kobe/.env")
+ROOT_DIR = Path(os.environ.get("SERVICE_CRAWLER_WORKSPACE_ROOT", r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI"))
+ENV_PATH = Path(os.environ.get("SERVICE_CRAWLER_ENV", r"D:/AI_Projects/Kobe/.env"))
 ATTACHMENT_SUFFIXES = {".pdf", ".jpg", ".jpeg", ".png"}
 console = Console()
 

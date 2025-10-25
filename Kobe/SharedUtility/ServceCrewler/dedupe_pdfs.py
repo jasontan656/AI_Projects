@@ -5,14 +5,15 @@ from functools import cmp_to_key
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
+import os
 
 from pdfminer.high_level import extract_text
 from rich.console import Console
 from rich.table import Table
 from rich.progress import track
 
-ROOT = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-TEXT_CACHE_ROOT = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/.pdf_text_cache")
+ROOT = Path(os.environ.get("SERVICE_CRAWLER_WORKSPACE_ROOT", r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI"))
+TEXT_CACHE_ROOT = Path(os.environ.get("SERVICE_CRAWLER_PDF_CACHE", ROOT.parent / ".pdf_text_cache"))
 PDF_EXT = ".pdf"
 YEAR_PATTERN = re.compile(r"\b(20\d{2})\b")
 DOC_NUM_PATTERN = re.compile(r"(?:^|[^0-9])(\d{2,})(?!\d)")

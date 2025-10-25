@@ -1,7 +1,17 @@
 import os
 import subprocess
-from dotenv import load_dotenv
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+# Ensure .env is loaded from the repo root (Kobe), not only CWD
+# 1) Try walking up from CWD to find the nearest .env
+_dotenv = find_dotenv(usecwd=True)
+# 2) Fallback to the Kobe root inferred from this file location
+if not _dotenv:
+    _repo_root = Path(__file__).resolve().parents[1]  # .../Kobe
+    _dotenv = str((_repo_root / '.env').resolve())
+
+load_dotenv(_dotenv, override=False)
 
 from utils.i18n import strings
 from datetime import datetime

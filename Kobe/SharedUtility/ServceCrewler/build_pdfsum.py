@@ -19,8 +19,9 @@ console = Console()
 
 ATTACHMENT_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png"}
-ENV_PATH = Path("D:/AI_Projects/Kobe/.env")
-DEFAULT_ROOT = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
+BASE_DIR = Path(__file__).resolve().parent
+ENV_PATH = Path(os.environ.get("SERVICE_CRAWLER_ENV", r"D:/AI_Projects/Kobe/.env"))
+DEFAULT_ROOT = Path(os.environ.get("SERVICE_CRAWLER_WORKSPACE_ROOT", r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI"))
 
 
 def ensure_environment() -> None:

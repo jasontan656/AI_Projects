@@ -16,9 +16,11 @@ from pdfminer.high_level import extract_text
 from rich.console import Console
 from rich.progress import track
 
-ROOT_DIR = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-ENV_PATH = Path("D:/AI_Projects/Kobe/.env")
-TEMP_ROOT = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/.rename_tmp")
+from config_loader import resolve_path, get_llm_config
+
+ROOT_DIR = resolve_path("workspace_root")
+ENV_PATH = resolve_path("env_file")
+TEMP_ROOT = resolve_path("rename_tmp")
 ATTACHMENT_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
 MAX_SNIPPET_CHARS = None
 BASENAME_GUIDELINES = [
@@ -28,6 +30,31 @@ BASENAME_GUIDELINES = [
     "DependentApplicationForm",
     "CertificationApplication",
 ]
+
+RENAMER_PROMPT_FALLBACK = (
+    "你是文档归档助手。请阅读附件全文（或图像 OCR 内容），判断其在签证/认证流程中的用途。"
+    "若现有文件名已满足以下规范，则直接复用原文件名；否则生成符合规范的新名称。规范："
+    "1) 文件名仅包含 1-3 个英文单词（驼峰或首字母大写连写均可），例如 Checklist、DependentApplicationForm；"
+    "2) 不包含业务名称/部门名称，只描述用途；"
+    "3) 内容应反映表单/清单类型（ApplicationForm、Checklist、Certification 等）。"
+    " 示例（仅供参考）：{examples}。"
+    "命名决策优先依据以下关键词：若正文标题或开头含有 'Checklist'、'Checklist of'、'Checklist for' 等字样，输出 Checklist；"
+    "若出现 'Application Form', 'Petition Form', 'Request Form' 等，输出 ApplicationForm 或更具体如 DependentApplicationForm；"
+    "若为证明/证明书包含 'Certification'、'Certificate' 等，则输出 CertificationApplication；"
+    "如无法根据关键词判断，再综合文意选择最贴切的 1-3 个词。"
+    "返回 JSON：{\"filename\": \"...\"}，值需附带扩展名（例如 Checklist.pdf）。"
+)
+
+try:
+    RENAMER_LLM = get_llm_config("rename_attachments")
+except KeyError as exc:
+    raise RuntimeError("config.yaml 缺少 llm.rename_attachments 配置。") from exc
+
+RENAMER_MODEL = RENAMER_LLM.get("model")
+RENAMER_PROMPT_TEMPLATE = RENAMER_LLM.get("system_prompt")
+
+if not RENAMER_MODEL or not RENAMER_PROMPT_TEMPLATE:
+    raise RuntimeError("llm.rename_attachments 需要提供 model 与 system_prompt。")
 
 
 @dataclass
@@ -132,22 +159,10 @@ def request_filename_from_llm(
     attachment: Attachment,
     content: str,
     image_b64: Optional[str] = None,
+    prompt_template: str = "",
 ) -> str:
     payload = build_prompt_payload(attachment, content)
-    examples = ", ".join(BASENAME_GUIDELINES)
-    system_prompt = (
-        "你是文档归档助手。请阅读附件全文（或图像 OCR 内容），判断其在签证/认证流程中的用途。"
-        "若现有文件名已满足以下规范，则直接复用原文件名；否则生成符合规范的新名称。规范："
-        "1) 文件名仅包含 1-3 个英文单词（驼峰或首字母大写连写均可），例如 Checklist、DependentApplicationForm；"
-        "2) 不包含业务名称/部门名称，只描述用途；"
-        "3) 内容应反映表单/清单类型（ApplicationForm、Checklist、Certification 等）。"
-        f" 示例（仅供参考）：{examples}。"
-        "命名决策优先依据以下关键词：若正文标题或开头含有 'Checklist'、'Checklist of'、'Checklist for' 等字样，输出 Checklist；"
-        "若出现 'Application Form', 'Petition Form', 'Request Form' 等，输出 ApplicationForm 或更具体如 DependentApplicationForm；"
-        "若为证明/证明书包含 'Certification'、'Certificate' 等，则输出 CertificationApplication；"
-        "如无法根据关键词判断，再综合文意选择最贴切的 1-3 个词。"
-        "返回 JSON：{\"filename\": \"...\"}，值需附带扩展名（例如 Checklist.pdf）。"
-    )
+    system_prompt = prompt_template.format(examples=", ".join(BASENAME_GUIDELINES))
 
     user_content = [{"type": "input_text", "text": json.dumps(payload, ensure_ascii=False)}]
     if image_b64:
@@ -243,13 +258,14 @@ def process_attachment(
     store_temp_excerpt(attachment, content or "[image]")
 
     try:
-        suggested = request_filename_from_llm(
-            client=client,
-            model=model,
-            attachment=attachment,
-            content=content,
-            image_b64=image_b64,
-        )
+    suggested = request_filename_from_llm(
+        client=client,
+        model=model,
+        attachment=attachment,
+        content=content,
+        image_b64=image_b64,
+        prompt_template=prompt_template,
+    )
     except Exception as exc:  # pragma: no cover - defensive
         console.print(
             f"[red]LLM request failed[/red] {attachment.relative}: {exc}",

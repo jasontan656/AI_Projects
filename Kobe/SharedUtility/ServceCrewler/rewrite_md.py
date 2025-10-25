@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import concurrent.futures
+import os
 import traceback
 from pathlib import Path
 from typing import List, Tuple
@@ -9,20 +10,33 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from rich.console import Console
 
-ROOT = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-TEMPLATE_PATH = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/mdtemplate.md")
-PRICE_PATH = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI_price.md")
-ENV_PATH = Path(r"D:/AI_Projects/Kobe/.env")
+from config_loader import resolve_path, get_llm_config
+
+BASE_DIR = Path(__file__).resolve().parent
+ROOT = resolve_path("workspace_root")
+TEMPLATE_PATH = resolve_path("md_template")
+PRICE_PATH = resolve_path("price_doc")
+ENV_PATH = resolve_path("env_file")
 OUTPUT_SUFFIX = "_rewritten.md"
-MODEL = "gpt-5-2025-08-07"
 MAX_WORKERS = 10
 
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT_FALLBACK = """
 role: "PROWRITER"
 description: "你是一名政务与业务文档结构化专家，任务是理解、迁移并增强指定业务说明文档，使其完全符合统一模板结构。你的目标是：吸收 BASE_DOC、PDF_SUMMARY、PRICE_DOC、TEMPLATE 四个来源中的信息，理解后用中文重写为完整、结构化、信息充分的业务说明 Markdown。"
 
 (省略其余提示词内容...)
 """
+
+try:
+    LLM_CONFIG = get_llm_config("rewrite_md")
+except KeyError as exc:
+    raise RuntimeError("config.yaml 缺少 llm.rewrite_md 配置。") from exc
+
+MODEL = LLM_CONFIG.get("model")
+SYSTEM_PROMPT = LLM_CONFIG.get("system_prompt")
+
+if not MODEL or not SYSTEM_PROMPT:
+    raise RuntimeError("llm.rewrite_md 需要同时提供 model 与 system_prompt。")
 
 console = Console()
 

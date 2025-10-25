@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from openai import OpenAI
 
-BASE_DIR = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-ENV_PATH = Path("D:/AI_Projects/Kobe/.env")
+BASE_DIR = Path(os.environ.get("SERVICE_CRAWLER_WORKSPACE_ROOT", r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI"))
+ENV_PATH = Path(os.environ.get("SERVICE_CRAWLER_ENV", r"D:/AI_Projects/Kobe/.env"))
 VISA_DATA = [
     {"category": "Immigrant Visas", "name": "Child Born Abroad of Immigrant Mother", "url": "https://immigration.gov.ph/child-born-abroad-of-immigrant-mother/"},
     {"category": "Immigrant Visas", "name": "Child Born Subsequent to the Issuance of Immigrant Visa of the Accompanying Parent", "url": "https://immigration.gov.ph/child-born-subsqeunt-to-the-issuance-of-immigrant-visa-of-the-accompanying-parent-13c/"},

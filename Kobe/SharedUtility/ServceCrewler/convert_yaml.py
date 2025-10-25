@@ -1,24 +1,28 @@
 from __future__ import annotations
 
 import concurrent.futures
+import os
+import random
 import traceback
 from pathlib import Path
 from typing import List, Tuple
-import random
 
 from dotenv import load_dotenv
 from openai import OpenAI
 from rich.console import Console
 
-ROOT = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-TEMPLATE_PATH = Path(r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/service_yaml_template.yaml")
-ENV_PATH = Path(r"D:/AI_Projects/Kobe/.env")
+from config_loader import resolve_path, get_llm_config
+
+BASE_DIR = Path(__file__).resolve().parent
+ROOT = resolve_path("workspace_root")
+TEMPLATE_PATH = resolve_path("yaml_template")
+ENV_PATH = resolve_path("env_file")
 TARGET_FIRST_DIR = ROOT / "PreArrangedEmploymentVisa9G"
 OUTPUT_EXT = ".yaml"
 MODEL = "gpt-5-2025-08-07"
 MAX_WORKERS = 10
 
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT_FALLBACK = """
 system_role: "STRUCTURE_CONVERTER_V2"
 description: >
   将业务说明文档（Markdown）转换为标准化 YAML（v2）。
@@ -192,6 +196,17 @@ quality_gates:
   - 金额不满足 amount 规则、随意补写内容、或出现未定义键名，视为错误；修正或置空。
   - 若 slug 为空或 department 为空，视为错误；必须按 mapping_guide 规则补齐（允许使用 CONTEXT.service_dir_name）。
 """
+
+try:
+  LLM_CONFIG = get_llm_config("convert_yaml")
+except KeyError as exc:
+  raise RuntimeError("config.yaml 缺少 llm.convert_yaml 配置。") from exc
+
+MODEL = LLM_CONFIG.get("model")
+SYSTEM_PROMPT = LLM_CONFIG.get("system_prompt")
+
+if not MODEL or not SYSTEM_PROMPT:
+  raise RuntimeError("llm.convert_yaml 需要同时提供 model 与 system_prompt。")
 
 console = Console()
 

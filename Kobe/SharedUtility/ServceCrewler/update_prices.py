@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.parse import urljoin
+import os
 
 import requests
 from bs4 import BeautifulSoup
@@ -15,13 +16,13 @@ from rich.console import Console
 from rich.progress import Progress
 
 
-BASE_URL = "https://immigration.gov.ph"
+BASE_URL = os.environ.get("SERVICE_CRAWLER_BASE_URL", "https://immigration.gov.ph")
 SERVICES_URL = f"{BASE_URL}/services/"
-ROOT_DIR = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI")
-PRICE_SOURCE_PATH = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI_price.md")
-RAW_OUTPUT_PATH = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/prices_raw.txt")
-TEMP_RESULT_PATH = Path("D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/pricetemp.md")
-ENV_PATH = Path("D:/AI_Projects/Kobe/.env")
+ROOT_DIR = Path(os.environ.get("SERVICE_CRAWLER_WORKSPACE_ROOT", r"D:/AI_Projects/TelegramChatHistory/Workspace/VBcombined/BI"))
+PRICE_SOURCE_PATH = Path(os.environ.get("SERVICE_CRAWLER_PRICE_DOC", str(Path(__file__).resolve().parent / "BI_price.md")))
+RAW_OUTPUT_PATH = Path(os.environ.get("SERVICE_CRAWLER_PRICE_RAW", str(Path(__file__).resolve().parent / "prices_raw.txt")))
+TEMP_RESULT_PATH = Path(os.environ.get("SERVICE_CRAWLER_PRICE_TEMP", str(Path(__file__).resolve().parent / "pricetemp.md")))
+ENV_PATH = Path(os.environ.get("SERVICE_CRAWLER_ENV", r"D:/AI_Projects/Kobe/.env"))
 
 VISA_PAGES: List[Tuple[str, str]] = [
     ("Immigrant Visas | Child Born Abroad of Immigrant Mother", "https://immigration.gov.ph/child-born-abroad-of-immigrant-mother/"),

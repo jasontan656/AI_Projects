@@ -1,0 +1,125 @@
+version: ""                     # 文档版本号（字符串，可空）
+updated_at: ""                 # 文档更新时间（YYYY 或 YYYY-MM-DD，可空）
+default_language: "zh-CN"      # 默认语言（固定 zh-CN）
+aliases: []                    # 别名/简称（数组，字符串）
+department: ""                 # 牵头机构（默认 BureauOfImmigration）
+name: ""                       # 服务名称（中文主标题）
+slug: ""                       # 唯一标识（小写连字符，仅英数与-）
+type: "reference"              # 类型（固定 reference）
+
+semantic_profile:              # 语义画像（用于意图与路由）
+  intent_id: ""                # 语义ID（如 visa.9g.employment）
+  category: ""                 # 类别（PROCESSING_REQUIREMENT/CERTIFICATION/…）
+  tags: []                     # 关键词（数组，字符串）
+
+service_overview: ""           # 服务概览（一段话，字符串）
+
+applicability:                 # 适用情境（map：{case-id: 文本}）
+  items: {}                    # 每条为原子情境文本；按出现顺序写入
+
+preconditions:                 # 办理前提（map）
+  required: {}                 # 必备条件（{req-id: 文本}）
+  not_eligible: {}             # 不受理/暂缓条件（{ne-id: 文本}）
+
+pre_required_documents:        # 材料清单（map）
+  mandatory: {}                # 通用材料（{doc-id: 文本}）
+  conditional: {}              # 条件触发（map：{trigger-id: {trigger: 文本, documents: [字符串…]}}）
+
+process:                       # 办理流程
+  steps: {}                    # 步骤（{step-id: {order,title,description}}）
+  variants: {}                 # 变体（{variant-id: {name,trigger,description,extra_requirements: [字符串…]}}）
+  notes: ""                    # 备注（字符串）
+
+pricing:                       # 费用信息
+  metadata:
+    last_verified: ""          # 费率核验年份（如 "2025"）
+    source: ""                 # 费率来源（如 Citizens Charter 2025 等）
+  items: {}                    # 分组-明细-属性（三段式，map）
+  # 结构说明（示例为注释，实际输出不包含示例键名）：
+  # items:
+  #   group-id:                # 组ID（如 top1000-main-1y-2025；命名：层级-角色-年限-年份）
+  #     label: ""              # 可读名称（如 "Top 1000 企业 · 主申请人 · 1年（2025）"）
+  #     details:               # 费用子项（map）
+  #       detail-id:           # 费用项ID（如 visa-fee/acr-icard/visa-sticker/express-lane/lrf）
+  #         amount:            # 金额对象（禁止用纯字符串）
+  #           currency: ""     # 三位大写币种（"PHP"/"USD"/…）
+  #           value: 0         # 整数金额；不确定时 null
+  #           display: ""      # 原样展示（如 "PHP 10,630"），可空
+  #           range:           # 可选：区间（仅用于浮动项）
+  #             min: 0         # 最小值（int）
+  #             max: 0         # 最大值（int）
+  #           tiers:           # 可选：分层（仅用于 LRF 等）
+  #             - value: 0     # 金额（int）
+  #               condition: "" # 适用条件（str）
+  #         notes: ""          # 说明/限制（str）
+  #         attr:              # 类型标注（用于后续校验/拼接）
+  #           amount:
+  #             currency: "str"
+  #             value: "int|null"
+  #             display: "str"
+  #             range:         # 如存在 range
+  #               min: "int"
+  #               max: "int"
+  #             tiers:         # 如存在 tiers
+  #               value: "int"
+  #               condition: "str"
+  #           notes: "str"
+  #     total:                 # 可选：分组汇总（与 details.* 同构）
+  #       amount:
+  #         currency: ""
+  #         value: 0
+  #         display: ""
+  #       notes: ""
+  #       attr:
+  #         amount:
+  #           currency: "str"
+  #           value: "int|null"
+  #           display: "str"
+  #         notes: "str"
+
+deliverables:                  # 交付物
+  description: ""             # 概述（字符串）
+  items: {}                    # {deliverable-id: {name,usage}}
+
+kpis:
+  processing_time: ""          # 办理时长（字符串）
+
+risks:
+  items: {}                    # 风险提示（{risk-id: 文本}）
+
+info_collection:               # 信息收集需求（各分组为 map，字段为“字段对象”）
+  applicant: {}                # 申请人（{field-id: {label,type,required,format,pattern,example,notes}}）
+  spouse: {}                   # 配偶
+  father: {}                   # 父亲
+  mother: {}                   # 母亲
+  children: {}                 # 子女
+  dependents: {}               # 受养人（其他）
+  employment: {}               # 雇佣信息（雇主/职位/AEP/薪资…）
+  authorization: {}            # 授权/代理信息
+  arrival_info: {}             # 到达信息（最近入境、口岸、授权停留截止等）
+  travel_history: {}           # 签证/身份与申请类别
+  compliance: {}               # 合规项（BI/BOQ/Annual Report 等）
+  additional_details: {}       # 补充信息
+  # 字段对象说明（示例为注释）：
+  # applicant:
+  #   passport-number:         # 字段ID（kebab-case，原子字段，不得含 and/与/及/&/、/+）
+  #     label: ""              # 可读名称（中文）
+  #     type: "string"         # [string|integer|number|boolean|date|datetime|enum]
+  #     required: "true"       # "true"/"false"（字符串）
+  #     format: "passport-no"  # 可选：iso-date/e164-phone/email/country-iso2…
+  #     pattern: ""            # 可选：正则
+  #     example: ""            # 可选：示例（勿含实名）
+  #     notes: ""              # 可选：说明
+
+acknowledgement_flags:         # 标注隐私同意与宣誓/承诺
+  data_privacy_consent: ""     # 有则简述；无则空
+  certification_statement: ""  # 有则简述；无则空
+
+faq:
+  qas: {}                      # 常见问题（{qa-id: {question,answer}}）
+
+disclaimers:
+  items: {}                    # 声明（{disc-id: 文本}）
+
+service_related:
+  links: {}                    # 关联服务（{slug: {name,relation}}）
