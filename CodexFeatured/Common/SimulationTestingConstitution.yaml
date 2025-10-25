@@ -1,0 +1,166 @@
+description: 本地生产级仿真测试通用规范（Universal Local Production Simulation Testing Specification）
+
+test_strategy:
+  goal: >
+    建立一套面向真实使用路径的本地生产级仿真测试标准，
+    用于验证模块在完整调用链下的稳定性、行为一致性、异常恢复与性能表现。
+    所有测试均须从模块官方入口执行，严禁从内部函数或非公开方法直接触发。
+    本规范确保测试过程可控、安全、不死锁，并支持交互式运行流程。
+
+  principles:
+    - 默认所有依赖服务已在本地启动。
+    - 测试行为完全基于真实使用场景模拟。
+    - 允许外部API调用由业务场景。
+    - 所有测试执行于固定路径：`D:\AI_Projects\Kobe\SimulationTest`
+    - 每次执行自动创建隔离子目录，测试日志、结果与报告独立存放。
+    - 所有命令均受强制超时保护（默认10秒）。
+
+test_environment:
+  base_directory: "D:\\AI_Projects\\Kobe\\SimulationTest"
+  create_policy:
+    - 为每个模块创建独立子目录（模块名为目录名）
+    - 子目录结构：
+        * `test_cases/` —— 测试脚本与输入文件
+        * `results/` —— 结果与报告
+        * `logs/` —— 各级日志文件（debug, info, error）
+    - 每次执行创建带时间戳的结果子目录
+    - 默认保留最近10轮完整结果集
+  service_expectation:
+    - 测试前验证依赖服务可访问（RabbitMQ/Redis/MongoDB）
+    - 测试中验证服务状态变化（队列消息数/缓存键/文档插入）
+    - 服务不可用或状态异常时标记失败
+  isolation_policy: "每次执行均隔离运行，防止结果污染"
+  data_cleanup: "自动清理旧结果，仅保留10轮记录"
+
+test_toolstack:
+  framework: "pytest + pytest-asyncio"
+  timeout_control: "pytest-timeout（全局）+ timeout-decorator（局部）"
+  reporting: "pytest-json-report（结构化）+ pytest-html（可视化）"
+  monitoring: "psutil（资源）+ pytest-benchmark（性能）"
+  interaction: "click（CLI参数）+ readchar（倒计时输入）"
+  dependency_manifest: "requirements.txt 必须包含所有测试依赖"
+
+test_scope:
+  categories:
+    - EntryLevelValidation:
+        description: >
+          从模块官方入口或系统公开端点发起测试，确保模块完整加载、执行与关闭。
+        entry_rule:
+          - 禁止 import 被测模块的任何函数或类
+          - 仅可通过 HTTP 端点、CLI 命令或消息队列调用
+    - RealScenarioSimulation:
+        description: >
+          模拟真实使用流程，包括输入、处理中断、重试、异常、状态恢复。
+        entry_rule:
+          - 所有输入均从模块官方入口进入
+          - 仿真应涵盖多用户上下文与并发交互
+    - CrossModuleIntegration:
+        description: >
+          验证不同模块之间数据流与事件协作是否稳定、无死锁、无丢失。
+        entry_rule:
+          - 测试起点为系统级入口（如 orchestrator、dispatcher）
+          - 禁止直接注入中间态
+    - FaultToleranceAndRecovery:
+        description: >
+          验证在任务崩溃、I/O中断、API超时等异常情况下的恢复机制。
+        entry_rule:
+          - 模拟中断、重试、断点续传
+          - 验证恢复后状态一致性
+    - PerformanceAndStressTest:
+        description: >
+          在受控负载下验证系统性能、吞吐量、并发稳定性。
+        entry_rule:
+          - 自动生成负载数据持续施压
+          - 记录 CPU / Memory / I/O 指标
+
+execution_timing_policy:
+  runall_flow:
+    description: >
+      当通过 `RunAll` 模式执行全量测试时，系统应以一条龙方式顺序运行各模块测试。
+      每个测试节点（一个输入 + 一个过程 + 一个输出）完成后：
+        * 暂停并询问用户是否继续；
+        * 若用户在30秒内无输入，则自动继续；
+        * 在暂停期间计时器保持运行。
+    implementation_notes:
+      - 仅 `RunAll` 入口文件具备该交互功能；
+      - 单模块测试文件不包含暂停或询问逻辑；
+      - 用户响应包括：
+          * Y / Enter → 立即继续
+          * N → 中止当前轮测试
+          * Timeout(30s) → 自动继续下一测试
+  timeout_policy:
+    description: >
+      所有测试步骤均受统一超时控制，以防止死循环或网络卡顿导致阻塞。
+      每个命令、函数或子测试执行的最大允许时长为10秒。
+    enforcement:
+      - 超过10秒未返回结果即触发强制中断；
+      - 记录错误日志并标记当前测试为“timeout_error”；
+      - 后续测试可继续执行；
+      - 禁止单个函数绕过此限制；
+      - 超时控制在执行器层面全局生效。
+
+test_execution_rules:
+  - 所有测试文件命名：`test_<entry_name>_<scenario>.py`
+  - 所有测试可独立运行且具备可验证输出
+  - 每轮执行自动生成：
+      * `results/report.json`
+      * `logs/debug.log`
+      * `logs/error.log`
+  - 日志与报告必须记录：
+      * 测试入口与调用路径
+      * 资源占用信息
+      * 异常堆栈
+      * 超时状态与执行耗时
+      * 是否触发外部API
+
+validation_standard:
+  success_criteria:
+    - 所有测试均从官方入口执行，执行链完整无捷径。
+    - 模块在强制超时与负载下运行稳定。
+    - 日志、报告与输出可复现且结构完整。
+    - RunAll 模式暂停交互正常响应。
+  failure_criteria:
+    - 调用内部函数或绕过入口。
+    - 测试卡死、超时未捕获或死循环。
+    - 缺失日志、报告或执行未完成。
+    - RunAll 模式无响应或未自动继续。
+
+reporting:
+  artifact_directory: "results/"
+  artifact_files:
+    - "report.json"
+    - "performance_report.json"
+    - "error_trace.log"
+  summary_output: "终端输出与JSON报告并行生成"
+  retention_policy: "保留最近10次测试结果"
+  report_format:
+    json:
+      generator: "pytest-json-report"
+      required_fields: ["tests", "summary", "duration", "exit_code"]
+      custom_fields: ["resource_usage", "service_status", "timeout_events"]
+    html:
+      generator: "pytest-html"
+      include: "screenshots（如有）, logs excerpts, failure traces"
+  performance_metrics:
+    tool: "pytest-benchmark + psutil"
+    collect: ["execution_time", "cpu_percent", "memory_rss", "io_counters"]
+
+execution_notes:
+  - 统一执行入口文件：`run_local_simulation_tests.py`
+  - 支持命令参数：
+      * `--entry <module_entry>` ：指定入口模块
+      * `--scenario <scenario_name>` ：指定场景
+      * `--all` ：运行全部测试（触发 RunAll 模式）
+  - RunAll 模式：
+      * 每个节点完成后询问用户是否继续
+      * 30秒无输入则自动进入下一节点
+      * 在终端显示计时器倒计时提示
+  - 单模块模式：
+      * 无交互暂停，自动执行
+  - 所有命令均受10秒超时保护
+
+version_control:
+  baseline_branch: "main"
+  test_branch: "simulation/test"
+  merge_policy: "所有仿真测试通过后方可合并主线"
+  record_policy: "仅提交报告索引，不提交结果文件与日志"

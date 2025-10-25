@@ -1,0 +1,42 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility/RichLogger"
+  last_updated: "2025-10-20"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "RichLogger"
+  summary: "Rich-themed logging system with bootstrap helpers and handler builders."
+  responsibilities:
+    - "Expose RichLoggerManager.bootstrap to initialize the global logger"
+    - "Provide console, app file, error file, and per-module handlers"
+    - "Ship trace utilities for trace_id and progress reporting"
+  non_goals:
+    - "Does not enforce business-specific logging formats"
+  entry_points:
+    - "SharedUtility.RichLogger.logger:RichLoggerManager.bootstrap"
+    - "SharedUtility.RichLogger.logger:RichLoggerManager.for_node"
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe/app.py"
+  provides_apis: []
+  reasons:
+    - "Document the shared logging implementation reused across services"
+files:
+  key_files:
+    - "__init__.py"
+    - "logger.py"
+    - "console_handler.py"
+    - "file_handler.py"
+    - "trace.py"
+    - "transient.py"
+  test_locations: []
+sub_indexes:
+  - "logs"
+notes:
+  - "bootstrap wires console output plus app.log and error.log sinks"
+  - "for_node adds a module-specific file handler stored under logs/modules"
+  - "Metadata refreshed on 2025-10-20"

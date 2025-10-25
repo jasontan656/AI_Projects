@@ -1,0 +1,13 @@
+###############################################
+# Root policy: ignore all except /Kobe
+###############################################
+
+# Ignore everything at repo root
+/*
+
+# Whitelist: keep only the Kobe project
+!/Kobe/
+
+# Keep this file tracked (optional but safe)
+!/.gitignore
+

@@ -1,0 +1,224 @@
+---
+meta:
+  name: "Backend Constitution"
+  version: "2.4"
+  last_updated: "2025-10-14"
+  language: "zh-CN"
+
+mandates:
+  runtime:
+    python: "3.10"
+    venv: "Kobe/.venv"                # 项目级虚拟环境，避免全局污染
+    env_file: "Kobe/.env"             # 统一环境变量入口，不覆盖已设置的进程变量
+    validation: "Pydantic v2"          # 采用 v2，版本上限 <3，便于未来升级
+    async_io: true                      # I/O 默认支持 async/await
+    llm:                                 # 大模型使用规范
+      provider: "OpenAI"                # 统一使用 OpenAI 官方 SDK
+      api_key_env: "OPENAI_API_KEY"     # API Key 环境变量名
+      model_env: "OPENAI_MODEL"         # 模型环境变量名
+      default_model: "gpt-4o-mini"      # 推荐默认模型
+      required: true                     # 未连通 LLM 时，相关流程必须直接失败
+
+  app:
+    framework: "FastAPI"
+    app_entry: "Kobe.main:app"
+    start_dev: "python -m Kobe.main"
+    start_prod: "uvicorn Kobe.main:app --host 0.0.0.0 --port 8000"
+
+  logging:
+    module: "Kobe.SharedUtility.RichLogger"
+    rule: "统一使用 logging，禁止直接 print()"
+
+  background_tasks:
+    orchestrator: "Celery"
+    broker: "RabbitMQ"
+    cache_store: "Redis"
+    mandatory: true                    # 强制：所有业务任务必须经由 Celery 调度
+    task_naming: "Slug-only (^[a-z0-9_:.]{1,64}$)"
+    registration: "通过 Kobe.SharedUtility.TaskQueue.registry.task 装饰器注册"
+    dispatch: "HTTP 或 /task/start 通用分发；提供 send_task() 封装"
+    allowlist: "从 .env 读取 ALLOWED_TASKS，按 slug 校验"
+
+  messaging:
+    semantics: "at-least-once"
+    publisher_confirm: true
+    durable_persistent: true
+    retry_policy: "指数退避 + 幂等"
+
+  api:
+    policy_ref: "所有任务一律走 Celery 异步；HTTP 层仅接收/查询"
+    long_flow: "使用 chain/group/chord 结构化编排"
+
+  realtime:
+    websocket:
+      enabled: true
+      unique_per_user: true           # 每个用户仅允许一个活跃 WebSocket 连接（基于 auth subject）
+      uniqueness_strategy: "Redis lock keyed by user_id"
+      heartbeat_interval_sec: 30
+    sse:
+      enabled: true                   # SSE 默认开启，作为服务端推送与流式首选
+      default_media_type: "text/event-stream"
+      retry_ms: 2000
+      keepalive_comment_interval_sec: 15
+
+  execution:
+    mode: "async_only"                # 统一执行模式
+    rule: "业务侧不得在请求线程直接执行任务，必须入队 Celery"
+
+  cache:
+    strategy: "Write→Invalidate"
+    keys: "分层命名 + 统一 TTL"
+    strict: "强一致诉求使用 Transactional Outbox/CDC"
+
+  observability:
+    expose: ["Metrics", "Logs", "Traces"]
+    stack: ["Prometheus", "OpenTelemetry"]
+
+  security:
+    secrets_policy: "密钥集中管理，最小权限原则"
+
+  langchain:
+    required: true
+    packages:
+      core: ["langchain", "langchain-community", "langchain-openai"]
+      graph: ["langgraph"]
+    when_to_use:
+      - "LLM 交互（对话/问答/函数调用）"
+      - "Prompt 组织与复用"
+      - "RAG（检索增强生成）与向量检索"
+      - "多轮对话记忆（短期/长期）"
+      - "工具调用/插件化工具体系"
+      - "Agent/多智能体/工作流编排"
+      - "流式输出（增量 token）与 SSE/WS 推送"
+      - "结构化输出与模式校验"
+    must:
+      - "以上场景必须优先采用 LangChain/LangGraph 生态能力，不得自建等价基础设施"
+      - "多智能体编排必须使用 LangGraph（Typed State + Checkpointer）"
+      - "结构化输出必须使用 Pydantic v2 BaseModel + OutputParser，并在接口层校验"
+      - "流式响应统一使用 Runnable.stream → SSE，WS 仅在需要双向指令时使用"
+    should:
+      - "优先使用 Runnable/PromptTemplate 组合进行链式构建，避免散落函数逻辑"
+      - "RAG 默认使用 ChromaDB；集合名通过 env 配置"
+      - "嵌入默认使用 OPENAI_EMBEDDING_MODEL 配置"
+      - "Tracing 优先 LangSmith（若配置），否则走 OpenTelemetry"
+    components:
+      llm_io:
+        client: "langchain_openai.ChatOpenAI"
+        retriable: true
+        timeout_sec: 60
+      prompts:
+        template: "ChatPromptTemplate"
+        input_variables: "显式声明并校验"
+      memory:
+        short_term: "ConversationBufferMemory/RedisChatMessageHistory"
+        long_term: "Vector store memory（ChromaDB）"
+      retrieval:
+        vectorstore: "ChromaDB"
+        chunk:
+          size: 800
+          overlap: 200
+      tools:
+        spec: "langchain.tools.Tool"
+        registry: "集中注册 + slug 访问"
+        id_rule: "Slug-only (^[a-z0-9_:.]{1,64}$)"
+      agent:
+        framework: "langgraph"
+        state: "TypedState"
+        checkpoint: "Redis/SQLite Checkpointer"
+      streaming:
+        transport_default: "SSE"
+        websocket_policy: "当需要双向推送或客户端指令时使用 WebSocket"
+      structured_output:
+        schema: "Pydantic v2 BaseModel"
+        parser: "StructuredOutputParser/JsonOutputParser"
+        strict: true
+      tracing:
+        provider_preferred: "LangSmith（可选）"
+        env: ["LANGCHAIN_TRACING_V2", "LANGCHAIN_API_KEY", "LANGCHAIN_PROJECT", "LANGCHAIN_ENDPOINT"]
+      governance:
+        change_control: "新增框架或替代 LangChain 需提交 Tech Decision 并经架构评审"
+
+  infrastructure_local:
+    docker_network: "ai_services_net"
+    services:
+      redis: { name: "svc-redis", ports: ["6379:6379"] }
+      mongodb: { name: "svc-mongo", ports: ["27017:27017"] }
+      rabbitmq: { name: "svc-rabbitmq", ports: ["5672:5672", "15672:15672"] }
+      chromadb: { name: "svc-chromadb", ports: ["8001:8001"] }
+      minio: { name: "svc-minio", ports: ["9000:9000", "9001:9001"] }
+
+  env_defaults:
+    REDIS_URL:
+      host: "redis://localhost:6379/0"
+      container: "redis://svc-redis:6379/0"
+    MONGODB_URI:
+      host: "mongodb://localhost:27017"
+      container: "mongodb://svc-mongo:27017"
+    RABBITMQ_URL:
+      host: "amqp://guest:guest@localhost:5672/"
+      container: "amqp://guest:guest@svc-rabbitmq:5672/"
+    CHROMADB_URL:
+      host: "http://localhost:8001"
+      container: "http://svc-chromadb:8001"
+    # LangChain/LangSmith & RAG 相关参数
+    LANGCHAIN_TRACING_V2: false
+    LANGCHAIN_ENDPOINT: "https://api.smith.langchain.com"
+    LANGCHAIN_API_KEY: ""               # 配置于 .env
+    LANGCHAIN_PROJECT: "backend"
+    OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+    VECTORSTORE_COLLECTION: "default"
+    RAG_CHUNK_SIZE: 800
+    RAG_CHUNK_OVERLAP: 200
+    STRUCTURED_OUTPUT_STRICT: true
+    MINIO_ENDPOINT:
+      host: "http://localhost:9000"
+      container: "http://svc-minio:9000"
+    MINIO_ROOT_USER: "minioadmin"
+    MINIO_ROOT_PASSWORD: "minioadmin"
+    MINIO_BUCKET: "app-files"
+    MINIO_SECURE: false
+    SSE_ENABLED: true
+    WS_UNIQUE_PER_USER: true
+    OPENAI_MODEL: "gpt-4o-mini"       # 默认模型名（可在 .env 覆盖）
+    production: "上线前需完成凭据接入与只读审计"
+
+  dependencies:
+    requirements_file: "Kobe/Requirements.txt"
+    libs: [
+      "fastapi", "uvicorn", "pydantic>=2.7,<3",
+      "celery", "redis", "hiredis", "pymongo", "motor", "pika", "chromadb",
+      "openai", "sqlparse", "pymysql",
+      "langchain", "langchain-community", "langchain-openai", "langgraph",
+      "sse-starlette", "minio"
+    ]
+
+  index_spec:
+    root_index: "Kobe/index.yaml"
+    sub_index: "重要目录需附 index.yaml"
+    path_style: "路径统一起始 Kobe/，使用正斜杠"
+    bounds: "代码文件限定在 Kobe/ 下"
+
+storage:
+  object_store: "MinIO"
+  purpose: "专用于文件/对象存储，不承载数据库职责"
+  access:
+    sdk: "minio"
+    public_access: false               # 默认私有，外部访问通过预签名 URL
+    presigned_url_expire_minutes: 15
+  bucket:
+    default: "app-files"
+    policy: "private"
+    versioning: false
+  naming:
+    prefix_by_tenant: true
+    path_template: "{tenant}/{yyyymm}/{uuid4}{ext}"
+
+prohibitions:
+  - "禁止长时间阻塞型同步 I/O"
+  - "禁止在 app 入口外创建全局线程"
+  - "禁止抛弃型消息（需 DLQ/重试）"
+  - "禁止生产凭据入库"
+  - "禁止 Redis 充当持久化数据库"
+  - "禁止绕过 Celery 在请求线程/线程池直接执行任务"
+  - "禁止在已规定能力范围内造轮子：涉及 LLM/RAG/Agent/Memory/流式/结构化输出 等场景，必须优先采用 LangChain/LangGraph/Chroma 等已选栈；如需替换或自建，必须提交技术决策文档并经架构评审"
+

@@ -1,0 +1,287 @@
+---
+meta:
+  name: "Python Tech Stack Best Practices Index"
+  version: "1.0"
+  last_updated: "2025-10-09"
+  language: "zh-CN"
+
+sections:
+  - title: "核心工具与环境"
+    links:
+      - label: "Python 官方文档"
+        url: "https://docs.python.org/3.10/"
+      - label: "PyPI (Python Package Index)"
+        url: "https://pypi.org/"
+      - label: "pip 用户指南"
+        url: "https://pip.pypa.io/en/stable/user_guide/"
+
+  - title: "依赖管理与虚拟环境"
+    links:
+      - label: "venv (虚拟环境)"
+        url: "https://docs.python.org/3.10/library/venv.html"
+      - label: "Poetry (依赖管理)"
+        url: "https://python-poetry.org/docs/"
+      - label: "pip-tools"
+        url: "https://pip-tools.readthedocs.io/en/latest/"
+
+  - title: "数据验证与序列化"
+    links:
+      - label: "Pydantic v3"
+        url: "https://docs.pydantic.dev/latest/"
+      - label: "marshmallow"
+        url: "https://marshmallow.readthedocs.io/en/stable/"
+
+  - title: "Web 框架"
+    links:
+      - label: "FastAPI"
+        url: "https://fastapi.tiangolo.com/"
+      - label: "Flask"
+        url: "https://flask.palletsprojects.com/"
+      - label: "Django"
+        url: "https://docs.djangoproject.com/"
+
+  - title: "ASGI/WSGI 服务器"
+    subsections:
+      - subtitle: "ASGI 服务器（异步）"
+        links:
+          - label: "Uvicorn"
+            url: "https://www.uvicorn.org/"
+            notes:
+              - "高性能 ASGI 服务器，FastAPI 官方推荐"
+              - "部署文档：https://www.uvicorn.org/deployment/"
+              - "配置参考：https://www.uvicorn.org/settings/"
+          - label: "Hypercorn"
+            url: "https://hypercorn.readthedocs.io/en/latest/"
+            notes:
+              - "支持 HTTP/2 和 HTTP/3 的 ASGI 服务器"
+          - label: "Daphne"
+            url: "https://github.com/django/daphne"
+            notes:
+              - "Django Channels 项目的 ASGI 服务器"
+      - subtitle: "WSGI 服务器（同步）"
+        links:
+          - label: "Gunicorn"
+            url: "https://docs.gunicorn.org/en/stable/"
+            notes:
+              - "Python WSGI HTTP 服务器，Flask/Django 常用"
+          - label: "uWSGI"
+            url: "https://uwsgi-docs.readthedocs.io/en/latest/"
+            notes:
+              - "功能强大的应用服务器"
+
+  - title: "异步编程"
+    links:
+      - label: "asyncio (标准库)"
+        url: "https://docs.python.org/3.10/library/asyncio.html"
+      - label: "aiohttp"
+        url: "https://docs.aiohttp.org/en/stable/"
+      - label: "httpx"
+        url: "https://www.python-httpx.org/"
+
+  - title: "数据库与 ORM"
+    subsections:
+      - subtitle: "Python 数据库驱动"
+        links:
+          - label: "SQLAlchemy (ORM)"
+            url: "https://docs.sqlalchemy.org/"
+          - label: "psycopg3 (PostgreSQL)"
+            url: "https://www.psycopg.org/psycopg3/docs/"
+          - label: "PyMongo (MongoDB)"
+            url: "https://pymongo.readthedocs.io/en/stable/"
+          - label: "Motor (MongoDB 异步驱动)"
+            url: "https://motor.readthedocs.io/en/stable/"
+          - label: "Redis-py"
+            url: "https://redis-py.readthedocs.io/en/stable/"
+            notes:
+              - "asyncio 示例：https://redis-py.readthedocs.io/en/stable/examples/asyncio_examples.html"
+              - "hiredis (Python 绑定)：https://github.com/redis/hiredis-py"
+          - label: "mysql-connector-python"
+            url: "https://dev.mysql.com/doc/connector-python/en/"
+          - label: "aiomysql (异步 MySQL)"
+            url: "https://aiomysql.readthedocs.io/en/stable/"
+      - subtitle: "数据库官方文档"
+        links:
+          - label: "PostgreSQL"
+            url: "https://www.postgresql.org/docs/"
+          - label: "MySQL"
+            url: "https://dev.mysql.com/doc/"
+          - label: "MongoDB"
+            url: "https://www.mongodb.com/docs/"
+          - label: "Redis"
+            url: "https://redis.io/docs/"
+          - label: "SQLite"
+            url: "https://www.sqlite.org/docs.html"
+          - label: "MariaDB"
+            url: "https://mariadb.com/kb/en/documentation/"
+          - label: "Elasticsearch"
+            url: "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html"
+          - label: "ClickHouse"
+            url: "https://clickhouse.com/docs/en/intro"
+
+  - title: "AI/LLM 相关"
+    subsections:
+      - subtitle: "LangChain 生态"
+        links:
+          - label: "LangChain 核心文档"
+            url: "https://python.langchain.com/docs/get_started/introduction"
+          - label: "LangChain 中文文档"
+            url: "https://www.langchain.asia/"
+          - label: "LangChain Community"
+            url: "https://python.langchain.com/docs/integrations/platforms/"
+          - label: "LangChain Hub (Prompts)"
+            url: "https://smith.langchain.com/hub"
+          - label: "LangSmith (调试追踪)"
+            url: "https://docs.smith.langchain.com/"
+          - label: "LangGraph (Agent 工作流)"
+            url: "https://langchain-ai.github.io/langgraph/"
+          - label: "LangServe (部署)"
+            url: "https://python.langchain.com/docs/langserve"
+      - subtitle: "LLM 提供商 SDK"
+        links:
+          - label: "OpenAI Python SDK"
+            url: "https://github.com/openai/openai-python"
+          - label: "OpenAI API 文档"
+            url: "https://platform.openai.com/docs/api-reference"
+          - label: "Anthropic Python SDK"
+            url: "https://docs.anthropic.com/en/api/client-libraries"
+          - label: "Anthropic API 文档"
+            url: "https://docs.anthropic.com/en/api/getting-started"
+          - label: "Google Generative AI (Gemini)"
+            url: "https://ai.google.dev/docs"
+          - label: "Cohere Python SDK"
+            url: "https://docs.cohere.com/docs/cohere-python"
+          - label: "Mistral AI Python SDK"
+            url: "https://docs.mistral.ai/api/"
+      - subtitle: "向量数据库与嵌入"
+        links:
+          - label: "ChromaDB"
+            url: "https://docs.trychroma.com/"
+          - label: "Pinecone"
+            url: "https://docs.pinecone.io/"
+          - label: "Weaviate"
+            url: "https://weaviate.io/developers/weaviate"
+          - label: "Qdrant"
+            url: "https://qdrant.tech/documentation/"
+          - label: "FAISS (Meta)"
+            url: "https://github.com/facebookresearch/faiss/wiki"
+          - label: "Milvus"
+            url: "https://milvus.io/docs"
+      - subtitle: "AI 工具与框架"
+        links:
+          - label: "Hugging Face Transformers"
+            url: "https://huggingface.co/docs/transformers/"
+          - label: "LlamaIndex"
+            url: "https://docs.llamaindex.ai/en/stable/"
+          - label: "Haystack"
+            url: "https://docs.haystack.deepset.ai/docs/intro"
+          - label: "Instructor (结构化输出)"
+            url: "https://python.useinstructor.com/"
+
+  - title: "终端与日志"
+    links:
+      - label: "Rich (终端美化)"
+        url: "https://rich.readthedocs.io/en/stable/"
+      - label: "Click (CLI 工具)"
+        url: "https://click.palletsprojects.com/"
+      - label: "Typer (CLI 工具)"
+        url: "https://typer.tiangolo.com/"
+      - label: "structlog (结构化日志)"
+        url: "https://www.structlog.org/en/stable/"
+
+  - title: "测试"
+    links:
+      - label: "pytest"
+        url: "https://docs.pytest.org/en/stable/"
+      - label: "unittest (标准库)"
+        url: "https://docs.python.org/3.10/library/unittest.html"
+      - label: "pytest-asyncio"
+        url: "https://pytest-asyncio.readthedocs.io/en/latest/"
+      - label: "coverage.py (测试覆盖率)"
+        url: "https://coverage.readthedocs.io/"
+
+  - title: "配置管理"
+    links:
+      - label: "python-dotenv"
+        url: "https://saurabh-kumar.com/python-dotenv/"
+      - label: "pydantic-settings"
+        url: "https://docs.pydantic.dev/latest/concepts/pydantic_settings/"
+
+  - title: "HTTP 客户端"
+    links:
+      - label: "Requests"
+        url: "https://requests.readthedocs.io/en/latest/"
+      - label: "httpx"
+        url: "https://www.python-httpx.org/"
+
+  - title: "浏览器自动化与爬虫"
+    links:
+      - label: "Playwright"
+        url: "https://playwright.dev/python/"
+      - label: "Selenium"
+        url: "https://selenium-python.readthedocs.io/"
+      - label: "Puppeteer (Node.js, 参考)"
+        url: "https://pptr.dev/"
+      - label: "BeautifulSoup4 (HTML 解析)"
+        url: "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
+      - label: "Scrapy (爬虫框架)"
+        url: "https://docs.scrapy.org/en/latest/"
+      - label: "lxml (XML/HTML 解析)"
+        url: "https://lxml.de/"
+
+  - title: "数据处理"
+    links:
+      - label: "Pandas"
+        url: "https://pandas.pydata.org/docs/"
+      - label: "NumPy"
+        url: "https://numpy.org/doc/stable/"
+      - label: "orjson (高性能 JSON)"
+        url: "https://github.com/ijl/orjson"
+
+  - title: "任务队列与调度"
+    links:
+      - label: "Celery"
+        url: "https://docs.celeryq.dev/en/stable/"
+      - label: "Pika (RabbitMQ Python 客户端)"
+        url: "https://pika.readthedocs.io/en/stable/"
+      - label: "APScheduler"
+        url: "https://apscheduler.readthedocs.io/en/stable/"
+      - label: "RQ (Redis Queue)"
+        url: "https://python-rq.org/"
+    subsections:
+      - subtitle: "消息代理/中间件"
+        links:
+          - label: "RabbitMQ 官方文档"
+            url: "https://www.rabbitmq.com/docs/"
+          - label: "RabbitMQ 管理插件文档"
+            url: "https://www.rabbitmq.com/docs/management"
+
+  - title: "代码质量"
+    links:
+      - label: "Black (代码格式化)"
+        url: "https://black.readthedocs.io/en/stable/"
+      - label: "Ruff (Linter)"
+        url: "https://docs.astral.sh/ruff/"
+      - label: "mypy (类型检查)"
+        url: "https://mypy.readthedocs.io/en/stable/"
+      - label: "pre-commit"
+        url: "https://pre-commit.com/"
+
+  - title: "文档生成"
+    links:
+      - label: "Sphinx"
+        url: "https://www.sphinx-doc.org/en/master/"
+      - label: "MkDocs"
+        url: "https://www.mkdocs.org/"
+      - label: "pdoc"
+        url: "https://pdoc.dev/"
+
+  - title: "其他实用工具"
+    links:
+      - label: "tenacity (重试机制)"
+        url: "https://tenacity.readthedocs.io/en/latest/"
+      - label: "arrow (时间处理)"
+        url: "https://arrow.readthedocs.io/en/latest/"
+      - label: "pathlib (标准库路径处理)"
+        url: "https://docs.python.org/3.10/library/pathlib.html"
+
+  - titel : "https://www.openmcpdirectory.com/servers"

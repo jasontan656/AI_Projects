@@ -1,0 +1,105 @@
+spec_version: 1.0
+name: 顺序抄写式叙述注释规范（Code-Order Literal Narrative Comments）
+purpose: >
+  用“顺着代码书写顺序”的口语化注释，逐行描述“此行立刻做了什么”，
+  不解释内部机制，不追求语言优美，但必须突出：内置函数、依赖库调用、模块调用关系。
+principles:
+  - 仅按代码出现顺序叙述当前行的直接动作（谁→做什么→立刻结果）。
+  - 不做目的性总结，不解释语法或运行原理，不提前概括下一行。
+  - 循环/条件的控制流用固定短语表达：进入本轮 / 结束本轮回到循环头 / 跳过本轮 / 终止整个循环。
+  - 必须标注调用主体类别：内置函数（Built-in）、标准库/第三方依赖（Library）、同项目模块（Module）。
+  - 在注释尾部可附简短术语对照方括号样式：【中文（English）/ …】。
+glossary: # 术语对照（示例）
+  循环: Loop
+  迭代: Iteration
+  条件分支: Branch
+  副作用: Side Effect
+  标准输出: Stdout
+  函数调用: Function Call
+  方法调用: Method Call
+classification_rules:
+  builtins:
+    detect: >
+      名称在 Python 内置命名空间（如 for/print/range/len/any 等）或语言关键字时，标为“内置”。
+    annotate_token: "使用 python 内置函数 {name}"
+  libraries:
+    detect: >
+      由 import 或 from … import … 引入的标准库或第三方包（如 json, requests, numpy 等）。
+    annotate_token: "使用依赖库函数 {qualname}"
+  modules:
+    detect: >
+      同仓库/项目内的模块或对象调用（如 mypkg.utils.fn、obj.method）。
+    annotate_token_fn: "使用模块函数 {qualname}"
+    annotate_token_meth: "在对象 {recv} 上调用方法 {name}"
+formatting:
+  placement: "行内注释优先（# 之后），如不够则放在上一行。"
+  connectors: ["先", "然后", "接着", "随后", "最后"]
+  control_flow_phrases:
+    enter_loop: "进入本轮"
+    end_loop: "本行执行后结束本轮并回到 for 头部准备下一次"
+    continue: "跳过本轮后续语句；直接回到 for 头部准备下一次"
+    break: "终止整个循环；不再获取后续元素"
+  tail_glossary_style: "【{left_cn}（{left_en}）/ {right_cn}（{right_en}）】"
+comment_templates:
+  assignment: "使用赋值把 {rhs} 结果绑定给变量 {lhs}"
+  function_call_builtin: "使用 python 内置函数 {fn} {action}"
+  function_call_lib: "使用依赖库函数 {fn} {action}"
+  function_call_module: "使用模块函数 {fn} {action}"
+  method_call: "在对象 {recv} 上调用方法 {meth} {action}"
+  loop_for_range: >
+    使用 python 内置函数 for 循环遍历；使用 python 函数 {range_expr} 生成的范围 {human_range}；进入本轮把当前取到的元素绑定给变量 {iter_var}{tail}
+  print_line: >
+    使用 print 输出；输出{what}；{end_flow}
+rules_of_detail:
+  - 每行都要覆盖：调用主体+动作动词（遍历/打印/赋值/返回等）+直接结果。
+  - 尽量复用模板短语，确保文风一致、可机械复现。
+  - 当一行包含多个动作（如调用+拼接），用“；”分隔，顺序保持与代码从左到右一致。
+  - 所有循环体内的最后一句若无特殊流控制，结尾追加 control_flow_phrases.end_loop。
+  - 必须显式点名“内置/依赖库/模块”三类之一；不能省略。
+  - 注释末尾的术语对照仅在结构性语句（如 for/while/if/with/try）处添加。
+examples:
+  for_range_print:
+    code: |
+      for i in range(1, 6):
+          print("当前数字:", i)
+    expected: |
+      for i in range(1, 6):                       # 使用 python 内置函数 for 循环遍历；使用 python 函数 range 生成的范围 1-5；进入本轮把当前取到的元素绑定给变量 i【循环（Loop）/ 迭代（Iteration）】
+          print("当前数字:", i)                    # 使用 print 输出；输出固定前缀字符串与变量 i 的值；本行执行后结束本轮并回到 for 头部准备下一次
+  continue_break:
+    code: |
+      for i in range(1, 6):
+          if i % 2 == 0:
+              continue
+          if i == 5:
+              break
+          print(i)
+    expected: |
+      for i in range(1, 6):                       # 使用 python 内置函数 for 循环遍历；使用 python 函数 range 生成的范围 1-5；进入本轮把当前取到的元素绑定给变量 i【循环（Loop）/ 迭代（Iteration）】
+          if i % 2 == 0:                          # 计算 i 对 2 取模并比较是否等于 0；条件成立进入分支【条件分支（Branch）】
+              continue                            # 跳过本轮后续语句；直接回到 for 头部准备下一次
+          if i == 5:                              # 比较 i 是否等于 5；条件成立进入分支【条件分支（Branch）】
+              break                                # 终止整个循环；不再获取后续元素
+          print(i)                                 # 使用 print 输出；输出变量 i 的值；本行执行后结束本轮并回到 for 头部准备下一次
+validation_checklist:
+  - 是否逐行覆盖且仅描述“此行的直接动作”？
+  - 是否明确标注了调用类别（内置/依赖库/模块）？
+  - 循环是否使用固定短语表述进入/结束/跳过/终止？
+  - 是否保持从左到右的动作顺序，使用“；”连接？
+  - 结构性语句是否附加术语对照方括号？
+  - 与 examples.expected 是否逐字一致（允许空白差异外）？
+self_test:
+  input: |
+    for i in range(1, 6):
+        print("当前数字:", i)
+  generated_by_spec: |
+    for i in range(1, 6):                       # 使用 python 内置函数 for 循环遍历；使用 python 函数 range 生成的范围 1-5；进入本轮把当前取到的元素绑定给变量 i【循环（Loop）/ 迭代（Iteration）】
+        print("当前数字:", i)                    # 使用 print 输出；输出固定前缀字符串与变量 i 的值；本行执行后结束本轮并回到 for 头部准备下一次
+  expected_style: |
+    for i in range(1, 6):                       # 使用 python 内置函数 for 循环遍历；使用 python 函数 range 生成的范围 1-5；进入本轮把当前取到的元素绑定给变量 i【循环（Loop）/ 迭代（Iteration）】
+        print("当前数字:", i)                    # 使用 print 输出；输出固定前缀字符串与变量 i 的值；本行执行后结束本轮并回到 for 头部准备下一次
+  verdict:
+    match: true
+    confidence: 0.93
+notes:
+  - 若需要标出依赖库/模块调用关系，按 classification_rules 替换模板中的“使用 print / 使用 python 函数 …”为“使用依赖库函数 …”或“使用模块函数 …/在对象 … 上调用方法 …”。
+  - 对中文范围描述（如 1-5）必须与 range 的半开区间对应（range(1,6) → “1-5”）。

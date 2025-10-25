@@ -1,0 +1,32 @@
+meta:
+  version: "1.0"
+  schema_version: "1"
+  path: "Kobe/SharedUtility"
+  last_updated: "2025-10-20"
+  owners:
+    - "kobe-core"
+  stability: "alpha"
+module:
+  name: "SharedUtility"
+  summary: "Common helper layer that currently hosts the RichLogger infrastructure."
+  responsibilities:
+    - "Provide SharedUtility.RichLogger for application-wide logging"
+    - "Offer an expansion point for future shared utilities"
+  non_goals:
+    - "Does not implement domain-specific business logic"
+  entry_points: []
+relations:
+  depends_on: []
+  used_by:
+    - "Kobe/app.py"
+  provides_apis: []
+  reasons:
+    - "Centralize utilities reused by multiple services"
+files:
+  key_files: []
+  test_locations: []
+sub_indexes:
+  - "RichLogger"
+notes:
+  - "Only the RichLogger subtree is populated as of 2025-10-20"
+  - "Metadata refreshed on 2025-10-20"
