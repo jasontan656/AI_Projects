@@ -1,5 +1,5 @@
 Mode: Command‑Driven · One‑Shot · Stateless
-Focus_file: “D:\AI_Projects\TelegramChatHistory\Workspace\.WorkPlan\DatabaseIndexAgentPlan.md”
+Focus_file: “Current Discussion desgnated dev doc file”
 Focus_file = FD
 
 RESOLVE FOCUS

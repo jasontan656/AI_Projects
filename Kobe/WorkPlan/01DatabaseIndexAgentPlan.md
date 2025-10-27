@@ -1,41 +1,111 @@
-```yaml
+---
+```python
 doc:
-  id: DatabaseIndexAgentPlan
-  title: Telegram BI/Index 方案与 Agent 开发工作笔记
+  id: 01DatabaseIndexAgentPlan
+  title: Index Agent 方案与 Knowledge Base 设计工作笔记
   language: zh-CN
   created: 2025-10-25
-  updated: 2025-10-25
+  updated: 2025-10-27
   owner: owner
   editors:
     - AI Assistant
   status: draft
-  repository_root: D:\\AI_Projects
-  focus_note_path: D:\\AI_Projects\\TelegramChatHistory\\Workspace\\.WorkPlan\\DatabaseIndexAgentPlan.md
-  knowledge_base_root: AckowleageBase
-  all_paths_relative_to: BASE_DIR=Kobe
+  schema_version: 1.1.0
+  kind: universal-ssot-plan
+  family: kobe
+  repository_root: AUTO
+  focus_note_path: D:\\\\AI_Projects\\\\Kobe\\\\WorkPlan\\\\01DatabaseIndexAgentPlan.md
+  knowledge_base_root: AUTO
+  all_paths_relative_to: REPO_ROOT
   purpose: >
     作为面向 AI 与开发者的“几乎可执行”设计文档：
-    本文优先定义 index.yaml 的结构与字段（单一事实来源，SSOT）；
-    注意：各“独立机构/业务体系（agency）”各自维护一份独立的 index.yaml，
-    每份 index.yaml 是该机构/业务线的唯一真源；项目可并行存在多份 index.yaml；
-    Agent 仅作为索引的消费者；TelegramBot 改造按此索引完成对接。
+    文档优先给出 Telegram ↔ Agents 接入所需的 schema、行为定义、JSON Schema、样例与 SLO；
+    所有渠道与服务均须将本文视作单一事实来源（SSOT）。
 writing_rules:
-  content_ratio: "20% 代码式标记 + 80% 中文叙述"
+  content_ratio: "100% behavior 描述 + 接口字段/Schema 说明，禁止可执行代码"
+  universality_policy:
+    non_customizable_by_content: true         # 文件头为全局模板，正文不得降低约束
+    must_autofill_missing_sections: true      # 未定义项由 AI 按发现顺序自动补齐
+    must_align_with_repo_before_write: true   # 生成正文前 MUST 读取并对齐代码库
+    autofill_precedence: ["code/constants", "config/*.yaml", "env/.env", "index/knowledge_base", "defaults"]
+    conflict_resolution: "header>MUST>repo_contract>content"
+    cross_doc_coherence:
+      family_docs: ["01DatabaseIndexAgentPlan", "02TelegramBotGCmessagePlan", "03KBtoolUnify"]
+      ownership:
+        plan_01: "Index/KB schema & routing"
+        plan_02: "Channel adapter, interaction prompts/behavior, runtime policies"
+        plan_03: "KB 工具与统一化治理"
+      precedence:
+        index_level: "plan_01 overrides"
+        channel_level: "plan_02 overrides"
+        tooling_level: "plan_03 extends without override"
+  codegen:
+    targets:
+      - kind: "config"              # 从 Prompt JSON Schema 生成配置
+        from: "Prompt JSON Schema"
+        to: "{REPO_ROOT}/Config/prompts.{locale}.yaml"
+        naming: "snake_case"
+      - kind: "python"              # 从 Behavior Contract 生成契约骨架
+        from: "Behavior Contract"
+        to: "{REPO_ROOT}/Contracts/behavior_contract.py"
+        anchors: ["class BehaviorContract", "def apply_contract()"]
+      - kind: "python"              # 从 ToolCall Contract 生成工具封装骨架
+        from: "ToolCall / FunctionCall Contract"
+        to: "{REPO_ROOT}/Contracts/toolcalls.py"
+        anchors: ["def call_{tool}()"]
+      - kind: "schema"              # 输出契约落盘，供运行期校验
+        from: "Output Contract"
+        to: "{REPO_ROOT}/Contracts/output.schema.json"
+    rules:
+      - MUST regenerate all targets when any of [Prompt Catalog, Output Contract, Behavior Contract] changes
+      - MUST fail if target file missing or schema‑breaking change detected
+      - MUST annotate generated files with "generated-from: {doc.id}@{doc_commit}"
+    placeholders:
+      allowed: ["{REPO_ROOT}", "{FAMILY}", "{COMPONENT}", "{DOC_ID}", "{DOC_COMMIT}", "{LOCALE}", "{VERSION}"]
+      semantics:
+        REPO_ROOT: "仓库根目录（自动解析）"
+        FAMILY: "产品族/域（例如 kobe）"
+        COMPONENT: "子组件名（例如 TelegramBot, OpenaiAgents, KnowledgeBase）"
+        DOC_ID: "当前文档 id"
+        DOC_COMMIT: "提交哈希缩写"
+        LOCALE: "语言区域标识（zh-CN/en-US/...）"
+        VERSION: "文档/契约版本，如 prompt_version"
+    path_policy:
+      - MUST use only placeholders listed in codegen.placeholders.allowed
+      - MUST be absolute after placeholder expansion
+      - MUST NOT contain user home 或 临时目录占位（如 ~、%TEMP%）
+      - SHOULD keep depth <= 4 级目录，便于审计
   structure_order:
-    - 标题: 每节以 "# 标题: ..." 开头, 简述目标与范围
-    - 设计意图: 先说明“设计成怎么实现”与“为何如此设计”
-    - 设计原因: 引用代码/文档/数据结构作为证据
-    - 接口锚点: 仅写 import/from/def/class 声明行(无实现)
-    - 需求字段: 列清晰的字段与约束, 使用英文键名与 ASCII 标点
-    - 二级嵌套: 展开对象/数组字段, 说明层级关系与依赖
-    - 三级嵌套: 必要时补充, 记录边界与回退
-    - 如何使用: 叙述调用顺序与输入输出契约, 不写实现
-    - agent如何读取: 叙述检索与最小读取流程, 不写实现
+    - 标题
+    - 设计意图
+    - 设计原因
+    - 接口锚点
+    - 需求字段
+    - 二级嵌套
+    - 三级嵌套
+    - JSON Schema (MUST)
+    - Prompt Catalog (MUST)
+    - Prompt JSON Schema (MUST)
+    - Behavior Contract (MUST)
+    - ToolCall / FunctionCall Contract (MUST)
+    - Config Contract (MUST)
+    - Safety & Refusal Policy (MUST)
+    - i18n & Brand Voice (MUST)
+    - Output Contract (MUST)
+    - Logging & Observability (MUST)
+    - Versioning & Traceability (MUST)
+    - Golden Sample(s) (MUST >=3)
+    - Counter Sample(s) (MUST >=2)
+    - 决策表 / 状态机 / 顺序化约束
+    - 如何使用
+    - agent如何读取
+    - 边界与回退
+    - SLO / 阈值 / 触发条件
   body_style:
     description: >
-      正文采用 Python 上色以提升可读性；允许 import/from/def/class 作为“声明式锚点”，
-      允许 if/else/try/except/return 表达流程与回退；禁止函数体、真实赋值、函数调用与循环；
-      仅标题使用 #，其它小节为纯文本行或引号内容；按滚雪球顺序展开。
+      正文仅允许 Python 代码块承载行为描述、字段清单、接口锚点、JSON Schema、示例与决策表；
+      允许 import/from/def/class 作为标识符；必须使用 RFC 2119 术语（MUST/SHALL/SHOULD/MAY）表达约束；
+      优先使用中文叙述解释业务语义，字段/关键字保持 ASCII；禁止任何可执行代码或赋值；所有逻辑采用 docstring/步骤/表格形式，确保实现可复制。
     python_fenced_block: true
     ascii_punctuation_only: true
     allow_structs: ["dict", "list", "string"]
@@ -49,876 +119,1557 @@ writing_rules:
     pseudo_assignment_labels: ["需求字段", "设计意图", "设计原因", "二级嵌套", "三级嵌套", "如何使用", "agent如何读取", "边界与回退", "模板与占位"]
     def_line_format: "def Name(): ...  中文说明"
     class_line_format: "class Name: ...  中文说明"
-    multiline_allowed: true
-    nesting_allowed: true
-    parse_markers:
-      - 标题
-      - 设计意图
-      - 设计原因
-      - 接口锚点
-      - 需求字段
-      - 二级嵌套
-      - 三级嵌套
-      - 如何使用
-      - agent如何读取
-      - 边界与回退
-      - 模板与占位
+  prompt_style:
+    human_readable_first: true
+    description: >
+      每条 Prompt Catalog 需先以中文段落说明“用途、触发条件、变量说明、示例文案”，
+      再给出结构化 Prompt 条目与 JSON Schema 以便自动化；若包含多语言提示，说明段落默认中文，必要时附英文原文。
+    required_sections: ["用途", "触发条件", "变量说明", "示例文案"]
+  policy:
+      determinism:
+        temperature: 0      # MUST 在正文显式给值
+        seed: REQUIRED      # MUST 指定以保证可重现
+        top_p: 1            # 建议值，若不同需在正文说明
+      token_budget:
+        per_call_max_tokens: REQUIRED
+        per_flow_max_tokens: REQUIRED
+        summarize_threshold_tokens: REQUIRED
+      output_mode: "strict-json | markdown-structured"   # MUST 二选一并给出输出契约
+      naming:
+        prompt_version: REQUIRED
+        doc_commit: REQUIRED
+      nondeterminism:
+        allow_without_seed: false
+        provider_fallback_order: ["OpenAI.Responses", "OpenAI.ChatCompletions", "Anthropic.Messages", "Custom"]
+        drift_tolerance_tokens: 1
+        assert_output_contract: true
+      provider_capabilities:
+        OpenAI.Responses:
+          supports_seed: true
+          supports_json_mode: true
+          supports_function_call: true
+          max_input_tokens: 200000
+          notes: "优先使用；strict JSON 建议配合 schema 约束"
+        OpenAI.ChatCompletions:
+          supports_seed: true
+          supports_json_mode: true
+          supports_function_call: true
+          max_input_tokens: 128000
+        Anthropic.Messages:
+          supports_seed: false
+          supports_json_mode: partial
+          supports_function_call: tool_use
+          max_input_tokens: 200000
+          notes: "seed 不稳定时需放宽 drift 容忍或改用结构化提示"
+        Custom:
+          supports_seed: unknown
+          supports_json_mode: unknown
+          supports_function_call: unknown
+          max_input_tokens: unknown
+      refusal_strategy:
+        priority: ["safety", "contract", "budget", "rate_limit", "other"]
+        rules:
+          safety:
+            on: ["safety_triggered", "policy_violation", "pii_detected"]
+            action: "refuse"
+            audit_log: true
+          contract:
+            on: ["output_validation_failed", "schema_mismatch", "drift_exceeded"]
+            action: "repair_then_refuse_if_unfixable"
+            max_repairs: 1
+          budget:
+            on: ["token_budget_exceeded", "summary_required"]
+            action: "degrade_or_summarize"
+          rate_limit:
+            on: ["rate_limited"]
+            action: "retry_with_backoff"
+            backoff_ms: [200, 400, 800]
   code_guidelines:
     language: python
     libraries:
       - openai-agents
       - pydantic>=2
-    patterns:
-      - 正文不出现任何实现细节；仅保留接口锚点与中文说明
-      - 参数使用 snake_case；时间统一 ISO-8601（含时区偏移）
   acceptance_criteria:
-    - 正文整体包裹在一个 python 代码块中，仅用于高亮与结构表达
-    - 每节按“设计意图→设计原因→接口锚点→需求字段→使用→读取→回退”顺序叙述
-    - 文本基于现有代码/文档的实际字符串(函数名/文件路径/键名)，可直接映射为实现与测试契约，表达无歧义
+    - 正文整体包裹在一个 python 代码块中
+    - MUST 保证 doc.id 等于当前文件名（去扩展名），focus_note_path 为当前文件绝对路径，repository_root/knowledge_base_root 使用 AUTO 并由工具在生成时解析
+    - 每节必须包含 JSON Schema、>=3 正向样例、>=2 反例、至少一张决策表或状态机描述
+    - MUST 提供完整 Prompt 清单（system/triage/summarize/compose/clarify/toolcall/refusal/welcome/help/rate_limit/degrade）
+    - 每个 Prompt Catalog 条目必须先提供中文“用途/触发条件/变量说明/示例文案”描述块，再给结构化条目，保证人类与机检并行
+    - MUST 提供 Prompt 变量表（name/type/required/default/example/description），并与 JSON Schema 对齐
+    - MUST 提供 Output Contract（JSON Schema 或 Markdown 结构）以及端到端样例（输入->期望输出）>=3；对抗样例（提示注入/越权/敏感）>=2 并给出期望拒答
+    - MUST 指定解码参数（temperature/top_p/seed）与 token 预算（per_call/per_flow/summary_threshold）
+    - MUST 明确日志/可观测性字段（request_id/chat_id/convo_id/prompt_version/doc_commit/latency_ms/status_code/error_hint）
+    - 字段、路径、模块名必须与仓库真实结构匹配，并在 CI 可机检（schema 校验、锚点存在性）
+    - MUST 明确 SLO/阈值/触发条件并使用 RFC 2119 术语
+    - MUST 在生成/渲染前执行仓库发现：扫描 anchors （常量/配置/索引）并将解析结果写入正文“Auto‑Discovery”小节；缺失即失败
+    - MUST 在变更 Prompt/Behavior/SLO 时 bump prompt_version，并同步更新 Golden/对抗样例
+    - MUST 在 changelog 的每条记录中标注 change_type: breaking|nonbreaking；breaking 需附 migration_guide 与 rollback_notes
+    - MUST 提供 pii_redaction 规则（字段与掩码）并在运行期启用
+    - MUST 记录 prompt_fingerprint(sha256) 与 output_schema_id；运行期开启严格输出校验（不符即拒答/降级）
+    - MUST 所有 codegen.targets[*].to 仅使用 codegen.placeholders.allowed 中占位符；展开后路径为绝对路径
+    - MUST 所选 provider 属于 policy.provider_capabilities 的键，且调用满足其能力约束；若不满足必须按 provider_fallback_order 切换
+    - MUST 运行期对输出执行严格契约校验，不符合则按照 policy.refusal_strategy 执行 refuse/degrade/repair
+ci:
+  guards:
+    - name: schema_validation
+      tools: ["ajv", "pydantic"]
+    - name: anchors_existence
+      tools: ["scripts/check_anchors.py"]
+    - name: samples_parse
+      tools: ["scripts/validate_samples.py"]
+    - name: adversarial_refusal
+      tools: ["scripts/validate_safety.py"]
+    - name: runtime_output_validation
+      tools: ["scripts/validate_runtime_output.py"]
+    - name: pii_redaction
+      tools: ["scripts/check_pii_redaction.py"]
+  required_status: pass
 changelog:
-  - date: 2025-10-25
+  - date: 2025-10-26
     author: AI Assistant
-    change: 规范对齐；修复 YAML/正文分离；引入 index.yaml 设计为主、Agent 为消费者
-```
-
-```python
-# 标题: 文档背景与阅读说明
-from agents import Agent, Runner  "依赖锚点: OpenAI Agents SDK; 默认 Responses API"
-from agents.models.openai_responses import OpenAIResponsesModel  "依赖锚点: Responses API 模型封装"
-
-需求字段 = {
-"knowledge_base_root": "AckowleageBase",
-"focus_note_path": "D:\\AI_Projects\\TelegramChatHistory\\Workspace\\.WorkPlan\\DatabaseIndexAgentPlan.md",
-"sections": ["Index设计", "Agent设计", "集成设计/TelegramBot 改造"]
-}
-设计意图: "优先定义 index.yaml 结构与字段；Agent 只消费 index.yaml；TelegramBot 改造与 Agent 对齐。"
-
-# 标题: 最小改造基座 / 接口适配（第一步必做）
-
-需求字段 = {
-"目标": "以最小侵入方式把 Telegram 消息管线接到我们的 Agents 接口, 保持原事件循环不变, 先跑通对话",
-"原则": ["不改 ApplicationBuilder 启动范式", "不改 handlers 注册模式", "仅替换‘向模型发问’这一层的实现"],
-"兼容契约": "新适配层需保持 BaseLLM.ask_stream_async/ask_stream 的生成器语义, 以便 bot.py 的 getChatGPT 原样复用",
-"环境": {"USE_AGENTS": true, "MODEL": "agents", "BASE_DIR": "Kobe"}
-}
-设计意图: "先把‘出口’接稳(问答可通), 再逐步实现 index 与 Agent 工作流; 这是最易出错但最小的改动点。"
-
+    change: 采用行为描述写作规范，重写 Telegram/Agents 接入方案
+---pythonpython
+# 标题: 全局运行参数与决定性配置
+设计意图: "集中声明可重现所需的解码/预算/版本/脱敏/指纹等参数，作为全局约束。"
+设计原因: "保证不同章节在同一组决定性参数下可复现、可校验。"
 接口锚点:
-def AgentsBridge.ask_stream_async(): ...  文本: 适配层; 输入 prompt/convo_id/model/语言等; 内部调用 AgentsGateway.dispatch_stream; 以增量文本块 yield 回 Telegram 层;
-def AgentsBridge.ask_stream(): ...  文本: 同步包装, 基于 async→sync 生成器适配; 维持 BaseLLM 接口一致;
-def AgentsGateway.dispatch_stream(): ...  文本: 将 Telegram 文本转为 {intent, tools}; 咨询→compose_reply 小预算; 方案→mem_read+planner 中预算; 按 TokenMeter 汇报用量;
-def TelegramAdapter.to_markdown_chunk(): ...  文本: 将 Agents 增量输出映射为 Telegram 需要的 MarkdownV2 片段(避免破坏代码块/图片占位);
-def Config.get_robot_agents(): ...  文本: 当 USE_AGENTS 或 MODEL=="agents" 时返回 AgentsBridge 实例; 否则保持原 get_robot 行为;
-
-如何使用:
-在 .env 设置 USE_AGENTS=true, MODEL=agents; TelegramBot/config.py 读取 .env 后, get_robot 返回 AgentsBridge; bot.py 的 getChatGPT 函数不变(继续消费 ask_stream_async 增量), 立即可对话;
-
-agent如何读取:
-AgentsBridge 内部使用内存快照与 tools; 咨询/介绍→compose_reply 生成短句; 方案/办理→mem_read 取段落后交 Planner; Guardrails.enforce_brevity 控制长度; TokenMeter 输出本轮用量。
-
-# 标题: 工程现状 / 仓库结构与启动方式（给开发AI的上下文）
-
+class GlobalRuntimePolicy: ...  "Contracts/behavior_contract.py 读取并注入"
 需求字段 = {
-"BASE_DIR": "Kobe",  # 仓库根; 所有索引路径相对该根解析
-"org_index_file": "AckowleageBase/AckowleageBase_index.yaml",  # 顶层索引相对路径
-"agency_index_pattern": "AckowleageBase/<agency>/<agency>_index.yaml",  # 机构索引命名规范
-"kb_root": "AckowleageBase",  # 知识库根; 运行期已内存化
-"env_file": ".env",  # 放置于 BASE_DIR 下; 由 TelegramBot/config.py 显式加载
-"agents_sdk_root": "OpenaiAgents",  # OpenAI Agents SDK 本地工程
-"telegram_bot_root": "TelegramBot",  # 机器人工程
-}
-设计意图: "为执行开发任务的 AI 提供最小但关键的工程上下文, 防止跑偏。"
-
-如何使用:
-入口应用: "TelegramBot/bot.py"（python-telegram-bot v20+ 应用, 非 FastAPI）; 启动方式: ApplicationBuilder().build(); 依据 WEB_HOOK 选择 run_webhook 或 run_polling; 禁止改其启动范式（仅允许最小注入）。
-
-agent如何读取:
-所有文件与索引路径相对 BASE_DIR 解析; 禁止使用绝对路径; MemoryLoader 在进程启动时一次性加载为 MemorySnapshot; 运行期工具仅访问内存。
-
-# 标题: 集成约束 / 最小注入与环境加载（给开发AI）
-
-需求字段 = {
-"env_loading": "TelegramBot/config.py 已改为优先 find_dotenv(usecwd=True), 找不到则回落 BASE_DIR/.env",
-"bootstrap": "在应用启动前/入口处调用 Bootstrap.memory_preload 与 AgentsGateway.attach_snapshot（可挂到 post_init 钩子）",
-"no_framework_change": "不改 ApplicationBuilder/run_webhook/run_polling 方式, 保持现状",
-}
-设计意图: "以最小侵入方案接入内存快照与 Agents 工具, 保障现有机器人可持续运行。"
-
-如何使用:
-加载 .env 后, 以 BASE_DIR 相对路径构建 MemorySnapshot; 将 snapshot 与 app_name=\"Kobe\" 注入 AgentsGateway; 其它逻辑不变。
-实现提示:
-  - TelegramBot/config.py 暴露 `_ensure_agents_bridge()`、`get_robot_agents()` 与 `get_active_robot()`，当 `USE_AGENTS=true` 或 `MODEL=agents` 时返回 `AgentsBridge`；否则回退历史 ChatGPT 路径。
-  - `.env` 中保留 `TELEGRAM_BOT_TOKEN`、`OPENAI_API_KEY`、`USE_AGENTS`、`WEB_HOOK` 等键，config.py 会自动创建/读取 BASE_DIR 下的 `user_configs/*.json`（支持 CHAT_MODE=global/multiusers）。
-  - bot.py 仅在 `ApplicationBuilder.post_init` 注入 `Bootstrap.memory_preload()` 与 `AgentsGateway.attach_snapshot()`，并复用现有 handlers/事件循环，确保 USE_AGENTS=false 时可无缝回退。
-
-# 标题: 消息格式 / Telegram Markdown 转义约定（沿用既有实现）
-
-设计意图: "复用 TelegramBot 现有 MarkdownV2 转义与分片逻辑, 不重复造轮子。"
-
-需求字段 = {
-"escape_impl": "md2tgmd.src.md2tgmd.escape",
-"split_code_impl": "md2tgmd.src.md2tgmd.split_code",
-"replace_all_impl": "md2tgmd.src.md2tgmd.replace_all",
-}
-如何使用:
-TelegramAdapter.to_markdown_chunk 调用上述实现完成转义/分片; AgentsBridge 仅传递语义片段, 不直接操作 Markdown 细节。
-
-# 标题: 品牌与欢迎语 / 多语言尾注（给开发AI）
-
-需求字段 = {
-"bot_brand": "Kobe",  # 自称与日志品牌
-"welcome_zh": "您好，我是四方集团的小秘书 Kobe~ 我可以提供关于移民局所有业务的咨询和协调。",
-"welcome_tail_languages": ["English", "中文", "Español", "العربية", "한국어"],  # 多语支持提示; 内容仍以英文为默认
-}
-设计意图: "统一对外话术与品牌自称, 并在首条消息以短句建立‘咨询域’边界。"
-
-如何使用:
-TriageAgent.classify_and_greet 在首次交互以小预算 LLM 返回简短欢迎/确认, 文案源自 welcome_zh 与语言设置; 该消息不长篇大论。
-
-# 标题: 机构语义 / agency 命名（防混淆）
-
-需求字段 = {
-"agency_id": "kebab-case, 全局唯一且稳定; 当前=bi",
-"agency": {"agency_id": "bi", "agency_name": "BureauOfImmigration"}
-}
-设计意图: "统一使用 agency 表达‘政府机构/业务体系’, 避免与‘公司内部部门’混淆。"
-
-如何使用:
-OrgIndexAgent/AgencyIndexAgent 与所有会话状态字段使用 agency_* 命名; 顶层 org 索引为 agencies 列表。
-
-
-# 标题: Index设计 / 组织级顶层 index（机构路由，最简）
-
-需求字段 = {
-"org_index_file": "AckowleageBase/AckowleageBase_index.yaml",
-"agencies": [
-  {"agency_id": "<id>", "agency_name": "<name>", "agency_desc": "<description>", "agency_folder": "<relative_folder>", "index_rel": "index.yaml"}
+"determinism": {"temperature": 0, "top_p": 1, "seed": 20251027},
+"token_budget": {"per_call_max_tokens": 3000, "per_flow_max_tokens": 6000, "summary_threshold_tokens": 2200},
+"output_mode": "markdown-structured",
+"versioning": {"prompt_version": "idx-v1", "doc_commit": "local-dev"},
+"pii_redaction": [
+  {"field": "email", "mask": "***@***"},
+  {"field": "phone", "mask": "***-****"},
+  {"field": "id_number", "policy": "hash(sha256)"}
 ],
-"agency_synonyms?": {"<standard_name>": ["同义词1", "同义词2"]}
+"fingerprints": {"prompt_fingerprint": "0000000000000000000000000000000000000000000000000000000000000000", "output_schema_id": "kobe/index/outputs@v1"}
 }
-设计意图: "仅用于定位机构与其文件夹/机构索引(index.yaml)；不承载业务条目与值选择；上层字段可由脚本自机构索引反推生成（如 agency_name/agency_folder）。"
-实现提示: 当前仓库已提供 AckowleageBase/AckowleageBase_index.yaml，内含 bi (BureauOfImmigration) 机构条目，并指向 AckowleageBase/BI/BI_index.yaml；OrgIndexAgent 直接加载该 YAML，即为目前生产真源。
-      设计原因: "顶层只负责‘发现与路由’，复杂结构全部留在机构级 index.yaml，避免重复定义与维护成本。"
-
-      如何使用:
-      OrgIndexAgent.locate_agency 读取 org_index_file，依据 agency_name/agency_synonyms 与用户请求匹配机构；命中后以 agency_folder + index_rel 组装机构索引路径，交由 AgencyIndexAgent 继续处理。若用户提示词涉及多机构，允许返回多机构候选并由上层合并拼接或按需要进入语义读取最小段落。
-
-      # 标题: Index设计 / 组织级可选预路由 routing_table（降本缩域）
-      
-      需求字段 = {
-      "routing_table?": {
-        "pricing": {"tokens": ["价格", "费用", "费率", "多少钱"], "agencies": ["bi"], "l3_candidates?": ["<level3_key>"]},
-        "process": {"tokens": ["流程", "步骤", "怎么办理"], "agencies": ["bi"], "l3_candidates?": []},
-        "faq": {"tokens": ["问", "FAQ"], "agencies": ["bi"]}
-      }
-      }
-      设计意图: "在进入 LLM 前用确定性映射缩小候选集，降低平均 tokens；未命中时回退到纯 LLM。"
-      语言适配: "routing_table.tokens 按 IntentAgent 检测到的语言选择对应词表；若该语言无词表则直接回退纯 LLM 判定。"
-      
-      如何使用:
-      TriageAgent 先用 routing_table 从用户词面命中 {agencies, l3_candidates}（至多 K 个），再把候选作为限制项交给 LLM 判定与首轮问候；若无候选或歧义高 → 直接走 LLM 判定。该模块为可选与灰度，不改变保底链路。
-
-agent如何读取:
-若未命中机构 → 返回‘当前知识库尚未覆盖该机构’；若机构已注册但 index_rel 缺失 → 返回‘该机构索引暂不可用’并记录告警；其余流程与机构级索引一致。
-
-# 标题: Index设计 / index.yaml 顶层结构
-
-需求字段 = {
-"index_file_pattern": "AckowleageBase/<agency>/<agency>_index.yaml",
-"version": "v1",
-"updated_at": "",
-"kb_root": "AckowleageBase",
-"path.syntax": "<domain>/<collection>/<level3>/<level4>/<attribute?>",
-"domains": ["pricing", "process", "preconditions", "pre_required_documents", "applicability", "faq", "deliverables", "info_collection", "acknowledgement_flags", "service_related", "kpis", "risks", "semantic_profile"],
-"lang.priority": ["default_language", "zh-CN", "en-US"],
-"sections": ["agency", "domain_profiles", "compose_rules", "selectors", "synonyms", "entries", "slots", "build", "stats", "llm_policies"]
-      }
-设计意图: "知识库 YAML 不变；差异与深度在 index.yaml 表达；可跨知识库复用。"
-设计原因: "1/2 级固定路径；3/4 级动态；5 级为属性层（但个别域在 4 即属性），必须以数据标注消解差异。"
-
-二级嵌套:
-agency_index_map? = {"bi": "AckowleageBase/BI/BI_index.yaml"}
-
-# 标题: Index设计 / 内存快照与路径解析（运行期零磁盘IO）
-
-设计意图: "运行期完全使用内存对象，避免本地文件 IO；路径语义保持不变，指向内存中的结构体。"
-
-需求字段 = {
-"MemoryLoader": {"load_all": true, "org_index": "AckowleageBase_index.yaml", "agency_indices": "<agency>_index.yaml", "kb_root": "AckowleageBase"},
-"MemorySnapshot": {"snapshot_id": "<uuid>", "indexed_at": "<iso8601>", "agency_map": "{agency_id: AgencyView}", "bytes_approx": 0},
-"InMemoryKB": {"entries": "list", "selectors": "dict", "slots": "dict", "synonyms": "dict", "domain_profiles": "dict", "compose_rules": "dict"},
-"MemoryStore": {"get(path)": "value", "list(prefix)": "paths", "exists(path)": "bool"}
-      }
-
-def MemoryLoader.load_all(): ...  文本: 进程启动一次性解析顶层与各部门索引及业务 YAML, 构建 MemorySnapshot(只读)
-def MemoryStore.get(): ...  文本: 从内存按 path.syntax 取值; 不做磁盘 IO
-def MemoryStore.list(): ...  文本: 列举前缀路径; 用于生成占位与路径映射
-def MemoryHealth.report(): ...  文本: 输出 snapshot_id/entries_count/bytes_approx/last_indexed_at
-
-如何使用:
-启动阶段构建 MemorySnapshot → 运行期所有工具仅访问 MemoryStore，不访问文件系统
-
-agent如何读取:
-OrgIndexAgent/AgencyIndexAgent/index_locate/index_get_paths_for_l3/mem_read 全部读内存; shape_override 与 selectors 在内存中生效
-
-# 标题: Index设计 / domain_profiles 与 compose_rules（新增）
-
-需求字段 = {
-"agency": {"agency_id": "<id>", "agency_name": "<name>", "namespace?": "<ns>", "kb_id?": "<kb>"},
-"domain_profiles": {
-  "pricing": {"dynamic_levels": [3,4], "attr_level": 5, "compose_hint": "pricing_aggregate_fees"},
-  "process": {"dynamic_levels": [3],   "attr_level": 4, "compose_hint": "process_outline"},
-  "preconditions": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "rules_list"},
-  "pre_required_documents": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "docs_list"},
-  "applicability": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "scenarios_list"},
-  "faq": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "qa_list"},
-  "deliverables": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "deliverables_list"},
-  "info_collection": {"dynamic_levels": [3], "attr_level": 4, "compose_hint": "info_list_items"}
-},
-"compose_rules": {
-  "pricing": {"frame": "价格速览: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "process": {"frame": "办理步骤总览: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "preconditions": {"frame": "基本条件: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "pre_required_documents": {"frame": "前置材料: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "applicability": {"frame": "适用范围: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "faq": {"frame": "常见问答: {level3_name} 包含 {level4_item_list}.", "joiner": "，"},
-  "info_collection": {"frame": "信息采集项: {level3_name} 包含 {level4_item_list}.", "joiner": "，"}
-},
-"render_policy": {
-  "list_style": "bullet|inline",
-  "max_items": 6,
-  "ellipsis": "…",
-  "joiner": "，",
-  "sort": "original|alpha",
-  "omit_empty": true,
-  "dedupe": true,
-  "casing": "preserve|title"
-}
-}
-设计意图: "以域为单位声明动态层与属性层，前置拼接句式；Agent 零-LLM即可拼接首轮‘框架+占位’。"
-
-# 标题: Index设计 / selectors 与 slots（已定）
-
-需求字段 = {
-"selectors": {
-  "pricing": ["amount.display", "amount.value + currency", "notes"],
-  "process": ["description", "title"],
-  "pre_required_documents": ["documents", "trigger + documents"],
-  "faq": ["answer"],
-  "default": ["text"]
-],
-"slots": {
-  "pricing": {"l3_slot": "level3_name", "l4_slot": "level4_fee_items", "selector_slot": "selector"},
-  "process": {"l3_slot": "step_name", "l4_slot": "step_details"},
-  "faq": {"l3_slot": "question_key", "l4_slot": "answer_key"},
-  "info_collection": {"l3_slot": "group_name", "l4_slot": "item_list"}
-}
-}
-边界与回退:
-try 读取 "amount.display" except → return "amount.value + currency"; 若仍无 → return "notes"
-if 缺失 "process/steps/<step>/description" → return "title"
-语言: if 文档含 "default_language" → 返回对应语言; else → 返回原文
-
-# 标题: Index设计 / pricing 聚合策略（确定性计算，非模板堆叠）
-```yaml
-需求字段 = {
-"pricing.aggregate": {
-  "inputs": {"fields": ["amount.value", "currency", "discounts?"], "group_by": ["level3_name"], "round": 2, "locale": "zh_CN|en_US"},
-  "outputs": {"items": "[{l3,l4,value,display}]", "totals": "{by_l3, grand_total}", "notes?": "list"},
-  "display": {"grand_total_slot": "{grand_total_display}", "by_l3_slot": "{by_l3_list}"}
-}
-}
-设计意图: "金额/币种/合计用确定性工具计算, 不交给 LLM；模板只负责渲染。"
-跨币种: "同一次聚合需同币种；若检测到多币种则分别汇总并各自渲染 totals（不做自动换汇）。"
-如何使用:
-compose_reply 在 domain=pricing 时调用聚合器生成 items/totals，再按 render_policy 与 frame 渲染首轮“价格速览”；后续如需细节，仅最小读取属性层进行替换，不做语义改写。
-```
-
-# 标题: Index设计 / entries 规范与覆盖（shape_override）
-
-需求字段 = {
-"entries": [
+JSON Schema (MUST):
   {
-    "doc_rel_path": "<relative/path.yaml>",
-    "domain": "pricing|process|...",
-    "collection": "items|steps|mandatory|conditional|required|not_eligible|qas|applicant|metadata",
-    "level3_key": "<l3_key>",
-    "level4_key": "<l4_key>",
-    "l3_label": "<readable_name>",
-    "l4_label": "<readable_name>",
-    "value_selector": "selectors[domain] 或 entries 覆盖",
-    "shape_override?": {"dynamic_levels": [3], "attr_level": 4},
-    "compose_hint_override?": "info_list_items",
-    "lang": "doc.default_language 或 lang.priority[1]",
-    "tags": ["semantic_profile.intent", "semantic_profile.category", "semantic_profile.tags", "aliases?"],
-    "mtime": "<source_file_mtime>",
-    "indexed_at": "<index_time>"
+    "$id": "kobe/global/runtime.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["determinism", "token_budget", "output_mode", "versioning", "pii_redaction", "fingerprints"],
+    "properties": {
+      "determinism": {"type": "object", "properties": {"temperature": {"type": "number"}, "top_p": {"type": "number"}, "seed": {"type": "integer"}}, "required": ["temperature", "top_p", "seed"]},
+      "token_budget": {"type": "object", "properties": {"per_call_max_tokens": {"type": "integer"}, "per_flow_max_tokens": {"type": "integer"}, "summary_threshold_tokens": {"type": "integer"}}, "required": ["per_call_max_tokens", "per_flow_max_tokens", "summary_threshold_tokens"]},
+      "output_mode": {"type": "string", "enum": ["strict-json", "markdown-structured"]},
+      "versioning": {"type": "object", "properties": {"prompt_version": {"type": "string"}, "doc_commit": {"type": "string"}}, "required": ["prompt_version", "doc_commit"]},
+      "pii_redaction": {"type": "array", "items": {"type": "object"}},
+      "fingerprints": {"type": "object", "properties": {"prompt_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "output_schema_id": {"type": "string"}}, "required": ["prompt_fingerprint", "output_schema_id"]}
+    }
   }
-}
-}
-设计意图: "entries 到 level4 即止；属性层值由 Agent 按需读取；个别文档在 level4 即属性时，以条目级覆盖避免全局冲突。"
-优先级: "属性层判定 entry.shape_override > domain_profiles.attr_level"
-
-# 标题: Index设计 / synonyms 与 build/stats/llm_policies
-
-需求字段 = {
-"synonyms": {"standard_name": ["synonym1", "synonym2"]},
-"build": {"indexed_at": "<iso8601>", "builder": "IndexBuilder", "run_id": "<uuid>", "schema_version": "1.0.0"},
-"stats": {"doc_count": 0, "path_count": 0, "missing": 0, "overrides": 0, "conflicts": 0},
-"llm_policies": {
-  "triage": {"enabled": True, "max_tokens": 256},
-  "intro_frame": {"enabled": True, "max_tokens": 256},
-  "planner": {"enabled": True, "max_tokens": 4096},
-  "brevity": {"max_sentences": 3, "max_bullets": 5, "forbid_essay": True},
-  "business_lock": {"threshold": 5, "lockout_seconds": 3600, "lock_text": "尝试次数过多，请{countdown}再试。"}
-}
-}
-设计意图: "把 LLM 可用性与预算放到数据层，仅在需要的节点开启；intro_frame 默认零-LLM。"
-
-# 标题: Agent设计 / 使用 index.yaml 的接口锚点
-from agents import function_tool  "依赖锚点: 工具清单与契约"
-from agents import Agent, Runner  "依赖锚点: 会话循环与工具路由"
-from OpenaiAgents.UnifiedCS.tools import ToolContext, toolset  "实现锚点: OpenaiAgents/UnifiedCS/tools.py，集中维护 locate_agency/compose_reply 等工具"
-
-设计意图: "Agent 仅消费 index.yaml；首轮返回‘框架+占位+路径’，二阶段按需读取属性层；LLM 只在意图/方案类节点介入。机构/业务线通过 agency_id/kb_id 精确选择对应 index.yaml。" 所以 def IndexReader.load_index(): ... 然后 def IndexReader.locate_by_intent(): ...
-实现提示: "ToolContext.attach_snapshot 在 OpenaiAgents/UnifiedCS/bootstrap.py 中由 memory_preload 调用，一次性注入 MemorySnapshot，toolset() 列表由 tools.py 暴露，供 AgentsGateway/Responses API 统一注册。"
-
-def OrgIndexAgent.locate_agency(): ...  文本: 读取 org_index_file; 使用 agency_synonyms 与 domains 匹配机构; 输出 {agency_id, agency_name, agency_folder, index_rel}
-def AgencyIndexAgent.load_agency_index(): ...  文本: 基于 {agency_folder, index_rel} 加载机构级 index.yaml; 暴露 agency/domain_profiles/compose_rules/selectors/slots/entries
-def AgencyIndexAgent.route_agency_flow(): ...  文本: 依据 triage 决策选择“咨询/介绍”或“方案/办理”分支; 咨询走 compose_reply; 方案走检索+Planner
-
-def IndexReader.load_index(): ...  文本: 读取并解析 index.yaml(可选 agency_id/kb_id), 暴露 agency/domain_profiles/compose_rules/selectors/slots/entries/synonyms
-def IndexReader.locate_by_intent(): ...  文本: 基于意图与关键词过滤 entries(限定 agency_id/kb_id), 输出 domain 下某 level3 的全部 level4 路径
-def IndexReader.get_paths_for_l3(): ...  文本: 输入 (domain, level3_key), 输出该主题下全部 level4 路径
-def KVReader.read_values(): ...  文本: 按 paths + selector 最小读取属性值, 应用回退规则
-def ResponsePlanner.compose_frame(): ...  文本: 依据 slots 与 compose_rules 生成“框架+占位”, 首轮不读取属性层
-
-如何使用:
-咨询/介绍: OrgIndexAgent.locate_agency → AgencyIndexAgent.load_agency_index → 意图→domain→entries 过滤→取 level3/4 键名→compose_frame→返回 框架+占位+路径 映射; 离线替换最小取值
-方案/办理: OrgIndexAgent.locate_agency → AgencyIndexAgent.load_agency_index → 意图→domain→仅取必要段落→携带 user prompt 交 LLM 组织答案→（可选）离线替换
-
-# 标题: Agent设计 / 工具清单与契约（以内存快照驱动）
-
-工具清单 = ["locate_agency", "hydrate_agency", "index_locate", "index_get_paths_for_l3", "mem_read", "compose_reply", "plan_workflow"]
-设计意图: "所有工具基于内存快照运行，避免磁盘 IO；LLM 仅在 compose_reply/plan_workflow 节点介入；工具实体集中维护在 OpenaiAgents/UnifiedCS/tools.py。"
-
-def locate_agency(): ...  文本: 工具; 输入: agency_query|keywords; 输出: {agency_id, agency_name, agency_folder, index_rel}; 行为: 从 MemorySnapshot 的 org_index 视图匹配机构
-def hydrate_agency(): ...  文本: 工具; 输入: agency_id 或 {agency_folder, index_rel}; 输出: 机构视图 (agency/domain_profiles/compose_rules/selectors/slots/entries/synonyms)
-def index_locate(): ...  文本: 工具; 输入: intent|keywords|domain; 输出: {level3_candidates, compose_rules, selectors, slots}
-def index_get_paths_for_l3(): ...  文本: 工具; 输入: {domain, level3_key}; 输出: 该 l3 下全部 level4 路径与占位集合（附路径标签）
-def mem_read(): ...  文本: 工具; 输入: {paths, selector, lang?}; 输出: 路径对应的最小值集合，全部从 MemoryStore 读取
-def compose_reply(): ...  文本: 工具(可配置 LLM=none，小预算); 输入: {frame: compose_rules[domain], slots, labels(l3/l4)}; 输出: “框架+占位+路径映射”字符串
-def plan_workflow(): ...  文本: 工具(LLM 中预算); 输入: {segments, user_prompt, lang, llm_policies}; 输出: “方案类结构化答复”（步骤/注意事项等）
-
-
-# 标题: 工具字段契约表（字段名对齐与返回结构）
-```yaml
-# 说明: 所有字段均使用 ASCII 标点与英文键名；未标注 "?" 的为必填；返回结构仅示意字段名与层级，不包含实现。
-
-def locate_agency(): ...  字段契约
-需求字段 = {
-  "input": {
-    "agency_query?": "string",
-    "keywords?": "list[string]",
-    "lang": "string"
-  },
-  "output": {
-    "agency_id": "string",
-    "agency_name": "string",
-    "agency_folder": "string",
-    "index_rel": "string"
-  },
-  "errors": [
-    {"no_match": "未命中机构"}
-  ]
-}
-
-def hydrate_agency(): ...  字段契约
-需求字段 = {
-  "input": {
-    "agency_id?": "string",
-    "agency_folder?": "string",
-    "index_rel?": "string"
-  },
-  "output": {
-    "agency": "dict",
-    "domain_profiles": "dict",
-    "compose_rules": "dict",
-    "render_policy": "dict",
-    "selectors": "dict",
-    "slots": "dict",
-    "entries": "list",
-    "synonyms?": "dict"
-  },
-  "errors": [
-    {"missing_index": "机构索引缺失/损坏"}
-  ]
-}
-
-def index_locate(): ...  字段契约
-需求字段 = {
-  "input": {
-    "intent": "consult|plan",
-    "keywords": "list[string]",
-    "domain?": "string"
-  },
-  "output": {
-    "level3_candidates": "list[string]",
-    "meta": {"slots": "dict", "compose_rules": "dict"}
-  }
-}
-
-def index_navigator.find_paths(): ...  字段契约
-需求字段 = {
-  "input": {
-    "domain": "string",
-    "level3_key?": "string"
-  },
-  "output": {
-    "key_structure": {
-      "l3_list": "list[string]",
-      "l4_map": "{l3_key: list[string]}"
-    },
-    "path_map": "{placeholder: path}",
-    "labels?": "{key: readable_label}"
-  }
-}
-
-def index_get_paths_for_l3(): ...  字段契约
-需求字段 = {
-  "input": {
-    "domain": "string",
-    "level3_key": "string"
-  },
-  "output": {
-    "paths": "list[path]",
-    "placeholders": "list[string]",
-    "labels?": "{l4_key: readable_label}"
-  }
-}
-
-def value_reader.read_values(): ...  字段契约
-需求字段 = {
-  "input": {
-    "paths": "list[path]",
-    "selector?": "string|list[string]",
-    "strategy": "full",
-    "lang?": "string"
-  },
-  "output": {
-    "content_bundle": "list[{path: string, key: string, value: any, lang?: string}]"
-  }
-}
-
-def compose_reply.llm_frame(): ...  字段契约
-需求字段 = {
-  "input": {
-    "key_structure": "{l3_list, l4_map}",
-    "frame": "string",
-    "render_policy": "dict",
-    "slots": "dict",
-    "lang": "string"
-  },
-  "output": {
-    "text_frame": "string",
-    "placeholders": "{placeholder: path}",
-    "used_paths": "list[path]",
-    "domain": "string",
-    "l3_keys": "list[string]"
-  },
-  "constraints": [
-    "禁止输出属性值",
-    "严格遵守 render_policy 与 brevity"
-  ]
-}
-
-def planner.llm_plan(): ...  字段契约
-需求字段 = {
-  "input": {
-    "content_bundle": "list[object]",
-    "user_prompt": "string",
-    "lang": "string",
-    "llm_policies": "dict"
-  },
-  "output": {
-    "final_text": "string",
-    "used_paths": "list[path]"
-  },
-  "constraints": [
-    "仅基于提供的完整键值集合组织答案",
-    "保持简短, 以步骤/要点为主"
-  ]
-}
-
-def pricing.aggregate(): ...  字段契约
-需求字段 = {
-  "input": {
-    "fields": "[amount.value, currency, discounts?]",
-    "group_by": "[level3_name]",
-    "round": 2,
-    "locale": "zh_CN|en_US"
-  },
-  "output": {
-    "items": "[{l3, l4, value, display}]",
-    "totals": "{by_l3: list[{l3,total}], grand_total: number}",
-    "notes?": "list[string]"
-  },
-  "constraints": [
-    "跨币种分别汇总, 不自动换汇"
-  ]
-}
-```
-
-# 标题: Agent设计 / 工作流（咨询/介绍 与 方案/办理）
-
-咨询/介绍（LLM 低开销）:
-1. IntentAgent.classify → 判定为咨询/介绍, 解析关键词与 agency 候选, 输出 {lang,intent,keywords,agency_candidates}; 未命中则用欢迎语模板引导提供业务语义。
-2. OrgIndexAgent.locate_agency → 从内存 org_index 视图返回 {agency_id, agency_folder, index_rel} + 导航说明 nav_hints。
-3. AgencyIndexAgent.hydrate_agency → 取得机构级内存视图。
-4. index_locate / index_navigator.find_paths → 依据 intent/keywords 与 domain_profiles/synonyms 列出 l3 候选与该 l3 的 l4 子键结构（仅键名与标签）。
-5. compose_reply.llm_frame（LLM 小预算）→ 输入 {键名结构+frame+render_policy+slots+lang} 生成“框架+占位+路径映射”，禁止属性值。
-6. OfflineReplacer.replace_placeholders（离线）→ 按 selectors 读取所需属性值并替换占位 → 输出最终回复。
-
-方案/办理（LLM 中预算）:
-1. IntentAgent.classify → 判定为方案/办理, 解析关键词。
-2. OrgIndexAgent.locate_agency → 定位机构(内存)。
-3. AgencyIndexAgent.hydrate_agency → 取得机构级内存视图。
-4. index_locate / index_navigator.find_paths → 选择 domain 与 l3（必要时多 l3），并确定需要的跨文件路径集合。
-5. value_reader.read_values(strategy="full") → 读取上述路径的“完整所需键值集合”（可跨文件）。
-6. planner.llm_plan（LLM 中预算）→ 以 {完整键值集合 + user prompt + lang} 生成方案答复（步骤/注意事项）。
-7. （可选）OfflineReplacer.replace_placeholders → 若仍需嵌值或补足细节，再行替换。
-
-# 标题: 读取策略 / 咨询与方案（白名单与限制）
-
-设计意图: "咨询类由 LLM 基于‘键名结构’组织‘框架+占位+路径映射’，不读取属性值；方案类直接读取‘完整所需键值集合’后由 LLM 生成最终答复；金额/个人信息等只允许按选择器替换，不做语义推断。"
-
-咨询类（框架白名单）: 允许除属性层(level5+)之外的一切键名参与框架组织；属性层值仅在 selectors 指定时由离线替换；LLM 不得直接输出属性值、不得语义改写属性。
-
-方案类（内容白名单）: 允许读取涉及回答所需的“完整键值集合”（可跨文件）；LLM 在此基础上组织步骤/要点；严禁凭空扩展与外推。
-
-金额/个人信息: 仅允许按 selectors 替换（如 amount.display 或 value+currency），不得由 LLM“推断/改写/扩展”。
-
-# 标题: Agent设计 / 会话状态与缓存（三层）
-
-会话状态 = {"agency_id", "kb_id?", "agency_folder", "index_rel", "domain", "level3_key", "paths", "slots", "selector", "lang", "llm_policy", "non_business_count", "locked_until"}
-缓存策略 = {"org_index": "mtime 失效; 会话级只读", "agency_index": "mtime 失效; 会话级只读", "kv_value": "按 (path+selector+lang) 短 TTL"}
-设计意图: "最小状态贯穿 Org→Dept→Reply 全链路；禁用全量值缓存，防止 token 与内存膨胀。"
-
-# 标题: Agent设计 / LLM 策略与流式
-
-遵守 index.yaml.llm_policies: IntentAgent/consult_frame 均启用 LLM(小预算); planner 启用 LLM(中预算)。运行期所有取数走内存，不访问磁盘。IntentAgent 自动检测用户语言；所有节点使用用户语言输出。
-handoff 策略: 咨询/介绍 → stop_on_first_tool（compose_reply.llm_frame 产出即停）；方案/办理 → run_llm_again（必要时允许多轮组织）。
-流式: 各 LLM 节点支持流式输出；如流式出错，立即抛异常（不降级、不兜底）。
-
-# 标题: Agent设计 / 错误与回退
-
-未命中机构: 返回“知识库未覆盖该机构”, 记录 org.stats.missing_index。
-机构索引缺失/损坏: 返回“该机构索引暂不可用”, 记录 org.stats.stale_index。
-选择器无值: 按回退链继续; 若仍无则降级为不含该占位的回复并记录 stats.missing。
-权限/路径越界: KVReader 拒绝非 kb_root 路径并告警; 会话清理敏感状态。
-
-# 标题: Agent设计 / 观测与日志（richlogger + token 计数）
-from rich.logging import RichHandler  "依赖锚点: 控制台彩色日志"
-import logging  "依赖锚点: 标准日志接口, 供封装"
-
-设计意图: "为每一轮对话与工具调用提供清晰、降噪、可追溯的观测; 输出 DEBUG 级到 Console 与 File; 结合 OpenAI Agents SDK/Responses API 的 usage 做 Token 报告。"
-
-需求字段 = {
-"log.console": {"enabled": true, "level": "DEBUG", "rich": true},
-"log.file": {"enabled": true, "level": "DEBUG", "dir": "logs/agents/%Y-%m-%d", "rotate_mb": 10, "backup": 14, "format": "jsonl"},
-"log.fields": ["timestamp", "session_id", "trace_id", "agency_id", "kb_id", "agent", "tool", "step", "elapsed_ms", "status", "message", "memory.bytes_approx", "memory.entries_count"],
-"token.fields": ["input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens", "reasoning_tokens?", "total_tokens"],
-"redact": {"enabled": true, "patterns": ["phone", "email", "id_number"], "strategy": "mask_or_hash"},
-"sampling_ratio": 1.0
-}
-
-def RichLogger.setup(): ...  文本: 初始化 Console/File Handler; Console 使用 RichHandler; File 使用 Rotating 或按日目录 JSONL
-def RichLogger.event(): ...  文本: 关键节点统一打点; 接收 kwargs→结构化; 支持降噪合并
-def TokenMeter.start_turn(): ...  文本: 回合开始; 初始化 turn_id/trace_id; 清零 usage 聚合
-def TokenMeter.stop_turn(): ...  文本: 回合结束; 汇总 usage→TokenReport; Console 打印; File 追加
-def ToolWrapper.with_logging(): ...  文本: 为 function_tool 增加 before/after 钩子; 记录耗时/异常/子用量
-def BudgetGuard.check_and_warn(): ...  文本: 对比 llm_policies 预算; 近阈值 WARN; 超阈值 ERROR 并短路
-
+如何使用: "Contracts/behavior_contract.py 在应用启动时读取并注入；各章节不得私自覆盖。"
+agent如何读取: "AgentsBridge 从全局 policy 读取种子/预算/输出模式，确保流式行为一致。"
+边界与回退: "任一字段缺失 MUST 阻止部署；seed 变更 MUST bump prompt_version。"
+SLO / 阈值 / 触发条件: "读取与验证 SHOULD < 10ms；PII redaction 命中率 100%。"# 标题: Agent 基座背景与阅读说明
+设计意图:
+  - MUST 将 01 文档限定为 Index schema、内存知识库与 Agent 行为的 SSOT，禁止混入第三方项目改造说明。
+  - MUST 在写入正文前完成仓库自动勘察（目录/配置/知识库文件），并记录发现结果供 codegen、CI 重放。
+  - SHOULD 向 02 文档暴露本篇提供的字段/契约清单，确保 channel 层直接引用，无需重复解释。
+设计原因:
+  - 仓库当前仅存在 `.venv`, `KnowledgeBase/`, `OpenaiAgents/`, `SharedUtility/`, `TelegramBot/`, `Tests/`, `WorkPlan/`；缺少 core/ 与 app.py，需要文档明确待建结构。
+  - 旧文本仍讨论 ApplicationBuilder/minimal injection，与现行 aiogram/FastAPI 策略冲突，必须剔除。
+接口锚点:
+  - from OpenaiAgents import __all__  "{REPO_ROOT}/OpenaiAgents/ 存在但无 UnifiedCS，本文定义的 schema 需落盘于此"
+  - from KnowledgeBase import KnowledgeBase_index  "{REPO_ROOT}/KnowledgeBase/ 现存，需按照本计划补充 index.yaml"
+  - from WorkPlan import plan_family  "{REPO_ROOT}/WorkPlan/ 包含 02 文档，需 cross-reference plan_02"
+需求字段:
+  - auto_discovery:
+      repo_root: "D:/AI_Projects/Kobe"
+      existing_dirs: ["KnowledgeBase", "OpenaiAgents", "SharedUtility", "TelegramBot", "Tests", "WorkPlan", ".venv", "logs"]
+      missing_dirs: ["core", "app.py", "Config", "Contracts"]
+      knowledge_base_seed: ["KnowledgeBase/README.md? (absent)", "KnowledgeBase_index.yaml (absent)"]
+  - scope_sections: ["Agent 链路", "Memory Snapshot", "Index Schema"]
+  - plan_links: {"02": "Kobe/WorkPlan/02TelegramBotGCmessagePlan.md", "03": "待建立"}
 二级嵌套:
-关键节点: IntentAgent.classify_and_greet, OrgIndexAgent.locate_agency, AgencyIndexAgent.load_agency_index, index_locate, index_get_paths_for_l3, mem_read, compose_reply, plan_workflow, LockManager 状态变更
-降噪策略: 合并重复调用; 内容截断(首尾 80); Console 仅摘要; File 保留 hash 与必要字段
-安全: 脱敏启用; 拒绝非 kb_root 路径; 不记录密钥
-
+  - AutoDiscovery:
+      steps: ["listdir(REPO_ROOT)", "detect files per requirement", "emit report"]
+      output_fields: ["existing_dirs", "missing_dirs", "evidence_paths"]
+  - PlanAlignment:
+      inputs: ["plan_02 anchors", "plan_03 placeholders"]
+      policy: "plan_01 overrides at index level"
+三级嵌套:
+  - AutoDiscovery.evidence_paths:
+      KnowledgeBase: "exists -> True"
+      Config: "exists -> False"
+      Contracts: "exists -> False"
+    interpretation: "缺失路径需在后续章节给出创建指引"
+JSON Schema (MUST):
+  {
+    "$id": "kobe/agents/plan_overview.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["repo_root", "existing_dirs", "missing_dirs", "scope_sections", "plan_links"],
+    "properties": {
+      "repo_root": {"type": "string", "pattern": "^D:/AI_Projects/Kobe$"},
+      "existing_dirs": {
+        "type": "array",
+        "items": {"type": "string"},
+        "minItems": 1
+      },
+      "missing_dirs": {
+        "type": "array",
+        "items": {"type": "string"},
+        "minItems": 1
+      },
+      "scope_sections": {
+        "type": "array",
+        "items": {"type": "string", "enum": ["Agent 链路", "Memory Snapshot", "Index Schema"]},
+        "minItems": 3
+      },
+      "plan_links": {
+        "type": "object",
+        "required": ["02"],
+        "properties": {
+          "02": {"type": "string", "const": "Kobe/WorkPlan/02TelegramBotGCmessagePlan.md"},
+          "03": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - plan_autodiscovery_status（locale=zh-CN, audience=devops）
+    用途: 汇报自动勘察结果，提醒仓库缺失目录或文件。
+    触发条件: auto_discovery 流程完成后，无论是否存在缺失目录都发送。
+    变量说明: {existing_dirs}: 已发现目录数组；{missing_dirs}: 缺失目录数组；{repo_root}: 仓库根路径。
+    示例文案: "AutoDiscovery 完成：现有 ['KnowledgeBase','OpenaiAgents']，缺失 ['Config','Contracts']，repo_root=D:/AI_Projects/Kobe。"
+    结构化定义:
+      prompt_id=plan_autodiscovery_status locale=zh-CN audience=devops
+      text="AutoDiscovery 完成：现有 {existing_dirs}，缺失 {missing_dirs}，repo_root={repo_root}"
+  - plan_alignment_gap（locale=en-US, audience=arch）
+    用途: 提示某章节缺失必填块，便于架构审核。
+    触发条件: call_validate_plan_alignment 检测到 missing_blocks 非空时。
+    变量说明: {section}: 章节名；{block}: 缺失块名称。
+    示例文案: "Plan-01 alignment gap detected: section Agent 链路 missing required block Prompt Catalog."
+    结构化定义:
+      prompt_id=plan_alignment_gap locale=en-US audience=arch
+      text="Plan-01 alignment gap detected: section {section} missing required block {block}"
+  - plan_scope_ack（locale=zh-CN, audience=engineering）
+    用途: 告知团队本计划只覆盖 Agent 链路/Memory/Index，避免引用 legacy 改造。
+    触发条件: 文档入口渲染完成后主动发送。
+    变量说明: {scope_sections}: 三个核心范围数组。
+    示例文案: "本计划聚焦 ['Agent 链路','Memory Snapshot','Index Schema']，其它项目改造已废弃，请勿引用旧文档。"
+    结构化定义:
+      prompt_id=plan_scope_ack locale=zh-CN audience=engineering
+      text="本计划聚焦 {scope_sections}，其余改造（如第三方 bot）已废弃，请勿引用旧文档"
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/plan_overview.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text", "audience"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^plan_"},
+      "locale": {"type": "string", "enum": ["zh-CN", "en-US"]},
+      "text": {"type": "string", "minLength": 8},
+      "audience": {"type": "string"}
+    },
+    "additionalProperties": false
+  }
+Behavior Contract (MUST):
+  - def behavior_plan_overview(): ...  文档入口合约
+        """
+        Steps:
+          1. MUST run auto_discovery(repo_root) before rendering任何章节。
+          2. MUST compare findings with structure_order requirements,记录缺口。
+          3. MUST emit prompts plan_autodiscovery_status + plan_scope_ack to Config/prompts.*.
+          4. SHOULD attach plan_alignment_gap for每个缺失块，供后续章节填补。
+        Inputs: repo_root, expected_dirs, plan_links.
+        Outputs: plan_overview_payload (符合 JSON Schema)。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_auto_discovery(repo_root: str) -> dict: ...  列目录并返回 existing/missing
+        """MUST read filesystem只在 REPO_ROOT 内；失败 raise AutoDiscoveryError。"""
+  - def call_validate_plan_alignment(section: str, required_blocks: list[str]) -> dict: ...  对齐校验
+        """返回 {"section": section, "missing_blocks": [...]}；若为空则 status=ok。"""
+Config Contract (MUST):
+  - {REPO_ROOT}/Config/prompts.zh-CN.yaml MUST 包含 plan_autodiscovery_status 与 plan_scope_ack。
+  - {REPO_ROOT}/Config/prompts.en-US.yaml MUST 包含 plan_alignment_gap。
+  - {REPO_ROOT}/Contracts/behavior_contract.py MUST 实现 behavior_plan_overview。
+Safety & Refusal Policy (MUST):
+  - 若 auto_discovery 检测到 repo_root 不为 D:/AI_Projects/Kobe MUST refuse 生成并提示配置错误。
+  - 若缺失 scope_sections 中任一项 MUST refuse 并输出 plan_alignment_gap。
+  - 禁止引用 legacy TelegramBot ApplicationBuilder；检测到关键词 MUST refuse。
+i18n & Brand Voice (MUST):
+  - zh-CN：结构化、命令式语气；en-US：incident-style concise。
+  - 所有提示禁止 emoji/俚语。
+Output Contract (MUST):
+  {
+    "plan_overview_payload": {
+      "$ref": "kobe/agents/plan_overview.schema.json"
+    }
+  }
+Logging & Observability (MUST):
+  - Logs MUST 包含 request_id (UUID), repo_root, discovery_lat_ms, missing_count, emitted_prompts。
+  - Metrics: plan_autodiscovery_latency_ms histogram, plan_alignment_gaps_total counter。
+  - Traces: span name="plan.overview".
+Versioning & Traceability (MUST):
+  - prompt_version=idx-v1; 修改本章节需 bump 并记录在 changelog。
+  - 输出 plan_overview_payload 需打上 doc_commit 与 prompt_fingerprint(sha256)。
+Golden Sample(s) (MUST >=3):
+  - Sample A: repo_root=D:/AI_Projects/Kobe, existing_dirs=["KnowledgeBase","OpenaiAgents","WorkPlan"], missing_dirs=["Config","Contracts","core","app.py"], scope_sections=三项全，plan_links={"02":"Kobe/WorkPlan/02TelegramBotGCmessagePlan.md"}。
+  - Sample B: existing_dirs 包含 TelegramBot 与 logs，missing_dirs 仅 ["core","app.py"]。
+  - Sample C: plan_links 同上，并额外声明 plan_links.03="(pending)"。
+Counter Sample(s) (MUST >=2):
+  - Counter A: repo_root="E:/tmp" -> MUST fail pattern。
+  - Counter B: scope_sections 少于 3 -> MUST fail minItems。
+决策表 / 状态机 / 顺序化约束:
+  | Step | Condition | Action |
+  | auto_discovery | missing_dirs 非空 | emit plan_alignment_gap + mark status=degraded |
+  | auto_discovery | missing_dirs 为空 | status=ready |
+  | plan_alignment | required block 缺失 | refuse section 渲染 |
 如何使用:
-AgentsGateway.dispatch → TokenMeter.start_turn → 业务链路(工具经 ToolWrapper.with_logging 包装; 全部读内存) → TokenMeter.stop_turn → RichLogger.event 写回合汇总
-
+  - 渲染本文任何章节前运行 behavior_plan_overview -> 产出 plan_overview_payload -> 作为上下文写入后续章节。
 agent如何读取:
-在 triage/intro_frame/planner 的 Runner.run/stream 返回对象中抽取 usage 累加; 若存在 handoff, 多步累积后统一汇总
+  - Agents 仅需读取 plan_overview_payload.repo_root 与 scope_sections 以确定 index/KB 入口；其余字段供构建脚本使用。
+边界与回退:
+  - 如 auto_discovery 脚本失败（权限/路径）MUST 立即 halt 并提示手动校验。
+  - 若 missing_dirs 包含 WorkPlan，应视为配置损坏，需从版本控制恢复后重试。
+SLO / 阈值 / 触发条件:
+  - Auto discovery latency SHOULD < 1s。
+  - 缺口修复前禁止进入后续章节（门禁合规率 MUST 100%）。
+  - 触发条件：missing_dirs 变为 0 且 scope_sections 满足 → 标记 ready 并允许 codegen。
 
-# 标题: Agent设计 / 配置与开关（日志与预算）
-
-需求字段 = {
-"settings.logging.enabled": true,
-"settings.logging.redact": true,
-"settings.logging.rich_console": true,
-"settings.logging.file_debug": true,
-"settings.logging.log_dir": "logs/agents",
-"settings.budget.triage_max_tokens": 256,
-"settings.budget.intro_frame_max_tokens": 256,
-"settings.budget.planner_max_tokens": 4096
-}
-设计意图: "以最小配置驱动观测与预算; 所有数值可由环境变量覆盖, 部署时无需改代码。"
-
-# 标题: 集成设计 /.env 配置清单（手工维护, AI 禁止修改）
-
-需求字段 = {
-"USE_AGENTS": "true|false; 是否启用 AgentsBridge 适配层 (默认 true)",
-"MODEL": "agents|<legacy>; 设为 agents 以走新链路",
-"BASE_DIR": "Kobe; 仓库根; 所有路径相对该根解析",
-"ORG_INDEX_FILE": "AckowleageBase/AckowleageBase_index.yaml",
-"TELEGRAM_BOT_TOKEN": "<BotFather token>; webhook/polling 共用",
-"WEB_HOOK": "https://<ngrok 或公网域名>; 留空则使用 polling",
-"LOG_DIR": "logs/agents",
-"LLM_TRIAGE_MODEL": "responses:mini",
-"LLM_INTRO_MODEL": "responses:mini",
-"LLM_PLANNER_MODEL": "responses:standard",
-"LLM_TRIAGE_MAX_TOKENS": "256",
-"LLM_INTRO_MAX_TOKENS": "256",
-"LLM_PLANNER_MAX_TOKENS": "4096",
-"BUSINESS_LOCK_THRESHOLD": "5",
-"BUSINESS_LOCK_SECONDS": "3600",
-"APP_NAME": "Kobe",
-"MEMORY_WARN_MB": "1536",
-"MEMORY_ERROR_MB": "2048",
-"RICH_CONSOLE": "true",
-"FILE_DEBUG": "true",
-"REDACT": "true"
-}
-设计意图: "一次性复制到 .env 即可运行; 开关与预算独立于代码, 便于后续调优。"
-
-# 标题: 配置设计 / 模型与 Prompt 外置 YAML（给开发AI）
-
-需求字段 = {
-"models.yaml": "Config/models.yaml",  # 相对 BASE_DIR=Kobe
-"prompts.yaml": "Config/prompts.yaml"
-}
-设计意图: "将模型与节点 Prompt 从代码中拆出, 实现按节点/机构可插拔配置与成本/效果独立调优。"
-
-models.yaml 结构:
-defaults = {
-  "triage": {"model": "responses:mini", "temperature": 0.2, "max_tokens": 256, "tool_use_behavior": "default"},
-  "intro_frame": {"model": "responses:mini", "temperature": 0.2, "max_tokens": 256, "tool_use_behavior": "default"},
-  "planner": {"model": "responses:standard", "temperature": 0.3, "max_tokens": 4096, "tool_use_behavior": "default"}
-}
-agency_overrides? = {
-  "bi": {"planner": {"model": "gpt-5", "temperature": 0.3, "max_tokens": 4096}}
-}
-tool_overrides? = {
-  "compose_reply": {"model": "none", "reason": "咨询类首轮不需 LLM, 仅框架+占位"},
-  "mem_read": {"model": "none"},
-  "triage": {"tool_use_behavior": "stop_on_first_tool"}
-}
-semantics = {
-  "model": "字符串; 可为具体提供商型号(gpt-4o-mini, gpt-5 等)或逻辑组(responses:mini|responses:standard)",
-  "none": "特殊值; 表示该工具/阶段不调用 LLM",
-  "tool_use_behavior": "default|stop_on_first_tool; compose_reply 建议 stop_on_first_tool 以最小开销",
-  "fallback": "tool_overrides > agency_overrides > defaults; 若仍无 → 按 index.yaml.llm_policies"
-}
-校验与回退 = {
-  "validate_required": ["model"],
-  "validate_ranges": {"temperature": [0.0, 2.0], "max_tokens": [1, 32768]},
-  "normalize_alias": {"responses:mini": ["mini"], "responses:standard": ["standard"]}
-}
-
-prompts.yaml 结构:
-triage = {
-  "system": "你是企业客服意图分流与欢迎代理, 需检测用户语言(lang)与意图(intent ∈ {咨询, 方案}), 并返回极简确认。",
-  "instruction": "判定业务相关性, 超过阈值触发锁定提示, 否则返回简短确认; 不生成冗长解释。"
-}
-intro_frame = {
-  "system": "输出品牌欢迎与服务域边界; 语言=用户语言; 遵循简短风格; 禁止长段。",
-  "instruction": "使用 {brand} 与 {tail_languages} 生成一行欢迎 + 一行多语言可用提示。"
-}
-consult_frame = {
-  "system": "你是‘咨询框架器’，只基于提供的键名结构(l3/l4)+render_policy+compose_rules.frame 组织‘框架+占位+路径映射’；禁止输出属性值；严格简短。",
-  "instruction": "根据 {key_structure} 与 {render_policy} 选择 {max_items} 个要点；按 {frame} 生成文本，使用 {slots} 占位；如超限，用 {ellipsis} 收尾；不得臆造键。"
-}
-planner = {
-  "system": "根据内存读取到的完整所需键值集合(content_bundle)与用户提示词, 组织办理/方案类简明答复; 禁止编造; 严格简短。",
-  "instruction": "优先输出步骤与注意事项, 控制在 {brevity} 内。"
-}
-placeholders = {
-  "brand": "Kobe",
-  "tail_languages": ["English", "中文", "Español", "العربية", "한국어"],
-  "language": "auto",
-  "brevity": "<=3 sentences or <=5 bullets"
-}
-
-def ModelResolver.select(): ...  文本: 选择模型的优先级=tool_overrides > agency_overrides > defaults; 若缺失则回退 llm_policies
-def ModelResolver.validate(): ...  文本: 校验字段/范围; 解析 "none" 语义; 输出标准化配置
-def PromptRegistry.get(): ...  文本: 读取 prompts.yaml 的节点文案, 返回 {system, instruction}
-def PromptCompiler.render(): ...  文本: 用 placeholders 与会话 language/brand 渲染最终提示词
-
+# 标题: Agent 链路与运行编排
+设计意图:
+  - MUST 定义从用户意图判断到响应生成的完整链路（triage -> consult -> plan -> compose -> finalize），并与 02 文档 channel 层对接。
+  - MUST 描述 AgentsBridge/AgentsGateway/Workflow Orchestrator 的接口契约、Streaming 行为、降级路径。
+  - SHOULD 给出 token 预算、工具调用顺序、内存快照注入点，便于未来扩展其他渠道或 KB。
+设计原因:
+  - 仓库缺少 app.py/core 目录，Agent 层需要在 `OpenaiAgents/UnifiedCS` 下自建可复用基座。
+  - Index 设计要求 Agent 执行 deterministic routing，必须提前冻结 Behavior/Tool 合约和输出格式。
+接口锚点:
+  - from OpenaiAgents.UnifiedCS.bridge import AgentsBridge  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/bridge.py（待创建）"
+  - from OpenaiAgents.UnifiedCS.gateway import AgentsGateway  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/gateway.py（待创建）"
+  - class WorkflowOrchestrator  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/workflow.py：封装 triage→consult→plan→compose"
+  - from KnowledgeBase.loader import MemoryLoader  "{REPO_ROOT}/KnowledgeBase/loader.py：加载 index / snapshot"
+需求字段:
+  - pipeline_stages: ["triage", "prepare_context", "consult_flow", "plan_flow", "compose_response", "finalize"]
+  - inputs:
+      core_envelope: "来自 channel 的统一 schema"
+      memory_snapshot: "MemoryLoader 输出"
+      agent_policies: ["llm_policy", "token_budget", "safety_rules"]
+  - outputs:
+      response_stream: "Markdown-structured 或 strict-json"
+      telemetry: ["request_id", "convo_id", "stage_metrics", "tool_calls"]
+      audit_log: ["prompt_version", "doc_commit", "usage"]
+二级嵌套:
+  - StageTransitions:
+      triage -> prepare_context: "根据 intent_hint/kb_scope 选择 domain_profile"
+      consult_flow -> plan_flow: "若 intent=consult 则跳过 plan_flow"
+      plan_flow -> compose_response: "plan_flow 带来 structured plan，compose 渲染成 Markdown"
+  - ResourceGuards:
+      token_budget_per_call: 3000
+      max_plan_depth: 3
+      max_tool_calls: 4
+三级嵌套:
+  - Telemetry.stage_metrics.item: {"stage": "triage", "latency_ms": int, "tokens_in": int, "tokens_out": int}
+  - ToolCall.record: {"tool": "mem_read", "args": dict, "result_ref": "blob://snapshot/..." }
+  - SafetyRules: {"category": "policy_violation", "action": "refuse", "template": "refusal_policy#category"}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/agents/agent_pipeline.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["request_id", "convo_id", "stage", "status", "payload"],
+    "properties": {
+      "request_id": {"type": "string", "pattern": "^[a-f0-9-]{36}$"},
+      "convo_id": {"type": "string"},
+      "stage": {"type": "string", "enum": ["triage", "prepare_context", "consult_flow", "plan_flow", "compose", "finalize", "fallback"]},
+      "status": {"type": "string", "enum": ["ok", "degraded", "refused", "error"]},
+      "payload": {
+        "type": "object",
+        "required": ["core_envelope", "memory_ref", "agent_policy"],
+        "properties": {
+          "core_envelope": {"$ref": "kobe/core/core_envelope.schema.json"},
+          "memory_ref": {"type": "string"},
+          "agent_policy": {
+            "type": "object",
+            "required": ["token_budget", "llm_policy_key"],
+            "properties": {
+              "token_budget": {"type": "integer", "minimum": 1000},
+              "llm_policy_key": {"type": "string"},
+              "safety_rules": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "tool_calls": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      },
+      "telemetry": {
+        "type": "object",
+        "properties": {
+          "stage_metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["stage", "latency_ms"],
+              "properties": {
+                "stage": {"type": "string"},
+                "latency_ms": {"type": "number", "minimum": 0},
+                "tokens_in": {"type": "integer"},
+                "tokens_out": {"type": "integer"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - agent_triage_system（locale=en-US, audience=llm）
+    用途: 引导 LLM 判断用户意图（咨询/方案/操作）并选择 domain_profile。
+    触发条件: 每次 pipeline 进入 triage 阶段。
+    变量说明: {core_envelope.user_message}、{intent_candidates}、{domain_profiles.summary}。
+    示例文案: "You are the Index Agent triage core... classify the request: {user_message}."
+    结构化定义:
+      prompt_id=agent_triage_system locale=en-US audience=llm
+      text="You are the Index Agent triage core. Determine user intent for {core_envelope.user_message} using candidates {intent_candidates}，pick domain profile from {domain_profiles.summary}."
+  - agent_consult_compose（locale=zh-CN, audience=llm）
+    用途: 在咨询意图下生成简洁答案。
+    触发条件: triage 判定 intent=consult。
+    变量说明: {context_snippets}: 选定 entries；{tone}: 语气；{token_budget}: 最大 tokens。
+    示例文案: "请基于{context_snippets}，以{tone}语气回答，长度限制 {token_budget} tokens。"
+    结构化定义:
+      prompt_id=agent_consult_compose locale=zh-CN audience=llm
+      text="请用简洁段落回答用户问题。上下文：{context_snippets}，语气：{tone}，最大 {token_budget} tokens。"
+  - agent_plan_executor（locale=en-US, audience=llm）
+    用途: 生成步骤化方案。
+    触发条件: intent=plan 或 operation。
+    变量说明: {plan_context}: slot/selector 结果；{constraints}: 约束列表。
+    示例文案: "Given context {plan_context} and constraints {constraints}, produce a numbered plan with reasons."
+    结构化定义:
+      prompt_id=agent_plan_executor locale=en-US audience=llm
+      text="Given context {plan_context} and constraints {constraints}, produce stepwise plan with rationale."
+  - agent_refusal_policy（locale=zh-CN, audience=llm）
+    用途: 当安全/政策触发时输出拒绝模板。
+    触发条件: safety rule 命中或 contract 校验失败。
+    变量说明: {rule}: 触发规则；{contact}: 联系方式。
+    示例文案: "因触发 {rule}，无法提供信息。若需了解更多，请联系 {contact}。"
+    结构化定义:
+      prompt_id=agent_refusal_policy locale=zh-CN audience=llm
+      text="因触发 {rule}，无法提供信息。若需了解更多，请联系 {contact}。"
+Prompt 变量表 (MUST):
+  - 名称: core_envelope.user_message | 类型: string | 必填: 是 | 默认: 无 | 示例: "请给我销售日报" | 说明: triage 输入文本。
+  - 名称: intent_candidates | 类型: list[string] | 必填: 是 | 默认: ["consult","plan","operation"] | 示例: ["consult","plan"] | 说明: 可选意图集合。
+  - 名称: context_snippets | 类型: list[string] | 必填: 是 | 示例: ["销售额同比+12%"] | 说明: consult compose 用的上下文字段。
+  - 名称: tone | 类型: string | 必填: 否 | 默认: "业务口吻" | 示例: "正式" | 说明: 输出语气。
+  - 名称: plan_context | 类型: dict | 必填: 是 | 示例: {"slots":["流程","表格"]} | 说明: plan executor 的结构化输入。
+  - 名称: constraints | 类型: list[string] | 必填: 否 | 示例: ["完成时间<=2天"] | 说明: 方案约束。
+  - 名称: rule | 类型: string | 必填: 是 | 示例: "policy_violation" | 说明: 触发的拒绝策略编码。
+  - 名称: contact | 类型: string | 必填: 否 | 默认: "support@company.com" | 示例: "ops@company.com" | 说明: 拒绝提示里的联系人。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/agent_pipeline.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text", "audience"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^agent_"},
+      "locale": {"type": "string", "enum": ["zh-CN", "en-US"]},
+      "text": {"type": "string", "minLength": 20},
+      "audience": {"type": "string"}
+    },
+    "additionalProperties": false
+  }
+Behavior Contract (MUST):
+  - def behavior_agent_pipeline(): ...  Agent 链路行为合约
+        """
+        Inputs: core_envelope, memory_snapshot, agent_policy.
+        Steps:
+          1. MUST run triage_prompt -> classify intent (consult vs plan) and domain_profile。
+          2. MUST call prepare_context: clip history, attach memory_snapshot slices, enforce token_budget。
+          3. consult_flow: if intent=consult -> compose direct answer via agent_consult_compose prompt。
+          4. plan_flow: if intent in ["plan","procedure"] -> run planner prompt -> produce structured plan。
+          5. compose_response: unify plan/consult outputs into Markdown or strict JSON per agent_policy.output_mode。
+          6. finalize: attach telemetry + audit log; if validation fails -> go to fallback stage。
+        Outputs: streaming chunks + final payload matching agent_pipeline.schema。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_mem_read(slot: str, selectors: dict) -> dict: ...  读取 MemorySnapshot
+        """MUST validate selectors via index schema; returns excerpt list; failure -> raise MemoryMissError。"""
+  - def call_compose_reply(context: dict, plan: dict | None) -> str: ...  渲染回答
+        """MUST respect output_mode; Markdown 模式需 escape；JSON 模式需校验 schema。"""
+  - def call_summarize_history(convo_id: str) -> dict: ...  汇总上下文
+        """用于超过 token_budget 时触发 summary_threshold。"""
+Config Contract (MUST):
+  - `{REPO_ROOT}/Config/prompts.zh-CN.yaml` MUST include agent_consult_compose, agent_refusal_policy。
+  - `{REPO_ROOT}/Config/prompts.en-US.yaml` MUST include agent_triage_system, agent_plan_executor。
+  - `{REPO_ROOT}/Contracts/toolcalls.py` MUST export call_mem_read/call_compose_reply/call_summarize_history。
+  - `{REPO_ROOT}/Contracts/behavior_contract.py` MUST expose behavior_agent_pipeline。
+Safety & Refusal Policy (MUST):
+  - Safety rules triggered -> use agent_refusal_policy prompt, mark status=refused。
+  - Token budget exceeded -> call_summarize_history;若 summary 失败 -> degrade (status=degraded)。
+  - 不得触发外部工具无 schema 的调用；检测到 unauthorized tool -> refuse。
+i18n & Brand Voice (MUST):
+  - zh-CN 回复：专业、精炼，禁止口语/emoji。
+  - en-US 回复：concise enterprise tone。
+  - 所有 prompts 必须声明 locale 并匹配输出模式。
+Output Contract (MUST):
+  {
+    "agent_response": {
+      "type": "object",
+      "required": ["mode", "content", "telemetry", "usage"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["markdown-structured", "strict-json"]},
+        "content": {"type": "string"},
+        "telemetry": {"type": "object", "$ref": "kobe/agents/agent_pipeline.schema.json#/properties/telemetry"},
+        "usage": {
+          "type": "object",
+          "required": ["input_tokens", "output_tokens", "total_tokens"],
+          "properties": {
+            "input_tokens": {"type": "integer"},
+            "output_tokens": {"type": "integer"},
+            "total_tokens": {"type": "integer"}
+          }
+        }
+      }
+    }
+  }
+Logging & Observability (MUST):
+  - 每 stage MUST log {request_id, stage, status, latency_ms, tokens_in, tokens_out}。
+  - Metrics: agent_pipeline_stage_latency_ms, agent_pipeline_fallback_total, agent_pipeline_refusal_total。
+  - Distributed tracing: span per stage，parent span trace_id=request_id。
+Versioning & Traceability (MUST):
+  - prompt_version=agent-pipeline-v1；修改 Pipeline 或 prompts 必须 bump。
+  - output_schema_id="agent_pipeline.schema.json@v1"；commit 时写入 doc_commit。
+Golden Sample(s) (MUST >=3):
+  - Sample A: intent=consult，直接 compose；mode=markdown-structured；usage total_tokens=1200。
+  - Sample B: intent=plan，plan_flow 生成 3 steps -> compose -> strict-json 输出。
+  - Sample C: intent=consult，但 token over limit -> summarize_history -> degrade status=degraded。
+Counter Sample(s) (MUST >=2):
+  - Counter A: stage missing -> schema validation fail。
+  - Counter B: tool_calls 包含未知工具 -> refuse per policy。
+决策表 / 状态机 / 顺序化约束:
+  | Stage | Condition | Action |
+  | triage | safety triggered | goto fallback(status=refused) |
+  | prepare_context | tokens > budget | call summarize_history |
+  | compose | output validation fail | attempt repair once else refuse |
 如何使用:
-AgentsGateway.dispatch_stream 在每个节点调用 ModelResolver.select 与 PromptRegistry.get/PromptCompiler.render；在 .env 修改 LLM_* 即可覆盖默认值；开发阶段通过编辑 YAML 实施细粒度调优。
-
+  - AgentsBridge 将 core_envelope + memory_snapshot 输入 behavior_agent_pipeline，逐阶段 streaming 输出。
 agent如何读取:
-language 由 IntentAgent 检测并贯穿; planner 节点从 models.yaml 读出模型与温度, 并按 prompts.yaml 渲染系统/任务指令; compose_reply 节点默认 responses:mini 以控制成本。
+  - WorkflowOrchestrator 在 compose_response 阶段将 chunk feeding Telegram adapter（参照 plan_02）。
+边界与回退:
+  - Memory read miss -> fallback to summary snippet + degrade。
+  - AgentsGateway error -> retry up to 2 次；仍失败则 fallback stage 输出固定模板。
+SLO / 阈值 / 触发条件:
+  - 首字节延迟 SHOULD < 1s。
+  - 全流程成功率 MUST >= 98%。
+  - fallback ratio > 2% -> trigger incident。
 
-# 标题: 集成设计 / 最小注入示例（锚点与行号, 不改框架）
-
-需求字段 = {
-"文件": {
-  "TelegramBot/bot.py:893": "if __name__ == '__main__': 入口",
-  "TelegramBot/bot.py:895": "ApplicationBuilder().build() 构建处",
-  "TelegramBot/bot.py:959": "application.run_webhook(...)",
-  "TelegramBot/bot.py:961": "application.run_polling(...)"
-},
-"注入": {
-  "config.get_robot_agents": "当 USE_AGENTS=true 或 MODEL=agents 时返回 AgentsBridge 实例",
-  "AgentsBridge.ask_stream_async": "保持增量生成器契约不变, 供 getChatGPT 直接消费",
-  "Bootstrap.memory_preload": "进程启动时加载 MemorySnapshot（可挂 post_init 钩子）",
-  "AgentsGateway.attach_snapshot": "将 snapshot 注入; 所有工具走内存"
-}
-}
-设计意图: "仅替换‘向模型发问’层为 AgentsBridge; 其它启动与 handlers 不变; 方便快速回归。"
-
+# 标题: Memory Snapshot 与 Loader
+设计意图:
+  - MUST 定义 KnowledgeBase → MemorySnapshot 的加载/刷新/查询流程，确保 Agent 链路能在内存中零磁盘访问。
+  - SHOULD 支持 org-level 与 agency-level index 合并，输出可用于 mem_read/compose_reply 的视图。
+  - MUST 提供热更新/健康检查指标，便于监控 snapshot 与底层文件一致性。
+设计原因:
+  - 仓库已有 `KnowledgeBase/` 目录但缺少 index YAML；需文档先定义 schema，再由 Loader 生成 snapshot。
+  - Agent pipeline 依赖 deterministic context slices，必须有可验证的 Loader 契约与 JSON Schema。
+接口锚点:
+  - class MemoryLoader  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/memory/loader.py: load_all() + watch()"
+  - class MemorySnapshot  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/memory/snapshot.py: immutable view"
+  - from KnowledgeBase.index import load_org_index  "{REPO_ROOT}/KnowledgeBase/index.py"
+  - from KnowledgeBase.agency import load_agency_index  "{REPO_ROOT}/KnowledgeBase/{agency}/index.py"
+需求字段:
+  - snapshot_fields: ["org_metadata", "agencies", "routing_table", "domain_profiles", "compose_rules", "entries"]
+  - loader_config:
+      base_path: "{REPO_ROOT}/KnowledgeBase"
+      hot_reload: {"enabled": false, "interval_s": 300}
+      checksum: "sha256"
+  - health_checks: ["last_loaded_at", "file_count", "checksum_mismatch", "missing_agencies"]
+二级嵌套:
+  - Snapshot.agencies: dict keyed by agency_id -> AgencySnapshot
+  - AgencySnapshot:
+      fields: ["agency_id", "synonyms", "routing", "domain_profiles", "entries", "pricing"]
+三 级嵌套:
+  - DomainProfile: {"id": str, "selectors": list, "compose_rules": dict, "render_policy": dict}
+  - Entry: {"slot": str, "content": str, "metadata": {"source": str, "updated_at": str}}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/kb/memory_snapshot.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["org_metadata", "agencies", "routing_table", "created_at"],
+    "properties": {
+      "org_metadata": {
+        "type": "object",
+        "required": ["org_id", "default_language"],
+        "properties": {
+          "org_id": {"type": "string"},
+          "default_language": {"type": "string", "enum": ["zh-CN", "en-US"]},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "routing_table": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["match", "agency_id"],
+          "properties": {
+            "match": {"type": "string"},
+            "agency_id": {"type": "string"},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      },
+      "agencies": {
+        "type": "object",
+        "patternProperties": {
+          "^[a-z0-9_-]+$": {
+            "type": "object",
+            "required": ["agency_id", "domain_profiles", "entries"],
+            "properties": {
+              "agency_id": {"type": "string"},
+              "synonyms": {"type": "array", "items": {"type": "string"}},
+              "domain_profiles": {"type": "array", "items": {"type": "string"}},
+              "entries": {"type": "array", "items": {"type": "object"}},
+              "pricing": {"type": "object"},
+              "compose_rules": {"type": "object"},
+              "render_policy": {"type": "object"}
+            }
+          }
+        }
+      },
+      "created_at": {"type": "string", "format": "date-time"},
+      "checksum": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - memory_loader_alert（locale=en-US, audience=ops）
+    用途: 通知运维 MemoryLoader 在某个 agency 上检测到异常。
+    触发条件: behavior_memory_loader 捕获 issue（schema error、文件缺失等）。
+    变量说明: {issue}: 异常描述；{agency_id}: 机构 ID。
+    示例文案: "MemoryLoader detected schema_error for agency biz_cd"
+    结构化定义:
+      prompt_id=memory_loader_alert locale=en-US audience=ops text="MemoryLoader detected {issue} for agency {agency_id}"
+  - memory_snapshot_ready（locale=zh-CN, audience=engineering）
+    用途: 宣布 snapshot 构建成功以及机构/条目数量，方便工程确认。
+    触发条件: snapshot 构建结束且状态 ok。
+    变量说明: {agency_count}: 机构数；{entry_count}: 条目数。
+    示例文案: "MemorySnapshot 构建完成：机构 5，entries 420"
+    结构化定义:
+      prompt_id=memory_snapshot_ready locale=zh-CN audience=engineering text="MemorySnapshot 构建完成：机构 {agency_count}，entries {entry_count}"
+  - memory_checksum_mismatch（locale=en-US, audience=devops）
+    用途: 告警文件校验和与记录不一致。
+    触发条件: checksum 比对失败。
+    变量说明: {path}: 文件路径；{expected}: 期望值；{actual}: 实际值。
+    示例文案: "Checksum mismatch for KnowledgeBase/biz_cd/index.yaml, expected abcd, got 1234"
+    结构化定义:
+      prompt_id=memory_checksum_mismatch locale=en-US audience=devops text="Checksum mismatch for {path}, expected {expected}, got {actual}"
+Prompt 变量表:
+  - 名称:path | 类型:string | 必填:是 | 默认:"" | 示例:"KnowledgeBase/biz_cd/index.yaml" | 说明: 出错文件路径。
+  - 名称:agency_count | 类型:integer | 必填:是 | 默认:0 | 示例:5 | 说明: snapshot 中的机构数量。
+  - 名称:entry_count | 类型:integer | 必填:是 | 默认:0 | 示例:420 | 说明: snapshot 条目数量。
+  - 名称:issue | 类型:string | 必填:是 | 默认:"" | 示例:"schema_error" | 说明: 异常简称。
+  - 名称:agency_id | 类型:string | 必填:是 | 默认:"" | 示例:"biz_cd" | 说明: 受影响机构。
+  - 名称:expected | 类型:string | 必填:是 | 默认:"" | 示例:"abcd..." | 说明: 期望 checksum。
+  - 名称:actual | 类型:string | 必填:是 | 默认:"" | 示例:"1234..." | 说明: 实际 checksum。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/memory_loader.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text", "audience"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^memory_"},
+      "locale": {"type": "string", "enum": ["zh-CN", "en-US"]},
+      "text": {"type": "string", "minLength": 10},
+      "audience": {"type": "string"}
+    },
+    "additionalProperties": false
+  }
+Behavior Contract (MUST):
+  - def behavior_memory_loader(): ...  内存加载流程
+        """
+        Steps:
+          1. MUST scan base_path for KnowledgeBase_index.yaml + agency subdirs。
+          2. MUST validate YAML against index schema；失败 -> raise SchemaError。
+          3. MUST compute sha256 checksum per file并记录在 snapshot。
+          4. MUST emit health metrics (agency_count, entry_count, checksum_status)。
+          5. SHOULD support refresh(refresh_reason) to rebuild snapshot under lock。
+        Outputs: MemorySnapshot (immutable, JSON Schema compliant)。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_load_org_index(path: str) -> dict: ...  读取顶层 index
+  - def call_load_agency_index(path: str) -> dict: ...  读取 agency index
+  - def call_build_snapshot(org_index: dict, agency_indexes: dict) -> MemorySnapshot: ...  构建快照
+Config Contract (MUST):
+  - `{REPO_ROOT}/Config/prompts.en-US.yaml` MUST include memory_loader_alert & memory_checksum_mismatch。
+  - `{REPO_ROOT}/Config/prompts.zh-CN.yaml` MUST include memory_snapshot_ready。
+  - `{REPO_ROOT}/Contracts/toolcalls.py` MUST 暴露上述 tool 函数。
+Safety & Refusal Policy (MUST):
+  - YAML schema 验证失败 -> refuse snapshot 构建并触发 memory_loader_alert。
+  - 缺失 agency index -> refuse 该 agency 并标记 missing_agencies；若 critical agency 缺失 -> stop pipeline。
+  - checksum mismatch -> refuse promote snapshot，直到人工确认。
+i18n & Brand Voice (MUST):
+  - Ops 通知 (en-US) -> incident tone。
+  - Dev 通知 (zh-CN) -> 结构化语句。
+Output Contract (MUST):
+  {
+    "memory_snapshot": {
+      "$ref": "kobe/kb/memory_snapshot.schema.json"
+    }
+  }
+Logging & Observability (MUST):
+  - Logs: {request_id, agency_id, file_path, checksum, status, latency_ms}。
+  - Metrics: memory_loader_latency_ms, memory_loader_failures_total, memory_checksum_mismatch_total。
+  - Health endpoint: `/internal/memory_health` 返回最新 snapshot 元数据。
+Versioning & Traceability (MUST):
+  - snapshot_version = "kb-snapshot-v1"；修改 schema 必须 bump version + doc_commit。
+  - 记录 `snapshot_fingerprint=sha256(memory_snapshot JSON)`。
+Golden Sample(s) (MUST >=3):
+  - Sample A: org_id="kobe", agencies={"biz_cd": {...}}，entries=120。
+  - Sample B: agencies 含多个 synonyms，routing_table 3 条。
+  - Sample C: hot_reload.enabled=false，checksum=64 hex。
+Counter Sample(s) (MUST >=2):
+  - Counter A: missing org_metadata -> schema fail。
+  - Counter B: checksum 长度非 64 -> fail。
+决策表 / 状态机 / 顺序化约束:
+  | Event | Condition | Action |
+  | load | schema ok | build snapshot |
+  | load | schema fail | abort + alert |
+  | refresh | checksum mismatch | rebuild + alert |
 如何使用:
-不改 ApplicationBuilder 与 handlers; 在 config.get_robot 旁实现 get_robot_agents；在 post_init 或入口前调用 Bootstrap.memory_preload 与 AgentsGateway.attach_snapshot；确保 .env USE_AGENTS=true。
-
-# 标题: 集成设计 / 启动预热与健康检查（V1.0 不支持热更新）
-
-设计意图: "进程启动一次性加载内存快照，运行期只读内存；V1.0 不支持热更新；V1.1 再评估热更新方案。"
-
-def Bootstrap.memory_preload(): ...  文本: 启动时调用 MemoryLoader.load_all; 生成 MemorySnapshot 并注入 AgentsGateway
-def AgentsGateway.attach_snapshot(): ...  文本: 将 MemorySnapshot 提供给所有工具; 拒绝文件 IO
-def Healthz.memory(): ...  文本: /healthz/memory 输出 {snapshot_id, entries_count, bytes_approx, last_indexed_at}
-
-如何使用:
-进程启动 → Bootstrap.memory_preload → AgentsGateway.attach_snapshot → TelegramBot 正常接入
-
-边界与路径:
-BASE_DIR = "Kobe"（项目根）; 所有索引路径均为相对 BASE_DIR 的相对路径; 禁止使用绝对路径; 运行环境由 Kobe/TelegramBot/config.py 通过 find_dotenv(usecwd=True) 与模块 __file__ 推导 .env 与 BASE_DIR（无需依赖 FastAPI/uvicorn）
-
+  - Startup: call behavior_memory_loader -> produce snapshot -> pass to Agent pipeline。
+  - Periodic refresh: optional watcher triggers refresh()。
 agent如何读取:
-所有工具仅从内存读取; 如 MemoryHealth 报错或 snapshot 不可用, 返回临时不可用提示并记录告警
+  - AgentsBridge 只读 snapshot via MemorySnapshotView；禁止写入。
+边界与回退:
+  - 若 KnowledgeBase 目录缺失 -> fallback to empty snapshot, status=degraded（需告警）。
+  - refresh 失败 -> 保留旧 snapshot 并记录 stale_since。
+SLO / 阈值 / 触发条件:
+  - 初次加载 SHOULD < 2s。
+  - checksum mismatch MUST < 0.5% of files。
+  - missing_agencies > 0 -> degrade 并阻止部署。
 
-# 标题: Agent设计 / 意图与欢迎、业务域限制与锁定（LLM 常驻）
-
-设计意图: "LLM 始终对话；当意图不清或非业务时，最小反馈并约束交互；连续 N 次非业务后锁定 1 小时并返回倒计时。触发一次业务即解冻。"
-
-def IntentAgent.classify_and_greet(): ...  文本: 判定意图并返回简短欢迎/确认; 不清晰时提醒“仅用于业务咨询”并请求澄清
-def SessionPolicy.enforce_business_scope(): ...  文本: 递增 non_business_count; 达阈值设置 locked_until; 写入会话状态
-def LockManager.is_locked(): ...  文本: 判断当前是否处于锁定期
-def LockManager.remaining_time(): ...  文本: 计算剩余锁定时间(秒)
-def CountdownResponder.reply_remaining_lock(): ...  文本: 返回固定文案 "尝试次数过多，请{countdown}再试。"; 禁止进入后续链路
-
+# 标题: 顶层 KnowledgeBase Index Schema（org 级）
+设计意图:
+  - MUST 定义 `KnowledgeBase_index.yaml`（org级）的字段、嵌套与校验，供 MemoryLoader 与后续工具引用。
+  - SHOULD 提供 routing_table、agency list、global render policy，使 Agent 可快速定位 agency。
+设计原因:
+  - 目前 `KnowledgeBase_index.yaml` 不存在；文档需给出完整结构以生成初稿。
+  - 需保证多 agency 并存时 deterministic routing，避免 channel 层重复逻辑。
+接口锚点:
+  - file: `{REPO_ROOT}/KnowledgeBase/KnowledgeBase_index.yaml`
+  - class OrgIndexModel  `{REPO_ROOT}/OpenaiAgents/UnifiedCS/memory/models.py`
+  - from scripts import validate_kb_index  `scripts/validate_kb_index.py`
+需求字段:
+  - org_metadata: {"org_id": str, "display_name": str, "default_language": "zh-CN|en-US", "timezone": "Asia/Shanghai"}
+  - agencies: list of {"agency_id": str, "name": str, "path": str, "synonyms": list[str], "priority": int}
+  - routing_table: list of {"patterns": list[str], "agency_id": str, "weight": float}
+  - knowledge_assets: {"docs_path": str, "vector_index": str? (optional)}
+  - prompts_overrides: {"welcome": str, "signoff": str}
+二级嵌套:
+  - agencies[].path -> `{REPO_ROOT}/KnowledgeBase/{agency_id}/{agency_id}_index.yaml`
+  - routing_table[].patterns -> glob/regex strings
+三级嵌套:
+  - prompts_overrides.welcome: {"locale": str, "text": str}
+  - knowledge_assets.vector_index: {"provider": "qdrant|pinecone|local", "dsn": str}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/kb/org_index.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["org_metadata", "agencies", "routing_table", "created_at"],
+    "properties": {
+      "org_metadata": {
+        "type": "object",
+        "required": ["org_id", "display_name", "default_language", "timezone"],
+        "properties": {
+          "org_id": {"type": "string"},
+          "display_name": {"type": "string"},
+          "default_language": {"type": "string", "enum": ["zh-CN", "en-US"]},
+          "timezone": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      },
+      "agencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["agency_id", "name", "path"],
+          "properties": {
+            "agency_id": {"type": "string"},
+            "name": {"type": "string"},
+            "path": {"type": "string"},
+            "synonyms": {"type": "array", "items": {"type": "string"}},
+            "priority": {"type": "integer", "minimum": 0, "maximum": 10}
+          }
+        },
+        "minItems": 1
+      },
+      "routing_table": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["agency_id", "patterns"],
+          "properties": {
+            "agency_id": {"type": "string"},
+            "patterns": {"type": "array", "items": {"type": "string"}},
+            "weight": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      },
+      "knowledge_assets": {
+        "type": "object",
+        "properties": {
+          "docs_path": {"type": "string"},
+          "vector_index": {
+            "type": "object",
+            "properties": {
+              "provider": {"type": "string"},
+              "dsn": {"type": "string"}
+            }
+          }
+        }
+      },
+      "prompts_overrides": {
+        "type": "object",
+        "properties": {
+          "welcome": {"type": "string"},
+          "signoff": {"type": "string"}
+        }
+      },
+      "created_at": {"type": "string", "format": "date-time"}
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - kb_index_missing_agency（locale=zh-CN, audience=kb-admin）
+    用途: 提醒 KB 管理员某 agency 未在 org index 注册。
+    触发条件: behavior_org_index_builder 检测 agencies[].path 缺失或文件不存在。
+    变量说明: {agency_id}。
+    示例文案: "机构 biz_cd 未在 KnowledgeBase_index.yaml 注册"
+    结构化定义:
+      prompt_id=kb_index_missing_agency locale=zh-CN audience=kb-admin text="机构 {agency_id} 未在 KnowledgeBase_index.yaml 注册"
+  - kb_routing_conflict（locale=en-US, audience=arch）
+    用途: 报告 routing patterns 发生冲突。
+    触发条件: call_emit_routing_graph 检测到 pattern overlap。
+    变量说明: {agency_a}, {agency_b}, {pattern}。
+    示例文案: "Routing conflict between biz_cd and sales_ops pattern .*报表.*"
+    结构化定义:
+      prompt_id=kb_routing_conflict locale=en-US audience=arch text="Routing conflict between {agency_a} and {agency_b} pattern {pattern}"
+  - kb_index_ready（locale=zh-CN, audience=engineering）
+    用途: 通知工程团队顶层索引创建成功。
+    触发条件: schema 验证与路径检查全部通过。
+    变量说明: {agency_count}。
+    示例文案: "KB 顶层索引创建完成，机构数 5"
+    结构化定义:
+      prompt_id=kb_index_ready locale=zh-CN audience=engineering text="KB 顶层索引创建完成，机构数 {agency_count}"
+Prompt 变量表:
+  - 名称:agency_id | 类型:string | 必填:是 | 示例:"biz_cd" | 说明: 机构标识。
+  - 名称:agency_a | 类型:string | 必填:是 | 默认:"" | 示例:"biz_cd" | 说明: 冲突中的机构 A。
+  - 名称:agency_b | 类型:string | 必填:是 | 默认:"" | 示例:"sales_ops" | 说明: 冲突中的机构 B。
+  - 名称:pattern | 类型:string | 必填:是 | 默认:"" | 示例: ".*报表.*" | 说明: 冲突路由模式。
+  - 名称:agency_count | 类型:integer | 必填:是 | 示例:5 | 说明: 索引中的机构数量。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/org_index.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text", "audience"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^kb_"},
+      "locale": {"type": "string"},
+      "text": {"type": "string"},
+      "audience": {"type": "string"}
+    }
+  }
+Behavior Contract (MUST):
+  - def behavior_org_index_builder(): ...  生成与校验逻辑
+        """
+        MUST ensure agencies[].path 存在；若不存在 -> refuse。
+        MUST normalize patterns to regex；weight sum per agency <= 1。
+        SHOULD generate default prompts_overrides 若缺失 locale。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_validate_org_index(data: dict) -> None
+  - def call_emit_routing_graph(routing_table: list) -> str  "# returns dot graph path for CI"
+Config Contract (MUST):
+  - `{REPO_ROOT}/Config/prompts.zh-CN.yaml` MUST include kb_index_missing_agency, kb_index_ready。
+  - `{REPO_ROOT}/Config/prompts.en-US.yaml` MUST include kb_routing_conflict。
+Safety & Refusal Policy (MUST):
+  - agency path missing -> refuse index 发布。
+  - routing patterns overlap with same weight -> refuse until resolved。
+  - default_language unsupported -> refuse。
+i18n & Brand Voice (MUST):
+  - zh-CN 条目 -> 业务口吻。
+  - en-US -> architecture tone。
+Output Contract (MUST):
+  {
+    "org_index": {
+      "$ref": "kobe/kb/org_index.schema.json"
+    }
+  }
+Logging & Observability (MUST):
+  - Logs: {request_id, agency_id, pattern_count, weight_sum, status}。
+  - Metrics: kb_index_agency_count, kb_routing_conflict_total。
+Versioning & Traceability (MUST):
+  - org_index_version=v1；修改 schema -> bump + doc_commit。
+Golden Sample(s) (MUST >=3):
+  - Sample A: agencies=["biz_cd"], routing_table 2 entries。
+  - Sample B: agencies 两个，含 synonyms。
+  - Sample C: knowledge_assets.vector_index provider="qdrant"。
+Counter Sample(s) (MUST >=2):
+  - Counter A: agencies 空 -> fail。
+  - Counter B: routing_table item 缺 patterns -> fail。
+决策表 / 状态机 / 顺序化约束:
+  | Condition | Action |
+  | agencies missing path | refuse + kb_index_missing_agency |
+  | routing conflict | emit prompt kb_routing_conflict + block merge |
 如何使用:
-每条用户消息到达 → 若 LockManager.is_locked → CountdownResponder.reply_remaining_lock（{countdown} 为剩余时间简短描述，例如“59分20秒”）；否则 IntentAgent.classify_and_greet；若非业务 → SessionPolicy.enforce_business_scope 并返回简短提示；若为业务 → 进入 OrgIndexAgent/AgencyIndexAgent 流程。
+  - 初次创建 `KnowledgeBase_index.yaml` 时按 schema 填写；CI 运行 call_validate_org_index。
+agent如何读取:
+  - MemoryLoader.load_org_index -> produce org metadata + routing_table 供 triage 使用。
+边界与回退:
+  - 若 agencies>0 但 routing_table 空 -> fallback to priority order，标记 degraded。
+SLO / 阈值 / 触发条件:
+  - schema validation SHOULD 完成 <500ms。
+  - routing conflict 必须在 PR 合并前解决（合规率 100%）。
 
-# 标题: Agent设计 / 回复风格与长度约束（言简意赅）
-
-设计意图: "所有回复默认简短、直接、指向性强；禁止长篇大论；咨询类仅描述‘怎么做’，方案类仅呈现必要步骤与注意事项。"
-
-def Guardrails.enforce_brevity(): ...  文本: 约束回复长度(如 ≤3 句或 ≤5 条要点); 禁止无关寒暄
-def ResponseStyle.apply(): ...  文本: 应用精简风格与术语规范; 优先输出步骤/要点; 避免段落型长文
-
-# 标题: 集成设计 / TelegramBot 改造与 index.yaml 对接
-from aient.core.request import get_payload  "锚点: Kobe/TelegramBot/ChatGPT-Telegram-Bot/aient/aient/core/request.py"
-from aient.core.request import prepare_request_payload  "锚点: 同上"
-from aient.core.response import fetch_response, fetch_response_stream  "锚点: Kobe/TelegramBot/ChatGPT-Telegram-Bot/aient/aient/core/response.py"
-
-设计意图: "以最小侵入接管 GPT 分支；AgentsGateway 使用 index.yaml 与内存快照驱动工具链；保持上游接口与流式事件不变。" 所以 def AgentsGateway.dispatch(): ... 然后 def AgentsAdapter.convert_to_unified_response(): ...
-
-def AgentsGateway.dispatch(): ...  文本: 注册 tools, 路由 locate_agency/mem_read/compose_reply, 消费内存快照; 依据 agency_id/kb_id 选择具体 agency 视图
-def AgentsAdapter.convert_to_unified_response(): ...  文本: 将 Responses API 输出适配为现有统一事件结构
-
+# 标题: Agency Index Schema 与 Compose 规则
+设计意图:
+  - MUST 描述 `{REPO_ROOT}/KnowledgeBase/{agency}/{agency}_index.yaml` 的字段、compose_rules、render_policy。
+  - SHOULD 允许 agency 自定义 slots/entries/pricing，同时保持核心 schema 稳定。
+设计原因:
+  - Agent pipeline 依赖 agency-specific metadata（domain_profiles、compose_rules、render_policy），需在 index 中定义。
+接口锚点:
+  - file pattern: `{REPO_ROOT}/KnowledgeBase/{agency}/{agency}_index.yaml`
+  - class AgencyIndexModel  `{REPO_ROOT}/OpenaiAgents/UnifiedCS/memory/models.py`
+  - from KnowledgeBase.compose import render_frame  `{REPO_ROOT}/OpenaiAgents/UnifiedCS/compose/frame.py`
+需求字段:
+  - agency_metadata: {"agency_id", "display_name", "locale", "timezone", "contact"}
+  - domain_profiles: list of {"id", "intent", "selectors", "compose_rules"}
+  - compose_rules:
+      structure: {"header": str, "body": list[str], "footer": str}
+      tokens_budget: {"max_tokens": int, "buffer": int}
+  - render_policy: {"markdown": {"allow_code": bool}, "json": {"schema_id": str}}
+  - entries:
+      list of {"slot": str, "content": str, "summary": str, "source": str, "updated_at": str}
+  - pricing: {"currency": "CNY|USD", "unit": str, "calculation": "deterministic expression"}
+二级嵌套:
+  - domain_profiles[].selectors -> list of {"slot": str, "operator": "equals|contains|regex", "value": str}
+  - compose_rules.body -> array of template strings referencing {slot} placeholders
+三级嵌套:
+  - pricing.calculation -> AST nodes {"type": "multiply|add|lookup", "args": [...]}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/kb/agency_index.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["agency_metadata", "domain_profiles", "entries", "compose_rules", "render_policy"],
+    "properties": {
+      "agency_metadata": {
+        "type": "object",
+        "required": ["agency_id", "display_name", "locale"],
+        "properties": {
+          "agency_id": {"type": "string"},
+          "display_name": {"type": "string"},
+          "locale": {"type": "string"},
+          "timezone": {"type": "string"},
+          "contact": {"type": "string"}
+        }
+      },
+      "domain_profiles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id", "intent", "selectors"],
+          "properties": {
+            "id": {"type": "string"},
+            "intent": {"type": "string", "enum": ["consult", "plan", "operation"]},
+            "selectors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["slot", "operator", "value"],
+                "properties": {
+                  "slot": {"type": "string"},
+                  "operator": {"type": "string", "enum": ["equals", "contains", "regex"]},
+                  "value": {"type": "string"}
+                }
+              }
+            },
+            "compose_rules": {"type": "object"}
+          }
+        }
+      },
+      "entries": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["slot", "content", "source"],
+          "properties": {
+            "slot": {"type": "string"},
+            "content": {"type": "string"},
+            "summary": {"type": "string"},
+            "source": {"type": "string"},
+            "updated_at": {"type": "string", "format": "date-time"}
+          }
+        }
+      },
+      "compose_rules": {
+        "type": "object",
+        "required": ["header", "body", "footer"],
+        "properties": {
+          "header": {"type": "string"},
+          "body": {"type": "array", "items": {"type": "string"}},
+          "footer": {"type": "string"},
+          "tokens_budget": {
+            "type": "object",
+            "properties": {
+              "max_tokens": {"type": "integer"},
+              "buffer": {"type": "integer"}
+            }
+          }
+        }
+      },
+      "render_policy": {
+        "type": "object",
+        "properties": {
+          "markdown": {"type": "object", "properties": {"allow_code": {"type": "boolean"}}},
+          "json": {"type": "object", "properties": {"schema_id": {"type": "string"}}}
+        }
+      },
+      "pricing": {"type": "object"}
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - agency_compose_header（locale=zh-CN, audience=llm）
+    用途: 生成回答顶部框架，展示机构与领域名称。
+    触发条件: compose_response 初始化 header。
+    变量说明: {agency_display_name}, {domain_name}。
+    示例文案: "### 零售事业部 | 销售洞察"
+    结构化定义:
+      prompt_id=agency_compose_header locale=zh-CN audience=llm text="### {agency_display_name} | {domain_name}"
+  - agency_compose_body（locale=zh-CN, audience=llm）
+    用途: 渲染主体段落或列表。
+    触发条件: compose_response 渲染 body 模板。
+    变量说明: {body_template}, {slot_values}。
+    示例文案: "{body_template}"（模板内嵌 slot 占位符）。
+    结构化定义:
+      prompt_id=agency_compose_body locale=zh-CN audience=llm text="{body_template}"
+  - agency_pricing_alert（locale=en-US, audience=ops）
+    用途: 报告 agency pricing 计算失败。
+    触发条件: call_calculate_pricing 抛错。
+    变量说明: {agency_id}, {error}.
+    示例文案: "Pricing calculation failed for biz_cd: divide-by-zero"
+    结构化定义:
+      prompt_id=agency_pricing_alert locale=en-US text="Pricing calculation failed for {agency_id}"
+Prompt 变量表:
+  - 名称:agency_display_name | 类型:string | 必填:是 | 默认:"" | 示例:"零售事业部" | 说明: 展示名称。
+  - 名称:domain_name | 类型:string | 必填:是 | 默认:"" | 示例:"销售洞察" | 说明: 当前 domain。
+  - 名称:body_template | 类型:string | 必填:是 | 默认:"" | 示例:"- 指标：{metric}" | 说明: 模板文本。
+  - 名称:slot_values | 类型:list[string] | 必填:否 | 默认:[] | 示例:["指标：12%"] | 说明: 填充模板的值。
+  - 名称:agency_id | 类型:string | 必填:是 | 示例:"biz_cd" | 说明: 机构 identifier。
+  - 名称:error | 类型:string | 必填:是 | 示例:"divide-by-zero" | 说明: 错误详情。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/agency_index.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^agency_"},
+      "locale": {"type": "string"},
+      "text": {"type": "string"}
+    }
+  }
+Behavior Contract (MUST):
+  - def behavior_agency_index_builder(): ...  机构索引构建
+        """
+        MUST merge domain_profiles + entries -> AgencySnapshot。
+        MUST validate tokens_budget against pipeline policy。
+        SHOULD auto-generate compose rules (header/body/footer) when placeholders detected。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_render_compose_template(compose_rules: dict, slots: dict) -> str
+  - def call_calculate_pricing(pricing_config: dict, inputs: dict) -> dict
+Config Contract (MUST):
+  - prompts zh-CN -> agency_compose_header/body。
+  - prompts en-US -> agency_pricing_alert。
+Safety & Refusal Policy (MUST):
+  - missing entries -> refuse compose。
+  - pricing calculation exception -> refuse quoting，发出警报。
+i18n & Brand Voice (MUST):
+  - zh-CN compose -> BI 风格，提供“概览/指标/建议”模板。
+  - en-US pricing -> concise numeric phrasing。
+Output Contract (MUST):
+  {
+    "agency_index": {
+      "$ref": "kobe/kb/agency_index.schema.json"
+    }
+  }
+Logging & Observability (MUST):
+  - Metrics: agency_index_slot_count, agency_compose_render_latency。
+  - Logs: {agency_id, domain_id, slot, template_version}。
+Versioning & Traceability (MUST):
+  - agency_index_version=v1；SLO 变更需 bump。
+Golden Sample(s):
+  - Sample A: agency=finance_kb，domain_profiles=consult+plan。
+  - Sample B: render_policy.markdown.allow_code=false。
+  - Sample C: pricing currency="CNY"，calculation=deterministic AST。
+Counter Sample(s):
+  - Counter A: compose_rules.body empty -> schema fail。
+  - Counter B: locale unsupported -> fail。
+决策表:
+  | Condition | Action |
+  | entries missing slot | refuse publish |
+  | tokens_budget < pipeline requirement | raise error |
 如何使用:
-在 config.get_robot 旁新增 get_robot_agents 分支返回 AgentsBridge（当 USE_AGENTS=true 或 MODEL=agents）; models/chatgpt 等转义层保持不变; response 层复用既有统一事件结构与流式输出; 会话中携带 agency_id/kb_id 确保跨机构隔离
+  - 每个 agency 维护独立 index；MemoryLoader 合并后提供给 pipeline。
+agent如何读取:
+  - consult_flow 读取 compose_rules.body -> 组装 Markdown。
+边界与回退:
+  - 若 agency index 失效 -> fallback to org default response + degrade。
+SLO:
+  - agency index 校验 SHOULD < 300ms。
+  - compose 渲染成功率 MUST >= 99%。
 
-```
-# 标题: 文件架构 / V1 路径与最小侵入范围（UnifiedCS）
-```python
-需求字段 = {
-"BASE_DIR": "Kobe",
-"禁止": ["绝对路径", ".env 非人工修改"],
-"只读(运行期)": ["AckowleageBase/**", "Config/*.yaml"],
-"可写(运行期)": ["logs/agents/%Y-%m-%d/*.jsonl"],
-}
+# 标题: Selectors 与 Slots 契约
+设计意图:
+  - MUST 定义 selectors/slots 字段及匹配语义，供 triage/plan_flow/compose 使用。
+  - SHOULD 允许可扩展的 slot 类型（text/table/metric）并提供验证规则。
+设计原因:
+  - Agent pipeline 的 domain_profiles 依赖 selectors 决定 context；需统一 matcher 语法。
+接口锚点:
+  - from OpenaiAgents.UnifiedCS.selectors import SelectorEngine  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/selectors/engine.py"
+  - class SlotDefinition  "{REPO_ROOT}/OpenaiAgents/UnifiedCS/selectors/slots.py"
+  - scripts/validate_selectors.py
+需求字段:
+  - selector_fields: {"slot": str, "operator": "equals|contains|regex|range", "value": str|dict}
+  - slot_types: ["text", "metric", "table", "faq"]
+  - slot_schema:
+      base: {"slot": str, "type": slot_types, "content": str, "metadata": dict}
+      metric: {"value": number, "unit": str, "period": str}
+      table: {"columns": list[str], "rows": list[list[str]]}
+  - normalization_rules: {"case_sensitive": false, "trim": true}
+二级嵌套:
+  - SelectorEngine:
+      pipelines: ["preprocess", "match", "score", "resolve"]
+      preprocess: {"lowercase": true, "strip_punctuation": true}
+  - SlotRegistry:
+      required_fields: ["slot", "type", "content"]
+      optional_fields: ["summary", "source", "tags"]
+三级嵌套:
+  - range operator value -> {"min": number, "max": number, "inclusive": bool}
+  - metric metadata -> {"data_source": str, "currency": str?}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/kb/slot.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["slot", "type", "content"],
+    "properties": {
+      "slot": {"type": "string"},
+      "type": {"type": "string", "enum": ["text", "metric", "table", "faq"]},
+      "content": {"type": "string"},
+      "metadata": {"type": "object"},
+      "metric": {
+        "type": "object",
+        "properties": {
+          "value": {"type": "number"},
+          "unit": {"type": "string"},
+          "period": {"type": "string"}
+        }
+      },
+      "table": {
+        "type": "object",
+        "properties": {
+          "columns": {"type": "array", "items": {"type": "string"}},
+                      "rows": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}}
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - selector_match_debug（locale=en-US, audience=engineering）
+    用途: 在调试 selector 结果时输出匹配轨迹。
+    触发条件: 行为 behavior_selector_engine 开启 debug 标志。
+    变量说明: {stage}, {slot}, {operator}, {score}.
+    示例文案: "Selector match trace: stage=triage, slot=report, operator=regex, score=0.82"
+    结构化定义:
+      prompt_id=selector_match_debug locale=en-US text="Selector match trace: stage={stage}, slot={slot}, operator={operator}, score={score}"
+  - slot_validation_error（locale=zh-CN, audience=kb-admin）
+    用途: 提醒 slot 定义不符合 schema。
+    触发条件: call_validate_slot 抛出异常。
+    变量说明: {slot}, {reason}.
+    示例文案: "Slot sales_table 校验失败: 缺少 columns"
+    结构化定义:
+      prompt_id=slot_validation_error locale=zh-CN text="Slot {slot} 校验失败: {reason}"
+  - slot_missing（locale=zh-CN, audience=kb-admin）
+    用途: 提醒 agency index 漏填需要的 slot。
+    触发条件: selectors 匹配到 slot 但 entries 中不存在。
+    变量说明: {slot}.
+    示例文案: "缺少 slot plan_steps，请在 agency index 中补齐"
+    结构化定义:
+      prompt_id=slot_missing locale=zh-CN text="缺少 slot {slot}，请在 agency index 中补齐"
+Prompt 变量表:
+  - 名称:stage | 类型:string | 必填:是 | 默认:"" | 示例:"triage" | 说明: 所在阶段。
+  - 名称:slot | 类型:string | 必填:是 | 默认:"" | 示例:"report" | 说明: slot 标识。
+  - 名称:operator | 类型:string | 必填:是 | 默认:"equals" | 示例:"regex" | 说明: selector 运算符。
+  - 名称:score | 类型:number | 必填:是 | 默认:0 | 示例:0.82 | 说明: 匹配得分。
+  - 名称:reason | 类型:string | 必填:是 | 默认:"" | 示例:"缺少 columns 字段" | 说明: 校验失败原因。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/selector_slot.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^slot_|^selector_"},
+      "locale": {"type": "string"},
+      "text": {"type": "string"}
+    }
+  }
+Behavior Contract (MUST):
+  - def behavior_selector_engine(): ...  选择器流程
+        """
+        MUST preprocess user_message -> tokens。
+        MUST evaluate selectors in order of priority。
+        SHOULD compute scores and log top 3 matches。
+        """
+  - def behavior_slot_validator(): ...  slot 校验
+        """
+        MUST validate slot schema per type。
+        MUST enforce normalization rules。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_match_selectors(core_envelope: dict, selectors: list[dict]) -> dict
+  - def call_validate_slot(slot: dict) -> None
+Config Contract (MUST):
+  - prompts: selector_match_debug (en-US), slot_validation_error/missing (zh-CN)。
+Safety & Refusal Policy (MUST):
+  - selector 无匹配 -> degrade consult_flow (status=degraded)。
+  - slot 校验失败 -> refuse deploy until fixed。
+i18n & Brand Voice (MUST):
+  - Debug prompts -> English。
+  - QA prompts -> Chinese instructions。
+Output Contract (MUST):
+  {
+    "selector_result": {
+      "type": "object",
+      "required": ["matched_slots", "scores"],
+      "properties": {
+        "matched_slots": {"type": "array", "items": {"type": "string"}},
+        "scores": {"type": "array", "items": {"type": "number"}}
+      }
+    }
+  }
+Logging & Observability (MUST):
+  - Metrics: selector_latency_ms, selector_miss_total, slot_validation_fail_total。
+  - Logs: {convo_id, stage, slot, operator, score}。
+Versioning & Traceability (MUST):
+  - selector_engine_version=v1；slot_schema_version=v1。
+Golden Sample(s):
+  - Sample A: slot type text, selector equals "report".
+  - Sample B: slot type metric (value 1234, unit "CNY").
+  - Sample C: table slot with columns ["KPI","Value"]。
+Counter Sample(s):
+  - Counter A: slot type "video" -> fail。
+  - Counter B: range operator missing min/max -> fail。
+决策表:
+  | Condition | Action |
+  | match score < threshold | fallback to default domain |
+  | slot missing | emit prompt slot_missing |
+如何使用:
+  - DomainProfiles 在 index 中引用 selectors；Engine 在 triage/plan 流中调用。
+agent如何读取:
+  - consult_flow receives matched_slots -> load entries -> compose。
+边界与回退:
+  - 若 selectors 全失败 -> route to org default agency。
+SLO:
+  - selector latency SHOULD < 10ms。
+  - slot validation failure MUST < 1%。
 
-# 统一入口与编排（不使用 src；集中在 UnifiedCS/）
-"Kobe/OpenaiAgents/UnifiedCS/bridge": "与 TelegramBot 的 ask_stream_async 契约适配（AgentsBridge）",
-"Kobe/OpenaiAgents/UnifiedCS/gateway": "业务编排与路由：triage → 咨询 compose_reply / 方案 mem_read+planner",
-"Kobe/OpenaiAgents/UnifiedCS/bootstrap": "启动预热与快照注入：memory_preload、attach_snapshot",
+# 标题: Pricing 聚合与预算策略
+设计意图:
+  - MUST 定义定价字段、聚合器逻辑、token/费用预算，使 Agent 输出可引用 deterministic 定价。
+  - SHOULD 允许 agency 自定义 pricing 模板，同时提供 fallback 逻辑。
+设计原因:
+  - BI 场景需要稳定的价格/成本输出； index 必须提供 deterministic aggregator，避免 LLM 随意估算。
+接口锚点:
+  - from OpenaiAgents.UnifiedCS.aggregators.pricing import PricingAggregator
+  - from KnowledgeBase.pricing import pricing_expression.yaml
+  - scripts/validate_pricing.py
+需求字段:
+  - pricing_inputs: {"base_fee": number, "unit_fee": number, "currency": "CNY|USD", "tiers": list}
+  - aggregator_config:
+      expression: "base_fee + units * unit_fee"
+      rounding: {"mode": "half_up", "precision": 2}
+      currency_format: {"CNY": "¥{value}", "USD": "${value}"}
+  - budget_policy:
+      per_call_tokens: 3000
+      per_flow_tokens: 6000
+      summary_threshold_tokens: 2200
+二级嵌套:
+  - tiers[]: {"threshold": int, "unit_fee": number}
+  - currency_format -> string templates
+三级嵌套:
+  - expression AST -> nodes {"type": "add|multiply|number|variable"}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/pricing/aggregator.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["currency", "expression", "rounding"],
+    "properties": {
+      "currency": {"type": "string", "enum": ["CNY", "USD"]},
+      "expression": {"type": "string"},
+      "rounding": {
+        "type": "object",
+        "required": ["mode", "precision"],
+        "properties": {
+          "mode": {"type": "string", "enum": ["half_up", "floor", "ceil"]},
+          "precision": {"type": "integer", "minimum": 0, "maximum": 4}
+        }
+      },
+      "tiers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["threshold", "unit_fee"],
+          "properties": {
+            "threshold": {"type": "integer", "minimum": 0},
+            "unit_fee": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+Prompt Catalog (MUST):
+  - pricing_summary（locale=zh-CN, audience=llm）
+    用途: 在回复中展示费用拆解。
+    触发条件: pricing_result 计算成功且需要展示。
+    变量说明: {base_fee}, {units}, {total}。
+    示例文案: "费用：基础 100，用量 3，总计 160"
+    结构化定义:
+      prompt_id=pricing_summary locale=zh-CN text="费用：基础 {base_fee}，用量 {units}，总计 {total}"
+  - budget_alert（locale=en-US, audience=ops）
+    用途: 当 token usage 超过阈值时告警。
+    触发条件: behavior_budget_guard 检测 tokens > policy。
+    变量说明: {stage}, {tokens}。
+    示例文案: "Token budget exceeded: stage=compose, tokens=3500"
+    结构化定义:
+      prompt_id=budget_alert locale=en-US text="Token budget exceeded: stage={stage}, tokens={tokens}"
+  - pricing_error（locale=en-US, audience=ops）
+    用途: 报告聚合器计算失败。
+    触发条件: call_calculate_total 抛错。
+    变量说明: {error}.
+    示例文案: "Pricing calc failed: divide-by-zero"
+    结构化定义:
+      prompt_id=pricing_error locale=en-US text="Pricing calc failed: {error}"
+Prompt 变量表:
+  - 名称:base_fee | 类型:number | 必填:是 | 默认:0 | 示例:100 | 说明: 基础费用。
+  - 名称:units | 类型:number | 必填:是 | 默认:0 | 示例:3 | 说明: 用量。
+  - 名称:total | 类型:number | 必填:是 | 默认:0 | 示例:160 | 说明: 合计费用。
+  - 名称:stage | 类型:string | 必填:是 | 示例:"compose" | 说明: 触发阶段。
+  - 名称:tokens | 类型:integer | 必填:是 | 默认:0 | 示例:3500 | 说明: 使用 tokens。
+  - 名称:error | 类型:string | 必填:是 | 示例:"divide-by-zero" | 说明: 错误详情。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/pricing.schema.json",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^pricing_|^budget_"},
+      "locale": {"type": "string"},
+      "text": {"type": "string"}
+    }
+  }
+Behavior Contract (MUST):
+  - def behavior_pricing_aggregator(): ...  费用聚合
+        """
+        Inputs: pricing_inputs, aggregator_config。
+        MUST validate expression variables exist。
+        MUST apply tiers for units > threshold。
+        SHOULD format currency per locale。
+        """
+  - def behavior_budget_guard(): ...  token 预算守卫
+        """
+        MUST enforce per_call/per_flow limits。
+        MUST trigger summarize when summary_threshold exceeded。
+        """
+ToolCall / FunctionCall Contract (MUST):
+  - def call_calculate_total(pricing_inputs: dict, aggregator: dict) -> dict
+  - def call_check_budget(stage: str, tokens_used: int, policy: dict) -> dict
+Config Contract:
+  - prompts zh-CN -> pricing_summary；en-US -> budget_alert/pricing_error。
+Safety & Refusal Policy:
+  - Pricing calculation error -> refuse quoting, fallback to "价格稍后提供" 模板。
+  - Token budget exceed and summary fails -> refuse with budget_alert。
+i18n & Brand Voice:
+  - zh-CN pricing -> “费用说明”模板；en-US budget -> alert tone。
+Output Contract:
+  {
+    "pricing_result": {
+      "type": "object",
+      "required": ["currency", "total", "breakdown"],
+      "properties": {
+        "currency": {"type": "string"},
+        "total": {"type": "number"},
+        "breakdown": {"type": "object"}
+      }
+    }
+  }
+Logging & Observability:
+  - Metrics: pricing_calc_latency_ms, budget_exceed_total。
+  - Logs: {request_id, stage, units, total, tokens}.
+Versioning:
+  - pricing_aggregator_version=v1；policy changes require bump。
+Golden Sample(s):
+  - Sample A: base_fee=100, units=3, result=160。
+  - Sample B: tier threshold triggered -> total 250。
+  - Sample C: USD currency template。
+Counter Sample(s):
+  - Counter A: rounding precision >4 -> fail。
+  - Counter B: expression uses undefined variable -> fail。
+决策表:
+  | Condition | Action |
+  | tokens > per_flow | trigger summarize |
+  | pricing error | emit pricing_error prompt + refuse |
+如何使用:
+  - compose_response 引用 pricing_result 生成“费用说明”段落。
+agent如何读取:
+  - plan_flow attaches pricing_result to output JSON。
+边界与回退:
+  - 缺少 pricing config -> fallback to “暂未提供”模板 + degrade。
+SLO:
+  - pricing 计算 SHOULD < 20ms。
+  - budget_alert 触发率 MUST < 5%。
 
-# 内存知识库与读取
-"Kobe/OpenaiAgents/UnifiedCS/memory": "加载 org/agency index 与 KB → MemorySnapshot/Store/Health；只读，禁绝磁盘 IO",
-"Kobe/OpenaiAgents/UnifiedCS/aggregators": "确定性聚合器（V1: pricing 聚合）",
-"Kobe/OpenaiAgents/UnifiedCS/compose": "首轮‘框架+占位+路径’渲染，应用 render_policy 与 compose_rules",
+# 标题: Index 构建与发布流程
+设计意图:
+  - MUST 给出 KnowledgeBase 索引从编辑→校验→发布→部署的流水线，确保文档与 snapshot 一致。
+  - SHOULD 定义 CI 脚本、review 清单、回滚策略。
+设计原因:
+  - 目前缺少任何自动化脚本；需要文档驱动 scripts/check_* 的实现。
+接口锚点:
+  - scripts/check_kb_index.py
+  - scripts/generate_snapshot.py
+  - github workflow `.github/workflows/kb-validate.yml` (待建)
+需求字段:
+  - pipeline_steps: ["lint_yaml", "schema_validate", "diff_snapshot", "publish", "notify"]
+  - required_tools: ["yamllint", "ajv", "pydantic", "sha256sum"]
+  - approvals: {"kb_owner": 1, "arch": 1}
+二级嵌套:
+  - Notifications: prompts -> plan_autodiscovery_status, memory_snapshot_ready
+  - Publish targets: {snapshot_path: "{REPO_ROOT}/OpenaiAgents/UnifiedCS/memory/snapshots/{timestamp}.json"}
+三级嵌套:
+  - Rollback plan: {"restore_snapshot": path, "invalidate_cache": command, "notify": prompt_id}
+JSON Schema (MUST):
+  {
+    "$id": "kobe/kb/pipeline.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": ["pipeline_steps", "approvals"],
+    "properties": {
+      "pipeline_steps": {"type": "array", "items": {"type": "string"}},
+      "approvals": {
+        "type": "object",
+        "properties": {
+          "kb_owner": {"type": "integer", "minimum": 1},
+          "arch": {"type": "integer", "minimum": 1}
+        }
+      },
+      "publish_targets": {"type": "object"}
+    }
+  }
+Prompt Catalog (MUST):
+  - kb_pipeline_failed（locale=en-US, audience=ops）
+    用途: 通知流水线某步骤失败。
+    触发条件: pipeline 任一步骤错误。
+    变量说明: {step}, {reason}.
+    示例文案: "KB pipeline step schema_validate failed: missing routing_table"
+    结构化定义:
+      prompt_id=kb_pipeline_failed locale=en-US text="KB pipeline step {step} failed: {reason}"
+  - kb_pipeline_success（locale=zh-CN, audience=engineering）
+    用途: 宣告成功发布并提供 snapshot 路径。
+    触发条件: 所有步骤成功并完成发布。
+    变量说明: {snapshot_path}.
+    示例文案: "索引发布成功：snapshot=OpenaiAgents/UnifiedCS/memory/snapshots/2025-10-27.json"
+    结构化定义:
+      prompt_id=kb_pipeline_success locale=zh-CN text="索引发布成功：snapshot={snapshot_path}"
+Prompt 变量表:
+  - 名称:step | 类型:string | 必填:是 | 示例:"schema_validate" | 说明: 出错步骤。
+  - 名称:reason | 类型:string | 必填:是 | 示例:"routing_table missing" | 说明: 错误原因。
+  - 名称:snapshot_path | 类型:string | 必填:是 | 默认:"" | 示例:"OpenaiAgents/.../snapshot.json" | 说明: 发布的快照路径。
+Prompt JSON Schema (MUST):
+  {
+    "$id": "kobe/prompts/kb_pipeline.schema.json",
+    "type": "object",
+    "required": ["prompt_id", "locale", "text"],
+    "properties": {
+      "prompt_id": {"type": "string", "pattern": "^kb_pipeline_"},
+      "locale": {"type": "string"},
+      "text": {"type": "string"}
+    }
+  }
+Behavior Contract (MUST):
+  - def behavior_kb_pipeline(): ...  端到端流程
+        """
+        Steps: lint_yaml -> schema_validate (org + agency) -> run selector/slot validation -> build snapshot -> diff with previous -> publish -> notify。
+        MUST abort on first failure。
+        """
+ToolCall / FunctionCall Contract:
+  - def call_run_lint(paths: list[str]) -> None
+  - def call_diff_snapshot(old: str, new: str) -> dict
+Config Contract:
+  - prompts zh-CN -> kb_pipeline_success；en-US -> kb_pipeline_failed。
+Safety & Refusal Policy:
+  - lint 或 schema fail -> refuse publish。
+  - approvals 未满足 -> refuse。
+i18n & Brand Voice:
+  - success -> zh-CN 简报；failure -> en-US incident。
+Output Contract:
+  {
+    "kb_pipeline_report": {
+      "type": "object",
+      "required": ["status", "snapshot_path", "issues"],
+      "properties": {
+        "status": {"type": "string", "enum": ["success", "failed"]},
+        "snapshot_path": {"type": "string"},
+        "issues": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+Logging & Observability:
+  - Metrics: kb_pipeline_duration_ms, kb_pipeline_fail_total。
+  - Logs: {request_id, step, status, duration_ms}。
+Versioning:
+  - pipeline_version=v1；workflow 更新需 bump + doc_commit。
+Golden Sample(s):
+  - Sample A: 所有 steps 成功 -> status success。
+  - Sample B: schema_validate fail -> issues list 包含 path。
+  - Sample C: diff_snapshot detect changes -> publish target created。
+Counter Sample(s):
+  - Counter A: approvals.kb_owner=0 -> schema fail。
+  - Counter B: pipeline_steps 空 -> fail。
+决策表:
+  | Step | Condition | Action |
+  | schema_validate | fail | emit kb_pipeline_failed |
+  | publish | success | emit kb_pipeline_success |
+如何使用:
+  - CI workflow 调用 behavior_kb_pipeline，阻止未通过的索引合并。
+agent如何读取:
+  - Agent 仅依赖最终 snapshot；pipeline 报告供运维审计。
+边界与回退:
+  - publish 失败 -> restore previous snapshot +通知。
+SLO:
+  - pipeline duration SHOULD < 3min。
+  - failure rate MUST < 2%。
 
-# 模型与提示词配置
-"Kobe/OpenaiAgents/UnifiedCS/config": "ModelResolver(select/validate)、PromptRegistry/PromptCompiler(placeholders 渲染)",
 
-# 观测与用量
-"Kobe/OpenaiAgents/UnifiedCS/logging": "richlogger(Console/File JSONL 降噪脱敏)、token_meter(聚合 Agents SDK usage)",
-
-# 轻量测试（可选）
-"Kobe/OpenaiAgents/UnifiedCS/tests": "聚合器/渲染策略/选择器的轻量单测（可延后）",
-
-# 其余必需路径（保持原位）
-"Kobe/AckowleageBase/AckowleageBase_index.yaml": "顶层 org index：agencies、agency_synonyms?、routing_table?",
-"Kobe/AckowleageBase/<agency>/<agency>_index.yaml": "机构级 index：domain_profiles、compose_rules、render_policy、selectors、slots、entries、pricing.aggregate",
-"Kobe/Config/models.yaml": "模型选择 defaults/agency_overrides/tool_overrides 与 tool_use_behavior（允许 model=none）",
-"Kobe/Config/prompts.yaml": "triage/intro_frame/planner 的 system/instruction 与 placeholders",
-"Kobe/logs/agents/%Y-%m-%d": "运行期日志 JSONL（token 用量与关键打点）",
-
-# 最小侵入改动点（仅两处）
-"Kobe/TelegramBot/config.py": "新增 get_robot_agents 分支（USE_AGENTS=true 或 MODEL=agents 时返回 AgentsBridge）; 保留 get_robot",
-"Kobe/TelegramBot/bot.py": "在既定钩点调用 UnifiedCS/bootstrap 的 memory_preload 与 attach_snapshot；不改 handlers/启动范式",
-
-设计意图: "把新增能力全部收纳到 UnifiedCS，避免与 OpenAI SDK 源码/例子目录混合，便于 debug 与演进；其余工程仅做两点最小注入。"
-```
-
-# 标题: 官方对齐与变更控制（Responses API + Agents SDK）
-```python
-# 真源与版本
-需求字段 = {
-"truth_sources": [
-  "Agents SDK Streaming: Runner.run_streamed/事件",
-  "Agents SDK Usage: result.context_wrapper.usage",
-  "Agents SDK Running agents: run/run_streamed 停止条件",
-  "Agents SDK Handoffs: stop_on_first_tool/handoff 行为"
-],
-"AGENTS_SDK_REF": "<tag-or-commit>; .env 锁定，升级需走测试闸门",
-"policy": "仅以官方文档与仓库为唯一真源，第三方信息不入规范"
-}
-
-# 事件/字段契约（桥接层输出，避免字段漂移）
-Streaming = {
-  "input": ["text|input_items", "convo_id", "lang", "llm_policy_key"],
-  "map_events": {
-    "response.output_text.delta": "text_delta  # 直接拼入增量缓冲，供 Telegram 流式渲染",
-    "run_item_stream_event": "tool_completed  # 仅日志打点，不上屏"
-  },
-  "finalize": ["result.final_output", "usage=requests|input_tokens|output_tokens|total_tokens"],
-  "on_error": "流式解析/网络/未知事件 → 立即抛出异常；不降级、不兜底"
-}
-
-Tools = {
-  "declaration": "function_tool + 类型注解（pydantic 校验）; 文档仅给出签名与字段语义，不含实现",
-  "json_strict": "工具参数严格 JSON；返回体语义在小节‘工具清单’已描述"
-}
-
-# 测试闸门（三件套，UnifiedCS/tests/；V1 就位）
-Tests = {
-  "test_gateway.py": "覆盖 AgentsGateway.dispatch_stream 的 Responses API 流式契约 (raw_response_event→text_delta)",
-  "test_memory_loader.py": "校验 MemoryLoader.load_all/MemorySnapshotView 能从 AckowleageBase_index.yaml 构建快照 (bi 实例)",
-  "test_tools.py": "对 locate_agency/index_locate/mem_read/compose_reply 等 function_tool 做 Pydantic 契约验证",
-  "test_bridge.py": "保证 AgentsBridge.ask_stream_async → TelegramMarkdown 适配符合 BaseLLM 生成器语义",
-  "test_live_agents.py": "真实调用 OpenAI Responses API，校验 ToolContext/toolset 流程 (需 OPENAI_API_KEY)",
-  "test_telegram_api.py": "验证 BOT_TOKEN/setWebhook/getMe 联通性 (需 Telegram 外网/WEB_HOOK)"
-}
-# 升级流程（可控跟新，非盲追新）
-Upgrade = {
-  "detect": "scripts/check_agents_sdk_ref.py 提示上游新 tag",
-  "branch": "新分支拉取更新 → 跑三件套 → 全绿后更新 .env:AGENTS_SDK_REF 与文档锚点日期",
-  "rollback": "若不兼容，保持旧 ref；待修复验证后再升级"
-}
-
-设计意图: "将‘跟官方对齐’转为可执行契约与测试，避免因知识截断或个人记忆导致的偏差；任何接口变化先由闸门卡住再进入集成。"
-```
+ ``` 
+ ``` 
