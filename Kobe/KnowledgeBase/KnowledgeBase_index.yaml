@@ -1,0 +1,15 @@
+version: v1
+updated_at: "2025-10-30T04:15:00+08:00"
+agencies:
+  - agency_id: bi
+    name: 菲律宾移民局(Bureau of Immigration)
+    path: KnowledgeBase/BI/BI_index.yaml
+    description: 负责管理菲律宾外国人入境、居留与相关许可的业务知识库索引。
+  - agency_id: dole
+    name: 劳工与就业部(Department of Labor and Employment)
+    path: KnowledgeBase/DOLE/DOLE_index.yaml
+    description: 关注外籍雇员许可(AEP)、劳工合规与雇主责任的业务知识库。
+  - agency_id: dfa
+    name: 外交部(Department of Foreign Affairs)
+    path: KnowledgeBase/DFA/DFA_index.yaml
+    description: 提供文件认证(Apostille)、照会及 konzular 支援相关咨询资料。

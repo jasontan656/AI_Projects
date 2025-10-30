@@ -1,0 +1,30 @@
+[
+  {
+    "keyword": "legacy_term_removed",
+    "matches": "(no matches)"
+  },
+  {
+    "keyword": "secondary",
+    "matches": "OpenaiAgents\\UnifiedCS\\memory\\loader.py:69:            \"secondary\": \"memory\"," 
+  },
+  {
+    "keyword": "memory_only_mode",
+    "matches": [
+      "WorkPlan\\02.md:362:    \"storage\": \"RedisStorage 作为主通道（redis:// URL）并在启动时执行 5s 内 ping 验证；验证失败时立刻切换为单实例 MemoryStorage 并记录 memory_only_mode\"",
+      "WorkPlan\\02.md:368:    \"\"\"返回 (storage, memory_only_mode)。\"\"\"",
+      "WorkPlan\\02.md:374:      4. 任何 coroutine close 都必须 await；异常 -> 标记 memory_only_mode。",
+      "WorkPlan\\02.md:699:        \"redis 不可达 MUST 切 MemoryStorage 并标记 memory_only_mode=true。\"",
+      "WorkPlan\\04.md:590:        status = \"memory_only\"",
+      "WorkPlan\\04.md:610:            refresh_status = \"memory_only\"",
+      "TelegramBot\\runtime.py:95:            \"memory_only_mode\": policy.get(\"runtime_flags\", {}).get(\"memory_only_mode\")"
+    ]
+  },
+  {
+    "keyword": "redis_memory_only",
+    "matches": "WorkPlan\\02.md:671:    {\"condition\": \"missing redis_url\", \"action\": \"use MemoryStorage\", \"notes\": \"reject multi instance deployment；若提供 redis_url 则在 5s ping 失败时同样切换至 MemoryStorage 并记录 behavior.bootstrap.redis_memory_only\"}"
+  },
+  {
+    "keyword": "downgrade",
+    "matches": "KnowledgeBase\\BI\\DowngradingOfVisa\\DowngradingOfVisa.yaml:10:  intent_id: \"visa-downgrading-status-change\" (业务术语，保留用于移民局流程)"
+  }
+]

@@ -103,7 +103,7 @@ def collect_anchor_candidates(soup: BeautifulSoup, base_url: str) -> List[Attach
     return candidates
 
 
-def classify_attachment(title: str, url: str, fallback: str = "other") -> str:
+def classify_attachment(title: str, url: str) -> str:
     text = f"{title} {url}".lower()
     if "checklist" in text or "requirements" in text:
         return "checklist"
@@ -111,7 +111,7 @@ def classify_attachment(title: str, url: str, fallback: str = "other") -> str:
         return "application_form"
     if "guide" in text or "manual" in text or "notes" in text:
         return "guide"
-    return fallback
+    raise ValueError(f"Unrecognized attachment type: {title} {url}")
 
 
 def extract_article_text(soup: BeautifulSoup) -> str:

@@ -1,0 +1,44 @@
+# 控制台结构化打印配置（开发阶段）。请根据业务需求调整。
+session:
+  width: 118                # 控制台 Panel 宽度
+  prompt_preview: 280       # 用户原始消息/Prompt 摘要长度
+  output_preview: 0         # 最终输出全量展示（0 表示不截断）
+  show_history: false       # 是否渲染最近一次历史引用
+
+nodes:
+  order:
+    - intent_agent
+    - service_selector_primary
+    - service_selector_secondary
+    - facet_selector
+    - summary_engine
+  prompt_preview: 0         # 节点 Prompt 全量展示（0 表示不截断）
+  output_preview: 0         # 节点输出全量展示（0 表示不截断）
+  metadata_preview: 0       # 节点 metadata 全量展示（0 表示不截断）
+  extras_preview: 0         # 节点 extras 全量展示（0 表示不截断）
+  show_input: true
+  show_prompt: true
+  show_output: true
+  show_metadata: true
+  highlight_errors: true
+
+alerts:
+  show_on_status:
+    - error
+    - invalid_json
+    - api_error
+    - no_candidates
+    - empty_slots
+  max_snippet: 180
+
+cost:
+  precision: 6              # 成本显示精度
+  on_missing_rate: warn     # missing 模型费率时的处理方式: warn | silent | error
+  models:
+    # 在此维护模型费率（单位：美元 / 1K tokens）
+    # gpt-5-mini-2025-08-07:
+    #   input: 0.0000000
+    #   output: 0.0000000
+    # gpt-4o-mini-2024-07-18:
+    #   input: 0.0000000
+    #   output: 0.0000000

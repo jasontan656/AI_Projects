@@ -137,14 +137,9 @@ def deduplicate_directory(directory: Path, docs: List[PdfDoc]) -> List[Path]:
             continue
         max_year = max(doc.best_year for doc in surviving)
         if max_year == 0:
-            # fallback: keep highest doc number if years ambiguous
-            keep = max(surviving, key=lambda d: (extract_doc_number(d.path), d.mtime))
-            for doc in list(surviving):
-                if doc is keep:
-                    continue
-                doc.path.unlink(missing_ok=True)
-                removed.append(doc.path)
-            continue
+            raise RuntimeError(
+                f"ambiguous year for {classification} in {directory}"
+            )
         for doc in list(surviving):
             if doc.best_year < max_year:
                 doc.path.unlink(missing_ok=True)

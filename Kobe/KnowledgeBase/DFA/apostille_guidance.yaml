@@ -1,0 +1,4 @@
+version: v1
+default_language: zh-CN
+name: DFA 文件认证(Apostille)咨询
+service_overview: 提供 DFA Apostille 预约、缴费及领件环节指引。

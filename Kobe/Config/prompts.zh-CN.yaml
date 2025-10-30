@@ -1,0 +1,688 @@
+metadata:
+  doc_id: 30
+  doc_commit: 28a8d3a
+  prompt_version: idx-v2
+  generated-from: 30@28a8d3a
+  locale: zh-CN
+  seed: 20251027
+  categories:
+    - system
+    - triage
+    - summarize
+    - compose
+    - clarify
+    - toolcall
+    - refusal
+    - welcome
+    - help
+    - rate_limit
+    - ops_alert
+    - dev_alert
+  mapping:
+    system:
+      - agent_triage_system
+    triage:
+      - agent_triage_system
+    summarize:
+      - telegram_history_summarize
+    compose:
+      - agency_compose_body
+      - agency_compose_header
+      - agent_consult_compose
+      - agent_plan_executor
+      - pricing_summary
+    clarify:
+      - telegram_user_clarify
+    toolcall:
+      - telegram_toolcall_error
+    refusal:
+      - agent_refusal_policy
+      - core_schema_violation
+    welcome:
+      - telegram_welcome
+    help:
+      - telegram_prompt_missing
+    rate_limit:
+      - budget_alert
+    ops_alert:
+      - agency_pricing_alert
+      - aiogram_bootstrap_alert
+      - aiogram_bootstrap_status
+      - asset_cleanup_summary
+      - asset_guard_violation
+      - kb_index_missing_agency
+      - kb_index_ready
+      - kb_pipeline_failed
+      - kb_pipeline_success
+      - memory_checksum_mismatch
+      - memory_loader_alert
+      - memory_snapshot_ready
+      - plan_autodiscovery_status
+      - pricing_error
+      - telegram_streaming_error
+      - webhook_register_retry
+      - webhook_signature_fail
+    dev_alert:
+      - core_envelope_attachment
+      - core_envelope_gap
+      - core_schema_alert
+      - core_schema_violation
+      - entry_layout_violation
+      - entry_missing_file
+      - kb_routing_conflict
+      - layout_missing_dir
+      - layout_owner_mismatch
+      - plan_alignment_gap
+      - plan_scope_ack
+      - selector_match_debug
+      - slot_missing
+      - slot_validation_error
+
+aiogram_bootstrap_status:
+  locale: zh-CN
+  audience: ops
+  text: "请确认 aiogram 服务 {status}，Router={router_name}，request_id={request_id}"
+  variables:
+    status:
+      type: string
+      required: true
+      default: "pending"
+    router_name:
+      type: string
+      required: true
+      default: "telegram_main_router"
+    request_id:
+      type: string
+      required: true
+      default: ""
+agent_triage_system:
+  locale: zh-CN
+  audience: llm
+  text: "你是对话路由器。请根据 {user_message} 在 {intent_candidates} 中判定意图，并从 {domain_profiles} 选择最匹配的领域。"
+  variables:
+    user_message:
+      type: string
+      required: true
+      default: ""
+    intent_candidates:
+      type: list
+      required: true
+      default:
+        - consult
+        - plan
+        - operation
+    domain_profiles:
+      type: list
+      required: true
+      default: []
+agent_consult_compose:
+  locale: zh-CN
+  audience: llm
+  text: "你是菲律宾移民咨询顾问。依据 {context_snippets} 中的知识库片段，在 {token_budget} tokens 内向用户输出清晰的业务指引：先确认办理事项与适用条件，再列出所需资料、办理步骤、费用/罚则及注意事项，最后给出我们的协助动作或下一步。语气保持 {tone}，不得臆造未知信息。"
+  variables:
+    tone:
+      type: string
+      required: false
+      default: "专业且友好"
+    token_budget:
+      type: integer
+      required: true
+      default: 300
+    context_snippets:
+      type: list
+      required: true
+      default: []
+pricing_summary:
+  locale: zh-CN
+  audience: llm
+  text: "费用：基础 {base_fee}，用量 {units}，总计 {total}"
+  variables:
+    base_fee:
+      type: number
+      required: true
+      default: 0
+    units:
+      type: number
+      required: true
+      default: 0
+    total:
+      type: number
+      required: true
+      default: 0
+kb_pipeline_success:
+  locale: zh-CN
+  audience: engineering
+  text: "索引发布成功：snapshot={snapshot_path}"
+  variables:
+    snapshot_path:
+      type: string
+      required: true
+      default: ""
+agency_compose_header:
+  locale: zh-CN
+  audience: llm
+  text: "### {agency_display_name} | {domain_name}"
+  variables:
+    agency_display_name:
+      type: string
+      required: true
+      default: ""
+    domain_name:
+      type: string
+      required: true
+      default: ""
+agency_compose_body:
+  locale: zh-CN
+  audience: llm
+  text: "{body_template}"
+  variables:
+    body_template:
+      type: string
+      required: true
+      default: ""
+    slot_values:
+      type: list
+      required: false
+      default: []
+strings_message_think:
+  locale: zh-CN
+  audience: user
+  text: "Thinking..."
+  variables: {}
+agent_refusal_policy:
+  locale: zh-CN
+  audience: llm
+  text: "因触发 {rule}，当前请求无法处理。如需帮助，请联系 {contact}。"
+  variables:
+    rule:
+      type: string
+      required: true
+      default: "policy_violation"
+    contact:
+      type: string
+      required: false
+      default: "support@example.com"
+telegram_history_summarize:
+  locale: zh-CN
+  audience: llm
+  text: "请把以下历史精炼为要点，长度不超过 {limit_tokens} tokens：{history_chunks}"
+  variables:
+    history_chunks:
+      type: list
+      required: true
+      default: []
+    limit_tokens:
+      type: integer
+      required: true
+      default: 200
+telegram_user_clarify:
+  locale: zh-CN
+  audience: user
+  text: "为了精准匹配菲律宾移民局流程，请补充以下信息：\n{checklist}\n示例：{sample}\n请按要点逐项说明，我们将基于知识库生成办理方案。"
+  variables:
+    checklist:
+      type: string
+      required: true
+      default: ""
+    sample:
+      type: string
+      required: false
+      default: ""
+telegram_welcome:
+  locale: zh-CN
+  audience: user
+  text: "欢迎使用 {bot_name}，直接发送问题或输入 /help 获取帮助。"
+  variables:
+    bot_name:
+      type: string
+      required: true
+      default: "KobeBot"
+telegram_payload_too_long:
+  locale: zh-CN
+  audience: user
+  text: "收到的内容超过 4096 字符。已截取前 200 字预览：{excerpt}"
+  variables:
+    excerpt:
+      type: string
+      required: true
+      default: ""
+
+telegram_attachment_not_supported:
+  locale: zh-CN
+  audience: user
+  text: "当前版本暂不支持处理 {kind} 附件，请改为发送文本。"
+  variables:
+    kind:
+      type: string
+      required: true
+      default: "file"
+
+asset_guard_violation:
+  locale: zh-CN
+  audience: devops
+  text: "发现遗留目录 {path}，阻止合并"
+  variables:
+    path:
+      type: string
+      required: true
+      default: ""
+
+slot_validation_error:
+  locale: zh-CN
+  audience: kb-admin
+  text: "Slot {slot} 校验失败: {reason}"
+  variables:
+    slot:
+      type: string
+      required: true
+      default: ""
+    reason:
+      type: string
+      required: true
+      default: ""
+
+slot_missing:
+  locale: zh-CN
+  audience: kb-admin
+  text: "缺少 slot {slot}，请在 agency index 中补齐"
+  variables:
+    slot:
+      type: string
+      required: true
+      default: ""
+
+plan_autodiscovery_status:
+  locale: zh-CN
+  audience: devops
+  text: "AutoDiscovery 完成：现有 {existing_dirs}，缺失 {missing_dirs}，repo_root={repo_root}"
+  variables:
+    existing_dirs:
+      type: list
+      required: true
+      default: []
+    missing_dirs:
+      type: list
+      required: true
+      default: []
+    repo_root:
+      type: string
+      required: true
+      default: ""
+
+plan_scope_ack:
+  locale: zh-CN
+  audience: engineering
+  text: "本计划聚焦 {scope_sections}，其余改造（如第三方 bot）已废弃，请勿引用旧文档"
+  variables:
+    scope_sections:
+      type: list
+      required: true
+      default: []
+
+kb_index_missing_agency:
+  locale: zh-CN
+  audience: kb-admin
+  text: "机构 {agency_id} 未在 KnowledgeBase_index.yaml 注册"
+  variables:
+    agency_id:
+      type: string
+      required: true
+      default: ""
+
+kb_index_ready:
+  locale: zh-CN
+  audience: engineering
+  text: "KB 顶层索引创建完成，机构数 {agency_count}"
+  variables:
+    agency_count:
+      type: integer
+      required: true
+      default: 0
+
+memory_snapshot_ready:
+  locale: zh-CN
+  audience: engineering
+  text: "MemorySnapshot 构建完成：机构 {agency_count}，entries {entry_count}"
+  variables:
+    agency_count:
+      type: integer
+      required: true
+      default: 0
+    entry_count:
+      type: integer
+      required: true
+      default: 0
+
+
+
+
+core_schema_violation:
+  locale: zh-CN
+  audience: dev
+  text: "CoreEnvelope 校验失败: {error}"
+  variables:
+    error:
+      type: string
+      required: true
+      default: ""
+
+
+telegram_prompt_missing:
+  locale: zh-CN
+  audience: user
+  text: "请发送文本内容"
+  variables:
+    none:
+      type: string
+      required: false
+      default: ""
+
+core_envelope_gap:
+  locale: zh-CN
+  audience: dev
+  text: "CoreEnvelope 缺少字段 {field}"
+  variables:
+    field:
+      type: string
+      required: true
+      default: ""
+
+webhook_signature_fail:
+  locale: zh-CN
+  audience: ops
+  text: "Webhook 签名验证失败 {request_id}"
+  variables:
+    request_id:
+      type: string
+      required: true
+      default: ""
+
+entry_missing_file:
+  locale: zh-CN
+  audience: devops
+  text: "缺少入口文件 {path}"
+  variables:
+    path:
+      type: string
+      required: true
+      default: ""
+
+layout_missing_dir:
+  locale: zh-CN
+  audience: dev
+  text: "目录缺失 {dir}"
+  variables:
+    dir:
+      type: string
+      required: true
+      default: ""
+
+agent_plan_executor:
+  locale: zh-CN
+  audience: llm
+  text: "请基于 {plan_context} 与约束 {constraints} 生成编号行动计划，并给出每步说明。"
+  variables:
+    plan_context:
+      type: dict
+      required: true
+      default: {}
+    constraints:
+      type: list
+      required: true
+      default: []
+
+telegram_toolcall_error:
+  locale: zh-CN
+  audience: ops
+  text: "工具 {tool} 调用失败：{error}，请求 {request_id}"
+  variables:
+    tool:
+      type: string
+      required: true
+      default: ""
+    error:
+      type: string
+      required: true
+      default: ""
+    request_id:
+      type: string
+      required: true
+      default: ""
+
+budget_alert:
+  locale: zh-CN
+  audience: ops
+  text: "Token 预算告警：阶段 {stage}，消耗 {tokens} > 阈值 {threshold}"
+  variables:
+    stage:
+      type: string
+      required: true
+      default: "compose"
+    tokens:
+      type: integer
+      required: true
+      default: 0
+    threshold:
+      type: integer
+      required: true
+      default: 3000
+
+telegram_streaming_error:
+  locale: zh-CN
+  audience: ops
+  text: "流式传输失败，请求 {request_id} 已切换为非流式。"
+  variables:
+    request_id:
+      type: string
+      required: true
+      default: ""
+
+webhook_register_retry:
+  locale: zh-CN
+  audience: devops
+  text: "Webhook 注册第 {retry} 次重试"
+  variables:
+    retry:
+      type: integer
+      required: true
+      default: 1
+
+pricing_error:
+  locale: zh-CN
+  audience: ops
+  text: "定价计算失败：{error}"
+  variables:
+    error:
+      type: string
+      required: true
+      default: ""
+
+memory_loader_alert:
+  locale: zh-CN
+  audience: ops
+  text: "MemoryLoader 发现 {issue}，机构 {agency_id}"
+  variables:
+    issue:
+      type: string
+      required: true
+      default: "unknown_issue"
+    agency_id:
+      type: string
+      required: true
+      default: "*"
+
+agency_pricing_alert:
+  locale: zh-CN
+  audience: ops
+  text: "机构 {agency_id} 定价计算异常：{error}"
+  variables:
+    agency_id:
+      type: string
+      required: true
+      default: ""
+    error:
+      type: string
+      required: true
+      default: ""
+
+aiogram_bootstrap_alert:
+  locale: zh-CN
+  audience: devops
+  text: "aiogram 初始化在步骤 {step} 失败，request_id={request_id}"
+  variables:
+    step:
+      type: string
+      required: true
+      default: "set_webhook"
+    request_id:
+      type: string
+      required: true
+      default: ""
+
+asset_cleanup_summary:
+  locale: zh-CN
+  audience: maintainer
+  text: "已清理资产目录 {dir}，时间 {timestamp}，提交 {commit}"
+  variables:
+    dir:
+      type: string
+      required: true
+      default: ""
+    timestamp:
+      type: string
+      required: true
+      default: ""
+    commit:
+      type: string
+      required: true
+      default: ""
+
+kb_pipeline_failed:
+  locale: zh-CN
+  audience: ops
+  text: "KB 管道步骤 {step} 失败：{reason}"
+  variables:
+    step:
+      type: string
+      required: true
+      default: ""
+    reason:
+      type: string
+      required: true
+      default: ""
+
+memory_checksum_mismatch:
+  locale: zh-CN
+  audience: devops
+  text: "内存快照校验失败：{path}，期望 {expected}，实际 {actual}"
+  variables:
+    path:
+      type: string
+      required: true
+      default: ""
+    expected:
+      type: string
+      required: true
+      default: ""
+    actual:
+      type: string
+      required: true
+      default: ""
+
+layout_owner_mismatch:
+  locale: zh-CN
+  audience: ops
+  text: "目录所有权异常：组件 {component}"
+  variables:
+    component:
+      type: string
+      required: true
+      default: ""
+
+entry_layout_violation:
+  locale: zh-CN
+  audience: maintainer
+  text: "入口布局不符合要求：{component}"
+  variables:
+    component:
+      type: string
+      required: true
+      default: ""
+
+plan_alignment_gap:
+  locale: zh-CN
+  audience: arch
+  text: "计划对齐缺口：章节 {section} 缺少块 {block}"
+  variables:
+    section:
+      type: string
+      required: true
+      default: ""
+    block:
+      type: string
+      required: true
+      default: ""
+
+selector_match_debug:
+  locale: zh-CN
+  audience: engineering
+  text: "Selector 调试：阶段={stage}，slot={slot}，操作符={operator}，得分={score}"
+  variables:
+    stage:
+      type: string
+      required: true
+      default: ""
+    slot:
+      type: string
+      required: true
+      default: ""
+    operator:
+      type: string
+      required: true
+      default: "equals"
+    score:
+      type: number
+      required: true
+      default: 0
+
+kb_routing_conflict:
+  locale: zh-CN
+  audience: arch
+  text: "KB 路由冲突：机构 {agency_a} 与 {agency_b} 匹配模式 {pattern}"
+  variables:
+    agency_a:
+      type: string
+      required: true
+      default: ""
+    agency_b:
+      type: string
+      required: true
+      default: ""
+    pattern:
+      type: string
+      required: true
+      default: ""
+
+core_envelope_attachment:
+  locale: zh-CN
+  audience: ops
+  text: "CoreEnvelope 附件校验失败：{kind}"
+  variables:
+    kind:
+      type: string
+      required: true
+      default: ""
+
+core_schema_alert:
+  locale: zh-CN
+  audience: ops
+  text: "CoreEnvelope Schema 告警：通道 {channel} 字段 {field}"
+  variables:
+    channel:
+      type: string
+      required: true
+      default: "telegram"
+    field:
+      type: string
+      required: true
+      default: ""
