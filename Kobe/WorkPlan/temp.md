@@ -1,10 +1,3 @@
-| 模型名称                        | 参数规模  | 开发方                | CPU运行表现       |
-| --------------------------- | ----- | ------------------ | ------------- |
-| **MarianMT (Helsinki-NLP)** | ~45M  | OPUS / HuggingFace | ✅ 1 秒内可翻译短句   |
-| **NLLB-200-Distilled 600M** | ~600M | Meta AI            | ✅ 约 2 秒翻译 1 句 |
-| **M2M100-418M**             | ~418M | Meta AI            | ✅ 2~3 秒翻译短句   |
-| **MBart-50 Mini**           | ~300M | Facebook AI        | ✅ 可用，延迟 1~2 秒 |
-
 用 gpt‑4o‑mini 作为“轻量多轮执行器”，通过 Responses
   API 的 store:true 与 previous_response_id 把每步产出的“结果片段”显式保存和续接；同时用
   Prompt Caching 给稳定前缀做折扣提速，二者配合，就能把一次复杂推理拆成多步、在多轮里完成并
@@ -95,31 +88,82 @@ User says hi.   >    langdetect   and send language code  > **MarianMT (Helsinki
      Judgements to be filled before making any conclusion:
 
        "inquiry" : bool  
-       "agency needed?" : bool
-          "agency info" : {
-            list of agency info loaded from step 2.
-          }
-       "agency detected" : {
-         mutiple agency related or just one
-       }
-       "complexity" : high / low
-         low : agency detected == 1
-         hight : agency detected >= 1
-       "key_defination" : {
-          available keys and its summerized defination of its use of content. Example "key_1" : {Summery : " this key name usually represents the situations this service may apply", Sample : "Expired visa", " over stay", "certifications etc"} key_2: {summery: " this key usually holds the breakdown of gov price,but not real time updated. advise user align with actual ops." ,Sample : "CRTV : 500 PHP" ,"EXPRESS FEE : 1000 PHP"}
-       }
-       "intent_keywords" : {
-         "mutilple words"
-       }
-       "service_index" :{
-              "{agencyname_index.yaml}": {
+       judgement_v1 :
+         "inquiry" : bool
+         "assistantReply" : "string | null"
+         "nextStep" : "agency_detect_v1" when inquiry == true, otherwise "session_end"
 
-              }
-       }
-       "addtional_info": "str"
-       "user_language" : "str"
+       agency_detect_v1 :
+         "judgements.agencyDetected" : ["agencyId", ...]
+         "judgements.agencyInfo" : {
+            list of agency info loaded from KnowledgeBase_index.yaml for cache sync
+         }
+         "judgements.agencyCount" : integer that matches agencyDetected length
+         "judgements.complexity" : "low" | "high"
+         "nextStep" : "category_select_v1" (low) | "semantic_analysis_v1" (high) | "session_end"
 
- 2. Execution Tasks detailed guide. Execute step by step :
+       category_select_v1 (only when complexity == low) :
+         "categorySelection.candidates" : {
+           "category_key" : {"value" : "description", "score" : 0.75}
+         }
+         offline script may still project this into legacy "key_defination" for backward compatibility
+
+       semantic_analysis_v1 (only when complexity == high) :
+         "semanticAnalysis.agencies" : [
+           {"agencyId" : "string", "agencyName" : "string", "categorySelection" : {...}}
+         ]
+         "semanticAnalysis.primaryAgency" : {"agencyId" : "string", "reason" : "string"}
+
+       service_select_v1 :
+         "userChatContextSummary" : [
+            {
+              "userPromptSummary" : "string",
+              "assistantReplySummary" : "string | null",
+              "timestamp" : "YYYY-MM-DDTHH:MM:SSZ"
+            }
+         ]
+         "serviceSelection" : {
+            "serviceKey" : "string",
+            "name" : "string",
+            "path" : "string",
+            "matchedField" : "key | name | overview | applicability_summary",
+            "score" : 0.00
+         }
+         "template.placeholders" : {
+            "service_name" : "{service_name}",
+            "...dynamic..." : "{...dynamic...}"
+         }
+         "template.rules" : "Describe how placeholders should be arranged"
+
+       multi_agency_service_answer_v1 (only when orchestrator branches after service_select_v1) :
+         "userChatContextSummary" : [
+            {
+              "userPromptSummary" : "string",
+              "assistantReplySummary" : "string",
+              "timestamp" : "YYYY-MM-DDTHH:MM:SSZ"
+            }
+         ]
+         "assistantReply" : "string"
+         "sourcesUsed" : [{"agencyId":"string","serviceKey":"string","path":"string"}]
+         "nextStep" : "session_end"
+
+       Additional state required by translation / analytics layers:
+         "userChatContextSummary" : latest ≤20 entries mirrored to Redis + Mongo
+         "intent_keywords" : ["multiple words"]
+         "service_index" : {
+            "{agency_id_upper}_index.yaml": {
+               "id": "string",
+               "name": "string",
+               "path": "KnowledgeBase/...yaml",
+               "aliases": ["alias1","alias2"],
+               "overview": "short summary",
+               "applicability_summary": "when to use"
+            }
+         }
+         "addtional_info": "str"
+         "user_language" : "str"
+
+2. Execution Tasks detailed guide. Execute step by step :
     
     Determinate weather the current user prompt sounds like a goverment agency service inquiry or just saying greetings or might as well being silly. we dont mind client wants to know about us. but we dont want the client keep on wasting our token.so we need to know if this user really needed something or block the silly ones by freezing the chat service. after you understand the user prompt,you shall return "if inquiry?"  true / false.
      
@@ -130,41 +174,132 @@ User says hi.   >    langdetect   and send language code  > **MarianMT (Helsinki
                 to user : answer user directly as your role set.
                 to backend : "inquiry : false", counted as 1 violation to be sent to (guard agent (offline python script code)) to mark this user 1 violation. continues 5 violations will result assistant responde freeze, guard agent will block user prompt from reaching the procedure and taking over to record only user prompt to mongodb and assistant reply to mongo db as chat history and always return user the mechine template response " None inquiry intent detected, Cooling down {time count down 15mins and display remining time count}"
          } 
-       Round end
-          Clear cache
+      Round end
+         Clear cache
+
     guard agent:
-    - guard agent only checks number count of certain chat user if it has reached 5. if yes, lock that chat user to be routed always to guard agent and start to reply mechine generated messgae "No inquiry intent detected, system has been locked for {time count down max 1 hour and display time left each time interacts with user message}" 
+    - guard agent only checks number count of certain chat user if it has reached 5. if yes, lock that chat user to be routed always to guard agent and start to reply mechine generated messgae "No inquiry intent detected, system has been locked for {time count down max 15mins and display time left each time interacts with user message}" 
       
       else load the next part of prompt of following
       
       inquiry : True
-          load all Agency supported from Kobe.KnowledgeBase.KnowledgeBase_index and store to cache:
-             {Agency_name}{agency_kb_path}{agency_description}  <- all read agency from yaml index file, store : true
-          determinate if what agency is related to user concern and fill "agency detected".
+          读取 Kobe/KnowledgeBase/KnowledgeBase_index.yaml 中的机构清单并写入缓存：
+             {agency_id}{name}{path}{description}  <- 与当前 YAML 字段保持一致
+          determinate which agency is related to user concern and fill "judgements.agencyDetected".
          
-          determinate if agency related is more than 1.
-            if agency detected number count is == 1, fill judgements complexity : low.
-               then enter template fill mode. 
-                 load revelent Kobe.KnowledgeBase.{agencyname}.{agencyname}_dictionary.yaml to learn available key name and its description. fill "key_defination". store : true
-                 load service_name , service_aliases, from Kobe.KnowledgeBase.BI.BI_index to "service_index"
-                 summrize existing information stored to determinate possible service intent keywords and fill "intent_keywords"
-                 decide what keys are applicable to the current situation of user concern.  Decide reply tamplate output and select needed service_name and key_name for offline scripts to extract key_value from revelent file to replace your place holder included in the tamplated reply to user. 
-                 ''''
-                  Ex : "Hey there, Thank you for your inquiry.The service you're needing / talking about is likely { key1: service name and description }, they are usually being used in {key2:situations details}. and since you wanted to know price. here is what I have { key3: prices details } but please respect the OPS. My info are only from internet.
-                 ''''
-               return your decided template with place holder for the offline script to assemble info. and reply to user assembled prompt reply.
-            Round end
-                Clear cache
+         determinate if agency related is more than 1.
+            if agency detected number count == 1, set judgements complexity : low 并执行以下步骤：
+               - 运行 category_select_v1：加载 KnowledgeBase/{agency_id_upper}/{agency_id_upper}_dictionary.yaml，把实际存在的 key/description 写入 categorySelection.candidates（score ≥ 0.50），离线脚本可同步生成 legacy "key_defination"。
+               - 运行 service_select_v1：结合 KnowledgeBase/{agency_id_upper}/{agency_id_upper}_index.yaml 的 {id, name, path, aliases, overview, applicability_summary}，模型输出 userChatContextSummary + serviceSelection + template.placeholders。离线脚本依据 placeholders 与 YAML 数据组装最终回复，并把最新 summary 追加到 Redis 对应会话、同步到 MongoDB 持久化存档（控制在 20 条内，滚动淘汰）。
+               - 低复杂度路径默认 nextStep = session_end。完成后，离线脚本写回最新 state、发送答复、清空缓存。
             
       else 
       load the next part of prompt of following:
 
-            if agency detected number count is > 1, fill judgements complexity : high.
-               request to load more info available from  Kobe.KnowledgeBase.BI.BI_index service_overview and load service_path. and fill them to "service_index".
-                  analyze existing info and decide if you need further information to be loaded from  Kobe.KnowledgeBase.BI.BI_index service_path and read specific key value you have selected from service_path file and if yes,load them and store in "addtional_info".
-                  now there is no more available info can be retrived from anywhere. Decide what would be your reply. At this point, You are allowed to assemble your reply by using template mode to assemble for token converving if its doable and doesnt lose anything from how you wanted to reply. Otherwise.Focus on delivering clear and accurate answer towards user goal and optional assembling from existing key_value for place holders to give more reference.
+            if agency detected number count > 1, set judgements complexity : high 并执行以下步骤：
+               - 运行 semantic_analysis_v1：对每个机构单独做语义匹配，写入 semanticAnalysis.agencies[]，并选出 semanticAnalysis.primaryAgency；离线脚本据此决定需要缓存的 index / service YAML。
+               - 运行 service_select_v1：按 primary agency 或多机构组合挑选 serviceSelection、生成 template.placeholders，并补充 userChatContextSummary；同时可能把 nextStep 设置为 multi_agency_service_answer_v1。
+               - 若 nextStep == multi_agency_service_answer_v1，则继续执行：汇总多机构服务，输出 assistantReply + sourcesUsed + userChatContextSummary，形成最终答复骨架，并由离线脚本负责 Redis/Mongo 同步。
+               - 整个高复杂度流程中，离线脚本负责按需读取 KnowledgeBase/{agency_id_upper}/{service_id}/{service_id}.yaml，填充 "service_index"、"addtional_info"、"intent_keywords"，并在最后填充 placeholders。
          Round end
           Clear cache
                
                 
  
+3. Offline Orchestrator Responsibilities (store:true pipeline):
+
+   The runtime outside of the LLM is responsible for orchestrating stage calls, persisting intermediate
+   state, and maintaining the chat context summary for Redis + MongoDB.
+
+   1) Load or bootstrap `cached_state.json` with `session_id`, `response_id`, `nextStep` (defaults to `judgement_v1`),
+      plus any static metadata (user locale, guard status, etc.).
+   2) While `nextStep != "session_end"`:
+        a. Read `stage_manifest.yaml` → locate prompt file for current stage.
+        b. Assemble invocation payload:
+           - Base system prompt (`prompt_base_system.md`, already cached via store:true).
+           - Stage-specific command prompt (e.g., `prompt_stage3-2_templatefill.md`).
+           - User block composed of:
+               • `{{input.user_prompt}}` = latest turn from end user.
+               • `{{input.chat_context_summary}}` = up to 20 entries from persisted summary.
+               • `{{input.cached_state}}` = current JSON state (serialized).
+               • `{{input.runtime_directive}}` = optional instruction from guard agent/ops.
+               • Wherever required: `{{input.KnowledgeBase_Dictionary}}`, `{{input.service_index}}`,
+                 or other YAML-derived inputs loaded from KnowledgeBase.
+        c. Call Responses API with `store:true`, `previous_response_id` = last successful stage response if reuse is desired.
+        d. Validate model output against `stage_runtime_contract.md` + prompt-specific rules:
+               • JSON parseable, mandatory fields present.
+               • `session_id` continuity, scores precision, `nextStep` value matches manifest transition.
+               • `userChatContextSummary` exists for stages that require it (`service_select_v1`, `multi_agency_service_answer_v1`).
+        e. On validation failure:
+               • Inspect `telemetry.notes` (if present), log reason.
+               • Decide whether to re-issue the same stage (up to N retries) or escalate to guard agent/manual review.
+        f. State merge:
+               • Update `cached_state.<stage_id>` with fields specified in `stage_runtime_contract.md`.
+               • Update `cached_state.nextStep` with stage response `nextStep`.
+               • Append or overwrite supporting attributes (`intent_keywords`, `service_index`, `addtional_info`, etc.).
+        g. Chat summary maintenance:
+               • Extract latest entry from `userChatContextSummary` (if provided) and append to Redis list keyed by user/session.
+               • Keep Redis list length ≤20 (pop oldest when necessary).
+               • Upsert same entry into MongoDB history collection with user id, session id, timestamp.
+        h. Knowledge base enrichment:
+               • When stage requires dictionary/service index, load corresponding YAML (e.g., `KnowledgeBase/BI/BI_index.yaml`)
+                 and inject the relevant fragments into `cached_state` before invoking the next stage.
+        i. Guard agent hooks:
+               • After `judgement_v1`, increment violation counter if `inquiry=false`.
+               • If guard threshold reached, short-circuit `nextStep` to `session_end` and route future user turns to guard handler.
+
+   3) After loop exits (`nextStep == "session_end"`):
+        • Fetch the final `assistantReply` (from `service_select_v1` template rendering pipeline or
+          `multi_agency_service_answer_v1`) and deliver to user.
+        • Persist final `cached_state` snapshot, Redis summary, and Mongo chat record.
+        • Optionally ensure any response objects stored via `store:true` are tagged for retention/cleanup per policy.
+
+   This offline workflow is the glue that turns per-stage command outputs into a coherent, stateful dialogue,
+   guaranteeing that Redis/Mongo remain authoritative for chat summaries, while `cached_state.json` stays aligned
+   with the orchestrator’s branching logic.
+
+4. Data store initialization & warm-up
+
+   To avoid ad-hoc collection creation at runtime, run the helper once per environment:
+
+   ```bash
+   python SharedUtility/scripts/init_data_stores.py
+   ```
+
+   - 环境变量：脚本读取 `.env` 中的 `MONGODB_URI`、`MONGODB_DATABASE`、`REDIS_URL`。
+     可用 `CHAT_SUMMARY_COLLECTION` 覆盖默认集合名 `chat_summaries`。
+   - MongoDB：脚本创建（或确认存在）集合 `<database>.<collection>`，并建立索引
+     `idx_chat_id_unique`（唯一 `chat_id`）与 `idx_updated_at`（按更新时间排序）。
+     文档结构建议：
+
+     ```json
+     {
+       "chat_id": "<telegram chat id or composed key>",
+       "entries": [
+         {
+           "userPromptSummary": "string",
+           "assistantReplySummary": "string | null",
+           "timestamp": "2025-10-31T15:20:45Z"
+         }
+       ],
+       "updated_at": "2025-10-31T15:20:45Z"
+     }
+     ```
+
+     离线脚本每次 upsert：先弹出现有记录（若超 20 条），再写入新数组，并更新 `updated_at`。
+
+   - Redis：脚本仅做 `PING` 验证，无需创建集合。约定以
+     `chat:{chat_id}:summary` 为键名，值类型为 list，内容与 Mongo `entries` 同构。
+
+   运行时准备与清理流程：
+   1) 当某个 chat 在 1 小时（可配置）内首次触发流程：
+        - 从 Mongo 读取对应文档（若存在），取最近 20 条写入 Redis list，同时设定 `EXPIRE = 3600` 秒。
+   2) 每次追加新的 `userChatContextSummary`：
+        - `LPUSH` 写入 redis（保持最新在前）。
+        - `LTRIM 0 19` 保持 20 条上限。
+        - 立即 `EXPIRE` 重置倒计时，确保活跃对话不过早过期。
+        - 将列表同步回 Mongo（见上方 upsert 逻辑）。
+   3) 若 1 小时内无互动，redis key 自然过期；下次对话重新从 Mongo 载入，避免在项目启动时加载所有历史。
+
+   Guard agent 与其它后台任务可以重复使用同一 redis/mongo 连接（通过共享的连接池封装），确保
+   读写策略一致。
