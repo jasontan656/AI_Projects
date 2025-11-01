@@ -1,688 +1,372 @@
 metadata:
-  doc_id: 30
-  doc_commit: 28a8d3a
-  prompt_version: idx-v2
-  generated-from: 30@28a8d3a
   locale: en-US
-  seed: 20251027
-  categories:
-    - system
-    - triage
-    - summarize
-    - compose
-    - clarify
-    - toolcall
-    - refusal
-    - welcome
-    - help
-    - rate_limit
-    - ops_alert
-    - dev_alert
-  mapping:
-    system:
-      - agent_triage_system
-    triage:
-      - agent_triage_system
-    summarize:
-      - telegram_history_summarize
-    compose:
-      - agency_compose_body
-      - agency_compose_header
-      - agent_consult_compose
-      - agent_plan_executor
-      - pricing_summary
-    clarify:
-      - telegram_user_clarify
-    toolcall:
-      - telegram_toolcall_error
-    refusal:
-      - agent_refusal_policy
-      - core_schema_violation
-    welcome:
-      - telegram_welcome
-    help:
-      - telegram_prompt_missing
-    rate_limit:
-      - budget_alert
-    ops_alert:
-      - agency_pricing_alert
-      - aiogram_bootstrap_alert
-      - aiogram_bootstrap_status
-      - asset_cleanup_summary
-      - asset_guard_violation
-      - kb_index_missing_agency
-      - kb_index_ready
-      - kb_pipeline_failed
-      - kb_pipeline_success
-      - memory_checksum_mismatch
-      - memory_loader_alert
-      - memory_snapshot_ready
-      - plan_autodiscovery_status
-      - pricing_error
-      - telegram_streaming_error
-      - webhook_register_retry
-      - webhook_signature_fail
-    dev_alert:
-      - core_envelope_attachment
-      - core_envelope_gap
-      - core_schema_alert
-      - core_schema_violation
-      - entry_layout_violation
-      - entry_missing_file
-      - kb_routing_conflict
-      - layout_missing_dir
-      - layout_owner_mismatch
-      - plan_alignment_gap
-      - plan_scope_ack
-      - selector_match_debug
-      - slot_missing
-      - slot_validation_error
-
-aiogram_bootstrap_alert:
-  locale: en-US
-  audience: devops
-  text: "aiogram bootstrap failed at step {step}. request_id={request_id}."
-  variables:
-    step:
-      type: string
-      required: true
-      default: "set_webhook"
-    request_id:
-      type: string
-      required: true
-      default: ""
-telegram_toolcall_error:
-  locale: en-US
-  audience: ops
-  text: "Toolcall {tool} failed: {error}, request={request_id}"
-  variables:
-    tool:
-      type: string
-      required: true
-      default: ""
-    error:
-      type: string
-      required: true
-      default: ""
-    request_id:
-      type: string
-      required: true
-      default: ""
-budget_alert:
-  locale: en-US
-  audience: ops
-  text: "Token budget exceeded at {stage}: tokens={tokens} > {threshold}"
-  variables:
-    stage:
-      type: string
-      required: true
-      default: "compose"
-    tokens:
-      type: integer
-      required: true
-      default: 0
-    threshold:
-      type: integer
-      required: true
-      default: 3000
-agency_pricing_alert:
-  locale: en-US
-  audience: ops
-  text: "Pricing calculation failed for {agency_id}: {error}"
-  variables:
-    agency_id:
-      type: string
-      required: true
-      default: "unknown"
-    error:
-      type: string
-      required: true
-      default: ""
-pricing_error:
-  locale: en-US
-  audience: ops
-  text: "Pricing calc failed: {error}"
-  variables:
-    error:
-      type: string
-      required: true
-      default: ""
+  audience: internal
+  version: "2025-11-01"
+  notes: "Bootstrap prompts for UnifiedCS Telegram pipeline – dev phase"
 
 agent_triage_system:
   locale: en-US
-  audience: llm
-  text: "You are the Index Agent triage core. Determine user intent for {core_envelope.user_message} using candidates {intent_candidates} and select a domain profile from {domain_profiles}."
+  audience: orchestration
+  text: |-
+    You are the triage controller for UnifiedCS, a concierge that assists with Philippine government services.
+    Analyse the incoming Telegram message and prepare guidance for downstream routing.
+
+    Incoming message:
+    {user_message}
+
+    Intent candidates to evaluate: {intent_candidates}
+    Domain profiles in scope: {domain_profiles}
+
+    Produce a concise analysis that helps the reasoning pipeline decide whether to continue, escalate, or refuse.
   variables:
-    core_envelope.user_message:
-      type: string
+    user_message:
       required: true
-      default: ""
     intent_candidates:
-      type: list
       required: true
-      default:
-        - consult
-        - plan
-        - operation
     domain_profiles:
-      type: list
       required: true
-      default: []
 
-agent_plan_executor:
+agent_consult_compose:
   locale: en-US
-  audience: llm
-  text: "Given context {plan_context} and constraints {constraints}, produce a numbered plan with rationale."
-  variables:
-    plan_context:
-      type: dict
-      required: true
-      default: {}
-    constraints:
-      type: list
-      required: true
-      default: []
+  audience: assistant
+  text: |-
+    Compose the next assistant turn for UnifiedCS (Philippine government service concierge).
+    Maintain the specified tone: {tone}
+    Stay within the token budget: {token_budget}
 
-memory_snapshot_ready:
-  locale: en-US
-  audience: engineering
-  text: "Memory snapshot ready at {snapshot_path}"
-  variables:
-    snapshot_path:
-      type: string
-      required: true
-      default: ""
-    checksum:
-      type: string
-      required: false
-      default: ""
+    Context snippets (most recent first):
+    {context_snippets}
 
-kb_pipeline_failed:
-  locale: en-US
-  audience: ops
-  text: "KB pipeline step {step} failed: {reason}"
+    Provide a helpful, policy-compliant reply that nudges the user toward a clear, actionable government-service question.
   variables:
-    step:
-      type: string
+    tone:
       required: true
-      default: ""
-    reason:
-      type: string
+    token_budget:
       required: true
-      default: ""
-
-asset_cleanup_summary:
-  locale: en-US
-  audience: maintainer
-  text: "Removed {dir} at {timestamp} commit {commit}"
-  variables:
-    dir:
-      type: string
+    context_snippets:
       required: true
-      default: ""
-    timestamp:
-      type: string
-      required: true
-      default: ""
-    commit:
-      type: string
-      required: true
-      default: ""
-
-
-core_schema_alert:
-  locale: en-US
-  audience: ops
-  text: "Schema mismatch on {channel}: {field}"
-  variables:
-    channel:
-      type: string
-      required: true
-      default: "telegram"
-    field:
-      type: string
-      required: true
-      default: ""
-
-core_envelope_attachment:
-  locale: en-US
-  audience: ops
-  text: "CoreEnvelope attachment validation failed for {kind}"
-  variables:
-    kind:
-      type: string
-      required: true
-      default: ""
-
-telegram_streaming_error:
-  locale: en-US
-  audience: ops
-  text: "Streaming failure detected for request {request_id}"
-  variables:
-    request_id:
-      type: string
-      required: true
-      default: ""
-
-telegram_payload_too_long:
-  locale: en-US
-  audience: user
-  text: "Input exceeded 4096 characters. Preview: {excerpt}"
-  variables:
-    excerpt:
-      type: string
-      required: true
-      default: ""
-
-telegram_attachment_not_supported:
-  locale: en-US
-  audience: user
-  text: "Attachments of type {kind} are not supported yet. Please resend as text."
-  variables:
-    kind:
-      type: string
-      required: true
-      default: "file"
-
-webhook_register_retry:
-  locale: en-US
-  audience: devops
-  text: "Webhook registration retry step {retry}"
-  variables:
-    retry:
-      type: integer
-      required: true
-      default: 1
-
-entry_layout_violation:
-  locale: en-US
-  audience: maintainer
-  text: "Layout mismatch at {component}"
-  variables:
-    component:
-      type: string
-      required: true
-      default: ""
-
-selector_match_debug:
-  locale: en-US
-  audience: engineering
-  text: "Selector match trace: stage={stage}, slot={slot}, operator={operator}, score={score}"
-  variables:
-    stage:
-      type: string
-      required: true
-      default: ""
-    slot:
-      type: string
-      required: true
-      default: ""
-    operator:
-      type: string
-      required: true
-      default: "equals"
-    score:
-      type: number
-      required: true
-      default: 0
-
-layout_missing_dir:
-  locale: en-US
-  audience: dev
-  text: "Directory missing {dir}"
-  variables:
-    dir:
-      type: string
-      required: true
-      default: ""
-
-layout_owner_mismatch:
-  locale: en-US
-  audience: ops
-  text: "Ownership mismatch {component}"
-  variables:
-    component:
-      type: string
-      required: true
-      default: ""
-
-kb_routing_conflict:
-  locale: en-US
-  audience: arch
-  text: "Routing conflict between {agency_a} and {agency_b} pattern {pattern}"
-  variables:
-    agency_a:
-      type: string
-      required: true
-      default: ""
-    agency_b:
-      type: string
-      required: true
-      default: ""
-    pattern:
-      type: string
-      required: true
-      default: ""
-
-plan_alignment_gap:
-  locale: en-US
-  audience: arch
-  text: "Plan alignment gap detected: section {section} missing required block {block}"
-  variables:
-    section:
-      type: string
-      required: true
-      default: ""
-    block:
-      type: string
-      required: true
-      default: ""
-
-memory_loader_alert:
-  locale: en-US
-  audience: ops
-  text: "MemoryLoader detected {issue} for agency {agency_id}"
-  variables:
-    issue:
-      type: string
-      required: true
-      default: "unknown_issue"
-    agency_id:
-      type: string
-      required: true
-      default: "*"
-
-memory_checksum_mismatch:
-  locale: en-US
-  audience: devops
-  text: "Checksum mismatch for {path}, expected {expected}, got {actual}"
-  variables:
-    path:
-      type: string
-      required: true
-      default: ""
-    expected:
-      type: string
-      required: true
-      default: ""
-    actual:
-      type: string
-      required: true
-      default: ""
 
 telegram_history_summarize:
   locale: en-US
-  audience: llm
-  text: "Summarize the following history into bullet points under {limit_tokens} tokens: {history_chunks}"
+  audience: assistant
+  text: |-
+    Summarise the recent Telegram history for UnifiedCS.
+    Token limit for the summary: {limit_tokens}
+
+    History excerpts:
+    {history_chunks}
+
+    Output a short bullet list capturing intent, context, and open questions that matter for the next response.
   variables:
     history_chunks:
-      type: list
       required: true
-      default: []
     limit_tokens:
-      type: integer
       required: true
-      default: 200
+
+agent_refusal_policy:
+  locale: en-US
+  audience: assistant
+  text: |-
+    Inform the user that the request cannot be processed because it violates {rule}.
+    Apologise briefly, restate the allowed scope (Philippine government services), and direct the user to contact {contact} if they need human help.
+  variables:
+    rule:
+      required: true
+    contact:
+      required: true
+
+telegram_prompt_missing:
+  locale: en-US
+  audience: assistant
+  text: |-
+    I’m here to help with Philippine government services. Could you describe the service, document, or procedure you need help with so I can guide you properly?
+  variables: {}
+
+webhook_signature_fail:
+  locale: en-US
+  audience: operator
+  text: |-
+    UnifiedCS could not validate the webhook signature for request {request_id}. Reject the request and log this identifier for follow-up diagnostics.
+  variables:
+    request_id:
+      required: true
 
 agency_compose_header:
   locale: en-US
-  audience: llm
-  text: "### {agency_display_name} | {domain_name}"
+  audience: assistant
+  text: |-
+    Prepare the heading for a UnifiedCS response about a Philippine government service.
+    Mention the agency and the core topic succinctly so the user knows the scope immediately.
   variables:
-    agency_display_name:
-      type: string
-      required: true
+    agency_name:
+      required: false
       default: ""
-    domain_name:
-      type: string
-      required: true
+    topic:
+      required: false
       default: ""
 
 agency_compose_body:
   locale: en-US
-  audience: llm
-  text: "{body_template}"
-  variables:
-    body_template:
-      type: string
-      required: true
-      default: ""
-    slot_values:
-      type: list
-      required: false
-      default: []
+  audience: assistant
+  text: |-
+    Draft the detailed body for a UnifiedCS service explanation.
+    Break down eligibility, required documents, submission location, and follow-up reminders in plain English.
+    Keep the focus on Philippine government services and cite policies when possible.
+  variables: {}
 
-agent_consult_compose:
+agent_plan_executor:
   locale: en-US
-  audience: llm
-  text: "You are a Philippines immigration consultant. Using the knowledge base excerpts in {context_snippets}, craft a response within {token_budget} tokens. Confirm the service scope and eligibility, list required documents, outline key steps, fees or penalties, and highlight critical reminders. Close with how our team will assist next. Keep the tone {tone} and do not invent unsupported facts."
-  variables:
-    tone:
-      type: string
-      required: false
-      default: "professional and supportive"
-    token_budget:
-      type: integer
-      required: true
-      default: 300
-    context_snippets:
-      type: list
-      required: true
-      default: []
+  audience: assistant
+  text: |-
+    Translate the current service plan into actionable next steps for the user.
+    Highlight sequencing, dependencies, and any deadlines or agency appointments.
+  variables: {}
 
 pricing_summary:
   locale: en-US
-  audience: llm
-  text: "Pricing summary: base {base_fee}, usage {units}, total {total}"
-  variables:
-    base_fee:
-      type: number
-      required: true
-      default: 0
-    units:
-      type: number
-      required: true
-      default: 0
-    total:
-      type: number
-      required: true
-      default: 0
+  audience: assistant
+  text: |-
+    Summarise the latest pricing data we hold for the requested service.
+    Call out official fees, accepted payment channels, and known surcharge scenarios.
+  variables: {}
 
 telegram_user_clarify:
   locale: en-US
-  audience: user
-  text: "To match you with the right Bureau of Immigration workflow, please share:\n{checklist}\nExample: {sample}\nKindly address each point so we can prepare the correct guidance."
-  variables:
-    checklist:
-      type: string
-      required: true
-      default: ""
-    sample:
-      type: string
-      required: false
-      default: ""
+  audience: assistant
+  text: |-
+    I want to make sure I understood your request. Could you clarify the Philippine government service or document you are working on, and tell me where you are in the process?
+  variables: {}
 
-agent_refusal_policy:
+telegram_toolcall_error:
   locale: en-US
-  audience: llm
-  text: "Request refused due to {rule}. For assistance contact {contact}."
-  variables:
-    rule:
-      type: string
-      required: true
-      default: "policy_violation"
-    contact:
-      type: string
-      required: false
-      default: "support@example.com"
-
-core_schema_violation:
-  locale: en-US
-  audience: dev
-  text: "CoreEnvelope validation failed: {error}"
-  variables:
-    error:
-      type: string
-      required: true
-      default: ""
+  audience: assistant
+  text: |-
+    I tried to look up the requested information but the internal tool returned an error. Please wait a moment and resend your question, or specify the government service again so I can retry.
+  variables: {}
 
 telegram_welcome:
   locale: en-US
-  audience: user
-  text: "Welcome to {bot_name}! Ask a question or type /help to get started."
-  variables:
-    bot_name:
-      type: string
-      required: true
-      default: "KobeBot"
+  audience: assistant
+  text: |-
+    Hello! I’m UnifiedCS, here to guide you through Philippine government services. Describe the permit, visa, or document you’re working on and I’ll help you figure out the next steps.
+  variables: {}
 
-telegram_prompt_missing:
+budget_alert:
   locale: en-US
-  audience: user
-  text: "Please send a text message."
-  variables:
-    none:
-      type: string
-      required: false
-      default: ""
+  audience: ops
+  text: |-
+    UnifiedCS hit the configured token budget threshold. Pause non-critical actions, review active conversations, and consider scaling limits.
+  variables: {}
+
+agency_pricing_alert:
+  locale: en-US
+  audience: ops
+  text: |-
+    Pricing feed for a referenced agency is missing or outdated. Trigger a pricing refresh workflow before sending cost-sensitive answers.
+  variables: {}
+
+aiogram_bootstrap_alert:
+  locale: en-US
+  audience: ops
+  text: |-
+    Aiogram bootstrap reported an error during startup. Inspect the webhook registration and environment variables immediately.
+  variables: {}
 
 aiogram_bootstrap_status:
   locale: en-US
   audience: ops
-  text: "aiogram status {status}, router={router_name}, request_id={request_id}"
-  variables:
-    status:
-      type: string
-      required: true
-      default: "pending"
-    router_name:
-      type: string
-      required: true
-      default: "telegram_main_router"
-    request_id:
-      type: string
-      required: true
-      default: ""
+  text: |-
+    Aiogram bootstrap completed successfully. Telegram handlers are ready to receive updates.
+  variables: {}
 
-kb_pipeline_success:
-  locale: en-US
-  audience: engineering
-  text: "KB pipeline completed. Snapshot={snapshot_path}"
-  variables:
-    snapshot_path:
-      type: string
-      required: true
-      default: ""
-
-plan_autodiscovery_status:
-  locale: en-US
-  audience: engineering
-  text: "Auto-discovery complete. Existing dirs={existing_dirs}, missing dirs={missing_dirs}, repo={repo_root}"
-  variables:
-    existing_dirs:
-      type: list
-      required: true
-      default: []
-    missing_dirs:
-      type: list
-      required: true
-      default: []
-    repo_root:
-      type: string
-      required: true
-      default: ""
-
-kb_index_missing_agency:
-  locale: en-US
-  audience: kb-admin
-  text: "Agency {agency_id} not registered in KnowledgeBase_index.yaml"
-  variables:
-    agency_id:
-      type: string
-      required: true
-      default: ""
-
-webhook_signature_fail:
+asset_cleanup_summary:
   locale: en-US
   audience: ops
-  text: "Webhook signature verification failed for request {request_id}"
-  variables:
-    request_id:
-      type: string
-      required: true
-      default: ""
-
-kb_index_ready:
-  locale: en-US
-  audience: engineering
-  text: "KB index ready. Agencies={agency_count}"
-  variables:
-    agency_count:
-      type: integer
-      required: true
-      default: 0
+  text: |-
+    Asset cleanup completed. Summarise which cached artifacts were removed and whether any manual follow-up is required.
+  variables: {}
 
 asset_guard_violation:
   locale: en-US
-  audience: devops
-  text: "Detected legacy asset path {path}; release blocked."
-  variables:
-    path:
-      type: string
-      required: true
-      default: ""
+  audience: ops
+  text: |-
+    Guardrails flagged a prohibited asset state. Review the violation, reset the asset, and document corrective actions.
+  variables: {}
 
-slot_missing:
+kb_index_missing_agency:
   locale: en-US
-  audience: engineering
-  text: "Slot {slot} missing from agency index."
-  variables:
-    slot:
-      type: string
-      required: true
-      default: ""
+  audience: ops
+  text: |-
+    KnowledgeBase index lookup did not contain a referenced agency. Add the agency index or adjust routing configuration.
+  variables: {}
 
-entry_missing_file:
+kb_index_ready:
   locale: en-US
-  audience: devops
-  text: "Entry file missing: {path}"
+  audience: ops
+  text: |-
+    KnowledgeBase index build finished and is ready for use in UnifiedCS routing.
+  variables: {}
+
+kb_pipeline_failed:
+  locale: en-US
+  audience: ops
+  text: |-
+    KnowledgeBase pipeline failed. Inspect logs, fix the underlying issue, and rerun the pipeline before users hit stale content.
+  variables: {}
+
+kb_pipeline_success:
+  locale: en-US
+  audience: ops
+  text: |-
+    KnowledgeBase pipeline succeeded. Newly ingested documents are live.
+  variables: {}
+
+memory_checksum_mismatch:
+  locale: en-US
+  audience: ops
+  text: |-
+    Memory store checksum mismatch detected. Trigger a snapshot restore or investigation before continuing sessions.
+  variables: {}
+
+memory_loader_alert:
+  locale: en-US
+  audience: ops
+  text: |-
+    Memory loader reported an operational warning. Inspect ingestion logs and confirm continuity of the conversation memory service.
+  variables: {}
+
+memory_snapshot_ready:
+  locale: en-US
+  audience: ops
+  text: |-
+    Conversation memory snapshot is ready. Archive or deploy according to the maintenance plan.
+  variables: {}
+
+plan_autodiscovery_status:
+  locale: en-US
+  audience: ops
+  text: |-
+    Autodiscovery routine for service plans finished. Review generated plans and annotate any irregularities.
+  variables: {}
+
+pricing_error:
+  locale: en-US
+  audience: ops
+  text: |-
+    A pricing computation failed. Verify the upstream rate tables and restart the pricing aggregator if needed.
+  variables: {}
+
+telegram_streaming_error:
+  locale: en-US
+  audience: ops
+  text: |-
+    Telegram streaming encountered an unexpected error. Check webhook delivery status and the aiogram worker logs.
+  variables: {}
+
+webhook_register_retry:
+  locale: en-US
+  audience: ops
+  text: |-
+    Webhook registration failed and will be retried. Monitor the retry status and verify the Telegram token configuration.
+  variables: {}
+
+core_schema_violation:
+  locale: en-US
+  audience: operator
+  text: |-
+    The inbound Telegram update failed schema validation: {error}
+    Reject the payload, log the error, and escalate if the pattern repeats.
   variables:
-    path:
-      type: string
+    error:
       required: true
-      default: ""
+
+core_envelope_attachment:
+  locale: en-US
+  audience: dev
+  text: |-
+    Attached the raw core envelope for debugging. Review payload fidelity before shipping changes.
+  variables: {}
 
 core_envelope_gap:
   locale: en-US
   audience: dev
-  text: "CoreEnvelope missing field {field}"
-  variables:
-    field:
-      type: string
-      required: true
-      default: ""
+  text: |-
+    Detected a missing field in the core envelope. Document the gap and patch the upstream generator.
+  variables: {}
 
-slot_validation_error:
+core_schema_alert:
   locale: en-US
-  audience: engineering
-  text: "Slot {slot} validation failed: {reason}"
-  variables:
-    slot:
-      type: string
-      required: true
-      default: ""
-    reason:
-      type: string
-      required: true
-      default: ""
+  audience: dev
+  text: |-
+    Core schema drift detected. Update schema definitions or reconcile contract expectations immediately.
+  variables: {}
+
+entry_layout_violation:
+  locale: en-US
+  audience: dev
+  text: |-
+    An entry layout violated repository conventions. Cross-check WorkPlan guidelines and repair the layout.
+  variables: {}
+
+entry_missing_file:
+  locale: en-US
+  audience: dev
+  text: |-
+    A required file is missing from the entry bundle. Restore the file or update manifests before deployment.
+  variables: {}
+
+kb_routing_conflict:
+  locale: en-US
+  audience: dev
+  text: |-
+    KnowledgeBase routing produced conflicting agency matches. Resolve the overlap to prevent misdirected answers.
+  variables: {}
+
+layout_missing_dir:
+  locale: en-US
+  audience: dev
+  text: |-
+    Expected directory absent in layout scaffolding. Create the directory to satisfy WorkPlan constraints.
+  variables: {}
+
+layout_owner_mismatch:
+  locale: en-US
+  audience: dev
+  text: |-
+    Directory ownership labels mismatch WorkPlan annotations. Align metadata before publishing artifacts.
+  variables: {}
+
+plan_alignment_gap:
+  locale: en-US
+  audience: dev
+  text: |-
+    Detected a gap between documented plan and implementation. Record the delta and schedule remediation.
+  variables: {}
 
 plan_scope_ack:
   locale: en-US
-  audience: engineering
-  text: "This plan focuses on sections {scope_sections}; defer other integrations."
-  variables:
-    scope_sections:
-      type: list
-      required: true
-      default: []
+  audience: dev
+  text: |-
+    Scope acknowledgement recorded. Continue execution but notify stakeholders if boundaries change.
+  variables: {}
 
+selector_match_debug:
+  locale: en-US
+  audience: dev
+  text: |-
+    Selector debug information: verify the matcher logic and keep this entry for audit trails.
+  variables: {}
+
+slot_missing:
+  locale: en-US
+  audience: dev
+  text: |-
+    A required slot is missing in the pipeline configuration. Fill the slot or update the schema.
+  variables: {}
+
+slot_validation_error:
+  locale: en-US
+  audience: dev
+  text: |-
+    Slot validation failed. Inspect slot definitions and adjust field mappings accordingly.
+  variables: {}

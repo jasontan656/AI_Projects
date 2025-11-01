@@ -28,42 +28,8 @@ from TelegramAPI.adapters.response import core_to_telegram_response
 from TelegramAPI.adapters.telegram import append_streaming_buffer, telegram_update_to_core
 from SharedUtility.core.context import ContextBridge
 from SharedUtility.core.prompt_registry import PROMPT_REGISTRY
-from OpenaiAgents.UnifiedCS.reporting import ConsoleReporter, NodeSnapshot, SessionPayload
-
 router = Router(name="telegram_message_router")
 log = logging.getLogger(__name__)
-_CONSOLE_REPORTER = ConsoleReporter.from_default(base_path=Path(__file__).resolve().parents[2])
-
-
-def _render_console_session(
-    *,
-    request_id: str,
-    convo_id: str,
-    channel: str,
-    user_message: str,
-    history_preview: list[str],
-    bridge_meta: Mapping[str, Any],
-    telemetry: Mapping[str, Any],
-) -> None:
-    debug_nodes_payload = bridge_meta.get("debug_nodes") or []
-    node_snapshots = []
-    for item in debug_nodes_payload:
-        if isinstance(item, Mapping):
-            node_snapshots.append(NodeSnapshot.from_mapping(item))
-    payload = SessionPayload(
-        request_id=request_id,
-        convo_id=convo_id,
-        channel=channel,
-        user_message=user_message,
-        history_preview=tuple(history_preview),
-        bridge_mode=str(bridge_meta.get("mode", "")),
-        bridge_chunks=tuple(str(chunk) for chunk in bridge_meta.get("chunks", [])),
-        tokens_usage=int(bridge_meta.get("tokens_usage") or 0),
-        telemetry=dict(telemetry),
-        node_logs=tuple(node_snapshots),
-    )
-    _CONSOLE_REPORTER.render_session(payload)
-
 
 class ProcessUpdateResult(TypedDict, total=False):
     status: Literal["handled", "ignored"]
@@ -221,15 +187,6 @@ async def process_update(message: Message, policy: dict[str, Any]) -> ProcessUpd
             bridge_output = await behavior_agents_bridge(agent_request)
             bridge_meta = bridge_output["agent_bridge_result"]
             bridge_telemetry = bridge_output.get("telemetry", {})
-            _render_console_session(
-                request_id=request_id,
-                convo_id=str(agent_request.get("convo_id") or ""),
-                channel="telegram",
-                user_message=user_text,
-                history_preview=[chunk for chunk in history_chunks if chunk],
-                bridge_meta=bridge_meta,
-                telemetry=bridge_telemetry,
-            )
             bridge_chunks = bridge_meta.get("chunks") or [compose_text]
             outbound = behavior_telegram_outbound(bridge_chunks, policy)
             response_text = outbound["text"] or compose_text
@@ -562,6 +519,8 @@ async def handle_message(message: Message, bot: Bot) -> None:
         "telegram.handler.completed %s",
         json.dumps(completed_payload, ensure_ascii=False),
     )
+
+
 
 
 
