@@ -24,6 +24,7 @@ from SharedUtility.Contracts.behavior_contract import (
     behavior_webhook_startup,
 )
 from SharedUtility.Contracts import toolcalls
+from SharedUtility.Config.paths import get_log_root
 from SharedUtility.core.context import ContextBridge
 
 DOC_ID = "02"
@@ -97,8 +98,8 @@ class _RichAlertHandler(logging.Handler):
 
 
 def _configure_logging() -> None:
-    # Logs are now under SharedUtility/logs after repo consolidation
-    log_dir = Path(__file__).resolve().parent / "SharedUtility" / "logs"
+    # Logs for every component are consolidated under the shared root
+    log_dir = get_log_root()
     log_dir.mkdir(parents=True, exist_ok=True)
 
     console_handlers: List[logging.Handler] = []

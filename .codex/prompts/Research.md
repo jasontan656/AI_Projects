@@ -6,7 +6,7 @@ This is also general when AI assisted development will cause inconsistent or wei
 
 You will always not pause / stop untill you find a stone solid answer or conclusion for user's concern. which matches current repo situation with evidence found from external source and internal source.
 
-- read newest log from kobe/logs (isuse recap)
+- read newest log from SharedUtility/logs/unifiedcs.console.log (isuse recap)
 - your Knowleage cut off is 2024. And today is 2025 oct 30th. (reminder of your capability)
 - analyze issue from design / business prespective. DO NOT FOCUS ON BUG ITSELF (reminder of DO NOT BE SHORT SIGHTED)
 - use context7 (learn the newest technology to avoid misleading user. Especially avoid creating what the stacks or tech always available to use.)
@@ -14,6 +14,6 @@ You will always not pause / stop untill you find a stone solid answer or conclus
 - 项目为1程序员+AI开发，禁止使用git ( GIT is specified for user use only)
 - 禁止脑补，除非开发人员显示要求，否则clarifify。 (Humen cant cover everything in one round of communication just like you as well. always be remindful but disregard if user ignroes your remind.)
 - project is still on dev phase,codes must be removed safely instead of 向后兼容. Project pects codes to be removed and pop more bugs to see the other potiential design issue to avoid future "secret bombs"
-
+- use path : "D:\AI_Projects\Kobe\AI_WorkSpace" as your only temp file storage and work logs. You may delete / create / modify any existing new file of that folder, its all yours to use.
 
 User_Prompt : "$ARGUMENTS"  # You must consider user prompt if there is any inputed user prompt.

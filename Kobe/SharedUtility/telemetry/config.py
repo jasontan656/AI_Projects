@@ -8,14 +8,7 @@ from typing import Any, Dict
 
 import yaml
 
-
-def _repo_root() -> Path:
-    current = Path(__file__).resolve()
-    for parent in current.parents:
-        if (parent / "SharedUtility").exists() and (parent / "OpenaiAgents").exists():
-            return parent
-    # Fallback to the immediate project directory (Kobe)
-    return current.parents[2]
+from SharedUtility.Config.paths import get_log_root, get_repo_root
 
 
 def _default_config() -> Dict[str, Any]:
@@ -25,6 +18,12 @@ def _default_config() -> Dict[str, Any]:
             "iteration_counter": True,
             "console": {
                 "handler": "rich",
+                "force_terminal": True,
+                "width": 120,
+                "highlight": False,
+                "markup": True,
+                "soft_wrap": True,
+                "legacy_windows": False,
                 "theme": "default",
                 "tree": True,
                 "prompt_preview_chars": 280,
@@ -34,10 +33,11 @@ def _default_config() -> Dict[str, Any]:
                 "highlight_token_threshold": 4000,
                 "show_cost": True,
                 "show_annotations": True,
+                "mirror_path": str((get_log_root() / "unifiedcs.console.log").resolve()),
             },
             "jsonl": {
                 "enabled": True,
-                "path": "SharedUtility/logs/unifiedcs.telemetry.jsonl",
+                "path": str((get_log_root() / "unifiedcs.telemetry.jsonl").resolve()),
                 "ensure_dir": True,
             },
             "redact": {
@@ -77,7 +77,7 @@ def load_telemetry_config() -> Dict[str, Any]:
     """Load telemetry configuration, merging defaults with YAML overrides."""
 
     config = _default_config()
-    repo_root = _repo_root()
+    repo_root = get_repo_root()
 
     config_path_env = os.getenv("TELEMETRY_CONFIG")
     if config_path_env:
@@ -96,7 +96,22 @@ def load_telemetry_config() -> Dict[str, Any]:
     json_cfg = telemetry_cfg.get("jsonl", {})
     path_str = json_cfg.get("path")
     if path_str:
-        json_cfg["path"] = str((repo_root / path_str).resolve())
+        json_path = Path(path_str)
+        if not json_path.is_absolute():
+            json_path = (repo_root / json_path).resolve()
+        json_cfg["path"] = str(json_path)
+    else:
+        json_cfg["path"] = str((get_log_root() / "unifiedcs.telemetry.jsonl").resolve())
+
+    console_cfg = telemetry_cfg.get("console", {})
+    mirror_path = console_cfg.get("mirror_path")
+    if mirror_path:
+        mirror_obj = Path(str(mirror_path))
+        if not mirror_obj.is_absolute():
+            mirror_obj = (repo_root / mirror_obj).resolve()
+        console_cfg["mirror_path"] = str(mirror_obj)
+    elif "mirror_path" not in console_cfg:
+        console_cfg["mirror_path"] = str((get_log_root() / "unifiedcs.console.log").resolve())
 
     config["telemetry"] = telemetry_cfg
     return config

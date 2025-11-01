@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import atexit
 import json
 import logging
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Mapping, Optional, Tuple
+from typing import Any, Dict, Mapping, Optional, TextIO, Tuple
 
 from rich import box
 from rich.console import Console
@@ -47,7 +48,57 @@ def _preview(value: Optional[str], length: int) -> str:
 class RichTelemetryConsole:
     def __init__(self, console_cfg: Mapping[str, Any]) -> None:
         self._console_cfg = console_cfg
-        self._console = Console()
+        self._logger = logging.getLogger("UnifiedCS.telemetry.console")
+
+        mirror_path_cfg = console_cfg.get("mirror_path")
+        self._mirror_file: Optional[TextIO] = None
+        self._mirror_path: Optional[Path] = None
+        if mirror_path_cfg:
+            mirror_path_obj = Path(str(mirror_path_cfg))
+            try:
+                mirror_path_obj.parent.mkdir(parents=True, exist_ok=True)
+                self._mirror_file = mirror_path_obj.open("a", encoding="utf-8", buffering=1)
+                atexit.register(self._mirror_file.close)
+                self._mirror_path = mirror_path_obj
+            except Exception:
+                self._logger.exception(
+                    "telemetry.console_mirror_open_failed",
+                    extra={"path": str(mirror_path_cfg)},
+                )
+                self._mirror_file = None
+                self._mirror_path = None
+                mirror_path_obj = None
+
+        console_kwargs: Dict[str, Any] = {
+            "force_terminal": bool(console_cfg.get("force_terminal", True)),
+            "width": int(console_cfg.get("width", 120)),
+            "highlight": bool(console_cfg.get("highlight", False)),
+            "markup": bool(console_cfg.get("markup", True)),
+            "soft_wrap": bool(console_cfg.get("soft_wrap", True)),
+        }
+        color_system = console_cfg.get("color_system")
+        if color_system:
+            console_kwargs["color_system"] = color_system
+        style = console_cfg.get("style")
+        if style:
+            console_kwargs["style"] = style
+        legacy_windows = console_cfg.get("legacy_windows")
+        if legacy_windows is not None:
+            console_kwargs["legacy_windows"] = bool(legacy_windows)
+        self._console = Console(**console_kwargs)
+        self._mirror_console: Optional[Console] = None
+        if self._mirror_file is not None:
+            mirror_kwargs: Dict[str, Any] = {
+                "file": self._mirror_file,
+                "force_terminal": False,
+                "color_system": None,
+                "width": console_kwargs.get("width"),
+                "highlight": bool(console_cfg.get("highlight", False)),
+                "markup": bool(console_cfg.get("markup", True)),
+                "soft_wrap": bool(console_cfg.get("soft_wrap", True)),
+            }
+            self._mirror_console = Console(**mirror_kwargs)
+        self._console_encoding_failed = False
         self._prompt_preview_chars = int(console_cfg.get("prompt_preview_chars", 280))
         self._state_keys = list(console_cfg.get("state_snapshot_keys", []))
         self._latency_threshold = console_cfg.get("highlight_latency_threshold_ms", 1500)
@@ -58,11 +109,27 @@ class RichTelemetryConsole:
         self._show_state_snapshot_full = bool(console_cfg.get("show_state_snapshot_full", True))
         self._show_output_full = bool(console_cfg.get("show_output_full", True))
 
+    def _print(self, *args: Any, **kwargs: Any) -> None:
+        try:
+            self._console.print(*args, **kwargs)
+        except UnicodeEncodeError:
+            if not self._console_encoding_failed:
+                self._console_encoding_failed = True
+                self._logger.warning(
+                    "telemetry.console_encoding_unsupported",
+                    extra={"encoding": getattr(self._console.file, "encoding", None)},
+                )
+        except Exception:
+            self._logger.exception("telemetry.console_print_failed")
+        if self._mirror_console is not None:
+            self._mirror_console.print(*args, **kwargs)
+
+
     def render(self, event: Mapping[str, Any]) -> None:
         event_type = event.get("event_type")
         stage_id = event.get("stage_id") or "-"
         header = f"{event_type} • stage={stage_id} • request={event.get('request_id')}"
-        self._console.print(Rule(header))
+        self._print(Rule(header))
         if event_type == "StageStart":
             self._render_stage_start(event)
         elif event_type == "StageEnd":
@@ -76,8 +143,10 @@ class RichTelemetryConsole:
         elif event_type == "ErrorEvent":
             self._render_error(event)
         else:
-            self._console.print(Panel(json.dumps(event, ensure_ascii=False, indent=2)))
-        self._console.print()
+            self._print(Panel(json.dumps(event, ensure_ascii=False, indent=2)))
+        self._print()
+        self._flush_mirror()
+
 
     def _render_stage_start(self, event: Mapping[str, Any]) -> None:
         payload = event.get("payload", {})
@@ -101,20 +170,20 @@ class RichTelemetryConsole:
             if lines:
                 table.add_row("[bold green]State[/]", "\n".join(lines))
 
-        self._console.print(table)
+        self._print(table)
 
         if self._show_prompt_full and prompt:
             base_system = prompt.get("base_system")
             stage_prompt = prompt.get("stage_prompt")
             if base_system:
-                self._console.print(self._syntax_panel(base_system, "Base System Prompt"))
+                self._print(self._syntax_panel(base_system, "Base System Prompt"))
             if stage_prompt:
-                self._console.print(self._syntax_panel(stage_prompt, "Stage Prompt"))
+                self._print(self._syntax_panel(stage_prompt, "Stage Prompt"))
 
         if self._show_state_snapshot_full:
             formatted = json.dumps(payload.get("state_snapshot") or {}, ensure_ascii=False, indent=2)
             if formatted and formatted != "{}":
-                self._console.print(self._syntax_panel(formatted, "State Snapshot", language="json"))
+                self._print(self._syntax_panel(formatted, "State Snapshot", language="json"))
 
     def _render_stage_end(self, event: Mapping[str, Any]) -> None:
         payload = event.get("payload", {})
@@ -178,12 +247,12 @@ class RichTelemetryConsole:
         tree = Tree("StageEnd")
         tree.add(metrics)
         tree.add(body_table)
-        self._console.print(tree)
+        self._print(tree)
 
         if self._show_output_full:
             output_excerpt = result.get("output_excerpt")
             if output_excerpt:
-                self._console.print(self._syntax_panel(output_excerpt, "Stage Output", language="json"))
+                self._print(self._syntax_panel(output_excerpt, "Stage Output", language="json"))
 
     def _render_guard_event(self, event: Mapping[str, Any]) -> None:
         guard = event.get("payload", {}).get("guard", {})
@@ -193,7 +262,7 @@ class RichTelemetryConsole:
         table.add_row("action", str(guard.get("action")))
         message = guard.get("message")
         panel = Panel(table, title="GuardEvent", subtitle=message or "", border_style="red")
-        self._console.print(panel)
+        self._print(panel)
 
     def _render_cache_event(self, event: Mapping[str, Any]) -> None:
         cache = event.get("payload", {}).get("cache", {})
@@ -213,11 +282,11 @@ class RichTelemetryConsole:
             if len(summary_text) <= 200:
                 table.add_row("summary", summary_text)
                 summary_text = None
-            self._console.print(table)
+            self._print(table)
             if summary_text:
-                self._console.print(self._syntax_panel(summary_text, "Cache Summary", language="json"))
+                self._print(self._syntax_panel(summary_text, "Cache Summary", language="json"))
             return
-        self._console.print(table)
+        self._print(table)
 
     def _render_bridge_summary(self, event: Mapping[str, Any]) -> None:
         summary = event.get("payload", {}).get("summary", {})
@@ -232,7 +301,7 @@ class RichTelemetryConsole:
         chunks = summary.get("chunks") or []
         if chunks:
             table.add_row("chunks[0]", _preview(str(chunks[0]), 400))
-        self._console.print(table)
+        self._print(table)
 
     def _render_error(self, event: Mapping[str, Any]) -> None:
         payload = event.get("payload", {})
@@ -241,12 +310,15 @@ class RichTelemetryConsole:
             title="ErrorEvent",
             border_style="bold red",
         )
-        self._console.print(panel)
+        self._print(panel)
 
     def _syntax_panel(self, text: str, title: str, language: str = "markdown") -> Panel:
         syntax = Syntax(text, language, theme="monokai", line_numbers=False, word_wrap=True)
         return Panel(syntax, title=title, expand=False)
 
+    def _flush_mirror(self) -> None:
+        if self._mirror_file is not None:
+            self._mirror_file.flush()
 
 class TelemetryBus:
     """Central dispatcher for telemetry events."""
