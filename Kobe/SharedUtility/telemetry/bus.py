@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, Tuple
 
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.rule import Rule
@@ -196,13 +197,27 @@ class RichTelemetryConsole:
 
     def _render_cache_event(self, event: Mapping[str, Any]) -> None:
         cache = event.get("payload", {}).get("cache", {})
-        table = Table.grid()
-        table.add_row("op", cache.get("op", ""))
-        table.add_row("path", cache.get("path", ""))
+        table = Table(
+            title="CacheEvent",
+            show_header=False,
+            box=box.MINIMAL_DOUBLE_HEAD,
+            expand=True,
+        )
+        table.add_column("Field", style="bold blue")
+        table.add_column("Value", overflow="fold")
+        table.add_row("operation", str(cache.get("op", "")))
+        table.add_row("path", str(cache.get("path", "")))
         summary = cache.get("summary")
         if summary:
-            table.add_row("summary", json.dumps(summary, ensure_ascii=False))
-        self._console.print(Panel(table, title="CacheEvent", border_style="blue"))
+            summary_text = json.dumps(summary, ensure_ascii=False, indent=2)
+            if len(summary_text) <= 200:
+                table.add_row("summary", summary_text)
+                summary_text = None
+            self._console.print(table)
+            if summary_text:
+                self._console.print(self._syntax_panel(summary_text, "Cache Summary", language="json"))
+            return
+        self._console.print(table)
 
     def _render_bridge_summary(self, event: Mapping[str, Any]) -> None:
         summary = event.get("payload", {}).get("summary", {})

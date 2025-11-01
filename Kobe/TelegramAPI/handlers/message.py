@@ -13,7 +13,7 @@ from typing import Any, Awaitable, Callable, Dict, Literal, Mapping, Optional, T
 from pathlib import Path
 
 from aiogram import Bot, Router
-from aiogram.exceptions import TelegramNetworkError
+from aiogram.exceptions import TelegramForbiddenError, TelegramNetworkError
 from aiogram.types import Message
 
 from SharedUtility.Contracts import toolcalls
@@ -325,6 +325,18 @@ async def handle_message(message: Message, bot: Bot) -> None:
         while True:
             try:
                 return await operation()
+            except TelegramForbiddenError as exc:
+                metrics_state["telegram_forbidden_total"] = metrics_state.get("telegram_forbidden_total", 0) + 1
+                log.warning(
+                    "telegram.user_forbidden",
+                    extra={
+                        "request_id": request_id,
+                        "action": action,
+                        "chat_id": getattr(message.chat, "id", ""),
+                        "error": str(exc),
+                    },
+                )
+                raise
             except TelegramNetworkError as exc:
                 attempt += 1
                 log.warning(
@@ -442,6 +454,18 @@ async def handle_message(message: Message, bot: Bot) -> None:
                     "response_mode": mode,
                 },
             )
+    except TelegramForbiddenError as exc:
+        metrics_state["telegram_user_blocked"] = metrics_state.get("telegram_user_blocked", 0) + 1
+        log.warning(
+            "telegram.handler.forbidden",
+            extra={
+                "request_id": request_id,
+                "chat_id": getattr(message.chat, "id", ""),
+                "error": str(exc),
+                "mode": mode,
+            },
+        )
+        return
     except Exception as exc:
         if placeholder_id is not None:
             try:
