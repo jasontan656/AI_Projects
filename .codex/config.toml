@@ -22,8 +22,8 @@ sandbox_mode = "danger-full-access"
 windows_wsl_setup_acknowledged = true
 
 # ==================== 工具配置 ====================
-[tools]
-web_search = true  # 启用网络搜索工具
+[features]
+web_search_request = true  # 启用网络搜索工具
 
 # ==================== 沙箱网络配置 ====================
 [sandbox_workspace_write]

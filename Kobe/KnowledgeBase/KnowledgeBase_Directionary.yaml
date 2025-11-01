@@ -1,0 +1,27 @@
+version: v1
+description: BI KnowledgeBase section key mapping
+keys:
+  service_overview: High-level overview of the BI service entry. Provide a brief description
+    of what the service achieves and the core background context that helps the applicant
+    recognize its purpose.
+  applicability: Explains which scenarios trigger this service. Summarize the visa
+    classes, stay durations, or special situations that make the applicant eligible,
+    with concise examples.
+  preconditions: Lists required eligibility checks before BI accepts the case. Cover
+    must-have conditions and disqualifying factors so applicants can confirm readiness.
+  pre_required_documents: Structured checklist of documents needed for this service.
+    Identify mandatory items versus conditional ones, plus brief acquisition or formatting
+    notes.
+  process: Step-by-step outline of how the service proceeds once documents are ready.
+    Describe the key actions, responsible offices, and main deliverables for each
+    step.
+  pricing: Compiles the government fees and related charges tied to the service. Note
+    currency, indicative amounts, and the receipts or OPS entries where fees appear.
+  info_collection: Specifies the applicant and representative data points that must
+    be gathered during intake. Organize fields by category to streamline form-filling
+    and verification.
+  disclaimers: Highlights important warnings, format rules, and risk notices specific
+    to the service. Reinforces that on-site instructions and OPS prevail over published
+    guides.
+  faq: Collects frequently asked questions about the service and provides official
+    answers. Supports rapid customer responses and reduces repeated frontline inquiries.

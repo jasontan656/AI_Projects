@@ -1,0 +1,100 @@
+"""
+模块: TelegramBot.contract.adapter_contract
+目的: 定义 Telegram Adapter（入站/出站）的行为契约、函数骨架与 Prompts；
+统一映射到 CoreEnvelope 并桥接 Agents。
+"""
+
+from __future__ import annotations
+
+from typing import Protocol, TypedDict, Mapping, Any
+
+
+class MdEscaper(Protocol):
+    def escape(self, text: str) -> str: ...
+
+
+class TelegramApi(Protocol):
+    def send_message(self, chat_id: str, text: str) -> Mapping[str, Any]: ...
+    def edit_message(self, chat_id: str, message_id: str, text: str) -> Mapping[str, Any]: ...
+
+
+class TelegramAdapterResult(TypedDict):
+    core_envelope: Mapping[str, Any]
+    response_status: str  # ok|refused
+
+
+"""函数：call_md_escape —— Telegram MarkdownV2 转义（辅助）
+MUST：对特殊符号进行转义，避免渲染/风控失败。"""
+def call_md_escape(escaper: MdEscaper, text: str) -> str:
+    return escaper.escape(text)
+
+
+"""函数：call_send_placeholder —— 发送占位消息用于流式编辑（辅助）
+返回 message_id 用于后续编辑。"""
+def call_send_placeholder(api: TelegramApi, chat_id: str) -> Mapping[str, Any]:
+    return api.send_message(chat_id, "思考中…")  # strings.message_think 占位
+
+
+"""函数：behavior_telegram_inbound —— 入站映射
+MUST：
+  - 空文本 → 拒绝并触发 telegram_prompt_missing。
+  - convo_id = chat_id（私聊）或 chat_id:thread_id（群话题）。
+SHOULD：
+  - 回复 bot 的消息 → ext_flags.reply_to_bot=True。"""
+def behavior_telegram_inbound(update: Mapping[str, Any]) -> Mapping[str, Any]:
+    text = (update.get("text") or "").strip()
+    if not text:
+        return {"response_status": "refused", "prompt": "telegram_prompt_missing"}
+    chat = str(update.get("chat_id", ""))
+    thread = update.get("thread_id")
+    convo_id = chat if not thread else f"{chat}:{thread}"
+    core = {
+        "metadata": {
+            "chat_id": chat,
+            "convo_id": convo_id,
+            "channel": "telegram",
+            "language": update.get("language", "zh-CN"),
+        },
+        "version": "v1.1.0",
+    }
+    return TelegramAdapterResult(core_envelope=core, response_status="ok")
+
+
+"""函数：behavior_telegram_outbound —— 出站渲染
+MUST：
+  - 发送占位消息；每 1.5s 或 500 chars 编辑一次；异常 → 触发 telegram_streaming_error 并停止。"""
+def behavior_telegram_outbound(api: TelegramApi, chat_id: str, chunks: list[str]) -> str:
+    placeholder = call_send_placeholder(api, chat_id)
+    message_id = str(placeholder.get("message_id", ""))
+    for c in chunks:
+        api.edit_message(chat_id, message_id, c)
+    return message_id
+
+
+def _examples() -> None:
+    return None
+
+
+#@anchor:prompts_snapshot
+PROMPT_CATALOG: dict = {
+    "telegram_prompt_missing": {
+        "locale": "zh-CN",
+        "audience": "user",
+        "text": "请发送文本内容",
+    },
+    "telegram_streaming_error": {
+        "locale": "en-US",
+        "audience": "ops",
+        "text": "Streaming failed request {request_id}",
+    },
+}
+
+
+PROMPT_VARS_SCHEMA: dict = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "request_id": {"type": "string"},
+    },
+    "required": [],
+}

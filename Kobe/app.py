@@ -17,14 +17,14 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
-from Contracts.behavior_contract import (
+from SharedUtility.Contracts.behavior_contract import (
     BehaviorContract,
     behavior_memory_loader,
     behavior_top_entry,
     behavior_webhook_startup,
 )
-from Contracts import toolcalls
-from core.context import ContextBridge
+from SharedUtility.Contracts import toolcalls
+from SharedUtility.core.context import ContextBridge
 
 DOC_ID = "02"
 DOC_COMMIT = "28a8d3a"
@@ -97,7 +97,8 @@ class _RichAlertHandler(logging.Handler):
 
 
 def _configure_logging() -> None:
-    log_dir = Path(__file__).resolve().parent / "logs"
+    # Logs are now under SharedUtility/logs after repo consolidation
+    log_dir = Path(__file__).resolve().parent / "SharedUtility" / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
 
     console_handlers: List[logging.Handler] = []
@@ -159,8 +160,8 @@ def _configure_logging() -> None:
 
     component_logs = {
         "kobe.app": "kobe.app.debug.log",
-        "TelegramBot.routes": "telegram.routes.debug.log",
-        "TelegramBot.handlers": "telegram.handlers.debug.log",
+        "TelegramAPI.routes": "telegram.routes.debug.log",
+        "TelegramAPI.handlers": "telegram.handlers.debug.log",
         "Contracts.behavior_contract": "contracts.behavior.debug.log",
         "uvicorn.error": "uvicorn.error.debug.log",
         "uvicorn.access": "uvicorn.access.debug.log",
@@ -265,7 +266,7 @@ class SignatureVerifyMiddleware(BaseHTTPMiddleware):
                 metrics_state["webhook_signature_failures"] = metrics_state.get("webhook_signature_failures", 0) + 1
             prompt_text = None
             try:
-                from core.prompt_registry import PROMPT_REGISTRY
+                from SharedUtility.core.prompt_registry import PROMPT_REGISTRY
 
                 prompt_text = PROMPT_REGISTRY.render("webhook_signature_fail", request_id=request_id)
             except Exception:  # pragma: no cover - optional registry
@@ -297,17 +298,17 @@ except FileNotFoundError:
         "doc_id": DOC_ID,
         "version": "v1.1.0",
         "app_py": "{REPO_ROOT}/app.py",
-        "infra": ["{REPO_ROOT}/infra/fastapi_app.py"],
+        "infra": ["{REPO_ROOT}/SharedUtility/infra/fastapi_app.py"],
         "core": [
-            "{REPO_ROOT}/core/schema.py",
-            "{REPO_ROOT}/core/adapters.py",
-            "{REPO_ROOT}/core/context.py"
+            "{REPO_ROOT}/SharedUtility/core/schema.py",
+            "{REPO_ROOT}/SharedUtility/core/adapters.py",
+            "{REPO_ROOT}/SharedUtility/core/context.py"
         ],
         "telegrambot": [
-            "{REPO_ROOT}/TelegramBot/runtime.py",
-            "{REPO_ROOT}/TelegramBot/routes.py",
-            "{REPO_ROOT}/TelegramBot/handlers/message.py",
-            "{REPO_ROOT}/TelegramBot/adapters/telegram.py"
+            "{REPO_ROOT}/TelegramAPI/runtime.py",
+            "{REPO_ROOT}/TelegramAPI/routes.py",
+            "{REPO_ROOT}/TelegramAPI/handlers/message.py",
+            "{REPO_ROOT}/TelegramAPI/adapters/telegram.py"
         ],
     }
 
@@ -341,8 +342,8 @@ def create_app() -> FastAPI:
         log.error("startup.insecure_webhook", extra={"public_url": public_url})
         raise RuntimeError("bootstrap_refused_insecure_webhook")
 
-    from TelegramBot.runtime import bootstrap_aiogram_service, get_bootstrap_metadata
-    from TelegramBot.routes import register_routes
+    from TelegramAPI.runtime import bootstrap_aiogram_service, get_bootstrap_metadata
+    from TelegramAPI.routes import register_routes
 
     bootstrap_state = bootstrap_aiogram_service(
         api_token=token,
@@ -378,7 +379,7 @@ def create_app() -> FastAPI:
 
     memory_loader_result = behavior_memory_loader(
         base_path=REPO_ROOT / "KnowledgeBase",
-        org_index_path=REPO_ROOT / "KnowledgeBase_index.yaml",
+        org_index_path=REPO_ROOT / "KnowledgeBase" / "KnowledgeBase_index.yaml",
         redis_url=redis_url,
         redis_primary=redis_active,
         redis_metadata=redis_runtime,
@@ -485,4 +486,7 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
+
+
+
 
