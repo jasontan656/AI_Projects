@@ -256,12 +256,40 @@ class RichTelemetryConsole:
 
     def _render_guard_event(self, event: Mapping[str, Any]) -> None:
         guard = event.get("payload", {}).get("guard", {})
-        table = Table.grid()
-        table.add_row("violations", str(guard.get("violations")))
-        table.add_row("locked_until", str(guard.get("locked_until")))
+        status = str(guard.get("status") or "")
+        table = Table(
+            show_header=False,
+            box=box.MINIMAL_DOUBLE_HEAD,
+            expand=True,
+        )
+        table.add_column("Field", style="bold blue", no_wrap=True)
+        table.add_column("Value", overflow="fold")
+        table.add_row("status", status or "-")
         table.add_row("action", str(guard.get("action")))
+        stage = guard.get("stage")
+        if stage:
+            table.add_row("stage", str(stage))
+        reason = guard.get("reason")
+        if reason and reason != "load":
+            table.add_row("reason", str(reason))
+        prev_val = guard.get("violations_prev")
+        curr_val = guard.get("violations")
+        display_val = str(curr_val)
+        try:
+            prev_int = int(prev_val) if prev_val is not None else None
+            curr_int = int(curr_val) if curr_val is not None else None
+        except (TypeError, ValueError):
+            prev_int = prev_val
+            curr_int = curr_val
+        if prev_val is not None and prev_int != curr_int:
+            display_val = f"{prev_val} -> {curr_val}"
+        table.add_row("violations", display_val)
+        locked_until = guard.get("locked_until")
+        if locked_until:
+            table.add_row("locked_until", str(locked_until))
         message = guard.get("message")
-        panel = Panel(table, title="GuardEvent", subtitle=message or "", border_style="red")
+        border_style = "red" if status.lower() == "locked" else "yellow"
+        panel = Panel(table, title="GuardEvent", subtitle=message or "", border_style=border_style)
         self._print(panel)
 
     def _render_cache_event(self, event: Mapping[str, Any]) -> None:
