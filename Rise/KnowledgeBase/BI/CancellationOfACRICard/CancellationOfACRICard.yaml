@@ -1,0 +1,560 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "ACR I-Card 注销/交回(取消登记)"
+slug: "cancellation-of-acr-i-card"
+type: "reference"
+semantic_profile:
+  intent_id: "acr-icard-cancellation"
+  category: "AlienRegistration"
+  tags: []
+service_overview: "面向已持有 ACR I-Card 的外籍人士,在身份或签证状态发生变化时办理注销/交回,由移民局外国人登记单位(ARU)受理并同步更新数据库,确保出入境与身份记录准确一致.完成后窗口出具接收凭证与官方收据,作为已履行交回义务的证明,便于离境、身份转换或结案审查,降低因未注销导致的系统异常或合规风险."
+applicability:
+  items:
+    visa-status-changed-or-terminated: "因签证降级、撤销或身份终止需注销原 ACR I-Card."
+    permanent-exit: "计划永久离境且不再返回菲律宾,需在离境前交回卡片."
+    death-of-holder: "持卡人已去世,由配偶、直系亲属或雇主依法代为注销."
+    lost-or-damaged-card: "卡片遗失或损坏,拟以注销结案(或先补办证明后注销)."
+    recognized-as-filipino-or-no-card-required: "已获得菲律宾身份认定/肯认或转为不需持卡的身份,需要注销既有卡片."
+preconditions:
+  required:
+    application-letters-two-copies: "提交两份载明注销理由的书面申请函."
+    surrender-card-or-loss-affidavit: "交回 ACR I-Card 正本;如遗失,须提交经宣誓的遗失声明书."
+    present-passport-for-verification: "出示申请人有效护照原件供一线人员核验,之后原件退还."
+    representative-authorization-and-id: "由代理人递件的,需出示移民局认可的代理证明(认证证件或每名申请人的 SPA 原件)并附代理人政府签发身份证件复印件."
+    supporting-evidence-as-applicable: "相关佐证按情形准备,如:降签/撤销/没收命令、最新出入境加盖章、死亡证明等."
+    form-filling-standard: "申请表以英文填写,使用英文大写字母并避免特殊字符;不适用项以“N/A”标注,不得留空."
+    bundling-and-timeline: "所有文件按“材料清单”顺序装订成法式纸张(8½×14英寸)文件夹,并在规定时限内提交."
+  not_eligible:
+    incomplete-or-noncompliant-docs: "材料不齐、顺序/规格不符、未呈验护照原件供识别."
+    representative-without-valid-authorization: "代理人未能提交移民局认证 ID 或有效 SPA 原件及身份证明."
+    photocopy-only-or-missing-evidence: "提交的卡片仅为复印件且无遗失宣誓书;或关键佐证缺失."
+    improper-form-filling: "申请表填写不规范(留空、非英文、大小写/字符不合系统要求)."
+pre_required_documents:
+  mandatory:
+    cancellation-letter-2-copies: "注销申请函 2 份(说明注销原因与事实经过)."
+    acr-icard-or-loss-affidavit: "ACR I-Card 正本;如遗失,提交遗失宣誓书原件."
+    acr-icard-copies: "ACR I-Card 正反面复印件 2 份(如遗失无法提供,须说明)."
+    passport-biodata-copies-and-original-for-verification: "护照资料页复印件 2 份,现场出示护照原件供核验."
+    or-copy: "已缴应缴费用的官方收据(OR)复印件."
+  conditional:
+    visa-downgrade-or-cancellation-order:
+      trigger: "签证降级/撤销/没收情形"
+      documents: ["签证降级/撤销/没收的官方命令或批示复印件"]
+    proof-of-travel-or-exit-stamps:
+      trigger: "永久离境或需证明离境状态"
+      documents: ["最新出入境章复印件或旅行记录证明"]
+    death-case-by-family:
+      trigger: "持卡人死亡,由家属/雇主代办"
+      documents: ["死亡证明及关系证明/雇佣证明"]
+    submission-by-authorized-representative:
+      trigger: "由代理提交"
+      documents: ["移民局认证代理 ID 或每名申请人的 SPA 原件", "代理人有效身份证件复印件"]
+    additional-as-required:
+      trigger: "经窗口要求补交说明或其他支持材料"
+      documents: ["补充说明/澄清函", "与案件相关的其他支持文件"]
+process:
+  steps:
+    submission-and-initial-assessment:
+      order: "1"
+      title: "受理与初审(ARU 窗口)"
+      description: "提交完整材料,窗口核对并开具缴费单(OPS),约 15 分钟."
+    payment-cash-unit:
+      order: "2"
+      title: "缴费(收银处/Cash Unit)"
+      description: "按 OPS 缴清费用,取得官方收据(OR)与领收凭条,约 10 分钟."
+    return-receipts-to-aru:
+      order: "3"
+      title: "回交凭证(ARU 窗口)"
+      description: "将 OR 及凭条交回 ARU,窗口出具接收副本作为交回凭证,约 10 分钟."
+    internal-processing:
+      order: "4"
+      title: "内部处理(ARU/相关科室)"
+      description: "系统资料更新与内部文书起草,通常 2 个工作日完成;其后转报上级复核(如需),预计 1 个工作日."
+    closure-and-tracking:
+      order: "5"
+      title: "结案与追踪"
+      description: "全流程参考时长约 3 个工作日 35 分钟.妥善保管接收副本,按需向窗口查询进度."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    general-applicant:
+      label: "一般申请人"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "注销受理的基本费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(LRF),配套征收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费;现场加急/认证加急等,如窗口列入"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        a-cert:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 + LRF PHP 10 + Express PHP 500"
+            value: null
+          notes: "ACR I-Card 状态/注销认证;若需开具“已注销/记录”证明时收取,具体以 OPS/OR 为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        annual-report:
+          amount:
+            currency: "PHP"
+            display: "A.R PHP 300 + LRF PHP 10;逾期 PHP 200/月(年度封顶 PHP 2,000)"
+            value: null
+          notes: "年度报告(A.R)费及逾期罚,是否适用依个案"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        overstay-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/月"
+            value: null
+            tiers:
+              - value: 500
+                condition: "每月"
+          notes: "逾期停留罚款,如案涉逾期需先行处理"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        motion-for-reconsideration:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 + LRF PHP 10 + Express PHP 500"
+            value: null
+          notes: "复议动议(MR),用于迟延/逾期情形,是否收取依情形"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        other-admin-items:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "其他行政项目以 OPS 为准;可能含头税、记录证明、复印认证等"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "窗口出具官方收据与接收副本,作为交回与缴费凭证."
+  items:
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费凭证与费用明细依据"
+    acknowledgment-copy:
+      name: "接收副本/交回凭证"
+      usage: "证明已交回 ACR I-Card,便于后续查询与佐证"
+kpis:
+  processing_time: "约 3 个工作日 35 分钟"
+risks:
+  items:
+    not-cancelled-may-affect-travel-and-applications: "未办理注销或未交回卡片可能导致系统记录异常,影响离境、再次入境或后续签证/许可申请."
+    false-documents-liability: "提交虚假材料、伪造证件将被驳回并可能承担行政或刑事责任."
+    outstanding-obligations-hold: "年度报告或其他既往义务未结清的,窗口可暂停办理直至缴清相关费用与罚款."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: "与护照一致"
+    first-name:
+      label: "名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "与护照一致"
+    middle-name:
+      label: "中间名(英文大写,如无填 N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "按证件所示"
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-place:
+      label: "出生地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "当前有效国籍"
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuing-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card 号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-icard-issue-date:
+      label: "ACR I-Card 签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    relationship-to-holder:
+      label: "与持卡人关系(配偶/子女/直系亲属)"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-identity-proof:
+      label: "身份证明文件信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于死亡/无法亲办情形"
+    representation-statement:
+      label: "代办事由与承诺"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "承担真实性责任"
+  employment:
+    employer-or-school-name:
+      label: "雇主/院校名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-or-school-address-line1:
+      label: "雇主/院校地址(行 1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-or-school-address-city:
+      label: "城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-or-school-address-province:
+      label: "省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-or-school-address-country:
+      label: "国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-or-school-address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-name:
+      label: "联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-phone:
+      label: "联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    related-visa-or-permit-number:
+      label: "关联签证/许可编号(如 9G/SSP/SWP/PWP)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-phone:
+      label: "代理人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-credential-id:
+      label: "移民局认证代理 ID"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "SPA 编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-government-id:
+      label: "代理人政府签发身份证件信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history:
+    latest-stamps-or-records-provided:
+      label: "是否提供最新出入境章/旅行记录证明"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    expected-departure-date:
+      label: "预计离境时间(如永久离境)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    current-visa-category:
+      label: "当前签证类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-status:
+      label: "当前签证状态(如降签/撤销/到期)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    outstanding-annual-report:
+      label: "是否存在未完成年度报告或逾期"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    cancellation-reason:
+      label: "注销原因(降签/撤销/终止、永久离境、死亡、遗失/损坏、身份认定或转为无需持卡)"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    case-explanation:
+      label: "情况说明/补充材料清单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    need-cancellation-certificate:
+      label: "是否需出具注销证明(A‑Cert)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "相关表格/声明需签名或经宣誓;遗失声明书须为经宣誓文件."
+faq:
+  qas:
+    lost-card-still-cancel:
+      question: "卡片遗失还能办理注销吗?"
+      answer: "可以.须提交经宣誓的遗失声明书,并按要求补充与案件相关的支持文件."
+    processing-time:
+      question: "整个注销流程需要多久?"
+      answer: "窗口受理与缴费当日可完成,内部资料更新与文书处理一般约 2 个工作日,如需上级复核再加约 1 个工作日,整体参考为约 3 个工作日 35 分钟."
+    representative-allowed:
+      question: "必须由本人到场吗?代理能办理吗?"
+      answer: "可由代理办理,但须提交移民局认证代理 ID 或针对该申请人的 SPA 原件,并附代理人有效身份证件;窗口将核验代理资质后受理."
+    fee-components-and-express:
+      question: "费用构成有哪些?是否一定收取快速通道费?"
+      answer: "基本为申请费与 LRF;如窗口列为加急或含认证环节,可能收取快速通道费.若需出具“ACR I-Card 已注销/记录”证明,另收认证费(及对应 LRF/Express).以 OPS 与 OR 为准."
+    when-to-cancel-before-exit:
+      question: "我即将永久离境,何时办理注销较稳妥?"
+      answer: "建议在离境前尽早办理(至少提前数个工作日),以留出资料更新与内部分发时间,避免影响出境安排."
+    who-can-file-if-deceased:
+      question: "持卡人已去世,谁可以代办?"
+      answer: "可由配偶、直系亲属或雇主依法代办,需提交死亡证明、关系证明/雇佣证明及代理授权文件."
+    what-if-incomplete-docs:
+      question: "如果资料不全会怎样?"
+      answer: "窗口可拒收或要求补件;补件未在规定时限内完成的,申请将被延后或不予处理."
+    expired-card-need-cancel:
+      question: "卡片过期还需要注销吗?"
+      answer: "需要.卡片过期并不等同于系统注销,仍须按程序交回或办理遗失声明注销,以确保数据库状态正确."
+disclaimers:
+  items:
+    bi-may-request-additional-docs: "移民局可根据审查需要要求补交其他支持材料."
+    fees-subject-to-ops-or: "实缴金额以窗口开具的 OPS 与官方收据(OR)为准,费用可能与同日办理的项目合并计收."
+    payment-channel: "统一在 Cash Unit 缴费;除非窗口另行通知,不接受线上支付."
+service_related:
+  links: {}

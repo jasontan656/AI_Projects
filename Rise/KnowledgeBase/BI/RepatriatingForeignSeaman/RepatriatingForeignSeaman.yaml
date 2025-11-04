@@ -1,0 +1,860 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "下船放行"
+  - "遣返"
+department: "BureauOfImmigration"
+name: "外籍船员遣返(下船放行)办理指引"
+slug: "repatriating-foreign-seaman"
+type: "reference"
+semantic_profile:
+  intent_id: "repatriating-foreign-seaman"
+  category: "port-clearance"
+  tags:
+    - "BSS"
+    - "Express"
+    - "CE Waiver"
+    - "LRF"
+    - "WEG"
+    - "Crew List Visa"
+    - "Repatriation"
+service_overview: "本指引面向航运公司或船员代理,在菲律宾港口为外籍船员办理下船放行/遣返的全流程操作,包括材料准备、BSS窗口受理与缴费、科长审批、移民区办系统编码及最终口岸放行.常见场景涵盖常规轮换与紧急医疗撤离;依据紧急程度可选择普通(Regular)或加急(Express)路径,所需时长与费用不同.核心环节包括不良纪录核验、证件与航班核验、缴纳CE豁免、LRF及(可选)快通费,并由属地区办完成最终编码放行."
+applicability:
+  items:
+    vessel-berth-disembarkation: "船舶靠泊菲律宾港口,外籍船员完成合约需下船返乡,由船代/派遣公司统一办理遣返放行."
+    rotation-adjustment: "船员轮换计划调整(如提前或延后换班),需为离船人员办理签离与离境放行."
+    medical-evacuation: "船员因健康原因需紧急医疗撤离并转入医院治疗,需快速完成移民手续与后续放行."
+    document-lost-or-damaged: "船员证件遗失/损坏已补齐必要证明,但需在港口合法完成下船与离境安排."
+    visa-or-crew-list-info-incomplete: "船员签证或船员名单签证(9(c))信息不齐,需要补缴相关费用或提交说明后办理放行."
+preconditions:
+  required:
+    company-formal-application-and-guarantee: "由航运/船员管理或派遣公司发出正式申请,并提供担保,承诺承担相关法律与费用责任.
+"
+    no-derogatory-verification-or-ccs-clearance: "船员通过不良纪录核验并取得“无不良纪录”标注(No Derogatory Stamp);如命中记录,须先经认证与清算科(CCS)完成清算/证明."
+    documents-complete: "证件齐备:护照、海员证、签证化的船员名单或相应缴费凭证、入境卡及航班离境信息."
+    fees-paid-and-bss-approval: "所有应缴费用缴清,取得官方收据(OR,Official Receipt),并经BSS科长审批同意办理."
+    medical-evacuation-supporting: "如属医疗撤离,须有检疫局证明(BOQ,Bureau of Quarantine)及医院接收函与医疗文件."
+  not_eligible:
+    materials-not-organized-or-late: "未按清单顺序、规格整理材料,或未在规定期限内提交,窗口可不予受理."
+    false-info-or-forged-docs-or-refuse-ndb-check: "航班信息明显不实、证件存在伪造/涂改,或拒不配合不良纪录查验."
+    unpaid-fines-or-without-approval: "尚未结清逾期停留、罚款、复议费用(如适用),或未经BSS科长批准即要求放行."
+    subject-to-hold-or-immigration-detainer: "涉及司法机关限制出境或移民局留置指令的人员."
+    medevac-missing-key-docs: "医疗撤离缺少BOQ证明或医院接收函等关键材料."
+pre_required_documents:
+  mandatory:
+    application-letter-3-copies: "由航运/派遣公司出具、致移民局署长的遣返(下船放行)申请函三份."
+    guarantee-letter-3-originals: "本地航运/派遣公司出具的担保函原件三份."
+    no-derogatory-stamp: "不良纪录验证结果(加盖“无不良纪录”戳记)."
+    vessel-arrival-notice: "船舶抵港通知/到港通告."
+    passport-biodata-copy: "船员护照资料页复印件."
+    seamans-book-copy: "海员证复印件."
+    crew-list-visa-or-or: "签证化的船员名单复印件,或已缴纳“船员名单签证费”的官方收据."
+    ce-waiver-or: "免除证明(CE)费用的官方收据原件或复印件(用于CE豁免核验)."
+    filled-arrival-card: "填妥的入境卡(Immigration Arrival Card)."
+  conditional:
+    flight-itinerary:
+      trigger: "常规遣返或医疗撤离建议提供航班与机票信息."
+      documents:
+        - "机票/行程单(PNR)"
+        - "离境机场与航班号"
+    crew-manifest-verification:
+      trigger: "口岸/区办要求核对乘员名单时."
+      documents:
+        - "到港乘员名单"
+    medical-evacuation-extra:
+      trigger: "涉及医疗撤离(MEDEVAC)时."
+      documents:
+        - "BOQ检疫证明"
+        - "医院接收函"
+        - "医疗诊断摘要/转运计划"
+    name-similarity-or-alert-hit:
+      trigger: "姓名相似或命中警示需澄清身份时."
+      documents:
+        - "“同一人/非同一人”证明(NTSP)或移民局清关证明"
+    lacking-9c-or-visa-mismatch:
+      trigger: "未持9(c)船员签证入境或签证信息不符,需现场补办WEG时."
+      documents:
+        - "WEG相关缴费凭证与书面说明"
+    authorized-liaison-processing:
+      trigger: "由企业指定联络员代办时."
+      documents:
+        - "公司工牌复印件"
+        - "授权说明"
+process:
+  steps:
+    step-1-bss-intake-and-precheck:
+      order: "1"
+      title: "接案与材料预检(BSS受理窗口,约30分钟)"
+      description: "提交完整材料包(按清单装订),核对护照、海员证、签证/船员名单与不良纪录验证;材料缺漏则退回补件."
+    step-2-ops-and-payment:
+      order: "2"
+      title: "开具缴费单并缴费(BSS评估与收银,约15–30分钟)"
+      description: "评估员出具缴费单OPS(含CE豁免、LRF及可选快通费),前往收银缴费并领取官方收据(OR)后返回提交."
+    step-3-chief-approval:
+      order: "3"
+      title: "科长审批与放行许可签发(BSS科长审批,约25分钟)"
+      description: "核验收据与材料一致后签发“遣返/下船放行许可”;如命中不良纪录,先转CCS清算/证明后续办."
+    step-4-district-encoding-and-release:
+      order: "4"
+      title: "区办编码与放行(相应移民区办,Express约1小时14分钟;Regular约3个工作日)"
+      description: "将批准件与全套材料转至辖区移民区办完成系统编码并生成放行指令;选择Express则优先处理."
+    step-5-port-execution:
+      order: "5"
+      title: "口岸执行与离境配合(口岸/港勤单位,约10–30分钟)"
+      description: "放行信息同步至口岸检查/签证窗口;船员按计划离船并办理离境手续;航班或转运变更需即时通知更新安排."
+  variants:
+    express:
+      name: "加急(Express)"
+      trigger: "选择加急办理"
+      description: "平均约1小时14分钟完成区办编码与放行;需缴纳快速通道费."
+      extra_requirements:
+        - "支付快速通道费(Express 500)"
+        - "优先排程处理"
+    regular:
+      name: "普通(Regular)"
+      trigger: "选择普通办理"
+      description: "平均约3个工作日完成区办编码与放行;按常规时序处理."
+      extra_requirements:
+        - "不收取快速通道费"
+        - "依常规排程"
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "RepatriatingForeignSeaman.md"
+  items:
+    per-crew-regular:
+      label: "每名船员 · 普通办理"
+      details:
+        ce-waiver:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "CE豁免(Certificate of Exemption Waiver)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(Legal Research Fee),随CE计收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "常见整包合计(每名船员,普通办理)"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    per-crew-express:
+      label: "每名船员 · 加急(Express)"
+      details:
+        ce-waiver:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "CE豁免(Certificate of Exemption Waiver)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(Legal Research Fee),随CE计收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(Express Lane Fee)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,510"
+          value: 1510
+        notes: "常见整包合计(每名船员,加急办理)"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    crew-list-visa:
+      label: "船员名单签证费(如需补缴) · 每人"
+      details:
+        crew-list-visa:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "Crew List Visa,按人计收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF 按人计收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 110"
+          value: 110
+        notes: "如需补缴时适用"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    weg-supplement:
+      label: "WEG 口岸补办(如适用) · 每人"
+      details:
+        weg:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "Waiver of Exclusion Ground(WEG)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        admin-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "行政罚款(Administrative Penalty)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如选择加急另收快通费(Express Lane Fee)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否包含快通费取决于是否选择加急,合计以实际缴费为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    certification-proof:
+      label: "证明/认证类(如清关证明、无旅行记录证明等) · 每份"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证/证明费用(如需)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如选择加急办理认证,另收快通费(Express Lane Fee)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否包含快通费视是否选择加急,实际以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "办理完成后取得的正式凭证与放行结果."
+  items:
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "费用缴纳凭证,用于与材料及审批一致性核对."
+    bss-release-permit:
+      name: "遣返/下船放行许可(BSS签发)"
+      usage: "作为转区办编码与口岸执行的依据."
+    district-release-instruction:
+      name: "区办系统编码与放行指令"
+      usage: "同步至口岸执行,完成离境查验和放行."
+kpis:
+  processing_time: "Express约1小时14分钟;Regular约3个工作日."
+risks:
+  items:
+    materials-noncompliance-return: "材料未按法律纸规格与顺序装订将被退回或不予受理,影响船期."
+    derogatory-hit-delay: "命中不良纪录或同名警示须先行清算/证明,产生时延与额外费用."
+    medevac-missing-docs: "医疗撤离缺少BOQ或医院接收函将无法放行."
+    unpaid-fees-no-approval: "未结清应缴费用与罚款或未经BSS科长批准,不予签发放行许可."
+    flight-change-not-synced: "航班/离船时间变更未及时同步BSS与区办,可能导致口岸执行延误或重新排程."
+    forged-documents-enforcement: "提交虚假或涂改文件将被拒受理并可能移交执法,影响公司合规."
+    visa-anomalies-trigger-weg: "未持9(c)或签证异常可能触发WEG及行政罚款."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PAUL"
+      notes: "无中间名可留空."
+    native-full-name:
+      label: "姓名(本国语)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照/本国证件一致."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Japan"
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "K1234567"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2028-11-30"
+      notes: ""
+    seamans-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SB0987654"
+      notes: ""
+    seamans-book-issuing-country:
+      label: "海员证签发国"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Panama"
+      notes: ""
+    job-title:
+      label: "职务/岗位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Able Seaman"
+      notes: ""
+    entry-record:
+      label: "入境记录编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ARR-2025-001234"
+      notes: "用于与入境卡/系统记录比对."
+    current-visa-class:
+      label: "当前签证类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9(c)"
+      notes: ""
+    current-visa-number:
+      label: "当前签证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9C-2025-12345"
+      notes: ""
+    has-9c-visa:
+      label: "是否持有9(c)签证"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    no-derogatory-result:
+      label: "不良纪录核验结果"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "No Derogatory"
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    spouse-passport-number:
+      label: "配偶护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "如适用."
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-07-01"
+      notes: "如适用."
+    child-passport-number:
+      label: "子女护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "如适用."
+  dependents:
+    is-traveling-with:
+      label: "是否同行"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: "如适用."
+    traveling-with-proof:
+      label: "同行证明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+  employment:
+    shipping-or-crew-agency-name:
+      label: "航运/派遣公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Co."
+      notes: ""
+    employer-registered-address:
+      label: "注册地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 Port Ave, Manila"
+      notes: ""
+    contact-person-name:
+      label: "联络人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: ""
+    contact-person-title:
+      label: "联络人职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Operations Officer"
+      notes: ""
+    contact-phone:
+      label: "联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    contact-email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "ops@abcshipping.com"
+      notes: ""
+  authorization:
+    authorized-liaison-name:
+      label: "指定联络员姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "代办时提供."
+    company-id-badge-number:
+      label: "公司工牌号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-45821"
+      notes: "代办时提供."
+    authorization-notes:
+      label: "授权说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "代办资质核验补充."
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MV OCEAN STAR"
+      notes: ""
+    imo-number:
+      label: "IMO号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "IMO1234567"
+      notes: ""
+    call-sign:
+      label: "呼号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DUAB2"
+      notes: ""
+    port-name:
+      label: "停靠港口"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Port of Manila"
+      notes: ""
+    berth:
+      label: "泊位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Berth 3"
+      notes: ""
+    arrival-date:
+      label: "抵港日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-15"
+      notes: ""
+    last-port:
+      label: "上一港口"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Singapore"
+      notes: ""
+    crew-list-id:
+      label: "乘员名单编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CLV-2025-0001"
+      notes: ""
+    crew-list-version:
+      label: "乘员名单版本"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "v2"
+      notes: ""
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR102"
+      notes: "离境/航班安排."
+    flight-date:
+      label: "航班日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-16"
+      notes: ""
+    departure-time:
+      label: "起飞时间"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "14:30"
+      notes: ""
+    departure-airport:
+      label: "出发机场"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MNL"
+      notes: ""
+    destination:
+      label: "目的地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Tokyo"
+      notes: ""
+    pnr:
+      label: "机票PNR"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC123"
+      notes: ""
+    e-ticket-number:
+      label: "电子客票号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "176-1234567890"
+      notes: ""
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    hospital-name:
+      label: "医院名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗撤离适用."
+    hospital-admission-letter-number:
+      label: "医院接收函编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗撤离适用."
+    boq-certificate-number:
+      label: "检疫局(BOQ)证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗撤离适用."
+    medical-diagnosis-summary:
+      label: "诊断摘要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗撤离适用."
+    transfer-plan:
+      label: "转运计划"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗撤离适用."
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    difference-express-regular:
+      question: "加急与普通的时长与费用有什么差别?"
+      answer: "加急(Express)平均约1小时14分钟,常见费用合计PHP 1,510;普通(Regular)平均约3个工作日,常见费用合计PHP 1,010;如涉及WEG、船员名单签证费或罚款,另行累加."
+    no-9c-visa-handling:
+      question: "船员没有9(c)签证如何处理?"
+      answer: "需在口岸按规定补办WEG并缴纳相应费用(含行政罚与LRF;如选加急另收快通费),同时配合BSS与区办的放行流程."
+    authorized-liaison-submission:
+      question: "材料必须本人提交吗?可否由公司联络员代办?"
+      answer: "可由指定联络员代办,但须附上所属公司的工牌复印件与授权说明;材料仍须按清单顺序、法律纸规格装订."
+    medical-evacuation-extra:
+      question: "医疗撤离是否有额外要求?"
+      answer: "除常规材料外,必须提供BOQ检疫证明、医院接收函和相关医疗文件;费用与审批时序与常规一致,但建议选择加急并提前协调救护转运与口岸通道."
+    derogatory-or-name-hit:
+      question: "若发现不良纪录或同名警示怎么办?"
+      answer: "暂停办理并转CCS完成清算或取得“非同一人”证明(NTSP)后继续流程;期间可能产生证明类费用与处理时延."
+    lost-clv-receipt:
+      question: "船员名单签证费收据遗失怎么办?"
+      answer: "应向相关窗口申请开具记录证明或按规定补缴;若需认证副本,按认证费标准缴纳,并确保清楚标明名单与人员对应关系."
+    flight-change-impact:
+      question: "航班临时变更会影响放行吗?"
+      answer: "需尽快通知BSS与区办更新编码与放行时间;未及时同步可能导致口岸执行延误或需要重新排程."
+disclaimers:
+  items:
+    materials-spec-deadline: "所有文件须按清单顺序、法律纸规格装订;逾期或散件不予受理."
+    authenticity-and-consequences: "提交虚假或涂改文件将被拒绝受理并可能移交执法."
+    scope-boundary-aep: "本服务与就业许可(AEP)无关,不涉及在菲就业资格审批."
+    payment-and-currency-note: "统一于移民局收银窗口缴纳并收取官方收据(OR);如出现外币计费项目,按BSP当日卖出价折算."
+service_related:
+  links: {}

@@ -1,0 +1,126 @@
+{
+  "system_role_block": "<verbatim base system block OR a stable reference>",
+  "inquiry": true,
+  "user_prompt": "<string>",
+  "chat_context_summary": [
+    {
+      "user_prompt": "<string>",
+      "assistant_reply": "<string>",
+      "timestamp": "<ISO-8601>"
+    }
+  ],
+  "response_id": "<string>",
+  "timestamp": "<ISO-8601>",
+  "session_id": "<uuid>",
+
+  "stages": {
+    "judgement_v1": {
+      "inquiry": true,
+      "assistantReply": "<string | null>",
+      "nextStep": "agency_detect_v1",
+      "telemetry": { "notes": "<string | null>" }
+    },
+
+    "agency_detect_v1": {
+      "agencyDetected": ["<agencyId>"],
+      "agencyInfo": [
+        {
+          "agencyId": "<string>",
+          "name": "<string>",
+          "path": "<string>",
+          "description": "<string>"
+        }
+      ],
+      "agencyCount": 1,
+      "complexity": "low | high",
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "category_select_v1 | semantic_analysis_v1"
+    },
+
+    "category_select_v1": {
+      "candidates": {
+        "key1": "<description>",
+        "key2": "<description>"
+      },
+      "topK": 3,
+      "threshold": 0.50,
+      "method": "semantic_match | keyword_fallback",
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "service_select_v1"
+    },
+
+    "semantic_analysis_v1": {
+      "agencies": [
+        {
+          "agencyId": "<string>",
+          "agencyName": "<string>",
+          "categorySelection": {
+            "candidates": {
+              "key": { "value": "<desc>", "score": 0.82 }
+            }
+          }
+        }
+      ],
+      "primaryAgency": {
+        "agencyId": "<string>",
+        "reason": "highest cumulative key relevance"
+      },
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "service_select_v1 | manual_review"
+    },
+
+    "service_select_v1": {
+      "serviceSelection": {
+        "serviceKey": "<string>",
+        "name": "<string>",
+        "path": "<string>",
+        "matchedField": "key | name | overview | applicability_summary",
+        "score": 0.00
+      },
+      "template": {
+        "placeholders": {
+          "<dynamic_key_1>": "{<dynamic_key_1>}",
+          "<dynamic_key_2>": "{<dynamic_key_2>}"
+        },
+        "structure": ["overview", "required_docs", "service_fee", "faq"],
+        "rules": "Dynamic placeholder mapping according to cached_state service keys"
+      },
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "offline_template_render"
+    },
+
+    "multi_agency_service_answer_v1": {
+      "agenciesUsed": [
+        {
+          "agencyId": "<string>",
+          "agencyName": "<string>",
+          "services": [
+            {
+              "serviceKey": "<string>",
+              "path": "<string>",
+              "score": 0.00
+            }
+          ]
+        }
+      ],
+      "assistantReply": "<string>",
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "session_end"
+    },
+
+    "offline_template_render": {
+      "assistantReply": "<string>",
+      "sourcesUsed": [
+        {
+          "agencyId": "<string>",
+          "serviceKey": "<string>",
+          "path": "<string>"
+        }
+      ],
+      "telemetry": { "notes": "<string | null>" },
+      "nextStep": "session_end"
+    }
+  },
+
+  "nextStep": "template_fill | offline_template_render | session_end"
+}

@@ -1,0 +1,5 @@
+- [x] Audit existing Business Service code paths (`src/business_service/conversation`, `src/business_service/knowledge`) and catalogue outbound contracts, Redis usage, and Business Asset touchpoints.
+- [x] Draft new typed models and service facades in the specs (Conversation Service, Knowledge Snapshot Service) including telemetry and safety hooks.
+- [x] Lay out the target file structure and migration checkpoints in `design.md`, referencing how Business Logic and assets integrate.
+- [x] Update capability specs under `openspec/changes/refactor-business-service-streamline/specs/` to reflect the planned contracts and sequencing.
+- [x] Run `openspec validate refactor-business-service-streamline --strict` to ensure proposal consistency.

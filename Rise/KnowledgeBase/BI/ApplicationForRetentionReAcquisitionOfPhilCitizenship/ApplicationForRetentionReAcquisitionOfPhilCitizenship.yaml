@@ -1,0 +1,872 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "菲律宾公民身份保留/重新取得(RA 9225)申请"
+slug: "application-for-retention-re-acquisition-of-phil-citizenship"
+type: "reference"
+semantic_profile:
+  intent_id: "ra-9225-application"
+  category: "citizenship"
+  tags: []
+service_overview: "面向因加入外国国籍而失去菲律宾国籍的原生菲律宾公民.通过提交材料、缴费与进行效忠宣誓,依法保留或重新取得菲律宾国籍,获取双重国籍身份及对应证明(核准命令、效忠誓词、证书).符合条件的未婚未成年受抚养子女可随同纳入同案办理并分别签发证件."
+applicability:
+  items:
+    native-filipino-now-foreign-national-seeking-restore: "原生菲律宾公民已入籍外国,拟在不放弃现有外国国籍的前提下恢复菲律宾国籍."
+    pre-ra9225-foreign-naturalization-include-minor-children: "在RA 9225生效前已取得外国国籍,拟申请保留/重新取得并将未婚且未满18岁的子女一并纳入."
+    registered-as-alien-need-surrender-acr: "已在菲律宾移民局登记为外侨者,办理时需交回外侨证件或提交遗失宣誓书以便注销."
+    identity-data-discrepancies-require-same-person-affidavit: "身份信息在不同文件中存在差异(如姓名拼写、婚姻变更),需提交“同一人”声明及支持证据."
+    oath-outside-bi-with-authentication: "因地域或时间原因无法在移民局法务官前宣誓,拟在其他合格官员前完成宣誓并提交认证文件与说明."
+preconditions:
+  required:
+    native-filipino-proof: "申请人须为原生菲律宾公民,能以出生证明、旧护照等材料证明出生时具有菲律宾国籍."
+    foreign-naturalization-and-oath: "已取得外国国籍,并愿意依RA 9225完成效忠宣誓及相关程序."
+    originals-or-certified-copies: "全部支持文件须为原件或经认证的真实副本;非英文文件须附经正式翻译件."
+    identity-discrepancy-affidavit: "如身份信息不一致(姓名、出生日期、婚姻状态等),须提交“同一人”宣誓书及相应佐证."
+    alien-registry-surrender-or-loss-affidavit: "如申请人或其受抚养人已在移民局登记为外侨,须交回外侨证件或提交遗失宣誓书以便注销."
+  not_eligible:
+    cannot-prove-native-filipino: "不能证明为原生菲律宾公民的申请."
+    dependent-over-18-or-married: "受抚养人已满18岁或已婚者,不能作为受抚养人并入同案."
+    refuse-or-fail-to-take-oath: "拒绝或未能依法完成效忠宣誓者."
+    fraudulent-documents-or-noncooperation: "提交虚假或伪造文件、拒不配合核查者."
+    fail-to-provide-translation-or-supplements: "无法按要求提供必要翻译、认证或补件且逾期未补齐者."
+pre_required_documents:
+  mandatory:
+    application-form-2014-01-005-with-photo: "主申请表 BI Form 2014-01-005(最新修订版),附2×2白底近期彩照1张(3个月内,不得使用扫描照、墨镜/彩色隐形眼镜或头饰;用固体胶粘贴于表格照片框)."
+    oath-of-allegiance-two-originals: "效忠誓词(Oath of Allegiance)原件2份;如不在移民局法务官前宣誓,须提交由合格官员见证并经相应认证的誓词原件及说明原因的宣誓书."
+    proof-of-native-filipino-citizenship: "原生菲律宾公民身份证明:如PSA出生证明、作废的旧菲律宾护照、选民证、结婚证(如适用)等."
+    foreign-passport-and-bio-page-copy: "外国护照原件及资料页复印件."
+    proof-of-foreign-citizenship-or-affidavit: "取得外国国籍的证明:入籍证明或说明取得外国国籍事实的宣誓书(非英文须附正式翻译)."
+  conditional:
+    alien-registry-surrender:
+      trigger: "申请人或受抚养人已在移民局登记为外侨"
+      documents:
+        - "外侨证(ACR I-Card/ICR/CRTV)原件交回以供注销"
+        - "遗失宣誓书(如无法交回)"
+    identity-discrepancy:
+      trigger: "身份信息不一致(姓名、出生日期、婚姻状态等)"
+      documents:
+        - "“同一人”宣誓书"
+        - "改名/婚姻/法院判令等支持文件"
+    oath-outside-bi:
+      trigger: "无法在移民局法务官前宣誓,需在外宣誓"
+      documents:
+        - "经认证/合法化的效忠誓词原件"
+        - "“原因说明”宣誓书"
+    with-dependent-children:
+      trigger: "受抚养的未婚且未满18岁子女随案办理"
+      documents:
+        - "受抚养人补充表 BI Form 2014-01-006,附2×2白底近照1张"
+        - "出生证明(如为外国出生证明,须附经认证翻译件)"
+        - "外国护照资料页复印件"
+        - "父母姓名与国籍信息(与主申请材料一致)"
+        - "ACR/ICR/CRTV交回或遗失宣誓书(如已登记为外侨)"
+process:
+  steps:
+    prepare-docs-and-consult:
+      order: "1"
+      title: "资料准备与咨询(约10分钟)"
+      description: "下载并填写BI Form 2014-01-005/006,按清单备齐材料;至受理柜台领取/核对清单与填写指引."
+    precheck-and-queue:
+      order: "2"
+      title: "初审与排队(约12–15分钟)"
+      description: "将完整申请夹交收件/初审窗口核对原件与复印件,确认材料完整性与照片规格."
+    assessment-and-ops:
+      order: "3"
+      title: "评估与开单(约12分钟)"
+      description: "至评估柜台出示护照与全套材料,获取缴费指示与支付单(Order of Payment Slip, OPS)."
+    payment-and-or:
+      order: "4"
+      title: "缴费取据(约10分钟)"
+      description: "至收银窗口按OPS金额缴费并领取正式收据(Official Receipt, OR)."
+    submission-oath-and-biometrics:
+      order: "5"
+      title: "交单排宣誓与指纹采集(约5分钟+15分钟)"
+      description: "将OR与申请夹交回受理柜台;由“双重国籍”窗口安排宣誓;在指定地点完成宣誓及生物信息采集."
+    approval-and-release:
+      order: "6"
+      title: "审批与出证(取件约20分钟;全流程典型用时约1小时21分钟)"
+      description: "等候审批完成,按通知领取核准命令、效忠誓词与证书.可本人领取,或授权他人凭OR与有效身份证件代领."
+    special-cases-handling:
+      order: "7"
+      title: "特殊情形处理(时长视情)"
+      description: "在外宣誓或需补件/更正信息的,按窗口指示补交认证文件或安排复核,整体时程以中央办公室核准为准."
+  variants:
+    oath-outside-variant:
+      name: "在外宣誓办理"
+      trigger: "无法在移民局法务官前宣誓"
+      description: "在合格官员前完成宣誓,并提交经认证/合法化的誓词原件与“原因说明”宣誓书;窗口据此排定出证."
+      extra_requirements:
+        - "经认证/合法化的效忠誓词原件"
+        - "“原因说明”宣誓书"
+    with-dependents-variant:
+      name: "携带未婚未成年受抚养人随案"
+      trigger: "未婚且未满18岁的子女随案办理"
+      description: "每名子女单独一套材料,随主申请同批提交以避免分案造成延时."
+      extra_requirements:
+        - "BI Form 2014-01-006(Supplement for Dependent)"
+        - "2×2白底近期彩照1张"
+        - "出生证明(如为外国出生证明须附经认证翻译件)"
+        - "外国护照资料页复印件"
+        - "如已登记为外侨:交回ACR/ICR/CRTV或遗失宣誓书"
+  notes: ""
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "ApplicationForRetentionReAcquisitionOfPhilCitizenship.md"
+  items:
+    main-applicant:
+      label: "主申请人 · 整包"
+      details:
+        package-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,010.00"
+            value: 3010
+          notes: "含标准通道或快速通道整包;以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,010.00"
+          value: 3010
+        notes: "以OPS为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    dependent:
+      label: "受抚养人 · 整包"
+      details:
+        package-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,760.00"
+            value: 1760
+          notes: "含标准通道或快速通道整包;以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,760.00"
+          value: 1760
+        notes: "以OPS为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    courier-transfer:
+      label: "邮寄/转送(如适用)"
+      details:
+        courier-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "由外勤分处转送或需快递,另行收取实际快递费用;以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    records-certification:
+      label: "记录/认证类(情境性费用)"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如需身份记录证明、同名核查等."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如选加急."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        corrections-or-authentication:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "名字/资料修正及宣誓文件认证:按实际项目与认证渠道费用计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "上述三项合计最高 PHP 1,010(如全部适用)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "审批完成后发放核准命令、效忠誓词及证书;受抚养人证件独立签发."
+  items:
+    order-approval:
+      name: "核准命令(Order)"
+      usage: "作为恢复/保留菲律宾国籍的核准依据及档案凭证."
+    oath-of-allegiance:
+      name: "效忠誓词(Oath of Allegiance)"
+      usage: "确认申请人宣誓效忠,作为办理双重国籍的法定凭证."
+    ra9225-certificate:
+      name: "证书(Certificate)"
+      usage: "证明保留/重新取得菲律宾国籍,可据此办理护照及公民事务."
+kpis:
+  processing_time: "常见场景下现场全流程约1小时21分钟;取件约20分钟(以评估及中央办公室核准为准)."
+risks:
+  items:
+    identity-inconsistency-may-delay: "文件信息不一致需提交“同一人”宣誓书及佐证,可能被要求补充记录证明或认证,影响时程."
+    oath-outside-requirements: "在外宣誓须提交通道合格官员见证且经认证/合法化的誓词原件及原因说明,否则不予纳入."
+    acr-not-surrendered: "已登记为外侨者如未交回ACR/ICR/CRTV或未提交遗失宣誓书,可能影响出证."
+    photo-noncompliance: "照片不合规格将被退件或要求重交."
+    false-declarations-penalties: "任何虚假陈述、伪造或篡改文件将导致拒批、记录列管,严重者可能承担行政或刑事责任并影响未来出入境或签证申请."
+    mailing-risk: "如需邮寄出证或跨分处转送,地址与联系人须核对准确,快递费用与风险由申请人自理."
+    revalidation-or-supplement-delay: "因案情需复核或补充认证(如旅行记录、无记录证明、同名核查等)应于时限内补齐,逾期可能重新排程."
+info_collection:
+  applicant:
+    philippine-last-name:
+      label: "菲律宾文件姓(与出生证明一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    philippine-first-name:
+      label: "菲律宾文件名(与出生证明一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    philippine-middle-name:
+      label: "菲律宾文件中间名(与出生证明一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无中间名可留空."
+    foreign-passport-last-name:
+      label: "外国护照姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于交叉核验."
+    foreign-passport-first-name:
+      label: "外国护照名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于交叉核验."
+    foreign-passport-middle-name:
+      label: "外国护照中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alias-other-names:
+      label: "别名/曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "Also known as(如适用)."
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "男/女."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    age:
+      label: "年龄"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与出生证明保持一致."
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "单身/鳏寡/离婚/婚姻撤销/分居/已婚(按适用)."
+    nationality-foreign-current:
+      label: "现有国籍(外国)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "填写取得外国国籍国家名称."
+    address-line1:
+      label: "现居住地址(行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "城市/市镇"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-passport-number:
+      label: "外国护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-passport-issue-date:
+      label: "外国护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-passport-issue-place:
+      label: "外国护照签发地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    old-philippine-passport-number:
+      label: "旧菲律宾护照号码(如有)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    old-philippine-passport-issue-place:
+      label: "旧菲律宾护照签发地(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-naturalization-date:
+      label: "取得外国国籍日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-naturalization-proof-type:
+      label: "取得外国国籍依据文件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如入籍证明、宣誓书等."
+    foreign-naturalization-certificate-number:
+      label: "入籍/证明文件编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alien-registration-card-number:
+      label: "外侨证件编号(ACR/ICR/CRTV,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alien-registration-card-status:
+      label: "外侨证件状态(交回注销/遗失)"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于注销或提交遗失宣誓书说明."
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(如已婚)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(如已婚)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍(如已婚)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father:
+    father-last-name:
+      label: "父亲姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-first-name:
+      label: "父亲名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-middle-name:
+      label: "父亲中间名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-nationality-at-applicant-birth:
+      label: "父亲在申请人出生时的国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-citizenship-acquisition-method:
+      label: "父亲国籍取得方式"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "出生/选举/婚姻/归化(按适用)."
+  mother:
+    mother-last-name:
+      label: "母亲姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-first-name:
+      label: "母亲名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-middle-name:
+      label: "母亲中间名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-nationality-at-applicant-birth:
+      label: "母亲在申请人出生时的国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-citizenship-acquisition-method:
+      label: "母亲国籍取得方式"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "出生/选举/婚姻/归化(按适用)."
+  children:
+    child-last-name:
+      label: "子女姓(按出生证明)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-first-name:
+      label: "子女名(按出生证明)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-middle-name:
+      label: "子女中间名(按出生证明,如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-foreign-name-alias:
+      label: "子女外文别名(按护照,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-gender:
+      label: "子女性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "男/女."
+    child-place-of-birth:
+      label: "子女出生地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-marital-status:
+      label: "子女婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "应为未婚."
+    child-nationality:
+      label: "子女国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-issue-date:
+      label: "子女护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-issue-place:
+      label: "子女护照签发地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-father-last-name:
+      label: "子女父亲姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-father-first-name:
+      label: "子女父亲名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-mother-last-name:
+      label: "子女母亲姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-mother-first-name:
+      label: "子女母亲名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-alien-registration-number:
+      label: "子女外侨登记编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如ACR/ICR/CRTV."
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-representative-name:
+      label: "代领人姓名(如授权代领)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-id-number:
+      label: "代领人身份证件号码(如授权代领)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "领取时须同时出示OR与有效身份证件."
+    authorization-presenting-or:
+      label: "是否将出示正式收据OR用于代领"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    oath-at-bi:
+      label: "是否在移民局法务官前宣誓"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    oath-outside-location:
+      label: "在外宣誓地点(如否)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "需合格官员见证并经认证/合法化."
+    oath-outside-date:
+      label: "在外宣誓日期(如否)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    oath-authentication-details:
+      label: "宣誓文件认证/合法化信息(如在外宣誓)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    same-person-affidavit:
+      label: "是否提交“同一人”宣誓书(如信息不一致)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    discrepancy-supporting-docs:
+      label: "信息不一致说明及支持文件清单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "涉及宣誓与宣誓书等法定声明,申请人需签署效忠誓词及相关声明并承担相应法律责任."
+faq:
+  qas:
+    processing-time:
+      question: "整个流程需要多久?"
+      answer: "常见场景下从提交到取证的现场用时约1小时21分钟(含宣誓与指纹采集),但最终以评估结果与中央办公室核准为准.如涉及补件/在外宣誓/记录认证,时间将顺延."
+    dependents-with-applicant:
+      question: "未婚且未满18岁的子女可以和我一起办理吗?"
+      answer: "可以.每名子女需提交BI Form 2014-01-006及照片、出生证明、外国护照复印件等;如子女已在移民局登记为外侨,还须交回ACR/ICR/CRTV或提供遗失宣誓书."
+    spouse-eligibility:
+      question: "我的配偶能否随同取得菲律宾国籍?"
+      answer: "不能.RA 9225仅适用于原生菲律宾公民;非菲律宾籍配偶不因本案自动取得国籍.配偶如拟长期在菲居留,可咨询适用的居留/移民签证路径."
+    oath-outside:
+      question: "如果我无法在移民局法务官前宣誓怎么办?"
+      answer: "可在合格官员前完成宣誓,但须提交经认证/合法化的誓词原件,并附“原因说明”宣誓书;窗口将据此排定出证."
+    prove-native-filipino:
+      question: "我没有旧菲律宾护照,如何证明原生菲律宾公民身份?"
+      answer: "可提交PSA出生证明及其他能证明出生时国籍的佐证(如选民证、结婚证等).如仍有疑义,窗口可能要求补充记录证明或其他认证文件."
+    authorized-pickup:
+      question: "领取结果必须本人到场吗?"
+      answer: "不必须.可授权他人代领,但须出示OR(正式收据)与代领人有效身份证件;建议提供简要授权说明以便核验."
+    fees-and-payment:
+      question: "费用是否有加急差异?怎么缴费?"
+      answer: "主申请人PHP 3,010.00、受抚养人PHP 1,760.00为整包价(标准/快速通道口径一致);以OPS为准,于收银窗口一次性缴纳并领取OR."
+    data-inconsistency:
+      question: "姓名/资料不一致会影响审批吗?"
+      answer: "会.须随案提交“同一人”宣誓书及相关支持文件;必要时窗口会要求补充认证或记录证明.未按时补齐将延后排程或导致退件."
+disclaimers:
+  items:
+    ops-prevails: "现场以PHP计费,实际应付以移民局开具的OPS为准,个别分处可能因寄送方式或并办项目存在差异."
+    fx-note: "如涉及以USD计费的第三方证件或卡证(本流程通常无),按菲律宾央行(BSP)当日汇率折算."
+    mailing-liability: "邮寄/转送由申请人自理相关费用与风险,请核对邮寄地址与联系人."
+service_related:
+  links: {}

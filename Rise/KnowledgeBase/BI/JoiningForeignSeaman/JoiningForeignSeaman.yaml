@@ -1,0 +1,714 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "外籍船员登船许可(Joining/Sign-On)"
+slug: "joining-foreign-seaman"
+type: "reference"
+semantic_profile:
+  intent_id: "joining-foreign-seaman"
+  category: "seafarer-services"
+  tags: ["BSS", "9c-visa", "WEG", "bay-service-section"]
+service_overview: "本服务为航运公司或船员管理代理在菲律宾港口为外籍海员办理登船许可(Join/Sign-On).由湾务服务科(BSS)受理、核查不良纪录、出具缴费单并审批;获批后由莱加斯皮移民区办执行系统编码,确保登船与出境环节具备合法依据.支持普通与加急,批复须及时送交区办编码以匹配船期,避免延误与罚责."
+applicability:
+  items:
+    join-at-ph-ports: "外籍船员计划在菲律宾港口(机场/码头)办理上船手续并直接登轮执行航次任务."
+    with-valid-passport-and-9c: "船员持有有效护照与9(c)船员签证(Seaman’s Visa),需完成移民局登船许可核准与系统录入."
+    crew-change-urgent: "船舶临时调整船员班次,需在本地口岸为替补船员办理快速登船许可."
+    without-9c-urgent: "船员未能事先取得9(c)签证,但因船期紧急需提交说明并依规定补缴相关费用与罚款后办理登船."
+    adverse-record-clearance-needed: "因姓名重名或历史记录预警,需先完成不良纪录核查/证明后再行登船许可."
+preconditions:
+  required:
+    local-agent-as-applicant: "由本地航运/船员代理公司作为申请主体递交,或由指派联络员统一代办."
+    valid-passport-and-seaman-book: "船员持有效护照资料页与海员证;如有9(c)船员签证,须一并提交."
+    voyage-proof-required: "船员出具拟登船航次证明(如船舶抵港通知、行程/航班信息)."
+    adverse-record-clearance: "通过不良纪录核查;如命中不良纪录,须先向认证与清算科(CCS)取得相关证明或完成清理后方可继续."
+    filing-format-and-deadline: "材料按清单顺序装订成合法尺寸文件夹(8½×14英寸,legal size),并在规定期限内提交."
+  not_eligible:
+    non-local-agent-or-incomplete-authorization: "申请主体非本地航运/船员代理公司,或授权证明不全."
+    submission-not-meeting-specs: "资料未按清单顺序、份数与规格提交,或逾越提交时限."
+    unresolved-adverse-or-falsified-docs: "船员存在未清不良纪录、伪造或涂改文书."
+    scenario-mismatch-offsign: "船员不符合登船场景(非上船而为离船/off-sign等)."
+    key-info-inconsistency: "关键信息不一致(姓名、护照号、船舶/航次信息前后矛盾)且未及时更正."
+pre_required_documents:
+  mandatory:
+    application-letter-4-copies: "登船申请函(由航运/船员代理公司出具,致移民局局长)—4份."
+    guarantee-letter-4-copies: "担保函(本地航运/船员代理公司出具原件)—4份."
+    passport-biodata-page-copy: "船员护照资料页复印件."
+    9c-visa-copy-if-any: "由菲律宾驻外机构签发的船员签证9(c)复印件(如已持有)."
+    immigration-departure-card: "填妥的出境卡(Immigration departure card)."
+  conditional:
+    without-9c-visa:
+      trigger: "未持9(c)签证时"
+      documents: ["说明函:阐明未能事先取得9(c)签证之原因.", "BSS 核准:就“未持签证之登船”由湾务服务科签批同意.", "行政罚款与相关费用的正式收据原件及复印件(按人计)."]
+    adverse-record-hit:
+      trigger: "命中不良纪录时"
+      documents: ["移民局认证与清算科出具的相关证明/无案证明或完成清理的凭证."]
+    by-designated-liaison:
+      trigger: "由指定联络员代办时"
+      documents: ["航运/船员代理公司工作证复印件."]
+process:
+  steps:
+    submission-and-initial-review:
+      order: "1"
+      title: "递件与初审(BSS,约30分钟)"
+      description: "由航运/代理公司向湾务服务科提交完整资料;BSS 核对文件、核查不良纪录与签证状态;如需缴费,开具缴费单(OPS)."
+    payment-and-approval:
+      order: "2"
+      title: "缴费与审批(收银/BSS,约20分钟)"
+      description: "申请人持 OPS 至收银窗口缴费.缴费后资料返送 BSS;科长/授权官员审核并签发登船许可批复."
+    district-office-encoding:
+      order: "3"
+      title: "区办编码实施(莱加斯皮移民区办,约13分钟)"
+      description: "将核准批复与资料送交区办进行系统编码与实施,完成后更新记录,以便口岸查验放行."
+    result-release-and-notice:
+      order: "4"
+      title: "结果领取与通知(即时/当日)"
+      description: "领取批复/收据,核对信息;由代理公司协调口岸现场流程,确保船员按计划登船."
+    supplementation-and-rectification:
+      order: "5"
+      title: "补件与整改(如被要求,时长依案而定)"
+      description: "如命中不良纪录或资料缺漏,先至相关部门补办证明/缴纳罚款,再回 BSS 续办."
+  variants:
+    normal-processing:
+      name: "普通办理"
+      trigger: "未选择加急通道"
+      description: "按标准窗口顺序办理,整体按常规流程推进."
+      extra_requirements: []
+    expedited-processing:
+      name: "加急办理"
+      trigger: "选择加急通道且现场调度同意"
+      description: "在现场工作量与值班审批允许的前提下,加急受理与审批."
+      extra_requirements: ["以现场工作量与值班审批为准"]
+  notes: "普通与加急均按相同步骤执行;整体标准处理时长约63分钟(不含补件/清案时间)."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    joining-permit-main-regular:
+      label: "登船许可 · 主申请人 · 普通"
+      details:
+        joining-permit-regular:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,510"
+            value: 2510
+          notes: "BSS 受理—审批—出批复;现场标准价."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,510"
+          value: 2510
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    joining-permit-main-expedited:
+      label: "登船许可 · 主申请人 · 加急"
+      details:
+        joining-permit-expedited:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,010"
+            value: 3010
+          notes: "选择加急通道;是否当场加急以现场调度为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,010"
+          value: 3010
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    weg-no-9c:
+      label: "WEG · 未持9(c)签证 · 每人"
+      details:
+        weg-exemption:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "未持9(c)签证且经 BSS 同意走 WEG 时收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        weg-admin-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "与 WEG 同单开具的行政罚款."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        weg-lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "与 WEG 相关的法律检索费(LRF)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "WEG 快速通道费(如适用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否收取快速通道费以现场为准,合计以 OPS/OR 所列为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    crew-list-visa-per-person:
+      label: "船员名单签证 · 每名"
+      details:
+        crew-list-visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "办理船员名单签证(如船方同批处理)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crew-list-visa-lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "与船员名单签证费配套的 LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 110"
+          value: 110
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    certification-common:
+      label: "证明/认证通用费 · 如需"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "认证与清算科出具证明、记录证明等(证书费500+LRF10+加急500)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    visa-sticker:
+      label: "签证贴纸 · 如贴附"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "如业务需要在护照贴签,依 OPS 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 100"
+          value: 100
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "完成审批后获取登船许可批复与正式收据,并由区办完成系统编码以供口岸查验放行."
+  items:
+    approval-memo:
+      name: "登船许可批复"
+      usage: "提交区办进行系统编码,并作为口岸查验依据."
+    official-receipt-or:
+      name: "正式收据(OR)"
+      usage: "费用支付凭证,需妥善保管以备查验."
+    district-encoding-completion:
+      name: "系统编码完成记录"
+      usage: "证明已完成区办编码,确保登船/出境查验放行."
+kpis:
+  processing_time: "标准流程约63分钟(不含补件/清案时间)."
+risks:
+  items:
+    improper-document-format: "资料规格与份数不符合要求可能被拒收(申请函与担保函各4份;legal size 装订)."
+    weg-path-noncompliance: "未持9(c)签证未按提交说明并走 WEG 路径办理将被拒绝放行."
+    adverse-record-not-cleared: "命中不良纪录未先办理证明/清案将导致驳回并可能触发调查."
+    delayed-district-encoding: "审批通过后未及时送交区办编码可能错过船期,责任由申请方承担."
+    falsified-or-altered-docs: "提供伪造、变造或虚假信息将被拒办并可能面临行政/刑事责任与后续入境限制."
+    key-info-inconsistency: "关键信息不一致(姓名、护照号、船名、航次、登船口岸/时间等)需即时更正,否则可能被退件或不放行."
+    or-receipt-management: "付款须以收银窗口开具的 OR 为准;未妥善保管可能影响查验."
+    possible-supplementary-docs: "现场可能依个案要求补交支持性文件,应预留时间以应对补件或清案流程."
+    scope-limitation-onsign-only: "登船许可仅适用于“上船”场景;离船(off‑signer)另有流程与费用."
+    compliance-violations-penalties: "逾期停留、未及时申报或地址变更等行政违规,可能叠加每月罚款或其他合规义务."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "中间名(与护照一致,如无留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "男/女"
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-expiry:
+      label: "海员证有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    9c-visa-number:
+      label: "9(c)签证号码(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    9c-visa-issuing-post:
+      label: "9(c)签证签发地(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    9c-visa-expiry:
+      label: "9(c)签证有效期(如有)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-last-name:
+      label: "紧急联系人姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-first-name:
+      label: "紧急联系人名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-middle-name:
+      label: "紧急联系人中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-relationship:
+      label: "紧急联系人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-phone:
+      label: "紧急联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    company-name:
+      label: "航运/船员管理公司名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-registration-number:
+      label: "统一社会登记/营业登记号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "办公地址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "办公地址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "办公地址(省/州)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "办公地址(国家)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "办公地址(邮政编码)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-last-name:
+      label: "指定联络员姓"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-first-name:
+      label: "指定联络员名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-middle-name:
+      label: "指定联络员中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-position-title:
+      label: "联络员职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-phone-mobile:
+      label: "联络员联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-company-id-number:
+      label: "联络员公司ID编号(代办时)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization: {}
+  arrival_info:
+    flight-number:
+      label: "航班号(如经机场)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    arrival-datetime:
+      label: "到达时间(如经机场)"
+      type: "datetime"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance:
+    ph-immigration-history-issues:
+      label: "既往菲律宾出入境记录有无异常"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    imo-number:
+      label: "IMO 编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    voyage-number:
+      label: "航次号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    planned-boarding-date:
+      label: "计划登船日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    planned-boarding-port:
+      label: "计划登船口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    eta-datetime:
+      label: "船舶抵港 ETA"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    etd-datetime:
+      label: "船舶离港 ETD"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-position:
+      label: "上船岗位/职务"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "标准流程(不含补件/清案)约63分钟:BSS受理与审批约50分钟(含缴费),区办编码约13分钟."
+    without-9c-visa:
+      question: "没有9(c)船员签证还能办理吗?"
+      answer: "可在提交说明函、获得BSS同意并缴纳 WEG 及相关行政罚款与费用后办理;未按此路径将不予放行."
+    personal-apply:
+      question: "可以个人直接申请吗?"
+      answer: "不可以.必须由本地航运/船员管理代理公司作为申请主体,或由其指派的联络员代为办理并出示公司ID."
+    why-4-copies:
+      question: "资料为什么要求4份申请函与担保函?"
+      answer: "系内部流转与留存需要,未按份数与顺序提交会导致退件或延误."
+    adverse-record-what-to-do:
+      question: "如命中不良纪录怎么办?"
+      answer: "需先到认证与清算科办理无案/同名非同人等证明或清案,取得证明后再回BSS继续;相关证明按通用认证费标准收取."
+    expedited-supported:
+      question: "是否支持加急?费用多少?"
+      answer: "支持加急,按加急通道收取 PHP 3,010;是否当场加急以现场工作量与值班审批为准."
+    schedule-change-effect:
+      question: "船期临时变更影响批复有效吗?"
+      answer: "信息变更需即时书面说明并申请更正或重编码;未及时更新可能导致口岸查验不放行,请务必与区办协调完成信息同步."
+disclaimers:
+  items:
+    fees-subject-to-or: "所有金额与项目以移民局 OPS/OR 所列为准;如遇官方调整,以最新公告执行."
+    processing-time-estimate: "处理时长为估算值,补件/清案时间不计入."
+service_related:
+  links: {}

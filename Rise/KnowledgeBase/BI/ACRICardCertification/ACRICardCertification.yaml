@@ -1,0 +1,573 @@
+version: "v2"
+updated_at: "2025-10-25"
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "ACR I-Card 认证(宽限期、记录、注销卡)"
+slug: "acri-card-certification"
+type: "reference"
+semantic_profile:
+  intent_id: "acr-icard-certification"
+  category: "immigration-certification"
+  tags: ["ACR I-Card","Grace Period","Record","Canceled Card","ARD","Certification"]
+service_overview: "面向持有菲律宾永久或暂时居留类签证且已领用 ACR I-Card 的申请人,由移民局外侨登记处(ARD)签发 ACR I-Card 认证,用于证明卡片处于宽限期、在案记录或已注销等状态的官方信息,可用于政府机关、法院、银行、雇主或第三方的合规审查与提交."
+applicability:
+  items:
+    grace-period-status-explanation: "处于宽限期内,需要移民局出具卡片状态说明,用于补充或解释在办事流程的合规性."
+    record-proof: "需要证明 ACR I-Card 的历史登记记录,以用于就业审核、银行开户、合规审计或其他行政审查."
+    canceled-card-proof: "卡片已注销,需向第三方说明注销事实与生效时间."
+    legal-proceedings-and-reviews: "法院诉讼、政府审查、境外签证申请或公司内部合规需要提交经移民局认证的在案副本或状态证明."
+    supporting-other-immigration-services: "与其他移民业务(如离境许可、年报、签证处理)配套,需提交 ACR I-Card 状态或记录认证作为补强材料."
+preconditions:
+  required:
+    valid-acr-icard-and-visa-class: "申请人须持有有效的 ACR I-Card,且签证类别为永久或暂时居留类(不含短期访客类)."
+    valid-passport-and-authorized-stay: "护照在有效期内,且最近一次入境的授权停留期限仍有效."
+    grace-period-order-required: "办理“宽限期认证”须同时提交由移民局签发的“宽限期命令”(Grace Period Order)."
+    letter-to-ard-chief: "申请“记录认证”或“注销卡认证”,需附致 ARD 主管的说明函件(提交至 ARD-CS 窗口)."
+    passport-original-for-verification: "申请人须能出示护照原件以供现场核验(核验后当场返还)."
+  not_eligible:
+    expired-docs-or-overstay-without-remedy: "ACR I-Card 已失效、护照过期或授权停留已过期且未获准复议/补救者."
+    unrelated-purpose-or-wrong-document-type: "申请目的与“ACR I-Card 认证(宽限期/记录/注销卡)”无关,或属于其他簿册/证明类型."
+    missing-grace-order-or-letter: "未提交宽限期命令或未附致 ARD 主管说明函件且拒不补件者."
+    incomplete-or-falsified-application: "申请表填写不全、未按要求使用英文大写字母或存在明显涂改伪造嫌疑."
+    unauthorized-agent: "授权代理无移民局认证资质且无法出具有效专属委托书(SPA)与身份证件者."
+pre_required_documents:
+  mandatory:
+    bi-form-2014-08-015-016: "填写完整的申请表:BI Form 2014-08-015/016 Rev 0(以窗口实际发放版本为准;英文大写字母,无法适用处填“N/A”)."
+    acr-icard-copies: "ACR I-Card 正反面复印件各1份(携带正本供现场查验)."
+    passport-and-visa-copies: "护照资料页、签证实施页、最近一次入境许可页复印件各1份(须显示仍在合法授权停留期内)."
+  conditional:
+    grace-period-order:
+      trigger: "申请“宽限期认证”"
+      documents: ["宽限期命令(Grace Period Order)复印件"]
+    letter-to-ard-chief:
+      trigger: "申请“记录认证”或“注销卡认证”"
+      documents: ["致 ARD 主管的说明函件(提交至 ARD-CS 指定窗口/房间)"]
+    authorized-representative:
+      trigger: "授权代理办理"
+      documents: ["移民局认证的代理证件(BI Accreditation ID)或每位申请人的原件专属委托书(SPA)","代理人有效政府签发身份证复印件"]
+process:
+  steps:
+    1-consultation-and-form-release:
+      order: "1"
+      title: "咨询与领表(ARD-CS)"
+      description: "领取申请表与材料清单,确认适用情形与注意事项(约5分钟)."
+    2-filing-and-initial-review:
+      order: "2"
+      title: "递件与初审(ARD-CS)"
+      description: "提交完整材料;核对护照原件及在案信息,不足即发补件通知,并进行不良记录检索(约10分钟)."
+    3-payment-cash-section:
+      order: "3"
+      title: "缴费(Cash Section)"
+      description: "凭 OPS 到现金窗口缴纳费用并领取 OR 官方收据(约10分钟)."
+    4-internal-review-and-approvals:
+      order: "4"
+      title: "内部审核与签批(ARD-CS/ARD-Proper)"
+      description: "制作证书文本,登记官与负责人复核,报 ARD 副主管与主管审核签批后回传证书科(约2个工作日)."
+    5-claim-certificate:
+      order: "5"
+      title: "领证(ARD-CS)"
+      description: "凭领证凭条(Claim Stub)领取 ACR I-Card Certification 原件(约5分钟)."
+    6-authorized-claim-if-applicable:
+      order: "6"
+      title: "代理领取(如适用)"
+      description: "被授权人须出示 SPA 原件与本人有效身份证;未携带不得代领(约5分钟)."
+    7-verify-copies-issued:
+      order: "7"
+      title: "呈递与核对副本数量"
+      description: "如申请多份认证件,按 OPS 标示数量核发并在领条与 OR 上体现(约3分钟)."
+  variants: {}
+  notes: "缴费方式与地点:凭 OPS 至移民局 Cash Section 当日缴费,获取 OR;未持 OR 不进入后续签批与制证流程."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "以 OPS/OR 为准;适用 2025 年版认证类收费口径"
+  items:
+    standard-main:
+      label: "标准口径 · 主申请人"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "ACR I-Card 认证基础费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证类通用附加."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "多数处室按认证并行收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        extra-copies:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "额外副本按份计收认证费或依窗口指示,以 OPS 标示为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        third-party-services:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "如复印、公证、快递等非移民局费用,视情另计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "价格表与多处官方页面一致."
+deliverables:
+  description: "签发 ACR I-Card 认证原件及相关收讫凭证,用于对外提交与核验."
+  items:
+    acr-icard-certification-original:
+      name: "ACR I-Card Certification 原件"
+      usage: "用于向政府机关、法院、银行、雇主或第三方提交状态或记录证明."
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费凭证,作为后续流程与对账依据."
+    claim-stub:
+      name: "领证凭条(Claim Stub)"
+      usage: "领取证书时必须出示;逾期未领超过30日证书作废."
+kpis:
+  processing_time: "约2个工作日(内部审核与签批)"
+risks:
+  items:
+    missing-original-passport: "未携带护照原件现场核验将导致延误或不予受理."
+    payment-not-completed: "未当日缴费或未持 OR,将不进入后续签批与制证流程."
+    certificate-claim-overdue: "证书签发后30日未领取将自动作废,需重新申请并缴费."
+    noncompliance-or-false-docs: "护照/授权停留过期、不良纪录或提供虚假文件将导致驳回,严重者依法追责."
+    improper-binding-and-size: "未按法律纸尺寸与清单顺序装订,窗口可拒绝受理."
+    agent-restrictions: "代理人无 BI 认证资质或未持 SPA 原件及有效身份证,不得代办/代领."
+    supplemental-docs-may-be-required: "移民局可视核查需要要求提交其他支持性材料(以窗口书面通知为准)."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(无则填 N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "N/A"
+      notes: ""
+    other-names:
+      label: "其他姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    aliases:
+      label: "别名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "01 JAN 1990"
+      notes: "格式 DD-MMM-YYYY."
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "男"
+      notes: "男/女."
+    birth-place:
+      label: "出生地(城市/国家)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING, CHINA"
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINESE"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "E12345678"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+    visa-class:
+      label: "签证类别/签注页信息(永久或暂时居留类)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "13A Permanent Resident Visa"
+      notes: ""
+    address-line1:
+      label: "菲居住/登记地址(门牌、街道/村镇)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 12A, 123 ABC St., Barangay XYZ"
+      notes: ""
+    address-barangay:
+      label: "小区/Barangay"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Barangay XYZ"
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    address-province:
+      label: "市/省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: "座机/手机至少一项可用."
+    phone-landline:
+      label: "联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "02-8123-4567"
+      notes: "座机/手机至少一项可用."
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: "用于通知与补件沟通."
+    purpose:
+      label: "申请目的(Purpose)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "银行合规审查提交"
+      notes: ""
+    document-to-certify:
+      label: "拟认证的文件名称(在案条目)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ACR I-Card record for 2023"
+      notes: ""
+    copies-count:
+      label: "认证份数"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2"
+      notes: "用于开单与制证."
+    pickup-method:
+      label: "领取方式(本人/授权代理)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "本人"
+      notes: ""
+    application-datetime:
+      label: "申请日期与时间"
+      type: "datetime"
+      required: "false"
+      format: "iso-datetime"
+      pattern: ""
+      example: "2025-03-15T10:30:00+08:00"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    children-count:
+      label: "子女人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2"
+      notes: ""
+    children-names:
+      label: "子女姓名(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Child A; Child B"
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主名称(可选)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC CORPORATION"
+      notes: ""
+    employer-address-line1:
+      label: "雇主地址(门牌/街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "10F, 123 Paseo de Roxas"
+      notes: ""
+    employer-city:
+      label: "雇主城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    employer-province:
+      label: "雇主省/大马尼拉区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    employer-contact-person:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "HR MANAGER"
+      notes: ""
+    employer-phone:
+      label: "雇主联系电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "02-8555-1234"
+      notes: ""
+  authorization:
+    spa-present:
+      label: "是否提供专属委托书(SPA)原件"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "授权代理时适用."
+    agent-full-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JUAN DELA CRUZ"
+      notes: ""
+    agent-gov-id-number:
+      label: "代理人政府签发身份证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-1234567890"
+      notes: ""
+    bi-accreditation-id:
+      label: "移民局认证机构证件(BI Accreditation ID)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ACC-2025-000123"
+      notes: "如代理人为移民局认证机构."
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-10"
+      notes: ""
+    authorized-stay-until:
+      label: "授权停留期限至"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-06-10"
+      notes: ""
+  travel_history: {}
+  compliance:
+    adverse-record-check:
+      label: "不良纪录检索结果"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "No adverse record found"
+      notes: "窗口将进行不良记录检索."
+  additional_details:
+    notes-or-instructions:
+      label: "其他说明(如多份认证需求、用途说明等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    eligibility:
+      question: "哪些申请人可以办理该认证?"
+      answer: "持有有效 ACR I-Card 且签证类别为永久或暂时居留的外国人;短期访客类一般不适用本项认证."
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "窗口递件与缴费约30分钟,内部审核与签批通常需约2个工作日;如需补件或遇复核将顺延."
+    fees-and-payment:
+      question: "费用标准是多少,在哪里缴?"
+      answer: "标准合计 PHP 1,010(认证费500 + LRF 10 + 快速通道费500),以 OPS/OR 为准;凭 OPS 至移民局 Cash Section 缴费."
+    expired-docs-eligibility:
+      question: "我的护照或最近一次入境授权停留已过期,能否申请?"
+      answer: "原则上不受理;应先依法补救(如办理复议/MR或其他合规措施)后再申请认证."
+    missing-grace-order-or-letter:
+      question: "未提交“宽限期命令”或未写致 ARD 主管函件是否会被拒?"
+      answer: "对应情形必须提交;缺失将被发出补件通知并暂停处理,直至补齐."
+    authorized-representative:
+      question: "可以委托他人代办/代领吗?"
+      answer: "可以.须提供每位申请人的 SPA 原件与代理人有效政府身份证;如代理人为移民局认证机构,可提交其 BI Accreditation ID."
+    claim-deadline:
+      question: "证书多久内需要领取?"
+      answer: "自签发之日起30日内.逾期未领取将自动作废,需重新申请并缴费出证."
+    form-filling:
+      question: "申请表应如何填写?"
+      answer: "使用英文大写字母,无法适用处填“N/A”,不得留空;信息须与护照一致,提交前请自检避免因填写错误导致延误."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用以 OPS/OR 为准,若与价目表存在差异以窗口实际为准."
+    may-require-additional-docs: "移民局可依据核查需要要求提交其他支持性材料(以窗口书面通知为准)."
+    version-2025: "内容基于 2025 年版认证类收费与流程要点."
+service_related:
+  links: {}

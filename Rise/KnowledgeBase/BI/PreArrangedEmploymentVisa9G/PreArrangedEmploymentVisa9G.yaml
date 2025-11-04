@@ -1,0 +1,1678 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "预先安排就业签证"
+  - "9G"
+  - "Pre-arranged Employment Visa"
+  - "Sec. 9(G)"
+department: "BureauOfImmigration"
+name: "预先安排就业签证(9G)"
+slug: "pre-arranged-employment-visa-9g"
+type: "reference"
+semantic_profile:
+  intent_id: "pre-arranged-employment-visa-9g"
+  category: "work-visa"
+  tags: []
+service_overview: "预先安排就业签证(Sec. 9(G))为拟在菲从事合法职业的外籍人士及其符合条件家属签发的非移民长期工作签证.获批后可在法定期限内为特定雇主合法工作并领取ACR I-Card.依据用人单位纳税规模与申请年限不同,费用与流程细节有所差异;核准后须在规定期限内完成签证实施与I-Card申领."
+applicability:
+  items:
+    change-of-status-to-9g: "外籍人才受聘在菲公司/机构,需要自短期停留(如9A)转换为9G长期工作签证."
+    hire-expatriates-in-ph: "企业引进境外管理、技术或研发人员,在菲任职与领薪."
+    include-dependents: "主申请人9G有效期内,为配偶及未婚且未满21周岁子女办理家属随行并纳入同类签证."
+    extension-renewal: "9G签证到期前办理展延(续签)以继续合法工作与居留."
+    provisional-work-permit-before-visa-issuance: "在9G核签前,先持临时工作许可(PWP)在菲合法工作的过渡安排."
+preconditions:
+  required:
+    lawful-employment-position: "拟在菲从事依法许可的职业活动,并有明确岗位、雇主与报酬安排."
+    petition-by-employer: "由菲律宾用人单位(请愿人)发起申请,提交完整材料并配合面谈/听证."
+    aep-required: "取得外籍雇员许可(AEP),由劳工与就业部核发."
+    valid-stay-and-passport: "申请人在菲律宾境内具备有效停留身份与在菲有效护照."
+    boq-medical-clearance-if-applicable: "如属于检疫附表国家公民且2014年6月后入境,应具卫生检疫局体检许可(Bureau of Quarantine Medical Clearance)."
+  not_eligible:
+    falsified-documents: "递交虚假或未经合法途径取得的文件,或材料存在重大不实."
+    aep-mismatch-or-missing: "未按要求提供AEP或岗位与AEP核准内容不一致."
+    overstay-or-records: "超期停留未先行处理或存在未结移民/治安违法记录."
+    no-show-or-refuse-biometrics: "未按要求参加听证或拒不配合指纹与影像采集."
+    not-implemented-within-90-days: "签证获批后90日内未实施签证或未申领ACR I-Card,导致签证自动取消/卡片停用."
+pre_required_documents:
+  mandatory:
+    joint-petition-letter-main: "由申请人与请愿单位共同签署的致移民局局长的联名请愿信(主申请人,首次/转换为9G)."
+    cgaf-two-originals-main: "非移民签证用CGAF两份正本(其中一份用于ACR I-Card)(主申请人)."
+    passport-copies-status-proof-main: "护照资料页、最近一次入境章页及当前合法停留证明的复印件(主申请人)."
+    employment-contract-and-appointment: "劳动合同、公司秘书证明/任命书/调任书等,载明薪酬、任期、岗位职责与工作范围."
+    latest-itr-and-proof-of-payment: "请愿单位最近一期所得税申报(ITR)及缴费凭证(OR/银行回单/eFPS截图等)."
+    entity-registration-docs: "机构注册文件:公司/合伙企业提供SEC注册证、公司章程、当年GIS(SEC收讫章);个体工商户提供DTI商名注册证、地方政府营业许可(Mayor’s Permit)."
+    aep-certificate: "外籍雇员许可AEP(劳工与就业部核发)."
+    headcount-affidavit: "经公证的本单位菲籍与外籍员工人数证明(使用移民局偏好格式)."
+    prc-temp-permit-if-regulated: "如属受监管专业,提交PRC核发的临时执业许可(如适用)."
+    bi-clearance-main: "移民局无案证明(BI Clearance Certificate)(主申请人)."
+    boq-medical-clearance-main: "卫生检疫局体检许可(适用于附录A国家且2014年6月后入境的主申请人)."
+    joint-petition-letter-dependents: "申请人与请愿人联名请愿信(家属随行纳入,每位家属)."
+    cgaf-two-originals-dependents: "非移民签证用CGAF两份正本(家属)."
+    principal-passport-and-visa-copies: "主签证持有人护照资料页、9G签证实施页、最近一次入境与合法停留复印件(家属案件)."
+    dependent-passport-and-stay-copies: "家属本人护照资料页与最近一次入境及合法停留复印件."
+    relationship-proof-spouse: "配偶随行的婚姻关系证明(PSA或经认证文件)."
+    relationship-proof-children: "子女随行的亲子关系证明(如出生证明等)."
+    bi-clearance-dependents: "家属无案证明(BI Clearance Certificate)."
+    boq-medical-clearance-dependents: "家属的卫生检疫局体检许可(适用于附录A国家且2014年6月后入境者)."
+    renewal-request-letter: "请愿单位致局长的续签请求函(续签/展延)."
+    cgaf-two-originals-renewal: "非移民签证用CGAF两份正本(续签/展延)."
+    passport-and-visa-copies-renewal: "护照资料页、9G签证实施页与最近一次入境及合法停留复印件(续签/展延)."
+    bi-clearance-renewal: "移民局无案证明(续签/展延)."
+    boq-medical-clearance-renewal: "卫生检疫局体检许可(适用于附录A国家且2014年6月后入境者)(续签/展延)."
+  conditional:
+    authorized-representative-submission:
+      trigger: "由授权代表递交时"
+      documents:
+        - "移民局认证ID(或认证号)"
+        - "针对每位申请人的特别授权书(SPA)"
+        - "代理人有效政府签证件复印件"
+    regulated-profession-prc:
+      trigger: "从事受监管专业"
+      documents:
+        - "PRC临时执业许可及其复印件"
+    quarantine-clearance-required:
+      trigger: "属移民令SBM-14-059-A附录A国家且2014年6月后入境"
+      documents:
+        - "卫生检疫局体检许可(Bureau of Quarantine Medical Clearance)"
+    missionary-noncommercial:
+      trigger: "非商业(传教)情形续签/展延"
+      documents:
+        - "所在社区/村镇(Barangay)证明,说明申请人确在当地从事传教服务"
+    more-than-two-children:
+      trigger: "主申请人子女超过两名"
+      documents:
+        - "申请人子女信息综合表(逐一列明姓名与出生日期)"
+process:
+  steps:
+    1-get-and-fill-forms:
+      order: "1"
+      title: "获取并填写表格(0.5天)"
+      description: "至PIAU或官网下载CGAF与模板,按英文大写、空项填N/A规范填写,准备两份正本(其中一份用于ACR I-Card)."
+    2-precheck-and-filing:
+      order: "2"
+      title: "预审与递件(0.5–1天)"
+      description: "至CRU或授权外勤办前台进行材料预审与受理;现场扫描护照原件后退还,预审通过后出具受理凭证."
+    3-payment-and-receipt:
+      order: "3"
+      title: "缴费并提交收据副本(当日)"
+      description: "按受理清单至出纳窗口缴费,保留官方收据(OR),按指引提交复印件或扫描件."
+    4-hearing-and-inquiry:
+      order: "4"
+      title: "听证与问询(1–2周排期)"
+      description: "按通知参加签证官听证/面谈,申请人与/或请愿单位代表携带护照原件/有效身份证明."
+    5-biometrics-and-acr:
+      order: "5"
+      title: "影像与指纹采集(当日)"
+      description: "前往ARD采集影像与指纹,并同步提交ACR I-Card申请所需材料."
+    6-approval-and-status:
+      order: "6"
+      title: "审批与状态查询(5–10个工作日)"
+      description: "审核周期视案情而定,可通过在线系统查询状态;被要求补件时限内提交."
+    7-visa-implementation:
+      order: "7"
+      title: "签证实施与贴签(1–3个工作日)"
+      description: "审批通过后提交护照办理签证实施与贴签(签证贴纸费用另计),领取完成通知."
+    8-collect-acr-icard:
+      order: "8"
+      title: "领取ACR I-Card(2–6周)"
+      description: "收到批准通知后凭证件领取;未成年人采集频次不同,代理领取须按要求备齐材料."
+    9-archive-and-obligations:
+      order: "9"
+      title: "结果归档与后续义务(当日)"
+      description: "妥善保管OR、批文与卡片;按要求办理年报、地址变更申报及到期前展延."
+  variants: {}
+  notes: "办理地点:移民局主办公室(Intramuros, Manila)及授权外勤办事处,建议选择可办理9G的授权窗口并提前预约."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "2014官方收费表与公民宪章2025版节选;不同办事处以实际OR为准."
+  items:
+    nontop1000-main-1y-2014:
+      label: "非Top 1000企业 · 主申请人 · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 10,130"
+            value: 10130
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card加收,按年限计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸费另计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-main-2y-2014:
+      label: "非Top 1000企业 · 主申请人 · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 17,170"
+            value: 17170
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: "ACR I-Card加收,按年限计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-main-3y-2014:
+      label: "非Top 1000企业 · 主申请人 · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 24,210"
+            value: 24210
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: "ACR I-Card加收,按年限计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-spouse-1y-2014:
+      label: "非Top 1000企业 · 配偶 · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,120"
+            value: 8120
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-spouse-2y-2014:
+      label: "非Top 1000企业 · 配偶 · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 13,960"
+            value: 13960
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-spouse-3y-2014:
+      label: "非Top 1000企业 · 配偶 · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 19,800"
+            value: 19800
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b16-1y-2014:
+      label: "非Top 1000企业 · 子女B16(<16) · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,870"
+            value: 7870
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b16-2y-2014:
+      label: "非Top 1000企业 · 子女B16(<16) · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 13,710"
+            value: 13710
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b16-3y-2014:
+      label: "非Top 1000企业 · 子女B16(<16) · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 19,550"
+            value: 19550
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b14-1y-2014:
+      label: "非Top 1000企业 · 子女B14(<14) · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,370"
+            value: 7370
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b14-2y-2014:
+      label: "非Top 1000企业 · 子女B14(<14) · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 13,210"
+            value: 13210
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-child-b14-3y-2014:
+      label: "非Top 1000企业 · 子女B14(<14) · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 19,050"
+            value: 19050
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-1y-2014:
+      label: "Top 1000企业 · 主申请人 · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 10,630"
+            value: 10630
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-2y-2014:
+      label: "Top 1000企业 · 主申请人 · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 18,170"
+            value: 18170
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-3y-2014:
+      label: "Top 1000企业 · 主申请人 · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 25,710"
+            value: 25710
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-spouse-1y-2014:
+      label: "Top 1000企业 · 配偶 · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,620"
+            value: 8620
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-spouse-2y-2014:
+      label: "Top 1000企业 · 配偶 · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 14,960"
+            value: 14960
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-spouse-3y-2014:
+      label: "Top 1000企业 · 配偶 · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 21,300"
+            value: 21300
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b16-1y-2014:
+      label: "Top 1000企业 · 子女B16(<16) · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,370"
+            value: 8370
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b16-2y-2014:
+      label: "Top 1000企业 · 子女B16(<16) · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 14,710"
+            value: 14710
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b16-3y-2014:
+      label: "Top 1000企业 · 子女B16(<16) · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 21,050"
+            value: 21050
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b14-1y-2014:
+      label: "Top 1000企业 · 子女B14(<14) · 1年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,870"
+            value: 7870
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b14-2y-2014:
+      label: "Top 1000企业 · 子女B14(<14) · 2年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 14,210"
+            value: 14210
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-child-b14-3y-2014:
+      label: "Top 1000企业 · 子女B14(<14) · 3年(2014)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 20,550"
+            value: 20550
+          notes: "与2025口径一致."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-1y-2025:
+      label: "Top 1000企业 · 主申请人 · 1年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 10,630"
+            value: 10630
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-2y-2025:
+      label: "Top 1000企业 · 主申请人 · 2年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 18,170"
+            value: 18170
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-main-3y-2025:
+      label: "Top 1000企业 · 主申请人 · 3年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 25,710"
+            value: 25710
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-dependent-1y-2025:
+      label: "Top 1000企业 · 配偶/子女 · 1年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,620"
+            value: 8620
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-dependent-2y-2025:
+      label: "Top 1000企业 · 配偶/子女 · 2年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 14,960"
+            value: 14960
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    top1000-dependent-3y-2025:
+      label: "Top 1000企业 · 配偶/子女 · 3年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 21,300"
+            value: 21300
+          notes: "与2014相同区间."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-main-1y-2025:
+      label: "非Top 1000企业 · 主申请人 · 1年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,560"
+            value: 7560
+          notes: "示例价,具体以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-main-2y-2025:
+      label: "非Top 1000企业 · 主申请人 · 2年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 14,100"
+            value: 14100
+          notes: "示例价,具体以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-main-3y-2025:
+      label: "非Top 1000企业 · 主申请人 · 3年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            range: null
+            tiers: []
+          notes: "暂无官方费用信息(待补充),以实际OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    nontop1000-dependent-1y-2025:
+      label: "非Top 1000企业 · 配偶/未成年 · 1年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,860"
+            value: 6860
+          notes: "示例价,具体以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-dependent-2y-2025:
+      label: "非Top 1000企业 · 配偶/未成年 · 2年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 12,700"
+            value: 12700
+          notes: "示例价,具体以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    nontop1000-dependent-3y-2025:
+      label: "非Top 1000企业 · 配偶/未成年 · 3年(2025)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            range: null
+            tiers: []
+          notes: "暂无官方费用信息(待补充),以实际OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    common-additional-fees:
+      label: "常见附加费用"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 500
+                condition: "standard"
+              - value: 1500
+                condition: "package scenarios"
+          notes: "不同处室或整包场景金额有所差异."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 10
+                condition: "common tier"
+              - value: 20
+                condition: "common tier"
+              - value: 30
+                condition: "common tier"
+              - value: 40
+                condition: "common tier"
+              - value: 50
+                condition: "common tier"
+          notes: "法律检索费常见档位(除头税与罚款外,多数项目计收)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "无案证明/各类认证常见总额(含认证费与Express/LRF),以开单为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        overstay-fine:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 500
+                condition: "per month"
+          notes: "超期停留罚款按月计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        annual-report-late:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 200
+                condition: "per month"
+              - value: 2000
+                condition: "annual cap"
+          notes: "年报逾期按月计收,年度封顶."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+deliverables:
+  description: "办理结果包含护照签证实施页(贴签)与ACR I-Card等相关凭证."
+  items:
+    visa-sticker-implementation:
+      name: "9G签证贴纸/实施页"
+      usage: "在护照上实施签注,证明签证生效与有效期."
+    acr-i-card:
+      name: "ACR I-Card(外国人登记身份证)"
+      usage: "居留期间的身份证明,用于年报、出入境等."
+    official-receipts-or:
+      name: "官方收据(OR)"
+      usage: "费用支付凭证,用于报销与存档."
+kpis:
+  processing_time: "约2–6周(从递件至I-Card领取,视案情与窗口安排)"
+risks:
+  items:
+    documents-falsification: "材料不实或文件伪造将被驳回并可能引发刑事起诉/递解出境."
+    failure-to-implement-within-90-days: "签证获批后90日内未实施将自动取消,ACR I-Card停用."
+    overstay-penalties: "逾期停留将加收罚金并影响后续签证."
+    reporting-noncompliance: "年报或地址变更未及时申报将产生行政罚."
+    aep-inconsistency: "AEP岗位、合同岗位与请愿内容不一致会影响审批."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(拼音/英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(拼音/英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: ""
+    middle-name:
+      label: "中间名(如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alias-names:
+      label: "别名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有需与历史记录一致."
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    country-of-birth:
+      label: "出生国家/地区"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可能触发检疫许可要求."
+    height-cm:
+      label: "身高(cm)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "175"
+      notes: ""
+    weight-kg:
+      label: "体重(kg)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "70"
+      notes: ""
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于家属纳入与证明匹配."
+    ph-address-line1:
+      label: "菲律宾居住地址(行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ph-address-city:
+      label: "菲律宾居住城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ph-address-province:
+      label: "菲律宾省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ph-address-postal-code:
+      label: "菲律宾邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-address-line1:
+      label: "海外住址(行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-address-city:
+      label: "海外住址城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-address-province:
+      label: "海外住址州/省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-address-country:
+      label: "海外住址国家/地区"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-address-postal-code:
+      label: "海外邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "菲律宾联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+    email:
+      label: "邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    tin:
+      label: "纳税人识别号(TIN,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "配偶姓名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-expiry:
+      label: "配偶护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-relationship-proof:
+      label: "婚姻关系证明信息"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "PSA或经认证文件."
+    spouse-last-entry-date:
+      label: "配偶最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-current-stay-until:
+      label: "配偶当前授权停留截止日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "子女姓名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-relationship-proof:
+      label: "亲子关系证明信息"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "PSA出生证明或经认证文件."
+  dependents: {}
+  employment:
+    job-title:
+      label: "职位名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "须与合同及AEP一致."
+    job-description:
+      label: "岗位描述"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contract-end-date:
+      label: "合同到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "用于确定签证有效期."
+    monthly-gross-salary-php:
+      label: "实际月度税前薪资(PHP)"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "120000"
+      notes: "与劳动合同一致."
+    aep-number:
+      label: "AEP编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    aep-expiry:
+      label: "AEP有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    prc-temp-permit-held:
+      label: "是否持有PRC临时执业许可(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    prc-temp-permit-number:
+      label: "PRC临时执业许可编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    prc-temp-permit-expiry:
+      label: "PRC临时执业许可有效期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-company-name:
+      label: "请愿单位(雇主)名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-registration-type:
+      label: "机构性质/注册类型(SEC/DTI/其他)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-registration-number:
+      label: "注册号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-line1:
+      label: "单位注册地址(行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-city:
+      label: "单位注册地址城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-phone:
+      label: "单位联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-email:
+      label: "单位邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-signatory-name:
+      label: "法定代表/签字授权人姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "请愿信签署主体."
+    authorized-signatory-title:
+      label: "签字授权人职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employee-count-filipino:
+      label: "菲籍员工人数"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "100"
+      notes: ""
+    employee-count-foreign:
+      label: "外籍员工人数"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "10"
+      notes: ""
+    latest-itr-period:
+      label: "最近一期ITR申报期间"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "FY2024"
+      notes: ""
+    tax-payment-proof-ref:
+      label: "缴费凭证参考号/OR编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    submission-mode:
+      label: "递交方式(亲办/授权代表)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "authorized-representative"
+      notes: ""
+    bi-accreditation-id:
+      label: "移民局认证ID/编号(代理)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-reference:
+      label: "特别授权书(SPA)编号/日期"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-govt-id:
+      label: "代理人政府签证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "NAIA"
+      notes: ""
+    current-authorized-stay-until:
+      label: "当前授权停留截止日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "用于计算转换/续签时限."
+  travel_history:
+    current-visa-type:
+      label: "现持签证/身份类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9A"
+      notes: ""
+    application-type:
+      label: "申请类别(转换/展延/纳入)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "转换"
+      notes: ""
+    requested-duration:
+      label: "申请年限(1/2/3年)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2"
+      notes: ""
+  compliance:
+    bi-clearance-number:
+      label: "BI无案证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-clearance-date:
+      label: "BI无案证明签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    boq-clearance-required:
+      label: "是否触发检疫体检许可要求"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "适用于附录A国家且2014年6月后入境."
+    boq-clearance-reference:
+      label: "检疫体检许可编号/日期"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    annual-report-compliance:
+      label: "年报办理情况(1–3月)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    notes-free-text:
+      label: "补充说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "提交CGAF并同意数据隐私声明;拇指印/签名按指引完成."
+  certification_statement: "经宣誓的声明/委托书须为原件并依法公证;申请人签署承诺/认证条款."
+faq:
+  qas:
+    processing-time:
+      question: "9G从递交到拿卡一般需要多长时间?"
+      answer: "常规为2–6周,包含预审与递件(0.5–1天)、听证排期(约1–2周)、审批(5–10个工作日)、签证实施(1–3个工作日)与I-Card制卡(2–6周),以案情与窗口为准."
+    aep-before-9g:
+      question: "AEP尚未核发可以先递9G吗?"
+      answer: "AEP为9G必备许可.业务紧急可先申请PWP在核签前合法工作,但9G递交与审批时须提供有效AEP."
+    common-mistakes:
+      question: "材料中最常见的错误有哪些?"
+      answer: "常见错误包括未用英文大写、空项未填N/A、国外文件缺少FSP/DFA认证、合同/岗位与AEP不一致、联名请愿信缺签或无请愿人抬头、ITR缺缴费凭证、民事关系证明非PSA原件等."
+    failure-to-implement:
+      question: "签证获批后一直未去实施会怎样?"
+      answer: "自批准起90日内未完成签证实施,签证将自动取消;ACR I-Card亦会停用,需重新递件并承担相应费用与延误."
+    pricing-top1000-difference:
+      question: "如何区分Top 1000与非Top 1000企业的收费?"
+      answer: "按请愿单位纳税规模划分收费区间.Top 1000收费标准略高;2025官方口径与2014在Top 1000区间数额一致,非Top 1000在新版中出现更低样例价,请以实际OR为准."
+    dependents-limits:
+      question: "家属纳入有哪些限制?"
+      answer: "限合法配偶与未婚且未满21周岁子女.需分别提交关系证明、护照与入境/停留证明、无案证明及(如触发)检疫体检许可."
+    minors-biometrics:
+      question: "未成年人需要到场采集生物信息吗?"
+      answer: "需要.10周岁及以下每次延期均需采集;11周岁及以上每5年采集一次,具体以ARD安排为准."
+    extension-missionary-proof:
+      question: "9G展延是否需要额外社区证明?"
+      answer: "一般商业9G不需要;非商业(传教)情形需补充Barangay证明,说明申请人确在当地从事传教服务."
+disclaimers:
+  items:
+    fees-subject-to-or: "不同办事处的收据组合与开单口径可能存在差异,费用以实际官方收据(OR)为准."
+    info-updates-2025: "以上信息已更新至2025官方版本,政策与费用可能调整,请以受理窗口最新指引为准."
+service_related:
+  links: {}

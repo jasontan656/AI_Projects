@@ -1,0 +1,850 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "随行父母移民签证签发后所生子女非配额移民签证转换(13C)"
+slug: "child-born-subsequenttothe-issuanceof-immigrant-visaofthe-accompanying-parent"
+type: "reference"
+semantic_profile:
+  intent_id: "immigrant-visa-13c-child-born-after-parent-visa"
+  category: "immigrant-visa"
+  tags: []
+service_overview: "为“在随行父母获批并签发移民签证后在菲律宾境内出生的子女”办理非配额移民签证(13C)转换,并同步完成ACR I-Card申请与发放,确保未成年人在菲长期合法居留、出入境与后续教育、医疗、登记等事务的合规性."
+applicability:
+  items:
+    child-born-after-parent-immigrant-visa-issued: "子女在随行父母的移民签证签发之后出生,需在菲律宾境内将身份转换为非配额移民签证(13C)."
+    at-least-one-parent-holds-valid-immigrant-visa: "父母一方或双方已持有效移民签证且在菲合法停留,拟为新生儿尽快取得合法居留与登记证件."
+    travel-plan-needs-visa-and-acr: "因即将安排子女出入境旅行,需要先落实签证实施与ACR I-Card发放."
+    include-child-into-family-records: "子女信息需纳入家庭移民档案,后续办理学校注册、医疗保险或银行开户需提供合法居留证明."
+    late-application-rectification: "过往未及时办理,现拟补齐转签与登记手续,规避逾期停留或记录不全的风险."
+preconditions:
+  required:
+    child-born-after-visa-issuance: "子女确为“在随行父母移民签证签发之后”出生."
+    parent-holds-valid-immigrant-visa: "随行父母至少一方持有有效移民签证,且当前在菲停留受许可且有效."
+    complete-birth-registration-docs: "申请人(子女)具备完整出生登记文件;在菲律宾签发的民事登记文件须为菲律宾统计局(PSA)原件."
+    cgaf-two-originals: "按要求完成统一申请表(CGAF)两份正本,且资料齐备."
+    present-original-passports-at-intake: "申请人与/或请愿人(父/母)在受理、评估与面谈时可出示原始护照或身份证件."
+  not_eligible:
+    birth-before-parent-visa-issued: "子女出生日期早于随行父母移民签证签发日期."
+    parent-stay-not-legal: "随行父母在菲停留不合法或无法证明其最新入境与有效停留."
+    key-docs-missing-or-fraud: "关键文件缺失或存在伪造嫌疑(包括出生证明、护照资料页、检疫证明等)."
+    foreign-docs-not-legalized: "未按要求提交经认证的境外文件(未经驻外机构或外交部认证/合法化,且无英文译本)."
+    adverse-records-or-prohibited: "经审查存在不良记录或其他法律禁止情形."
+pre_required_documents:
+  mandatory:
+    petition-letter-to-commissioner: "请愿信:由随行父母出具,致移民局局长,请求为子女办理13C转换."
+    cgaf-two-originals-bi-form: "统一申请表(CGAF,BI Form CGAF-001-Rev 2)两份正本:全英文、大写字母填写;不适用项填“N/A”,不得留空."
+    parents-passport-copies-and-stay-proof: "随行父母护照资料页复印件,以及最近一次入境章与当前有效停留的证明复印件."
+    child-birth-certificate: "子女出生证明:菲律宾签发的须为PSA原件;境外签发须为原件并经具辖菲律宾驻外机构(FSP)或菲律宾外交部(DFA)认证/合法化,非英文需附英文译本."
+    bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+    quarantine-medical-clearance-if-applicable: "检疫局体检/医学许可(如适用):特定国家且自2014年6月起入境者须提交检疫局出具的原件或经核证的真实副本."
+  conditional:
+    more-than-two-children:
+      trigger: "当申请表中子女数超过2人"
+      documents:
+        - "申请人子女信息补充表(Consolidated General Application Form for Information on Applicant’s Child(ren))"
+    represented-by-agent:
+      trigger: "由代理人递交或代领"
+      documents:
+        - "移民局认可机构之认证ID复印件(如为认证旅行社/律所)"
+        - "每位申请人的特别授权书(SPA)原件(如为非认证机构代理)"
+        - "代理人有效政府签发身份证复印件"
+    acr-i-card-application:
+      trigger: "办理ACR I-Card"
+      documents:
+        - "ACR I-Card申请材料(按外侨登记处ARD指引)"
+        - "影像与指纹采集(现场)"
+    additional-documents-as-required:
+      trigger: "受理单位为核验所需而要求补充"
+      documents:
+        - "受理单位通知的其他补充材料"
+process:
+  steps:
+    obtain-and-fill-forms:
+      order: "1"
+      title: "领取与填写表格(PIAU/官网)"
+      description: "在移民局PIAU或官网获取CGAF并按规范填写.预计0.5个工作日."
+    pre-evaluation-and-intake:
+      order: "2"
+      title: "预审与收件(CRU/前台)"
+      description: "向CRU或具受理资质的外勤办提交资料进行预审与扫描,原始护照核验后退还.预计0.5个工作日."
+    get-order-of-payment-slip:
+      order: "3"
+      title: "获取缴费单(OPS)"
+      description: "预审通过后领取缴费指示单(OPS).预计当日."
+    payment-and-receipt:
+      order: "4"
+      title: "缴费与回执"
+      description: "于收银窗口缴费并取得官方收据(OR).预计当日."
+    hearing-scheduling:
+      order: "5"
+      title: "听证排期"
+      description: "依官方收据所载时间与地点参加听证;同时按安排完成影像与指纹采集.通常提交后1–4周安排."
+    biometrics-and-acr-application:
+      order: "6"
+      title: "生物采集与ACR I-Card申请(ARD)"
+      description: "前往ARD完成影像、指纹采集并提交I-Card申请材料.预计当日完成."
+    online-status-check:
+      order: "7"
+      title: "网上查验进度"
+      description: "通过电子服务门户查询审批状态.审批周期一般约2–8周,视案情与排期而定."
+    visa-implementation:
+      order: "8"
+      title: "签证实施"
+      description: "审批通过后提交护照办理签证贴签(含贴纸费).通常3–5个工作日取件."
+    receive-acr-icard:
+      order: "9"
+      title: "领取ACR I-Card"
+      description: "I-Card核发后按通知领取;未成年人由父/母或授权代表依指引携证件领取.一般在生物采集后2–4周内可领."
+    archiving-and-follow-up:
+      order: "10"
+      title: "档案归档与后续管理"
+      description: "妥善保存OR、批文与I-Card;用于后续出入境、就学或银行业务."
+  variants: {}
+  notes: "时间以柜台受理与排期为准;可能因核验需要要求补件或追加面谈."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "13C签证费参考2014官方口径;通用费用按2025版执行;以OPS/OR为准."
+  items:
+    standard-child-13c:
+      label: "13C转换 · 子女 · 标准"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,870"
+            value: 7870
+          notes: "非配额移民签证申请费(13C转换);2014官方口径."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card费(1年有效);子女/眷属均需."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        i-card-express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "I-Card快速通道费(如适用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸费(签证实施)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 10
+                condition: "按每项收费项目自动计入(除头税与罚款外)"
+              - value: 20
+                condition: "按每项收费项目自动计入(除头税与罚款外)"
+              - value: 30
+                condition: "按每项收费项目自动计入(除头税与罚款外)"
+              - value: 50
+                condition: "按每项收费项目自动计入(除头税与罚款外)"
+          notes: "法律检索费(LRF),金额随项目而变动."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        bi-clearance-certificate:
+          amount:
+            currency: "PHP"
+            display: "PHP 510 / 1,010"
+            value: null
+            tiers:
+              - value: 510
+                condition: "常规(含认证费500+LRF10)"
+              - value: 1010
+                condition: "加急另加Express 500"
+          notes: "移民局无案证明(BI Clearance Certificate)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        motion-for-reconsideration:
+          amount:
+            currency: "PHP"
+            display: "PHP 500(常规)/ PHP 1,000(Express)"
+            value: null
+            tiers:
+              - value: 500
+                condition: "复议动议(MR)常规(另加LRF 10)"
+              - value: 1000
+                condition: "复议动议(MR)Express(另加LRF 10)"
+          notes: "逾期/迟延情形可能需提MR."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        quarantine-medical-clearance:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "检疫局医学许可(第三方收费),按检疫机关标准执行."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "具体以OPS/OR为准,部分项目为可选或因案情而异,无法精确汇总."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "审批通过后完成签证贴签与ACR I-Card发放,并取得官方收据与批文."
+  items:
+    13c-visa-sticker:
+      name: "13C非配额移民签证贴签"
+      usage: "证明长期合法居留资格,用于出入境与相关办理."
+    acr-i-card:
+      name: "ACR I-Card"
+      usage: "外侨登记身份证件,用于身份识别与合规检查."
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费凭证、后续办理与取件参考."
+    approval-order:
+      name: "批复/批文"
+      usage: "签证核准的正式依据."
+kpis:
+  processing_time: "常见情形下自递件起约2–8周获批;签证贴签约3–5个工作日;I-Card多在生物采集后2–4周发放."
+risks:
+  items:
+    late-conversion-overstay-penalty: "未及时办理转换或逾期停留,可能面临罚款、复议程序甚至出境限制."
+    false-docs-criminal-liability: "提交虚假文件将面临刑事责任和/或递解出境."
+    hearing-absence-delay-or-denial: "未按时参加听证或采集可能导致审批延误、补件甚至驳回."
+    fail-to-implement-within-90-days: "批复后未在90日内完成签证实施与I-Card领取,将自动取消签证并停用I-Card."
+    foreign-docs-without-legalization: "境外文件未完成认证/译本规范,可能被退件或驳回."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SMITH"
+      notes: ""
+    first-name:
+      label: "名(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: ""
+    middle-name:
+      label: "中间名(英文大写,如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "N/A"
+      notes: ""
+    date-of-birth:
+      label: "出生日期(DD-MMM-YYYY或ISO)"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2020-01-01"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "可选:Male/Female."
+    country-of-birth:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PHILIPPINES"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: ""
+    height-cm:
+      label: "身高(cm)"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: 120
+      notes: ""
+    weight-kg:
+      label: "体重(kg)"
+      type: "number"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: 25.5
+      notes: ""
+    marital-status:
+      label: "婚姻状况(未成年人一般为单身)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Single"
+      notes: "可选:Single/Married/Other."
+    phone-landline:
+      label: "在菲联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 2 8123456"
+      notes: ""
+    phone-mobile:
+      label: "在菲联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 123 4567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "APPLICANT@EMAIL.COM"
+      notes: ""
+    ph-address-line1:
+      label: "在菲住址—门牌/街道"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 MAIN ST"
+      notes: ""
+    ph-address-barangay:
+      label: "在菲住址—村/社区(Barangay)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BRGY. 123"
+      notes: ""
+    ph-address-city:
+      label: "在菲住址—市/城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    ph-address-province:
+      label: "在菲住址—省"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    ph-address-postal-code:
+      label: "在菲住址—邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: "^[0-9]{4}$"
+      example: "1200"
+      notes: ""
+    ph-address-country:
+      label: "在菲住址—国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: "^[A-Z]{2}$"
+      example: "PH"
+      notes: ""
+    overseas-address-line1:
+      label: "海外住址—门牌/街道(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-city:
+      label: "海外住址—城市(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-province:
+      label: "海外住址—州/省(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-country:
+      label: "海外住址—国家(如适用)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: "^[A-Z]{2}$"
+      example: ""
+      notes: ""
+    overseas-address-postal-code:
+      label: "海外住址—邮编(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+  spouse: {}
+  father:
+    father-last-name:
+      label: "父亲姓(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如为请愿人则填写."
+    father-first-name:
+      label: "父亲名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-middle-name:
+      label: "父亲中间名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-ph-address-line1:
+      label: "父亲在菲注册地址—门牌/街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    father-phone-mobile:
+      label: "父亲联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    father-email:
+      label: "父亲电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  mother:
+    mother-last-name:
+      label: "母亲姓(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如为请愿人则填写."
+    mother-first-name:
+      label: "母亲名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-middle-name:
+      label: "母亲中间名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-ph-address-line1:
+      label: "母亲在菲注册地址—门牌/街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-phone-mobile:
+      label: "母亲联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    mother-email:
+      label: "母亲电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  children:
+    children-count:
+      label: "子女数量"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 1
+      notes: "如超过2人,请使用子女信息补充表."
+  dependents: {}
+  employment: {}
+  authorization:
+    representative-name:
+      label: "授权代表姓名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-agency-name:
+      label: "机构名称(认证旅行社/律所,如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    boi-accreditation-number:
+      label: "移民局认证编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-contact:
+      label: "代表联系方式(电话/邮箱)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-address:
+      label: "代表办公/居住地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-present:
+      label: "是否提交特别授权书SPA(非认证机构代理)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-07-01"
+      notes: ""
+    authorized-stay-until:
+      label: "当前许可停留的最后一天"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-09-15"
+      notes: ""
+    current-immigration-status:
+      label: "现行移民身份类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "13A DEPENDENT / TOURIST"
+      notes: ""
+  travel_history: {}
+  compliance:
+    hearing-attendance-ack:
+      label: "已知悉并将按时参加听证"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    medical-clearance-required:
+      label: "是否属于需提交检疫局医学许可国家/情形"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: "参考SBM-14-059-A附件A与入境时间."
+  additional_details:
+    spouse-name-last:
+      label: "配偶姓(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-name-first:
+      label: "配偶名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-1-name-last:
+      label: "子女姓(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如名下子女超过2名,请提交补充表."
+    child-1-name-first:
+      label: "子女名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-1-date-of-birth:
+      label: "子女出生日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-1-full-name:
+      label: "在菲品行推荐人1姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-1-address:
+      label: "在菲品行推荐人1住址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-1-phone:
+      label: "在菲品行推荐人1联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-2-full-name:
+      label: "在菲品行推荐人2姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-2-address:
+      label: "在菲品行推荐人2住址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    referee-2-phone:
+      label: "在菲品行推荐人2联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-number:
+      label: "既有ACR号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-issue-date:
+      label: "ACR签发日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-expiry-date:
+      label: "ACR有效期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    crn-number:
+      label: "CRN号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    biometrics-schedule:
+      label: "影像与指纹采集安排(日期/时间/地点)"
+      type: "datetime"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人知悉并同意在提交CGAF及相关材料时遵守数据隐私与信息处理规定."
+  certification_statement: "申请人/请愿人承诺所填信息与提交文件真实准确,并在规定位置签名或按指纹确认."
+faq:
+  qas:
+    processing-time:
+      question: "办理周期一般多久?"
+      answer: "常见情形下,自递件起约2–8周获批;听证与生物采集通常在1–4周内安排.审批通过后签证实施约3–5个工作日,I-Card多在生物采集后2–4周发放,具体以窗口排期与个案核验为准."
+    born-before-visa-issuance:
+      question: "我的孩子是父母移民签证签发之前出生的,能办13C吗?"
+      answer: "不可以.13C仅适用于“在随行父母移民签证签发之后出生”的子女.若出生时间早于签发日期,应咨询适配的其他签证/居留路径."
+    hearing-required:
+      question: "需要参加听证吗?缺席会怎样?"
+      answer: "需要.听证为必要环节,时间与地点以官方收据为准.无故缺席可能导致审批延误、补件要求甚至直接驳回."
+    deadline-90-days:
+      question: "批复后多久内要完成签证贴签与I-Card领取?"
+      answer: "须在批复后90日内完成签证实施(贴签)并领取ACR I-Card.逾期将自动取消签证、I-Card自动停用,需重新办理并承担相应费用与不利后果."
+    bi-clearance-fee:
+      question: "“移民局无案证明(BI Clearance Certificate)”如何收费?"
+      answer: "常规收费为PHP 510(认证费500+LRF10);如选择加急,另收Express 500,总计PHP 1,010.是否必缴及具体金额以OPS/OR为准."
+    incomplete-docs:
+      question: "材料不齐是否可以先提交?"
+      answer: "不建议.清单明确要求资料齐备、顺序装订,以免被当场退件或后续被要求补件,进而延误审批或导致驳回."
+    agent-representation:
+      question: "能否由代理人代办或代领I-Card?"
+      answer: "可以.移民局认证的旅行社或律所可凭认证ID代办;非认证代理须提交每位申请人的特别授权书(SPA)原件及代理人有效政府签发身份证复印件.代领未成年人I-Card时,父/母有效身份证明亦须出示."
+    fee-discrepancy-13c:
+      question: "13C签证费为何与通用价目不一致?"
+      answer: "2025年版公开价目未单列13C转换签证费,当前参考2014年官方口径(PHP 7,870).其余通用费用按2025版执行;实际以OPS/OR为准,如官方更新将即时调整."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "所有费用以缴费单(OPS)与官方收据(OR)为准,美元项目按BSP汇率折算并以PHP缴付."
+    timelines-may-vary: "办理时长受排期、个案核验与补件影响,具体以窗口实际安排为准."
+    docs-authentication-requirement: "菲律宾境外签发文件须经具辖菲律宾驻外机构或DFA认证,非英文需附英文译本."
+    90-day-implementation-requirement: "批复后未在90日内完成签证实施与I-Card领取将导致签证取消与I-Card停用."
+service_related:
+  links: {}

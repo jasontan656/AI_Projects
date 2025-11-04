@@ -1,0 +1,552 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "旅行记录证明"
+slug: "travel-records-certificate"
+type: "reference"
+semantic_profile:
+  intent_id: "travel-records-certificate"
+  category: "certification"
+  tags: ["travel-records","immigration","certificate"]
+service_overview: "旅行记录证明由移民局认证与证明科出具,提供申请人在移民局旅行数据库内的出入境记录,供司法诉讼、海外就业或个人核验等用途.证书为盖章并封缄的正式文件,资料齐全并缴费后按规定时限出具,所有信息与数据库核对并记录处理过程."
+applicability:
+  items:
+    court-investigation-litigation: "法院或检调机关要求提供完整出入境记录,用于诉讼、调查或证据补强."
+    poea-employment-verification: "海外就业/POEA办理过程中,需核验申请人既往出入境情况."
+    self-check-travel-history: "个人自查旅行历史,核对护照签章与移民记录是否一致."
+    basis-for-other-immigration-certificates: "用于补办其他移民类证明(如无案证明、同名排除证明)前的事实依据."
+    background-check-by-agencies: "机构、使馆或雇主要求的背景核验,需提交官方出入境记录佐证."
+preconditions:
+  required:
+    provide-searchable-id-and-cooperate-verification: "申请人(菲律宾籍或外籍)提供可用于检索的证件信息,且愿意配合现场身份核验."
+    complete-application-form-bi-2014-13-006: "正确填写并提交旅行记录申请表(BI FORM 2014-13-006 Rev 0),不得留空项;不适用处填写“N/A”."
+    submit-passport-copies-and-stamp-pages: "提交护照资料页复印件,以及所申请求证期间的出入境章页复印件;原件须在收件阶段出示以供扫描."
+    bind-documents-legal-size: "文件按“文件清单”顺序装订于法定大小(8.5×14英寸)文件夹内,逾期或顺序不符可不受理."
+    agent-submission-requires-spa-and-id: "如由代理人递交或领取,须提供经移民局认可的资格证明或针对每位申请人的经认证特别授权书(SPA)与代理人政府核发身份证件."
+  not_eligible:
+    court-use-missing-letter-and-order: "法院/法律用途未提交致局长正式函与法院命令(或在境外主体的经认证SPA)."
+    poea-use-missing-letter: "POEA用途未提交POEA致局长的正式请求函."
+    form-not-properly-filled-or-unsupported-characters: "表格未按要求完整以英文大写字母填写,或使用系统不识别字符(如 ñ、é、ü、ç)."
+    missing-original-passport-for-scan-or-improper-binding: "未按规定提交原始护照供扫描或资料装订不合规范."
+    falsified-or-refusal-to-comply: "发现伪造、篡改或虚假文件,或拒不配合补件与核验."
+pre_required_documents:
+  mandatory:
+    application-form-bi-2014-13-006: "填写完整的旅行记录申请表(BI FORM 2014-13-006 Rev 0)."
+    passport-biodata-page-copy: "申请人护照资料页复印件."
+    passport-stamp-pages-copy: "申请期间的护照出入境章页复印件."
+    present-original-passport-for-scan: "申请时出示护照原件供中央收件单位(CRU)或前台人员扫描,随后当场返还."
+    agent-spa-and-gov-id: "若申请人为代理人办理:移民局认证的机构/人员身份证明或针对每位申请人的原始SPA,以及代理人有效政府身份证件复印件."
+  conditional:
+    court-legal-use:
+      trigger: "法院/法律用途"
+      documents: ["致移民局局长的正式请求函","法院命令,或如申请主体在海外,须提交经菲律宾外交部或相关渠道认证的SPA","申请人有效政府核发身份证件复印件(护照、SSS/GSIS、PRC、驾照、TIN或选民证)"]
+    poea-use:
+      trigger: "POEA用途"
+      documents: ["由POEA致移民局局长的正式请求函"]
+    other-agencies-embassies:
+      trigger: "其他政府机关或使馆"
+      documents: ["对方单位的正式请求文件及指示性附件(如需),按其格式与认证要求提交"]
+process:
+  steps:
+    submission-and-initial-review-ccs-cru:
+      order: "1"
+      title: "递交与初审(CCS/CRU)"
+      description: "现场提交申请表与全部材料,出示护照原件供扫描;窗口核对资料完整性与用途文件合规性,并确认检索期间与姓名规范(约10–20分钟)."
+    issue-ops:
+      order: "2"
+      title: "开具缴费单(OPS)"
+      description: "资料通过初审后开具官方支付指示单;材料缺漏将告知补件方式与期限."
+    payment-cashier-14-16:
+      order: "3"
+      title: "缴费(Cashier 窗口14–16)"
+      description: "持OPS至收银缴费,可选择常规或加急通道,完成缴费后领取官方收据(OR)(约10分钟)."
+    return-or-and-claim-stub:
+      order: "4"
+      title: "回交OR与领取凭条(CCS)"
+      description: "将OR交回CCS,领取领证凭条(Claim Stub),载明预计出证时间与领取窗口(约5分钟)."
+    issuance-and-sealing:
+      order: "5"
+      title: "出证与封缄(后台处理)"
+      description: "CCS在承诺时限内打印、签章并封缄旅行记录,必要时对异常记录复核(一般约3个工作日,急件优先)."
+    pickup-and-verification:
+      order: "6"
+      title: "领证与核对"
+      description: "按凭条时间到CCS窗口领取证书,现场核对姓名、护照号、日期区间等;勘误需提交支持文件并经审批后重新开具OPS再处理(约5–10分钟)."
+  variants: {}
+  notes: "领取时须出示领证凭条;如由代理人领取,须同时出示经认证SPA与代理人身份证件.证书自签发之日起逾30天未领取将自动作废,需重新申请与缴费."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "TravelRecordsCertification/TravelRecordsCertification.md"
+  items:
+    standard-regular:
+      label: "常规办理"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具旅行记录证明(常规)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证类标准附加项."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: "认证费+LRF."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    standard-express:
+      label: "加急办理"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具旅行记录证明."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证类标准附加项."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "加急/优先处理时收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "认证费+LRF+Express."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    gratis-inquiry:
+      label: "仅查询不出证"
+      details:
+        gratis-travel-records:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "仅内部查询不出具纸本时适用,以窗口告知为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 0"
+          value: 0
+        notes: "仅内部查询(Gratis)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "盖章并封缄的旅行记录证明,可作为相关机关审查凭据."
+  items:
+    travel-records-certificate:
+      name: "旅行记录证明(盖章并封缄)"
+      usage: "用于司法诉讼、海外就业流程或个人核验等需要."
+kpis:
+  processing_time: "资料齐全并缴费后通常约3个工作日出证;加急件优先,以领证凭条为准."
+risks:
+  items:
+    submission-of-false-documents: "提交虚假或伪造文件将被拒办并可能承担行政或刑事责任."
+    non-compliance-or-late-supplement: "不遵守窗口指引或多次逾期补件,可能被终止受理."
+    record-inconsistency-may-delay: "历史护照号、姓名拼写、国籍变更等导致的记录不一致需更正,可能影响时限."
+    overdue-pickup-void: "证书逾30天未领取将自动作废,需重新申请与缴费."
+    express-not-guaranteed-time: "加急仅代表优先处理,是否更快出证以窗口承诺与领证凭条为准."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: "按护照填报,英文大写."
+    first-name:
+      label: "名字"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "按护照填报,英文大写."
+    middle-name:
+      label: "中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ALPHA"
+      notes: "无则填N/A."
+    former-name:
+      label: "曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有,请填写."
+    alias:
+      label: "别名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有,请填写."
+    birth-date:
+      label: "出生日期"
+      type: "string"
+      required: "true"
+      format: "DD-MMM-YYYY"
+      pattern: ""
+      example: "01 JAN 1990"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与证件一致."
+    place-of-birth-city:
+      label: "出生地(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MANILA"
+      notes: ""
+    place-of-birth-country:
+      label: "出生地(国家)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PHILIPPINES"
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PHILIPPINE"
+      notes: "当前有效国籍."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: "当前有效护照号."
+    address-line1:
+      label: "在菲住址(门牌/街道/分区)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-barangay:
+      label: "在菲住址(Barangay)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "在菲住址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "在菲住址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "在菲住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "在菲联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "在菲联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    requesting-entity:
+      label: "请求单位(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "基金会/机构/使馆/其他."
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与政府身份证件一致."
+    agent-id-type:
+      label: "代理人证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DRIVER LICENSE"
+      notes: "政府核发ID."
+    agent-id-number:
+      label: "代理人证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "SPA编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "经认证的特别授权书(每位申请人各一份)."
+    spa-date:
+      label: "SPA日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-contact-mobile:
+      label: "代理人联系方式(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    agent-contact-email:
+      label: "代理人联系方式(邮箱)"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "agent@example.com"
+      notes: ""
+  arrival_info:
+    flight-number-arrival:
+      label: "航班号(到达)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR123"
+      notes: "对应各次行程."
+    flight-number-departure:
+      label: "航班号(离境)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR124"
+      notes: "对应各次行程."
+  travel_history:
+    request-period-start:
+      label: "申请求证区间开始日期"
+      type: "string"
+      required: "true"
+      format: "DD-MMM-YYYY 或 1993–Present"
+      pattern: ""
+      example: "01 JAN 2010"
+      notes: "如确无旅行记录,填“1993–Present/No Travel”."
+    request-period-end:
+      label: "申请求证区间结束日期"
+      type: "string"
+      required: "true"
+      format: "DD-MMM-YYYY 或 No Travel"
+      pattern: ""
+      example: "31 DEC 2020"
+      notes: "如确无旅行记录,填“1993–Present/No Travel”."
+    arrival-dates-list:
+      label: "抵达日期列表"
+      type: "string"
+      required: "false"
+      format: "DD-MMM-YYYY"
+      pattern: ""
+      example: "01 JAN 2018; 15 MAR 2019"
+      notes: "可另附页."
+    departure-dates-list:
+      label: "离境日期列表"
+      type: "string"
+      required: "false"
+      format: "DD-MMM-YYYY"
+      pattern: ""
+      example: "10 JAN 2018; 20 MAR 2019"
+      notes: "可另附页."
+    former-passport-number:
+      label: "曾用护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "如有,供交叉检索."
+    nationality-change:
+      label: "国籍变更说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有,供交叉检索."
+  compliance:
+    court-name:
+      label: "法院名称(含分院/地点与联系方式)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    poea-or-agency-name:
+      label: "POEA/其他机关名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "正式函抬头与文号(如有)."
+    purpose-description:
+      label: "用途说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "法院/POEA/个人自用/其他"
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    difference-regular-vs-express:
+      question: "常规与加急有何差异?"
+      answer: "两者收费不同.常规合计PHP 510;加急合计PHP 1,010.加急将优先处理,但具体出证时间以领证凭条为准."
+    when-to-receive-certificate:
+      question: "多久可以领取证书?"
+      answer: "在资料齐全并缴费后,通常约3个工作日出证;加急件优先,实际领证时间以凭条所载为准."
+    no-travel-record-what-to-do:
+      question: "如果查不到我的旅行记录怎么办?"
+      answer: "先确认是否曾更换护照或姓名拼写差异;必要时补交旧护照信息或佐证材料.确无记录者可出具“无旅行记录”类证明;表格中相应栏位请填写“1993–Present/No Travel”."
+    agent-processing-allowed:
+      question: "可以委托他人代办或代领吗?"
+      answer: "可以.须提交移民局认可的代理资质或经认证的SPA(每位申请人各一份)及代理人政府身份证件原件/复印件.领证时也需出示领证凭条."
+    court-use-extra-docs:
+      question: "法院用途需要哪些额外文件?"
+      answer: "需致局长的正式请求函和法院命令;如申请主体在境外,须提交经认证的SPA;并附申请人有效政府身份证件复印件."
+    poea-preparation:
+      question: "POEA用途如何准备?"
+      answer: "需提交POEA致移民局局长的正式请求函,其余材料按“必备资料”准备."
+    lost-claim-stub:
+      question: "领证凭条丢了怎么办?"
+      answer: "请立即至CCS窗口说明并出示有效身份证件与缴费收据;窗口将核实记录后指引补办或改以身份证明核验方式领取."
+    over-30-days-not-claimed:
+      question: "超过30天未领取会怎样?"
+      answer: "证书将自动作废,需重新申请并缴费;如仍需使用,请尽快按流程重新办理."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "本服务按“认证类收费”计收;最终以现场开具的OPS与官方收据(OR)为准."
+    currency-and-conversion: "统一以PHP计价;与美元项目合并缴费时,美元项按BSP汇率折算."
+    express-priority-only: "加急仅代表优先处理,是否更短时间出证以窗口承诺及领证凭条为准."
+    purpose-limitation: "证书仅用于申请时所述目的;如需用于其他机关,可能需再次申请或办理副本/再认证."
+service_related:
+  links: {}

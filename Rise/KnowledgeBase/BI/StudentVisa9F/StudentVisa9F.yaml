@@ -1,0 +1,1010 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "学生签证(9F)办理指南"
+slug: "student-visa-9f"
+type: "reference"
+semantic_profile:
+  intent_id: "student-visa-9f"
+  category: "visa"
+  tags: []
+service_overview: "学生签证(9F)为拟在菲律宾接受高等教育的外籍人士提供的非移民签证,适用于在菲将短期身份转换为9F及已持9F的展延.办理通常伴随ACR I-Card申请与领取.本指南涵盖表单填写规范、材料要求、窗口流程与常见风险,帮助院校与申请人依法依规完成申请、采集与签注."
+applicability:
+  items:
+    adult-higher-education-in-ph: "已年满18周岁,拟在菲律宾攻读高于高中层次的学位课程(大学/学院/神学院)."
+    in-ph-conversion-from-9a: "已以短期身份入境(如9A)并在菲律宾境内申请“转换为学生签证(9F)”."
+    extension-holding-9f: "已持9F签证,按学业进度申请展延(含转学或转专业情形)."
+    medical-dentistry-ched: "医学/牙医学专业入学,需额外提交CHED适读资格证明."
+    exit-reentry-need-ecc-src: "拟在学期间离境返入境,需要按学生身份办理离境许可(ECC)与特别返回证(SRC)的组合."
+preconditions:
+  required:
+    age-and-course-level: "申请人年满18周岁,课程层级高于高中."
+    valid-entry-and-stay: "持有效入境许可与仍在授权停留期内的最新入境章;护照页含检疫局(BOQ)章."
+    admission-and-recommendation: "院校出具录取通知(带校方干封)与“转换为学生签证的推荐函”(由教务注册主任签署)."
+    school-authorized-for-foreign-students: "院校具备移民局“学校接收外籍学生认证”,并能提供注册主任或授权代表的移民局认证身份证(ID)."
+    bi-clearance-required: "具备移民局无案证明(BI Clearance Certificate)."
+    conditional-med-dentistry-ched-coe: "医学/牙医学专业须提交CHED适读资格证明(Certificate of Eligibility for Admission)."
+    conditional-transfer-or-change-major-ched: "转学或转专业须提交CHED转学/转专业背书,并提供原校“荣誉退学证明/转学证明”."
+    conditional-nbi-after-6-months: "自首次入境达6个月(含)后提出申请须提交NBI无犯罪证明."
+    conditional-specific-countries-boq-medical: "属特定国家(见SBM-14-059-A附件A)且2014年6月后入境者(用于展延)需提交检疫局体检合格证明."
+  not_eligible:
+    under-18-non-degree: "未满18周岁且申请9F学位学习(未成年人或非学位短期课程通常办理SSP)."
+    school-not-certified-or-seal-issues: "院校无移民局外籍学生招生认证,或录取材料未加盖干封、签章不规范."
+    foreign-docs-not-authenticated-or-no-translation: "外文材料未按要求做FSP/DFA认证,或缺英文译文."
+    falsified-or-altered-docs: "申请材料存在伪造、涂改、信息不实等情况."
+    overstayed-without-remedy: "申请人已逾期停留且未依法先行处理复议/罚款事宜."
+pre_required_documents:
+  mandatory:
+    initial-joint-letter-to-commissioner: "学校与申请人联合致移民局局长的请示信(学校抬头纸并加盖干封)."
+    initial-cgaf-2-originals: "统一申请表(CGAF—学生签证/SSP),各2份“原件”."
+    initial-passport-copies-and-stamps: "护照资料页、最新入境章且在有效停留期内之页面、检疫局(BOQ)章页面复印件."
+    initial-admission-letter: "学校录取通知(带清晰干封)."
+    initial-recommendation-for-conversion: "学校出具的“身份转换为学生签证”推荐函(由注册主任签字)."
+    initial-school-registrar-or-rep-id: "学校注册主任或学校代表的移民局学校认证ID复印件."
+    initial-bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+    extension-joint-letter-to-commissioner: "学校与申请人联合致局长请示信(学校抬头纸与干封),说明符合展延条件."
+    extension-cgaf-2-originals: "CGAF(学生签证/SSP)—各2份“原件”."
+    extension-passport-copies: "护照资料页、签证签注页、最新入境章且在有效停留期内之页面复印件."
+    extension-tor-or-cog: "最近两学期成绩单或成绩证明(TOR/COG)."
+    extension-school-registrar-or-rep-id: "学校注册主任或学校代表的移民局学校认证ID复印件."
+    extension-bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+  conditional:
+    med-dentistry-coe:
+      trigger: "医学/牙医学专业入学"
+      documents: ["CHED适读资格证明(Certificate of Eligibility for Admission)"]
+    transfer-or-change-major:
+      trigger: "转学与/或转专业"
+      documents: ["CHED转学/转专业背书", "原校“荣誉退学证明/转学证明”"]
+    nbi-after-6-months:
+      trigger: "自首次入境满6个月(含)后提出申请"
+      documents: ["菲律宾国家调查局(NBI)无犯罪证明"]
+    specific-countries-after-2014-06:
+      trigger: "属特定国家且2014年6月后入境(用于展延)"
+      documents: ["检疫局(BOQ)体检合格证明原件或经认证的真实副本"]
+    children-declaration:
+      trigger: "有需申报的子女"
+      documents: ["申请人子女信息补充表(CGAF子女信息单页,按“日-月-年”填写)"]
+    agent-or-delegate-submission:
+      trigger: "由学校/中介授权代表代办/递件"
+      documents: ["移民局代理资质ID复印件", "或每名申请人的特别授权书(SPA)原件", "代理人政府签发身份证复印件"]
+    photo-requirements:
+      trigger: "提交照片"
+      documents: ["近3个月内白底2×2寸彩照,粘贴在表单指定位置;不接受扫描照;不得佩戴眼镜、彩色隐形眼镜或头饰"]
+    notarization-and-authentication:
+      trigger: "涉及宣誓声明/民事登记/国外文件"
+      documents: ["宣誓/具结文件须“原件并经公证”", "菲律宾本地民事登记文件须为PSA出具“原件”", "外国文件须为“原件并经FSP或DFA认证”,非英文文件须附英文译文"]
+    filing-order-and-folder:
+      trigger: "资料装订与提交介质"
+      documents: ["按“文件清单(CDR)”顺序整理", "使用8½×14英寸长形文件夹", "按规定期限内提交"]
+    passport-original-for-scanning:
+      trigger: "窗口扫描核验"
+      documents: ["递交受理窗口(CRU/前台)扫描护照原件后当场退还"]
+process:
+  steps:
+    initial-i1:
+      order: "I1"
+      title: "领取与填写表单(初次转换)"
+      description: "在PIAU领取或官网下载CGAF;以英文大写填写,无适用项填“N/A”,准备两份原件."
+    initial-i2:
+      order: "I2"
+      title: "预审递件(初次转换)"
+      description: "至CRU或授权移民办公室前台按清单预审材料."
+    initial-i3:
+      order: "I3"
+      title: "缴费(初次转换)"
+      description: "按票单到收银缴费,保留正式收据(OR)复印件随案提交."
+    initial-i4:
+      order: "I4"
+      title: "生物采集与登记(初次转换)"
+      description: "至外国人登记处(ARD)拍照与指纹采集,并提交ACR I-Card申请资料."
+    initial-i5:
+      order: "I5"
+      title: "等候审核与线上查询(初次转换)"
+      description: "通过移民局官网使用受理编号查询审批进度."
+    initial-i6:
+      order: "I6"
+      title: "批准后实施签证(初次转换)"
+      description: "按通知提交护照原件以贴签/加注."
+    initial-i7:
+      order: "I7"
+      title: "领取ACR I-Card(初次转换)"
+      description: "按通知到指定窗口领取卡片."
+    extension-e1:
+      order: "E1"
+      title: "领取与填写表单(展延)"
+      description: "在PIAU或移民局官网获取CGAF,按要求填写两份原件."
+    extension-e2:
+      order: "E2"
+      title: "预审递件(展延)"
+      description: "在CRU或授权窗口进行材料预审."
+    extension-e3:
+      order: "E3"
+      title: "缴费(展延)"
+      description: "到收银窗口缴纳展延费用并提交OR复印件."
+    extension-e4:
+      order: "E4"
+      title: "参加听证(展延)"
+      description: "按通知参加听证;未按时参加可能延误或需重排."
+    extension-e5:
+      order: "E5"
+      title: "等候审核与线上查询(展延)"
+      description: "按案情与排期等待处理结果."
+    extension-e6:
+      order: "E6"
+      title: "批准后实施签证(展延)"
+      description: "提交护照原件办理签注/贴签."
+    extension-e7:
+      order: "E7"
+      title: "领取/更新ACR I-Card(如需)"
+      description: "按通知领取或更新."
+  variants:
+    initial-conversion-in-ph:
+      name: "初次申请(在菲转换为9F)"
+      trigger: "持短期身份(如9A)在菲律宾境内申请转换为9F"
+      description: "线下窗口为主,包含CGAF递交、缴费、生物采集、审批与贴签、ACR I-Card领取."
+      extra_requirements: ["ACR I-Card申请与生物信息采集"]
+    student-visa-extension:
+      name: "学生签证展延"
+      trigger: "已持9F签证按学业进度办理展延(含转学/转专业)"
+      description: "线下窗口递交并通常需参加听证,审批后签注并更新ACR I-Card(如需)."
+      extra_requirements: ["按通知参加听证"]
+  notes: "部分表单可线上获取;办理以线下窗口为主.授权代表递交须提交代理资质ID或SPA及身份证明.全流程时长受材料完整度、听证排期与系统流量影响,建议预留2–6周处理缓冲."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "StudentVisa9F.md"
+  items:
+    initial-conversion-2014:
+      label: "初次申请(转换为9F)· 2014版参考"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-implementation:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "签注实施费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        service-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "服务费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certificate-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "证书费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "签证费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crtv-crts-crtt-crpe:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "CRTV/CRTS/CRTT/CRPE组合费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 70"
+            value: 70
+          notes: "法律检索费(LRF);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "外国人登记费;2014-03-06公布口径(不含I-Card卡费)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "人头税(>16岁);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(认证);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-filing:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(递件);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-icard:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(I-Card处理);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-fee-usd:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card(卡费),按BSP汇率折算支付"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 9,720"
+          value: 9720
+        notes: "不含ACR I-Card卡费;2014-03-06公布口径"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    extension-2014:
+      label: "学生签证展延 · 2014版参考"
+      details:
+        extension-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "展延费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 20"
+            value: 20
+          notes: "法律检索费(LRF);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certificate-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "证书费;2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(认证);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-filing:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(递件);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-icard:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(I-Card处理);2014-03-06公布口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-fee-usd:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card(卡费),按BSP汇率折算支付"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 4,020"
+          value: 4020
+        notes: "不含ACR I-Card卡费;2014-03-06公布口径"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    related-fees-2025:
+      label: "关联费用 · 2025官方价目(与9F常见搭配)"
+      details:
+        student-exit-permit-combo:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,920"
+            value: 1920
+          notes: "SRC PHP 700 + ECC PHP 700 + LRF PHP 20 + 快通费 PHP 500"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证实施贴纸"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "ACR I-Card处理加急(快通费)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification-general:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "证书费 PHP 500 + LRF PHP 10 + 快通费 PHP 500(含无案证明等)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: ">16岁适用,依情形与组合另计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      details_order: {}
+    main-2025:
+      label: "2025版9F主流程费用"
+      details: {}
+deliverables:
+  description: "获批后将完成签证贴签/加注,并制作与发放ACR I-Card."
+  items:
+    student-visa-sticker:
+      name: "学生签证贴签/加注"
+      usage: "作为签证效力与停留期限依据,供出入境与在菲就学查验."
+    acr-i-card:
+      name: "ACR I-Card 外国人登记身份证"
+      usage: "外国人身份登记卡,用于在菲居留管理、年度报告及出入境查验."
+kpis:
+  processing_time: "约2–6周(视材料完整度、听证排期与业务量而定)"
+risks:
+  items:
+    overstay-fines-and-impact: "逾期停留每月将产生罚款并可能影响审批;严重者可被拒签或需先行复议(MR)."
+    hearing-no-show-delay: "听证未按时参加将导致处理延误或重新排期."
+    falsified-docs-consequence: "伪造或不实文件将被即时驳回,并可能引发行政或刑事后果."
+    exit-without-ecc-src: "离境返入境未按要求办理ECC与SRC可能导致出入境受阻."
+    annual-report-overdue-penalty: "取得ACR I-Card后未在法定期间(通常1月1日至3月1日)办理年度报告将按月计罚."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(与护照一致,如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: ""
+    birth-date:
+      label: "出生日期(DD-MMM-YYYY)"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "15-JAN-2001"
+      notes: "按表单格式以英文月份缩写填写"
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "选项:Male/Female"
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Single"
+      notes: "选项:Single/Married/Annulled/Separated/Widowed/Divorced"
+    birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Chinese"
+      notes: ""
+    height-cm:
+      label: "身高(cm)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 172
+      notes: ""
+    weight-kg:
+      label: "体重(kg)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 65
+      notes: ""
+    phone-landline-ph:
+      label: "菲律宾座机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    phone-mobile-ph:
+      label: "菲律宾手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    address-ph-line1:
+      label: "菲律宾居住地址—门牌/街道/社区"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Taft Ave., Brgy. 123"
+      notes: ""
+    address-ph-city:
+      label: "菲律宾居住地址—市/镇"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila"
+      notes: ""
+    address-ph-province:
+      label: "菲律宾居住地址—省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-ph-postal-code:
+      label: "菲律宾居住地址—邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1000"
+      notes: ""
+    address-foreign-line1:
+      label: "海外居住地址—门牌/街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "56 Example Rd."
+      notes: ""
+    address-foreign-city:
+      label: "海外居住地址—城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    address-foreign-state:
+      label: "海外居住地址—州/省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    address-foreign-country:
+      label: "海外居住地址—国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    address-foreign-postal-code:
+      label: "海外居住地址—邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "200000"
+      notes: ""
+    ssrn:
+      label: "特别安全登记号(SSRN)(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Beijing"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2029-12-31"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: "最多10名子女,逐一重复提供本组字段"
+    child-first-name:
+      label: "子名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "XIAO"
+      notes: "最多10名子女,逐一重复提供本组字段"
+    child-middle-name:
+      label: "子女中间名(如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: "最多10名子女,逐一重复提供本组字段"
+    child-birth-date:
+      label: "子女出生日期(DD-MMM-YYYY)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "05-MAY-2015"
+      notes: "按表单格式填写;最多10名子女"
+  dependents: {}
+  employment: {}
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    bi-agent-id:
+      label: "移民局代理资质ID"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AGT-123456"
+      notes: ""
+    spa-number:
+      label: "特别授权书(SPA)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPA-2025-0001"
+      notes: ""
+    agent-gov-id-number:
+      label: "代理人政府签发身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID123456789"
+      notes: ""
+  arrival_info:
+    last-arrival-date:
+      label: "最近一次抵菲日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-06-01"
+      notes: ""
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PR301"
+      notes: ""
+    authorized-stay-until:
+      label: "授权停留截止日"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-08-15"
+      notes: ""
+    current-visa-class:
+      label: "现有移民身份类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9A"
+      notes: ""
+  travel_history: {}
+  compliance:
+    acr-icard-number:
+      label: "ACR I-Card 编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ICR-1234567890"
+      notes: ""
+    acr-icard-issue-date:
+      label: "ACR I-Card 签发日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2024-09-01"
+      notes: ""
+    acr-icard-expiry:
+      label: "ACR I-Card 有效期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2025-09-01"
+      notes: ""
+    acr-icard-crn:
+      label: "证件号码(CRN)(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    guardian-name:
+      label: "监护人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: "如学校/法规要求"
+    guardian-relationship:
+      label: "与申请人关系(监护)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Aunt"
+      notes: ""
+    guardian-address-line1:
+      label: "监护人地址—门牌/街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 Sample St."
+      notes: ""
+    guardian-address-city:
+      label: "监护人地址—市/镇"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Quezon City"
+      notes: ""
+    guardian-address-province:
+      label: "监护人地址—省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    guardian-postal-code:
+      label: "监护人地址—邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1100"
+      notes: ""
+    guardian-phone-landline:
+      label: "监护人联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    guardian-phone-mobile:
+      label: "监护人联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    school-name:
+      label: "学校名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC University"
+      notes: ""
+    school-cert-number:
+      label: "学校认证编号(移民局)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SFA-000123"
+      notes: ""
+    school-registered-address:
+      label: "学校注册地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Campus Ave., Manila"
+      notes: ""
+    school-contact-number:
+      label: "学校联系号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    course-name:
+      label: "课程/学位名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BS Computer Science"
+      notes: ""
+    extension-period-months:
+      label: "申请展延月数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 12
+      notes: ""
+    academic-year-range:
+      label: "学年范围"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AY 2025–2026"
+      notes: ""
+    school-authorized-representative-name:
+      label: "学校授权代表姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Registrar John Doe"
+      notes: ""
+    school-authorized-representative-id:
+      label: "学校授权代表识别编号(移民局认证ID)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SR-001234"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意依据CGAF及相关数据隐私政策收集、处理与使用个人信息."
+  certification_statement: "申请人声明所提交信息与文件真实准确,相关宣誓/具结文件均已依法公证."
+faq:
+  qas:
+    processing-time:
+      question: "办理9F初次转换一般多久能批?"
+      answer: "审批周期受材料完整度、听证安排与业务量影响,建议预留2–6周缓冲,可凭受理编号在移民局官网查询进度."
+    under-18-eligibility:
+      question: "未满18周岁能申请9F吗?"
+      answer: "不能.9F面向年满18周岁、就读高等教育学位课程的申请人;未成年人或短期/非学位学习通常办理SSP."
+    transfer-or-change-major:
+      question: "转学或转专业如何办理?"
+      answer: "须提供CHED转学/转专业背书,转学还需原校“荣誉退学证明/转学证明”;展延时一并提交最近两个学期成绩材料."
+    nearing-expiry-of-stay:
+      question: "授权停留即将到期但材料未齐怎么办?"
+      answer: "请在到期前尽快提交申请或咨询临时措施;逾期将按月罚款并可能影响审批.已逾期通常需先行办理复议(MR)与罚款."
+    agent-delegation:
+      question: "是否可以由学校或中介代为递交?"
+      answer: "可以.须提供学校/中介移民局代理资质ID复印件,或每名申请人的SPA原件与代理人身份证明复印件."
+    nbi-requirement:
+      question: "何时需要NBI无犯罪证明?"
+      answer: "自首次入境满6个月(含)后提出申请的,应提交NBI无犯罪证明."
+    hearing-required-for-extension:
+      question: "展延是否必须参加听证?"
+      answer: "通常需要按通知参加听证,未按时参加可能导致延误或需重新排期."
+    student-exit-permits:
+      question: "学生离境需要办理什么?"
+      answer: "一般需办理学生身份的ECC与SRC组合,标准组合费含SRC、ECC、LRF与快通费;请提前办理以避免通关受阻."
+disclaimers:
+  items:
+    fees-may-change:
+      text: "费用可能调整且不另行通知;以受理当日票单与正式收据(OR)为准."
+    acr-icard-exchange-rate:
+      text: "ACR I-Card卡费以美元计价并按BSP汇率折算支付,实际金额以缴费当日为准."
+    processing-time-variance:
+      text: "处理时长受材料完整度、听证排期与系统流量影响,无法承诺固定天数."
+service_related:
+  links: {}

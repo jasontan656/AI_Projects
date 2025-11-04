@@ -1,0 +1,674 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "登记/未登记证明(Certification of Non-Registration/Registration)"
+slug: "certificate-of-non-registration-registration"
+type: "reference"
+semantic_profile:
+  intent_id: "certificate-of-non-registration-registration"
+  category: "certification"
+  tags: []
+service_overview: "本服务为在菲律宾现居或曾居留之外国人士,出具其是否已在移民局完成登记的官方证明.该证明由移民局外侨登记处(ARD)审核签发,常用于对外出示个人移民登记状态,供外交部、银行、学校、雇主或其他政府机关办理相关事务之用.通过取得该证明,申请人可快速向第三方说明自身在移民局的登记或未登记事实,减少业务核验中的不确定性与额外询证.申请原则上在移民局主办公室临柜办理,材料齐全且信息一致的情况下通常可于当日或次日出证."
+applicability:
+  items:
+    visa-processing-proof: "办理护照、签证延伸或移民类业务时,被要求证明是否在移民局完成登记."
+    enrollment-employment-bank: "入学、就业或银行开户等场合,需要移民局出具登记现况证明."
+    submission-to-authorities: "向法院、政府机关或监管机构提交合规材料,需证明在菲居留期间的登记状态."
+    corporate-hr-compliance: "企业人资合规审查或外籍员工档案补齐,需附带移民登记/未登记证明."
+    agent-filing-unified-document: "委托代理人代为办理需提交统一口径的登记状态文件,以便后续流程衔接."
+preconditions:
+  required:
+    applicant-eligibility: "申请人为在菲律宾现居或曾经在菲律宾居留之外国人士."
+    submission-binding: "提交完整文件并依清单顺序装订于 8.5×14 英寸(Legal)文件夹内."
+    form-filling-rules: "申请表须以英文大写字母填写,非适用项以“N/A”标示,不得留空;系统不接受 ñ、é、ü、ç 等特殊字母."
+    passport-presentation: "申请人护照正本须于柜台出示以供核验,核对后归还."
+    agent-authorization: "如由代理提交,须附移民局认证代理人证件或经公证之特别授权书(SPA)原件及代理人政府身份证复印件."
+  not_eligible:
+    incomplete-docs-or-binding: "材料不齐、未按清单顺序或未使用规定尺寸文件夹装订."
+    form-errors-or-inconsistency: "申请表留空、使用小写或含系统不识别字符,或与证件资料不一致."
+    no-passport-or-invalid-authorization: "未能出示护照正本以供比对,或授权文件不符合要求的委托申请."
+    overdue-supplemental: "逾期提交被要求的补充材料且无合理说明."
+    suspicious-info-unresolved: "经初审发现存在可疑或矛盾信息且未能及时澄清."
+pre_required_documents:
+  mandatory:
+    request-letter-to-ard: "致移民局局长并注明外侨登记处(ARD)的申请函,明确请求出具“登记/未登记证明”及用途."
+    bi-form-2014-08-016: "申请表(使用移民局统一表格,BI FORM 2014-08-016(Rev 0)),以英文大写填写,不得留空;不适用项填“N/A”."
+    passport-copies-and-presentation: "护照资料页、签证实施页与最近一次入境章页复印件各 1 份(如适用),护照正本现场呈验后归还."
+    photo-2x2-white: "近三个月内拍摄之 2×2 白底证件照 4 张,五官清晰、无阴影、未经美颜或滤镜处理."
+    or-receipt-copy: "付款单据回执复印件(Official Receipt,OR)—缴费后提交给受理窗口以便流转."
+  conditional:
+    for-dfa-or-similar-agencies:
+      trigger: "向外交部等机关提交时(如属其要求场景)."
+      documents:
+        - "出生证明复印件 1 份"
+    agent-submission:
+      trigger: "由代理办理时."
+      documents:
+        - "移民局认证代理人证件复印件"
+        - "每位申请人对应的 SPA 原件及代理人政府身份证复印件"
+    further-verification-required:
+      trigger: "经承办人员通知,为进一步核验."
+      documents:
+        - "补充说明或支持性文件"
+process:
+  steps:
+    step-1-precheck-and-filing:
+      order: "1"
+      title: "预审与递件(ARD 窗口,约 10–20 分钟)"
+      description: "领取号单,向 ARD 递交按清单装订的完整文件夹,出示护照正本;受理人员进行形式审查与身份核对."
+    step-2-ops-issuance:
+      order: "2"
+      title: "开具缴费单(OPS 确认,约 5–10 分钟)"
+      description: "审核无误后,窗口签发缴费通知单(Order of Payment Slip,OPS),申请人核对费用项目与金额."
+    step-3-payment-and-or:
+      order: "3"
+      title: "缴费与取收据(Cashier 收银,约 10–20 分钟)"
+      description: "凭 OPS 前往收银处缴费,获取正式收据(Official Receipt,OR)."
+    step-4-or-return-and-routing:
+      order: "4"
+      title: "回交收据并流转(ARD 窗口,约 5 分钟)"
+      description: "将 OR 复印件交回 ARD 受理窗口,案件转入指纹核验环节."
+    step-5-fingerprint-and-record-check:
+      order: "5"
+      title: "指纹与记录查核(Fingerprinting Section,约 10–20 分钟)"
+      description: "进行必要的指纹与记录比对,完成内部复核."
+    step-6-certificate-issuance:
+      order: "6"
+      title: "制证与领证(ARD 出证,通常当日或次日)"
+      description: "资料核验完成后,由 ARD 制作并签发“登记/未登记证明”,按通知时间至窗口领取."
+  variants: {}
+  notes: "旺季或集中办理时段可能延长等待时间;具体以现场叫号及承办人员通知为准."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "以菲律宾移民局2025年版收费标准为准;以 OPS/OR 为最终依据."
+  items:
+    standard-with-express:
+      label: "标准 · 含快速通道"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具证明的基本费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "按通用规则对除头税与罚款外的项目计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "现场加急/认证加急,多数办事处按整包计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    standard-without-express:
+      label: "标准 · 不含快速通道"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具证明的基本费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "按通用规则对除头税与罚款外的项目计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "移民局外侨登记处签发的登记/未登记证明."
+  items:
+    non-registration-registration-certificate:
+      name: "登记/未登记证明(Certification of Non-Registration/Registration)"
+      usage: "用于向外交部、银行、学校、雇主或其他政府机关出示个人移民登记状态."
+kpis:
+  processing_time: "材料齐全且通过核验的情况下,通常当日或次日出证."
+risks:
+  items:
+    return-due-to-binding: "材料未按清单顺序装订或未使用规定尺寸文件夹,可能被退件."
+    form-format-errors: "申请表留空、使用小写或含系统不识别字符,或与证件资料不一致导致延误."
+    passport-not-presented: "未能出示护照正本以供比对将不予受理."
+    overdue-supplement-causes-delay: "未在限期内补件将导致延误或不予受理."
+    suspicious-info: "存在可疑或矛盾信息且未能及时澄清,可能暂缓受理."
+    false-documents-penalty: "提供虚假材料或伪造文件将被记入记录,可能引发拒签、罚款或行政/刑事责任."
+    peak-season-delay: "高峰期办理时段可能延长等待时间."
+    not-substitute-other-certificates: "本证明不替代无案证明(BI Clearance)或旅行记录证明,如第三方另有要求需另行申请."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致;特殊字符用系统可识别拼写."
+    first-name:
+      label: "名(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致;特殊字符用系统可识别拼写."
+    middle-name:
+      label: "中间名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可填“N/A”."
+    gender:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "当前有效国籍."
+    marital-status:
+      label: "婚姻状况"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "未婚/已婚/离异/丧偶等."
+    address-line1:
+      label: "现居住地址(在菲)- 详细地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "现居住地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "现居住地址-省/区域"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "现居住地址-邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "联系方式-手机"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "联系方式-电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    native-language:
+      label: "母语"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    name-english-variants:
+      label: "英文姓名常用变体"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "便于同名排查."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuing-country:
+      label: "护照签发国"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "未成年子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多个,逐一填写或另附清单."
+    child-date-of-birth:
+      label: "未成年子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-nationality:
+      label: "未成年子女国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-line1:
+      label: "雇主地址-详细地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-city:
+      label: "雇主地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-province:
+      label: "雇主地址-省/区域"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-postal-code:
+      label: "雇主地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-name:
+      label: "学校名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address-line1:
+      label: "学校地址-详细地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address-city:
+      label: "学校地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address-province:
+      label: "学校地址-省/区域"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address-postal-code:
+      label: "学校地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    is-submitted-by-agent:
+      label: "是否由代理提交"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-id-type:
+      label: "代理人证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-id-number:
+      label: "代理人证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-contact-phone:
+      label: "代理人联系方式-手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-number:
+      label: "移民局认证编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "SPA 文号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-issue-date:
+      label: "SPA 出具日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-flight:
+      label: "最近一次入境班次(航班/船班)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如知."
+  travel_history: {}
+  compliance:
+    current-visa-type:
+      label: "当前签证类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-stay-valid-until:
+      label: "当前有效停留期限"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    prior-registration-status:
+      label: "既往在菲登记情况"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可填:有/无/不详."
+  additional_details:
+    application-purpose:
+      label: "申请目的"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    intended-using-entity:
+      label: "使用单位(外交部/银行/学校/雇主或政府机关)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    pickup-method:
+      label: "拟领取方式"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    pickup-contact-name:
+      label: "领取联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    pickup-contact-phone:
+      label: "领取联系人手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "多久可以领取证明?"
+      answer: "材料齐全且通过核验的情况下,通常当日或次日发放;旺季可能顺延,具体以窗口通知为准."
+    mail-or-online:
+      question: "是否可以邮寄或线上申请?"
+      answer: "目前以移民局主办公室临柜办理为主,需出示护照正本方可核验,不接受邮寄申请."
+    lost-passport:
+      question: "护照遗失如何办理?"
+      answer: "须先补办新护照并备妥报案/遗失证明,现场以新护照正本核验后再行办理本证明."
+    agent-allowed:
+      question: "可以由代理人代办吗?"
+      answer: "可以.须提供移民局认证代理人证件,或提交每位申请人对应的 SPA 原件与代理人政府身份证复印件;授权不合规将被拒收."
+    reasons-delayed:
+      question: "为何被退件或延迟?"
+      answer: "常见原因包括:材料未按清单顺序装订、申请表留空或格式错误、复印件不清晰、护照正本未呈验、信息不一致且未及时说明、未在限期内补件等."
+    is-fee-fixed:
+      question: "费用是否固定为 PHP 1,010?"
+      answer: "多数办事处按“证书费 + LRF + 快通”整包收取合计 PHP 1,010;如无加急则可能仅收取 PHP 510.最终以 OPS/OR 为准."
+    equivalence-with-clearance:
+      question: "本证明是否等同于“无案证明”或“旅行记录证明”?"
+      answer: "不等同.本证明仅证明是否在移民局登记;如第三方要求无案证明(BI Clearance)或旅行记录证明,请另行申请相应证书."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用以现场 OPS/OR 列示为准,移民局可据公告调整."
+    processing-time-may-vary: "出证时效受现场叫号与承办人员安排影响,旺季可能顺延."
+    not-equivalent-statement: "本证明不替代无案证明(BI Clearance)或旅行记录证明."
+service_related:
+  links: {}

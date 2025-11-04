@@ -1,0 +1,703 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "菲律宾人身份肯认“确认”与IC签发(Affirmation of Recognition as Filipino Citizen and Issuance of Identification Certificate)"
+slug: "affirmation-of-recognition-as-filipino-citizen-and-issuance-of-identification-certificate"
+type: "reference"
+semantic_profile:
+  intent_id: "affirmation-of-recognition-filipino-citizen-ic"
+  category: "citizenship-recognition"
+  tags: ["IC", "DOJ", "PSA", "Apostille", "Affirmation"]
+service_overview: "本服务面向已获移民局IC但尚待司法部“肯认确认”的个人,通过提交佐证材料、缴费、生物信息采集与复审流程,促成特别调查委员会完成最终确认,并按程序发放或更新IC,保障后续身份主张与政务办理."
+applicability:
+  items:
+    ic-issued-awaiting-doj-affirmation: "已由移民局初步认定并获IC,但司法部“肯认确认”尚未核出,需要完成最终确认程序."
+    claim-by-descent-need-proof-parents-citizenship-at-birth: "依据血统主张菲律宾籍,需证明父母在申请人出生时具有菲律宾公民身份."
+    minor-application-by-parents-or-guardian: "申请人为未成年人,由父母或法定监护人代为说明与申请."
+    adult-applicant-self-apply: "申请人已成年,拟自行陈述并提交证明其父母身份与出生事实的文件."
+    received-rfe-continue-process: "已收到特别调查委员会的补件通知,需在限期内提交补充材料并继续流程."
+preconditions:
+  required:
+    with-order-of-recognition-and-ic-certified-copies: "已获移民局签发的“认定令/认定书”(Order of Recognition)及 IC(如已签发),并准备其认证副本."
+    prove-parents-filipino-citizenship-at-applicant-birth: "能证明申请人出生时父母之一或双方具有菲律宾公民身份;若父母涉及归化或双重国籍,须能清晰证明其在出生时的国籍状态."
+    sworn-statements-original-and-notarized: "所有宣誓陈述与声明须为原件并经合法公证."
+    philippine-civil-registry-psa-nso-originals: "菲律宾境内出具的民事登记文件(出生、结婚、死亡等)须为PSA/NSO原件."
+    foreign-documents-apostille-or-consular-legalization-with-english-translation: "境外签发文件须为原件,已完成Apostille认证或由具辖菲律宾驻外馆/外交部认证,并附英文译文(若使用其他语种)."
+  not_eligible:
+    improper-binding-and-format-noncompliant: "未按清单顺序装订、份数与幅面不合规(未用Legal尺寸夹:8.5×14英寸)且经提示仍未整改的."
+    missing-essential-identity-and-filial-evidence: "未提交申请人及父母(或监护人)身份文件、血统关系与出生事实之必要证据的."
+    overdue-rfe-or-refusal-to-cooperate: "逾期未回覆补件通知或拒不配合核验、无法进行必要比对的."
+    forged-or-falsified-documents: "明显提供虚假或伪造文书的."
+pre_required_documents:
+  mandatory:
+    application-letter-to-commissioner: "致移民局局长的申请函/请求书(成年申请人自行签署;未成年人由父母一方/双方或法定监护人签署),须载明父母在申请人出生时为菲律宾公民,并声明文件真实且依法取得."
+    passport-bio-page-copy: "申请人护照资料页复印件(受理时需出示护照原件供扫描)."
+    order-of-recognition-and-ic-certified-copies: "已签发的认定令(Order of Recognition)与菲律宾人识别证(IC)的认证副本(如已签发)."
+    photos-2x2-white-6pcs: "近期证件照片:2×2英寸白底6张(指纹建档与制证使用)."
+    official-receipt-or: "官方缴费收据(OR)."
+    parents-passport-bio-page-copies-or-govt-ids: "父母护照资料页复印件(或其他足以证明其国籍与身份之政府签发证件)."
+    birth-certificates-psa-or-foreign-legalized: "申请人及父母的菲律宾出生证明(PSA/NSO)或境外出生证明(须Apostille/领馆或DFA认证)."
+    guardian-proof-of-authority-notarized: "监护人资格证明(如适用),须公证并可供核验."
+  conditional:
+    naturalization-or-dual-citizenship:
+      trigger: "父母归化、再取得/保留菲律宾国籍(如双重国籍)等情形"
+      documents: ["公民身份宣誓书(公证)", "与父母归化、再取得/保留菲律宾国籍相关文件"]
+    non-english-documents:
+      trigger: "所提交文件为非英文"
+      documents: ["英文译文"]
+    authorized-representative:
+      trigger: "授权代办或授权代领"
+      documents: ["移民局认证机构ID复印件", "特别授权书(SPA)原件(针对每位申请人)", "委托人有效政府身份证复印件", "受托人有效政府身份证复印件"]
+    rfe-or-review-stage:
+      trigger: "进入补件或复核阶段(收到补件函)"
+      documents: ["补件答复函", "补充宣誓书", "更新后的护照/民事登记证件", "CRU/承办人员标注的受理与核验记录复印件(如有)"]
+process:
+  steps:
+    materials-binding-initial-check:
+      order: "1"
+      title: "材料装订与初检(窗口12或17,约10分钟)"
+      description: "携带按清单顺序装订好的Legal尺寸申请夹至指定窗口,由BSI评估人员进行形式审查与受理登记,生成OPS."
+    passport-scanning-and-registration:
+      order: "2"
+      title: "护照扫描与登记(CRU中央收件,约3–5分钟)"
+      description: "出示申请人护照原件供CRU或前台扫描核存,随后即刻归还."
+    payment-and-receipt-collection:
+      order: "3"
+      title: "缴费并领取收据(Cash Section,约10分钟)"
+      description: "持OPS至收银窗口缴纳移民费用、快速通道费及司法部费用,领取官方收据(OR)."
+    submit-complete-application-folder:
+      order: "4"
+      title: "递交完整申请夹(窗口20,约3分钟)"
+      description: "将申请夹连同OR交CRU登记;由受理人员出具材料完整性确认并流转."
+    fingerprint-enrollment-and-photo-verification:
+      order: "5"
+      title: "指纹建档与相片核验(证书科/210室,约10分钟)"
+      description: "出示OR与2×2白底照片6张,完成指纹与照片建档,领取领证凭条."
+    substantive-review-and-rfe:
+      order: "6"
+      title: "实体审查与补件(BSI案审,约40个工作日)"
+      description: "等候特别调查委员会的实质审查;如接获补件函,请按指引在期限内提交补件,逾期将顺延或致案停滞."
+    certificate-release:
+      order: "7"
+      title: "领证(证书科,约10分钟)"
+      description: "凭领证凭条与有效身份证件领取IC,可选择本人领取、授权代理领取或邮寄送达(授权/邮寄须按要求提供相应文件)."
+  variants: {}
+  notes: "全程建议保留OPS号、OR号与收件回执;如需进度说明,可凭证件至受理窗口查询."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "AffirmationOfRecognitionAsFilipinoCitizen.md"
+  items:
+    standard-main-2025:
+      label: "标准 · 主申请人 · 2025版"
+      details:
+        immigration-fees:
+          amount:
+            currency: "PHP"
+            display: "PHP 10,050"
+            value: 10050
+          notes: "肯认确认(Affirmation)办理主项."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-fees:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,500"
+            value: 1500
+          notes: "快速通道/加速处理线."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        doj-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,500"
+            value: 1500
+          notes: "司法部费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 13,050"
+          value: 13050
+        notes: "以2025年版收费为准;现场以OPS/OR实际开单为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    historical-reference-early:
+      label: "历史参考 · 早期口径"
+      details:
+        immigration-fees:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,540"
+            value: 8540
+          notes: "早期口径,仅供参考."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane-fees:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,500"
+            value: 1500
+          notes: "早期口径,仅供参考."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        doj-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,500"
+            value: 1500
+          notes: "早期口径,仅供参考."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 11,540"
+          value: 11540
+        notes: "以新版本为准,现场可能因政策更新或系统整合产生差异."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "司法部层面的肯认确认核出,并按程序发放或更新IC."
+  items: {}
+kpis:
+  processing_time: "通常约40个工作日(遇补件将顺延)"
+risks:
+  items:
+    noncompliant-binding-may-delay-or-reject: "未按规范装订与份数要求,可能被退件或延误受理."
+    false-or-inconsistent-information-legal-liability: "伪造文件、虚假陈述或信息不一致可能被拒办并承担法律责任."
+    overdue-rfe-may-stall-or-terminate: "逾期未回覆补件通知将导致审查延误、顺延或案件搁置/终止."
+    cannot-claim-rights-before-affirmation: "在肯认确认未核出前,不得以菲律宾公民身份主张免除他项义务."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无中间名可留空."
+    last-name-local:
+      label: "姓(本地语拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name-local:
+      label: "名(本地语拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name-local:
+      label: "中间名(本地语拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "当前法定状态."
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "当前法定状态."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与出生证明一致."
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与出生证明一致."
+    nationality-current:
+      label: "现持国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality-claimed:
+      label: "拟主张身份(菲律宾籍)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-place-of-issuance:
+      label: "护照签发地/机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-date-of-issuance:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "当前住址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可为境内或境外地址."
+    address-city:
+      label: "当前住址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "当前住址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "当前住址(国家/地区)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "当前住址(邮政编码)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "在菲联系方式(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "在菲联系方式(邮箱)"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    order-of-recognition-number:
+      label: "认定令编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ic-number:
+      label: "IC编号(如已签发)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    release-method:
+      label: "领证方式偏好"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "本人领取/授权代领/邮寄."
+  spouse: {}
+  father:
+    last-name:
+      label: "父亲姓(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "父亲名(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "父亲中间名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "父亲护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuing-authority:
+      label: "父亲护照签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality-at-applicant-birth:
+      label: "父亲在申请人出生时之国籍/身份"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "是否为菲律宾公民."
+  mother:
+    last-name:
+      label: "母亲姓(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "母亲名(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "母亲中间名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "母亲护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuing-authority:
+      label: "母亲护照签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality-at-applicant-birth:
+      label: "母亲在申请人出生时之国籍/身份"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "是否为菲律宾公民."
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-id-number:
+      label: "授权代表身份证件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-id:
+      label: "移民局认证机构ID"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-details:
+      label: "特别授权书(SPA)详情"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "文号/出具日期等."
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    port-of-entry:
+      label: "入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    entry-permit-type:
+      label: "入境许可类别(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    ops-number:
+      label: "OPS编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "初审生成."
+    or-number:
+      label: "OR收据号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "缴费凭证."
+    payment-date:
+      label: "缴费日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    rfe-notice-number:
+      label: "补件通知编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rfe-deadline:
+      label: "补件期限"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-recipient-name:
+      label: "邮寄收件人姓名(如选择邮寄)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-address-line1:
+      label: "邮寄地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-address-city:
+      label: "邮寄地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-address-province:
+      label: "邮寄地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-address-country:
+      label: "邮寄地址(国家/地区)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-address-postal-code:
+      label: "邮寄地址(邮政编码)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mailing-contact-phone:
+      label: "邮寄联系人手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意为办理本案之目的收集与处理其个人数据,并遵循适用的数据隐私规定."
+  certification_statement: "申请人确认所提交文件真实且依法取得,并在宣誓下承担相应法律责任."
+faq:
+  qas:
+    who-eligible:
+      question: "谁可以提出本项申请?"
+      answer: "已获移民局签发IC但司法部肯认尚未核出的个人;未成年人由父母或法定监护人代为申请;已成年的申请人可自行申请."
+    processing-time:
+      question: "办理周期多久?"
+      answer: "从受理起至出结论,通常约40个工作日.如收到补件通知,周期将依补件提交与复核时间顺延."
+    original-documents-required:
+      question: "一定要提交原件吗?"
+      answer: "是.宣誓书与关键民事文书须提交原件供核验;同时按规定提供四份影印件.护照原件用于CRU扫描后立即归还."
+    foreign-docs-without-apostille:
+      question: "境外文件没有Apostille可以受理吗?"
+      answer: "不可以.境外文件须完成Apostille或由具辖菲律宾驻外馆/外交部认证;非英文材料需附英文译文."
+    can-authorized-representative:
+      question: "可以由代理人代办与代领吗?"
+      answer: "可以.代办需提交移民局认证机构ID或针对每位申请人的SPA原件,并附双方有效身份证件.代领同理,须持领证凭条与授权材料."
+    fee-difference:
+      question: "费用为何与网上不同?"
+      answer: "以2025年版标准合计约PHP 13,050为准;早期口径可能为约PHP 11,540.实际金额以收银窗口OPS/OR开单为准,若政策更新将以新标准执行."
+    during-review-can-travel-or-claim:
+      question: "审查中能否出境或从事需要公民身份的事项?"
+      answer: "不建议在肯认确认未核出前主张菲律宾公民身份办理涉及权益的重要事务;如需出境或办理其他许可,建议先行咨询承办窗口或法律顾问."
+    how-to-respond-rfe:
+      question: "收到补件函怎么办?"
+      answer: "请在函件规定期限内一次性补足所需材料,并保留提交凭证.逾期可能导致审查延误或案件终止."
+disclaimers:
+  items:
+    fees-subject-to-or: "实际金额以收银窗口OPS/OR开单为准."
+    policy-updates-may-change-fees: "若政策更新或系统整合,费用将以新标准执行."
+    document-authentication-requirement: "境外文件须完成Apostille或菲律宾驻外馆/外交部认证,非英文材料需附英文译文."
+    non-claim-before-affirmation: "肯认确认未核出前,不得以菲律宾公民身份主张免除他项义务."
+service_related:
+  links: {}

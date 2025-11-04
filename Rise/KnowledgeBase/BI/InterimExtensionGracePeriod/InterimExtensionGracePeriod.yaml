@@ -1,0 +1,833 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "Interim Extension"
+  - "Grace Period"
+department: "BureauOfImmigration"
+name: "Interim Extension(Grace Period)—9G在审期间临时出入境宽限"
+slug: "interim-extension-grace-period-9g"
+type: "reference"
+semantic_profile:
+  intent_id: "9g-interim-extension-grace-period"
+  category: "visa"
+  tags:
+    - "9G"
+    - "Interim Extension"
+    - "Grace Period"
+    - "ACR I-Card"
+    - "BI"
+service_overview: "面向已递交但尚未核准的9(g)受雇签证申请人,在既有停留仍有效的前提下,申请“临时展延/宽限”(Interim Extension/Grace Period),以便在主案审批完成前实现临时出入境且不影响合法身份与待审案件的连续性.申请须由本人或授权代理在菲律宾境内提出,依据现有护照与授权停留进行加注;核准后护照将加注宽限,申请人可据此安排出入境并在返菲后继续等待主案审理与实施."
+applicability:
+  items:
+    business-trip-during-pending-9g: "持有效9G受雇签证且已提交展延或转换申请,待决期间因公务需短期离境并计划返菲复工."
+    temporary-travel-for-training-medical-family: "9G转换/展延尚在审理,护照与授权停留仍有效,近期存在培训、医疗、家庭紧急事由的临时出行需求."
+    branch-or-peza-local-processing: "分支机构或园区(如PEZA)就地受理,需在不影响主案排程的情况下先行加注临时宽限."
+    pre-approval-overseas-tasks: "外籍雇员需在主案核准前完成境外签署、客户会议或设备验收等任务,且回菲时需保持合法身份衔接."
+    dependents-travel-with-principal: "受养配偶/子女与主申请人同步离境返菲,需一并确保随员身份在宽限期内持续有效."
+preconditions:
+  required:
+    9g-case-pending-with-stamped-receipts: "已递交的9G签证展延或转换主案仍属“待决”,且提交给移民局的联合申请函、CGAF、签证申请函均有移民局“已收件/加盖日期”戳记."
+    applicant-in-ph-with-valid-stay-and-passport: "申请时本人在菲律宾境内,护照有效且持有仍在有效期内的入境许可与授权停留,护照有足够签注空白页."
+    valid-acr-icard: "持有效的外国人登记卡ACR I-Card."
+    proof-of-pending-case-or: "能出示主案的官方收据(OR)或其他能证明案件仍在流程中的凭证."
+    clearance-if-derogatory-hit: "如命中警示或可疑纪录,须先至认证与证明科(CCS)完成无阻证明/清关后方可继续."
+  not_eligible:
+    no-pending-9g-application: "未在移民局提报任何待决的9G相关申请."
+    overstayed-or-invalid-passport-stay: "已逾期停留或护照与授权停留在申请时已失效."
+    no-valid-acr-or-or: "无法出示有效ACR卡、主案收据或未能证明案件仍在办理."
+    applicant-outside-ph-or-unauthorized-agent: "申请人不在菲律宾境内或由无资质代理递交且未能提交有效授权文件."
+    unresolved-violations-or-clearance: "存在未结案的移民违规或尚未完成的清关事项."
+pre_required_documents:
+  mandatory:
+    joint-letter-to-commissioner: "致移民局局长的联合函原件1份(申请人与用人单位/配偶联署,说明申请临时宽限之必要性;宣誓类文件须为原件并依法公证)."
+    visa-amend-extend-convert-letter-copy: "已递交的签证修订/延长/转换申请函复印件1份(须有移民局“已收件”戳记与日期)."
+    cgaf-copy-with-stamp: "已填妥并递交的CGAF复印件1份(附收件戳记与日期)."
+    passport-and-visa-pages-copies: "护照资料页、既有签证实施页、最近一次入境章复印件各1份(授权停留必须仍有效)."
+    pending-case-or-copy: "待决主案之缴费OR复印件1份."
+    valid-acr-icard-copy: "有效ACR卡正反面复印件1份."
+    this-application-or-copy: "本次宽限申请之缴费OR复印件1份(回交时附上)."
+    itinerary-or-eticket-copy: "机票行程单/电子客票复印件1份(如已确定出行计划)."
+    bi-clearance-copy-if-required: "移民局无案证明(BI Clearance Certificate)复印件1份(如窗口或案情要求)."
+  conditional:
+    filing-by-authorized-agent:
+      trigger: "代理递交"
+      documents:
+        - "每名申请人提交单独的特别授权书(SPA)原件"
+        - "代理人政府签发身份证复印件"
+        - "或提交移民局认可旅行社/代理的登记证明/证件复印件"
+    marriage-or-kinship-documents:
+      trigger: "涉及婚姻/亲属关系之文件(如配偶/子女随同)"
+      documents:
+        - "菲律宾国家统计署(NSO)签发的出生/结婚/死亡证明原件"
+        - "涉外文书依法公证/认证并按要求翻译"
+    derogatory-hit-clearance:
+      trigger: "如命中警示纪录"
+      documents:
+        - "至CCS申请并取得相应清关/无阻证明"
+process:
+  steps:
+    step-1-initial-assessment-and-intake:
+      order: "1"
+      title: "资格初审与收件(约15分钟)"
+      description: "地点:园区/外勤受理窗口(如PEZA Immigration Extension Office)或CRU.动作:提交全套材料,前台核查身份、停留有效性与警示纪录;符合条件后签发缴费单(OPS)."
+    step-2-payment-and-or:
+      order: "2"
+      title: "缴费与取收据(现场完成)"
+      description: "地点:收银(Cash Section).动作:按OPS缴费并领取OR.未在当日或规定时限内缴费可能导致案件暂停."
+    step-3-return-or-and-docket:
+      order: "3"
+      title: "回交OR与登记立案(约5–10分钟)"
+      description: "地点:原受理窗口.动作:回交OR、确认联系方式与取件方式,领取参照编号/取件凭条;窗口提示预计审查周期7–10个工作日."
+    step-4-internal-review-and-approval:
+      order: "4"
+      title: "内部审核与签批(7–10个工作日)"
+      description: "节点:承办官审核,办案官(ACO)出具意见,逐级呈核至副署长/署长审批.说明:分港/外站案件需往返主办公室,通常增加约2个工作日的快递往返时程及相应费用."
+    step-5-annotation-implementation:
+      order: "5"
+      title: "核准后实施加注(1–3个工作日)"
+      description: "提示:按指引补缴实施费等,提交护照至实施组办理Grace Period加注.时效:送实施后1–2日完成护照签注贴附与放行."
+    step-6-release-and-closing:
+      order: "6"
+      title: "领证与结案(约5分钟)"
+      description: "动作:凭取件凭条/授权文件领取护照与批准文件(Grace Period Order),核对信息无误后签收完成."
+    step-7-special-provisions:
+      order: "7"
+      title: "特殊环节(按需执行)"
+      description: "如命中警示:先至CCS办理清关证明.如下步计划离境返菲:根据个人签证类别与停留时长,可能需在机场/口岸另行办理ECC-B+RP/SRC或其他出境许可."
+  variants: {}
+  notes: "递交格式与整理要求:1)所有文件按清单顺序排列,使用Legal size(8½×14英寸)装订.2)递交时须向CRU或前台出示护照原件以供扫描后当场返还.3)建议递交前向律师或BI认可机构咨询.4)移民局可根据核查情况要求补交支持性文件."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "InterimExtensionGracePeriod.md"
+  items:
+    main-applicant:
+      label: "主申请人"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "2014参考为PHP 510;2025通用价目暂无对应条目;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    dependent-applicant:
+      label: "受养人"
+      details:
+        application-fee-dependent:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "2014参考为PHP 310;2025通用价目暂无对应条目;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    common-all:
+      label: "通用费用"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express Lane Fee(选择加急者);部分常规通道可不收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        implementation-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "实施/签注类常用档,具体以实施组开单为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10–50"
+            value: null
+            range:
+              min: 10
+              max: 50
+          notes: "法律检索费(LRF),随具体费目计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+        bi-clearance:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "BI无案证明(按需):Certification 500 + LRF 10 + Express 500."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        eccb-rp-src-combo:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "口岸出入境许可组合(ECC-B+RP/SRC),与本服务分开开单,金额依官方标准及现场实际为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸费(如适用),随实施一并计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "核准后为护照实施Grace Period加注,并发放批准文件以供出入境使用与存档."
+  items:
+    passport-annotation-grace-period:
+      name: "护照加注(Grace Period)"
+      usage: "作为临时出入境宽限期间的合法依据,确保返菲后主案连续性."
+    grace-period-order:
+      name: "批准文件(Grace Period Order)"
+      usage: "用于证明宽限核准结果及后续查验存档."
+kpis:
+  processing_time: "内部审核7–10个工作日,实施加注1–3个工作日(分港往返可能增加约2个工作日)."
+risks:
+  items:
+    must-apply-in-ph:
+      text: "申请人必须在菲律宾境内提出;人在境外或已逾期停留将被拒收并可能产生行政罚."
+    document-format-noncompliance:
+      text: "文件顺序与版式不符(Legal size装订、宣誓原件、公证/认证要求)可能被要求补正或退件."
+    derogatory-hit-without-clearance:
+      text: "命中警示未至CCS完成清关将暂停处理."
+    payment-deadline-missed:
+      text: "未在OPS规定期限内缴费并回交OR,将导致案件暂停或退回并可能需重新排队."
+    unauthorized-agent-or-missing-spa:
+      text: "代理递交未能提交每位申请人专属SPA原件与有效证件可能被拒绝受理."
+    additional-time-and-courier-cost:
+      text: "分港/外站案件因公文往返主办公室,通常需额外约2个工作日及快递成本."
+    additional-port-permits:
+      text: "实际离境返菲可能需额外办理ECC-A/ECC-B及RP/SRC等口岸许可,需预留办理时长与费用."
+    data-mismatch-with-main-case:
+      text: "与9G主案信息不一致(职位、雇主或AEP信息)可能引发补件或复核,延误时程."
+    forged-or-false-documents:
+      text: "任何伪造、变造或不实文件将被退件并可能引致行政/刑事责任及后续签证限制."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    former-name:
+      label: "曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: "与护照一致."
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "与护照一致."
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Beijing"
+      notes: ""
+    passport-issuance-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2021-06-01"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2031-05-31"
+      notes: ""
+    address-line1:
+      label: "在菲地址(街道/门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Unit 1201, Tower A"
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 9171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card 卡号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "A123456789"
+      notes: ""
+    acr-icard-issuance-date:
+      label: "ACR I-Card 签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2023-07-15"
+      notes: ""
+    acr-icard-expiry:
+      label: "ACR I-Card 有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-07-14"
+      notes: ""
+    current-visa-type:
+      label: "现有签证种类"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9(g)"
+      notes: ""
+    current-visa-page-number:
+      label: "签注页号"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 32
+      notes: ""
+    current-visa-expiry:
+      label: "现有签证有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-30"
+      notes: ""
+    pending-case-type:
+      label: "待决主案类型(9G转换/展延)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9G延长"
+      notes: ""
+    pending-case-filing-date:
+      label: "主案收件日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-10"
+      notes: ""
+    pending-case-reference-number:
+      label: "主案参考号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "REF-2025-00123"
+      notes: ""
+    pending-case-or-number:
+      label: "主案OR号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OR-1234567"
+      notes: ""
+    travel-plan-departure-date:
+      label: "拟离境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-05"
+      notes: ""
+    travel-plan-return-date:
+      label: "拟返菲日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-20"
+      notes: ""
+    travel-plan-flight-number:
+      label: "航班号(如已定)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR356"
+      notes: ""
+    travel-plan-ticket-number:
+      label: "电子客票/票号(如已定)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "781-1234567890"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    dependent-relationship:
+      label: "关系(配偶/子女)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "配偶"
+      notes: ""
+    dependent-last-name:
+      label: "随员姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    dependent-first-name:
+      label: "随员名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WEI"
+      notes: ""
+    dependent-middle-name:
+      label: "随员中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-birth-date:
+      label: "随员出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-08-12"
+      notes: ""
+    dependent-nationality:
+      label: "随员国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: ""
+    dependent-passport-number:
+      label: "随员护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P98765432"
+      notes: ""
+    dependent-passport-expiry:
+      label: "随员护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-07-01"
+      notes: ""
+    dependent-acr-icard-number:
+      label: "随员ACR I-Card 卡号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-acr-icard-expiry:
+      label: "随员ACR I-Card 有效期(如有)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-latest-entry-date:
+      label: "随员最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-15"
+      notes: ""
+    dependent-stay-until:
+      label: "随员许可停留至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-15"
+      notes: ""
+    dependent-apply-grace-period:
+      label: "是否一并申请Grace Period"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    dependent-travel-departure-date:
+      label: "随员拟离境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-05"
+      notes: ""
+    dependent-travel-return-date:
+      label: "随员拟返菲日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-20"
+      notes: ""
+  employment:
+    employer-name:
+      label: "用人单位名称(与营业登记一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Manufacturing Inc."
+      notes: ""
+    employer-registration-type:
+      label: "注册类型(Top 1000/非Top 1000等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Top 1000"
+      notes: ""
+    employer-tin:
+      label: "纳税人识别号(TIN)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: ""
+    employer-address-line1:
+      label: "单位地址(街道/门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 Industry Rd."
+      notes: ""
+    employer-contact-person:
+      label: "联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    job-title:
+      label: "职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Engineer"
+      notes: ""
+    employment-term:
+      label: "聘用期限"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2024-2026"
+      notes: "与9G主案一致."
+    aep-number:
+      label: "AEP编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AEP-2024-001234"
+      notes: ""
+    aep-expiry:
+      label: "AEP有效期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-11-30"
+      notes: ""
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: ""
+    agent-organization:
+      label: "代理机构/旅行社名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "XYZ Immigration Services"
+      notes: ""
+    bi-accreditation-id:
+      label: "BI认证ID(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI-ACC-12345"
+      notes: ""
+    spa-present:
+      label: "是否提交SPA原件"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    spa-number:
+      label: "SPA编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPA-2025-0001"
+      notes: ""
+    agent-gov-id-number:
+      label: "代理人政府签发身份证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-987654321"
+      notes: ""
+    agent-gov-id-expiry:
+      label: "代理人政府签发身份证有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2027-04-15"
+      notes: ""
+    authorization-scope:
+      label: "授权范围(递交/领件/签收等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "递交与领件"
+      notes: ""
+  arrival_info:
+    latest-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NAIA T3"
+      notes: ""
+    latest-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-01"
+      notes: ""
+    authorized-stay-until:
+      label: "准许停留至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-01"
+      notes: ""
+  travel_history: {}
+  compliance:
+    ccs-clearance-required:
+      label: "是否命中警示需CCS清关"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+    ccs-clearance-number:
+      label: "CCS清关编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CCS-2025-000123"
+      notes: ""
+    ccs-clearance-date:
+      label: "CCS清关日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-20"
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意依据CGAF及相关规定收集与处理个人资料用于移民申请办理."
+  certification_statement: "申请人与/或雇主通过联合函及宣誓类文件确认所提交信息真实、准确并承担相应法律责任."
+faq:
+  qas:
+    can-authorize-agent:
+      question: "我可以委托他人代为递交与领取吗?"
+      answer: "可以.需为每位申请人分别提交SPA原件并附代理人的政府签发身份证复印件,或由BI认可的代理/旅行社凭其认证证件办理."
+    processing-time-and-expedite:
+      question: "正常审批大约多久?是否可以加急?"
+      answer: "内部签批一般7–10个工作日;获批后实施加注约1–3个工作日.是否加收Express由窗口依工作量与处室规定执行,具体以OPS/OR为准."
+    how-to-handle-derogatory-hit:
+      question: "系统提示我有警示纪录,该怎么处理?"
+      answer: "须先至CCS申请并取得清关/无阻证明,完成后窗口方可继续流转.未清关的案件将被暂缓."
+    late-payment-consequence:
+      question: "如果我来不及在OPS规定期限内缴费会怎样?"
+      answer: "未按时缴费将导致案件暂停或退回,可能需重新取号与排队,严重者需重新备齐材料再递交."
+    need-eccb-and-rp-src:
+      question: "临时宽限获批后离境,是否还需要办理ECC-B与RP/SRC?"
+      answer: "是否需要取决于您的签证类别、停留时长与出入境安排.9G等持卡人短期离境返菲,常见由口岸办理ECC-B+RP/SRC组合;请提前咨询口岸或外勤办并预留办理时间与费用."
+    price-differences:
+      question: "费用为什么与不同办事处给出的总额略有差异?"
+      answer: "移民局通用价目包含Express与LRF等通用项,实际出单以OPS/OR为准;分港往返快递、口岸许可等附加事项亦会影响合计金额."
+    acr-info-mismatch:
+      question: "我的ACR卡信息与主案不一致会影响办理吗?"
+      answer: "可能影响.建议先完成ACR信息修订或更正,再行提交临时宽限,以免触发主案补件或复核延误整体时程."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

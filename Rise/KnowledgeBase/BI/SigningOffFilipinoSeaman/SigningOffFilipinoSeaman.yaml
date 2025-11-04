@@ -1,0 +1,593 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "菲律宾籍海员离船(Sign-Off)办理指引"
+slug: "signing-off-filipino-seaman"
+type: "reference"
+semantic_profile:
+  intent_id: "SigningOffFilipinoSeaman"
+  category: ""
+  tags: []
+service_overview: "适用于在菲律宾港口办理离船的菲律宾籍船员,由移民局海湾服务科(BSS)审查并出具核准函,随后持核准函至港口外勤办事处在护照与海员证上办理相关盖章,完成合法合规放行.流程涵盖抵港前预申报、不良纪录核验与快速放行,以降低船期延误与行政风险."
+applicability:
+  items:
+    planned-crew-change: "计划性换班:菲律宾籍船员在菲律宾港口按计划轮换下船并返乡."
+    medical-or-emergency: "医疗或紧急情形:船员突发疾病或家庭紧急事件需在最近港口下船."
+    contract-complete-or-termination: "合同期满或解约:合同完成、提前解约或公司人事安排导致的离船."
+    name-list-adjustment: "名单调整:非原始下船名单内的菲律宾船员需补办离船许可."
+    vessel-ops-adjustment: "船舶营运调整:改港、改变航次或技术性靠泊需要临时办理船员离船."
+preconditions:
+  required:
+    pre-filing-letter-to-bss: "航运公司或人力代理须于船舶抵港前,向移民局专员提交请函并报送至 BSS 收件登记,载明拟允许菲律宾籍船员离船的事由与名单."
+    no-derogatory-stamp-or-ccs-clearance: "已完成不良纪录核验并取得“无不良纪录”标记(No Derogatory Stamp),若命中名单需先至 CCS 取得相应 clearance."
+    valid-passport-seamans-book-and-crewlist-consistency: "船员持有效护照与海员证,且与船长签署的到港乘员名单信息一致."
+    immigration-arrival-card-completed: "已填妥移民入境卡(Immigration Arrival Card),用于抵港入境登记."
+    submission-format-legal-size-and-proof-of-agent-id: "全套申请资料按官方清单顺序整理成册,使用 legal size 文件夹提交;如由联络官递交,须附航运/人力代理公司工作证复印件."
+  not_eligible:
+    no-pre-filing-or-no-bss-receipt: "未于抵港前完成请函报备或 BSS 未收件登记的."
+    incomplete-or-improper-docs: "文件不齐、未按清单顺序装订、未用法定尺寸文件夹或逾期提交."
+    identity-mismatch-or-alteration: "船员身份信息与护照、海员证、船长签署乘员名单不一致或存在涂改."
+    pending-cases-or-travel-ban-without-ccs-clearance: "船员存在未结行政案件、司法通报、离境限制或其他移民禁制且未取得 CCS clearance."
+    originals-not-present-or-noncooperation-at-field-office: "无法出示原件供核对,或申请人未能在外勤办窗口现场配合核验与盖章."
+pre_required_documents:
+  mandatory:
+    passport-bio-page-copy: "护照资料页复印件;备原件以供核对."
+    seamans-book-copy: "海员证(Seaman’s Book)复印件;备原件以供核对."
+    immigration-arrival-card: "填妥的移民入境卡(Immigration Arrival Card)."
+    bss-approval-notice-or-letter: "BSS 核准的登离船通知或核准函."
+    request-letter-to-commissioner: "致移民局专员的请函(说明离船原因、船名、航次、拟离船人员、靠泊港口及日期),抵港前已由 BSS 收件."
+    no-derogatory-stamp-page: "不良纪录验证结果页(加盖“无不良纪录”标记)."
+    captain-signed-arrival-crew-list: "船长签署之到港乘员名单(Crew List),清晰标注拟离船人员."
+    voyage-port-list-and-ops-explanation: "航次/停靠港清单与相关运营说明(如改港/技术靠泊情形)."
+    guarantee-letter-and-supporting-docs: "担保函及其他支持文件(按 BSS 要求提供)."
+  conditional:
+    derogatory-hit-or-name-similarity:
+      trigger: "命中通报/同名疑似"
+      documents:
+        - "CCS 出具之 clearance"
+        - "非同一人证明(NTSP)"
+    medical-signoff:
+      trigger: "医疗离船"
+      documents:
+        - "医院或船医诊断证明"
+        - "转运安排说明"
+    incident-or-disciplinary:
+      trigger: "意外/纪律事件"
+      documents:
+        - "船公司调查记录"
+        - "海事报告或警方回执"
+    liaison-officer-filing:
+      trigger: "联络官代办"
+      documents:
+        - "公司工作证复印件"
+        - "授权书"
+process:
+  steps:
+    pre-arrival-pre-filing-bss:
+      order: "1"
+      title: "抵港前预申报(BSS受理,建议提前1–3个工作日)"
+      description: "航运/人力代理向 BSS 递交请函与基础材料,完成收件登记与预审;确保名单准确、理由充分;未预申报将显著增加抵港后办理时长."
+    bss-window-review-and-derogatory-check:
+      order: "2"
+      title: "BSS 窗口审查与不良纪录核对(约37分钟/案)"
+      description: "窗口核对清单、检索不良纪录,由主管与科长审批签发核准函;审查进度通过场内广播或窗口通知,请及时关注并领取核准函."
+    field-office-stamping:
+      order: "3"
+      title: "外勤办现场盖章(约5分钟/人)"
+      description: "持 BSS 核准函、护照与海员证至港口外勤办窗口;移民官核对人证相符后,在护照与海员证上完成入境与离船相关盖章."
+    filing-and-clearance-release:
+      order: "4"
+      title: "归档与放行"
+      description: "外勤办留存必要副本或记录,通知船方或代理完成交接与放行手续."
+    exception-handling:
+      order: "5"
+      title: "异常处理(时长视情)"
+      description: "若命中通报或资料不一致,转 CCS 取得 clearance 或补正文件,再回 BSS/外勤办续办."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "2025官方版本说明"
+  items:
+    service-fee-filipino-seafarer-standard:
+      label: "本服务办理规费 · 菲律宾籍船员离船(标准情形)"
+      details:
+        service-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "依据2025版公民宪章,BSS审查与外勤盖章不收取规费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total: {}
+    certification-fee-conditional:
+      label: "认证/证明类(Certification Fee) · 条件触发"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "需出具无不良纪录证明、NTSP等时,由 CCS/记录科按通用标准收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如选快通加 PHP 500."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total: {}
+    crew-list-visa-fee-foreign-crew:
+      label: "船员名单签证费(Crew List Visa Fee) · 外籍船员签证名单办理"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "按人计费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express(按批)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total: {}
+    miscellaneous-others:
+      label: "其他杂项(如复议、逾期罚等) · 非标准情形触发"
+      details:
+        other-charges:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "依通用费表;现场以收银开单为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total: {}
+deliverables:
+  description: "BSS 核准函与护照/海员证离船相关盖章."
+  items:
+    bss-approval-letter:
+      name: "BSS 核准函"
+      usage: "用于外勤办窗口办理盖章与放行."
+    passport-and-seamans-book-stamped:
+      name: "护照与海员证完成相关盖章"
+      usage: "用于入境登记与离船放行查验."
+kpis:
+  processing_time: "BSS 审查与核准约37分钟/案;外勤盖章约5分钟/人;遇补件/命中通报/繁忙时段顺延."
+risks:
+  items:
+    pre-filing-required: "请函必须在船舶抵港前由 BSS 收件登记;未提前报备可能不予受理或大幅延误."
+    legal-size-and-order: "所有文件按官方清单顺序装订并使用 legal size 文件夹,否则可被退件."
+    derogatory-clearance: "命中通报、待决案件或离境限制须先向 CCS 申请 clearance,未清除不得放行."
+    originals-check: "外勤窗口需现场核对护照与海员证原件,信息不符将中止办理."
+    false-or-altered-docs: "涂改、伪造或提供不实材料将被拒办,并可能触发刑事/行政责任及对代理机构的处罚."
+    pickup-approval-letter: "需及时领取核准函,以免错过外勤盖章时段."
+    timing-coordination: "盖章一般约5分钟/人,需配合船期、靠泊安排与班次."
+    additional-documents-right: "移民局有权要求补件或面谈;未在期限内补齐将影响放行安排."
+    role-division: "BSS 负责审查与核准,外勤办负责现场盖章与放行记录;未获 BSS 核准,外勤办不予受理."
+    data-protection: "提交资料仅用于办理与核验,代理应妥善保护船员个人信息,避免二次扩散."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "中间名(如有,与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "YYYY-MM-DD"
+    gender:
+      label: "性别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    marital-status:
+      label: "婚姻状况"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-issuing-authority:
+      label: "海员证签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rank-onboard:
+      label: "船上职务/级别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "例如 AB、Oiler、Cook 等"
+    phone-mobile:
+      label: "联系方式(菲律宾本地电话)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-name:
+      label: "紧急联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-relationship:
+      label: "紧急联系人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-phone:
+      label: "紧急联系人电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    signoff-reason:
+      label: "离船原因"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "轮换/医疗/紧急/合同期满等"
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    agency-name:
+      label: "航运/人力代理公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与请函抬头一致"
+    agency-address:
+      label: "航运/人力代理公司地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-name:
+      label: "联络官姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-company-id:
+      label: "联络官公司证件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "需附证件复印件"
+    agency-contact-phone:
+      label: "联系人电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于接收通知与补件要求"
+    agency-contact-email:
+      label: "联系人电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    authorization-letter-ref:
+      label: "授权文件编号/参考"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "授权书/担保函(如需)"
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    imo-number:
+      label: "IMO 号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "船舶唯一识别号"
+    port-of-berth:
+      label: "靠泊港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "例如 Manila South Harbor 等"
+    berth:
+      label: "泊位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    eta:
+      label: "预计抵港日期与时间"
+      type: "datetime"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ata:
+      label: "实际抵港日期与时间"
+      type: "datetime"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-port:
+      label: "上一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    next-port:
+      label: "下一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    captain-name:
+      label: "船长姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "对应 Crew List"
+    crew-list-page-number:
+      label: "乘员名单页码"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "标注拟离船人员"
+    crew-list-line-number:
+      label: "乘员名单行号"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    medical-certificate-ref:
+      label: "医疗证明编号/参考"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗离船情形"
+    medevac-arrangement:
+      label: "转运安排说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "医疗离船情形"
+    ccs-clearance-number:
+      label: "CCS clearance 编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "命中通报时"
+    ntsp-number:
+      label: "NTSP(非同一人证明)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "同名疑似时"
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "整个流程需要多久?"
+      answer: "正常情况下,BSS 审查与核准约37分钟,持核准函到外勤办盖章约5分钟.如遇补件、命中通报或港口繁忙时段,整体时间将顺延."
+    fees:
+      question: "办理是否收费?"
+      answer: "本项服务为菲律宾籍船员离船办理,移民局不收取政府规费.仅在需出具认证/证明(如 NTSP、无案证明)或涉及其他非本流程服务时,按通用费表另行缴纳."
+    no-pre-filing:
+      question: "未提前向 BSS 提交请函还能办理吗?"
+      answer: "原则上不受理.应由航运/人力代理尽快补交请函与完整资料,BSS 将视情决定是否纳入当日流程,但可能造成显著延误."
+    derogatory-hit:
+      question: "命中不良纪录或同名通报怎么办?"
+      answer: "须先向 CCS 申请 clearance 或“非同一人证明”(NTSP),取得后再回 BSS 审核并携核准函至外勤办盖章.处理时间视案件复杂度而定."
+    submission-by-liaison:
+      question: "可以由联络官代为提交吗?"
+      answer: "可以.需附该联络官的公司工作证复印件与授权材料,并确保所有文件按清单顺序与尺寸规范整理."
+    copies-only:
+      question: "是否可以只交复印件?"
+      answer: "BSS 受理时提交复印件即可,但外勤窗口盖章时必须携带护照与海员证原件供现场核对,否则不予放行."
+    night-or-holiday-arrival:
+      question: "船舶夜间/节假日到港如何办理?"
+      answer: "请提前与 BSS/外勤办协调值班安排并完成预申报;实际放行依值班窗口开放情况与港口管理规定执行."
+    info-mismatch:
+      question: "名单与证件信息有差异怎么办?"
+      answer: "应由船方/代理立即修正乘员名单并提交说明;必要时提供经认证的记录副本(CTC)或相关证明,待 BSS 复核通过后再行放行."
+disclaimers:
+  items:
+    no-additional-fees:
+      text: "本服务不另收费;如涉及第三方费用(运输、翻译、公证等)由申请方自理."
+    cashier-final:
+      text: "费用以现场收银开单为准."
+    version-2025:
+      text: "已更新至2025官方版本."
+service_related:
+  links: {}

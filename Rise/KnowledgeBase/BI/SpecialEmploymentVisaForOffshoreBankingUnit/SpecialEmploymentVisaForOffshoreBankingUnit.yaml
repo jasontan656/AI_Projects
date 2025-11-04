@@ -1,0 +1,1596 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "离岸银行单位特别雇佣签证(依据总统令第1034号,OBU)"
+slug: "special-employment-visa-for-offshore-banking-unit"
+type: "reference"
+semantic_profile:
+  intent_id: "obu-special-employment-visa"
+  category: "work-visa"
+  tags: ["OBU","PD1034"]
+service_overview: "离岸银行单位特别雇佣签证(OBU)系依据总统令第1034号设立的非移民类工作签证,适用于由外国银行指派并在其于菲律宾境内设立的离岸银行单位任职的外籍人员.首次可办理转换为非移民签证(OBU项下),其后可按期展延,主申请人并可按规定为配偶与未婚且未满21周岁子女办理依附.持证人可在获准的离岸银行单位合法受雇、依法纳税,并申办/持有外侨登记卡(ACR I-Card);在聘用关系延续的情况下可按期展延以维持工作与居留的连续性与合规性."
+applicability:
+  items:
+    convert-to-obu-for-newly-assigned-staff: "外国银行新近指派员工赴菲律宾在其离岸银行单位工作,需要将当前在菲停留身份转换为OBU非移民签证."
+    extension-for-existing-obu-holders: "已持有OBU非移民签证的外籍员工,合同期延续或岗位未变,需要办理签证展延."
+    dependents-follow-to-attach: "主申请人在OBU签证获批后,拟为配偶与未婚未满21周岁子女办理依附随行."
+    renewal-to-keep-visa-and-acr-valid: "同一雇主内岗位续聘或合同续签后,需保持签证与ACR I-Card有效并连续."
+    accompany-family-convert-or-extend: "申请人携家属入境,需同步或分步为家属办理依附的转换或展延."
+preconditions:
+  required:
+    deployed-by-foreign-bank-to-obu: "申请人为外国银行派遣,在菲律宾境内该银行获准设立的离岸银行单位(OBU)专属任职人员."
+    lawful-stay-and-valid-passport: "申请时在菲停留合法且在有效停留期内,持有有效护照并具备最近一次入境记录与授权停留期限."
+    employer-sec-registration-and-gis: "雇主(请愿单位)具备有效的证券交易委员会(SEC)登记资料,包括公司注册证、公司章程与当前年度的公司信息表(GIS)."
+    employer-cert-and-tax-commitment: "雇主出具证明说明申请人系该行员工,且将专属为其OBU工作,并承诺依法代扣代缴并向税务局(BIR)申报在菲所得税款."
+    bi-clearance-and-boq-if-applicable: "通过移民局无案核查(BI Clearance);如申请人属特定国家且于2014年6月后入境,须提供检疫局体检/健康许可."
+    extension-additional-requirements: "展延加要求:OBU经营授权仍有效,且自原始入境日起至今,申请人在菲律宾已支付报酬且相应税款已依法代扣代缴并向BIR申报(需凭证)."
+  not_eligible:
+    non-obu-or-no-exclusive-employment: "非OBU体系派遣或无法证明与OBU的专属雇佣关系."
+    employer-qualification-or-obu-authorization-invalid: "雇主资质或OBU合法经营授权失效,或无法提供SEC文件与年度GIS."
+    overstay-or-false-or-untranslated: "申请人超出授权停留且未按程序处理、提供的外文资料未按规定认证/翻译、提交虚假文件或不配合核验."
+    health-or-tax-noncompliance: "未满足检疫或其他法定健康许可要求(如适用),或拒不履行纳税及承诺文件."
+pre_required_documents:
+  mandatory:
+    initial-main-petition-letter: "致移民局局长的公司责任官员签署之请愿函(首次转换为OBU非移民签证)."
+    initial-main-cgaf: "填妥之非移民签证综合申请表(CGAF),两份正本,另一份用于ACR I-Card."
+    initial-main-passport-copies: "护照资料页复印件、最近一次入境章及当前有效停留证明复印件;原件提交扫描后退还."
+    initial-main-employer-cert-tax-commitment: "公司责任官员证明:申请人为该外国银行员工,将专属为请愿单位之OBU工作;并承诺依法代扣并向税务局(BIR)缴纳其全部所得税."
+    sec-registration-articles-gis: "证券交易委员会(SEC)注册证、公司章程及当前年度公司信息表(GIS,带SEC收讫戳)."
+    bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+    dependent-cgaf: "每名家属/依附人:填妥之非移民签证综合申请表(CGAF)."
+    dependent-passport-copies: "每名家属/依附人:护照资料页与最近一次入境章及有效停留复印件."
+    proof-of-relationship: "每名家属/依附人:与主申请人之亲属关系证明(如婚姻证、出生证等;菲律宾签发之民事登记文件须为PSA原件)."
+    dependent-bi-clearance: "每名家属/依附人:移民局无案证明(BI Clearance)."
+    extension-petition-letter: "展延申请:公司责任官员出具之展延请愿函."
+    extension-cgaf: "展延申请:填妥之非移民签证综合申请表(CGAF)."
+    extension-passport-visa-copies: "展延申请:护照资料页、既有签证实施页、最近一次入境章及当前有效停留复印件."
+    obu-sworn-certification: "展延申请:OBU责任官员经宣誓之证明:OBU经营授权仍有效;申请人自原始入境日起在菲领取报酬;相应税款已依法代扣并缴至税务局."
+    tax-withholding-proof: "展延申请:OBU代扣个人所得税并完成缴纳之凭证."
+    extension-bi-clearance: "展延申请:移民局无案证明(BI Clearance)."
+  conditional:
+    attachment-a-nationals-since-2014-06:
+      trigger: "如为移民局SBM-14-059-A号令附件A国家国民且2014年6月或之后入境"
+      documents: ["检疫局体检/健康许可原件或经认证之副本"]
+    authorized-representative-submission:
+      trigger: "由授权代理/代表提交办理"
+      documents: ["移民局认证代理ID复印件","经公证的特别授权书(SPA,针对每位申请人分别出具)","受托人有效政府ID复印件"]
+    more-than-two-children:
+      trigger: "子女超过两人"
+      documents: ["申请人子女信息综合表(Applicant’s Children Form)"]
+    in-person-verification:
+      trigger: "申请或面谈时签证官核验身份"
+      documents: ["主申请人/请愿人护照原件或有效政府ID以备核验"]
+process:
+  steps:
+    fill-out-forms:
+      order: "1"
+      title: "领取并填写CGAF与相关表格"
+      description: "在PIAU窗口或官网下载表格;按要求以英文大写填写并签署.预计0.5个工作日."
+    precheck-and-lodgement:
+      order: "2"
+      title: "预审与收件"
+      description: "按清单顺序装订,提交CRU或前台窗口进行完整性预审.预计当日完成."
+    receive-ops:
+      order: "3"
+      title: "领取缴费单(OPS)"
+      description: "预审通过后由窗口签发缴费单.预计当日."
+    pay-fees:
+      order: "4"
+      title: "缴纳费用并领取OR"
+      description: "持OPS至收银窗口缴费,领取官方收据(OR).预计当日."
+    submit-or-copy-and-wait:
+      order: "5"
+      title: "回传收据与候审"
+      description: "提交OR复印件/扫描件至受理窗口,等待审批与签批.时长以移民局审理进度为准."
+    visa-implementation-and-acr-icard:
+      order: "6"
+      title: "签证实施与贴签并同步ACR I-Card"
+      description: "获批后提交护照原件实施签证贴签,并同步办理/领取ACR I-Card.注意:自批准起90日内未实施签证将自动取消,ACR I-Card逾期未领将自动停用."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    initial-main-1y:
+      label: "首次申请 · 主申请人 · 1年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,530"
+            value: 5530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    initial-main-2y:
+      label: "首次申请 · 主申请人 · 2年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,530"
+            value: 5530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    initial-main-3y:
+      label: "首次申请 · 主申请人 · 3年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,530"
+            value: 5530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    initial-dependent-1y:
+      label: "首次申请 · 配偶/家属 · 1年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    initial-dependent-2y:
+      label: "首次申请 · 配偶/家属 · 2年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    initial-dependent-3y:
+      label: "首次申请 · 配偶/家属 · 3年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 150"
+            value: 150
+          notes: "ACR I-Card按所选年限计费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-main-1y:
+      label: "展延 · 主申请人 · 1年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-main-2y:
+      label: "展延 · 主申请人 · 2年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-main-3y:
+      label: "展延 · 主申请人 · 3年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-dependent-1y:
+      label: "展延 · 配偶/家属 · 1年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,030"
+            value: 4030
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-dependent-2y:
+      label: "展延 · 配偶/家属 · 2年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,030"
+            value: 4030
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    extension-dependent-3y:
+      label: "展延 · 配偶/家属 · 3年"
+      details:
+        immigration-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,030"
+            value: 4030
+          notes: "家属为配偶或未婚且未满21周岁子女"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "视卡有效期处理ACR I-Card;以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF),可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证贴纸费,可能并入总额或分项列示,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "快速通道费(Express),如适用,以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以实际OPS/OR为准;ACR I-Card以USD计费并按BSP汇率折算收取"
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "申请获批后可获得签证贴签及外侨登记卡(ACR I-Card),用于在菲合法受雇与居留之证明."
+  items:
+    obu-visa-sticker:
+      name: "OBU非移民签证贴签"
+      usage: "贴附护照用于证明在菲OBU任职的合法停居留与工作许可."
+    acr-icard:
+      name: "ACR I-Card(外侨登记卡)"
+      usage: "作为外侨登记身份证件,配合签证管理居留与合规."
+kpis:
+  processing_time: "部分环节可当日完成;整体审批时长以移民局审理进度为准."
+risks:
+  items:
+    form-filling-and-signature:
+      "表格填写须英文大写且签名处须亲笔签署,违规将导致退件或延误."
+    binding-order-and-cgaf-separation:
+      "资料须按清单顺序装订;CGAF需提交两份且用于ACR I-Card者须单独文件夹."
+    originals-verification:
+      "护照原件窗口扫描后退还;评估/面谈时须携带原件以备核验."
+    civil-doc-authentication:
+      "菲律宾境内民事文件须为PSA原件;外国文书须经FSP或DFA认证,非英文须附英文译本."
+    dependents-processing:
+      "每名家属需独立备齐材料并填表;未婚且未满21周岁子女可依附;超过两名需额外提交子女信息综合表."
+    health-clearance-trigger:
+      "附件A名单国家国民且2014年6月后入境者须提交检疫局体检/健康许可."
+    tax-compliance:
+      "首次转换须雇主承诺依法代扣代缴税款;展延须提交代扣代缴凭证,无法证明纳税合规可能导致驳回."
+    90-day-implementation:
+      "签证批准后90天内未实施将自动取消;ACR I-Card逾期未领将自动停用."
+    overstay-penalty:
+      "超期停留每月可能被处以罚款并影响后续申请."
+    bi-discretion-and-fraud:
+      "移民局可要求补充材料;虚假陈述或伪造文件将导致驳回、可能刑事起诉并(或)递解出境."
+    consistency-of-information:
+      "表格、函件与证件信息须一致;公司名称与登记信息应与SEC文件/GIS完全匹配."
+    obu-authorization-validity:
+      "展延需证明OBU经营授权仍有效;授权失效应先行整改或暂缓申请."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WEI"
+      notes: ""
+    middle-name:
+      label: "中间名(如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alias-names:
+      label: "曾用名/别名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-date:
+      label: "出生日期(DD-MMM-YYYY)"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "05-MAY-1990"
+      notes: "按DD-MMM-YYYY格式填写"
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "男"
+      notes: "选项:男/女"
+    birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: "与护照载明一致"
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Chinese"
+      notes: ""
+    height-cm:
+      label: "身高(厘米)"
+      type: "number"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 175
+      notes: "单位:cm"
+    weight-kg:
+      label: "体重(千克)"
+      type: "number"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 70
+      notes: "单位:kg"
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "已婚"
+      notes: "选项:未婚/已婚/分居/丧偶/撤销婚姻/离婚"
+    tin:
+      label: "纳税人识别号(TIN,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "在菲联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    phone-mobile:
+      label: "在菲联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    ph-address-line1:
+      label: "在菲住址(门牌/街道/小区)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 101, 123 Ayala Ave"
+      notes: ""
+    ph-address-barangay:
+      label: "在菲住址(Barangay)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Bel-Air"
+      notes: ""
+    ph-address-city:
+      label: "在菲住址(城市/市镇)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    ph-address-province:
+      label: "在菲住址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    ph-address-postal-code:
+      label: "在菲住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1226"
+      notes: ""
+    ph-address-country:
+      label: "在菲住址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    overseas-address-line1:
+      label: "海外住址(门牌/街道/小区)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-city:
+      label: "海外住址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-state-province:
+      label: "海外住址(州/省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-country:
+      label: "海外住址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    overseas-address-postal-code:
+      label: "海外住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child1-full-name:
+      label: "子女1姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "若超过两名,请另附申请人子女信息综合表"
+    child1-birth-date:
+      label: "子女1出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child2-full-name:
+      label: "子女2姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "若超过两名,请另附申请人子女信息综合表"
+    child2-birth-date:
+      label: "子女2出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    company-name:
+      label: "公司名称(OBU/公司)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Bank OBU"
+      notes: ""
+    company-registration-no:
+      label: "公司登记号(SEC)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    organization-type:
+      label: "机构性质"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "商业"
+      notes: "选项:商业/宗教/其他(说明)"
+    company-address-line1:
+      label: "在菲注册地址(门牌/街道/楼层)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-city:
+      label: "在菲注册地址(城市/市镇)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-province:
+      label: "在菲注册地址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-postal-code:
+      label: "在菲注册地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-contact-phone:
+      label: "公司联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    company-contact-email:
+      label: "公司联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    position-title:
+      label: "职位名称(任职岗位)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contract-end-date:
+      label: "合同到期日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    monthly-salary:
+      label: "每月税前薪资(PHP)"
+      type: "number"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: 150000
+      notes: "货币:PHP"
+    aep-number:
+      label: "外国人就业许可证编号(AEP,如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    aep-expiry:
+      label: "AEP有效期至(如适用)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    agent-name:
+      label: "授权代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-bi-accreditation-no:
+      label: "代理人BI认证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agency-name:
+      label: "代理机构名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agency-address-line1:
+      label: "代理机构地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-reference:
+      label: "特别授权书(SPA)信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "针对每位申请人分别出具并经正式公证"
+    attorney-gov-id:
+      label: "受托人政府签发证件信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-flight-no:
+      label: "最近一次入境航班号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-stay-until:
+      label: "授权停留最后日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history:
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期(至)"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-type:
+      label: "现有移民身份/签证类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    acr-number:
+      label: "外侨登记卡编号(ACR,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-issue-date:
+      label: "ACR签发日期(如有)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-expiry:
+      label: "ACR有效期(如有)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    crn:
+      label: "居留证号码(CRN,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref1-name:
+      label: "在菲品行证明联系人1姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref1-address:
+      label: "在菲品行证明联系人1住址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref1-phone:
+      label: "在菲品行证明联系人1联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref2-name:
+      label: "在菲品行证明联系人2姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref2-address:
+      label: "在菲品行证明联系人2住址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-ref2-phone:
+      label: "在菲品行证明联系人2联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    relationship-proof-number:
+      label: "与主申请人关系证明文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "婚姻证/出生证等"
+    relationship-proof-issuer:
+      label: "关系证明签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "菲律宾签发须为PSA;外国文件须经FSP/DFA认证"
+    relationship-proof-issue-date:
+      label: "关系证明签发日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人签署CGAF并同意其中的数据隐私/信息处理声明."
+  certification_statement: "申请人及请愿单位需于相关宣誓/声明类文件上签署并确认所填资料与提交文件真实准确."
+faq:
+  qas:
+    difference-initial-vs-extension:
+      question: "首次“转换为OBU非移民签证”与“展延”在材料上有何差异?"
+      answer: "转换侧重确立雇佣与资格(如雇主承诺代扣代缴、SEC文件),展延除基本资料外,须提交OBU经营授权仍有效之宣誓证明、在菲支付报酬与相应BIR税款已代扣并缴纳的凭证."
+    90-day-implementation:
+      question: "签证获批后未在90天内实施会怎样?"
+      answer: "若未在批准后90天内实施签证,将自动取消;ACR I-Card如未及时领取亦会自动停用,需重新申请相关程序并可能增加成本与时间."
+    dependents-separate-filing:
+      question: "家属是否必须单独填表与备齐材料?"
+      answer: "是.每一位家属(配偶或未婚且未满21周岁子女)均须独立填写CGAF并提交亲属关系证明、入境与停留证明、BI Clearance及(如适用)检疫健康许可."
+    when-boq-medical-clearance:
+      question: "哪些情形需要检疫局的体检/健康许可?"
+      answer: "如申请人或家属为移民局SBM-14-059-A号令附件A所列国家国民,且自2014年6月以后入境,则须提交检疫局医疗许可原件或经认证之副本."
+    foreign-doc-auth:
+      question: "外国文件如何满足认证要求?"
+      answer: "须提交原件,并由签发地具有管辖权的菲律宾驻外馆处(FSP)进行认证;若系驻菲使馆出具的外国文件,则由菲律宾外交部(DFA)认证.非英文文件须附合格的英文译本."
+    aep-info:
+      question: "是否需要提供外国人就业许可证(AEP)信息?"
+      answer: "综合申请表包含AEP字段.是否需要AEP依岗位与主管部门要求而定,如适用应填写AEP编号与有效期并确保一致合法."
+    fee-and-acr-currency:
+      question: "费用如何计算?ACR I-Card以何种货币计费?"
+      answer: "签证费以PHP计收,ACR I-Card以USD计费(1年USD 50、2年USD 100、3年USD 150),按BSP汇率折算为PHP在收银处缴纳.实际以缴费单(OPS)与官方收据(OR)为准."
+    overstay-or-incomplete:
+      question: "超期停留或材料不全会有什么后果?"
+      answer: "超期可能按月罚款并影响审批;材料不全将导致退补或延误,情节严重者可被驳回.伪造文书或虚假陈述将面临刑事/行政责任与可能的递解出境."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "签证类收费以移民局缴费单(OPS)与官方收据(OR)为准."
+    acr-exchange-rate-bsp: "ACR I-Card以USD计费并按菲律宾央行(BSP)汇率折算收取."
+    2025-charter-unclear: "目前未检索到该OBU签证在2025版公民宪章中的明确条款与金额,待官方更新."
+    bi-may-request-more: "移民局可基于核验需要要求提供其他补充材料."
+service_related:
+  links: {}

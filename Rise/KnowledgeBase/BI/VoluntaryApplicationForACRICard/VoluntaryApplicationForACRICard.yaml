@@ -1,0 +1,714 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "自愿申请 ACR I-Card(外国人登记身份证)"
+slug: "voluntary-application-for-acr-i-card"
+type: "reference"
+semantic_profile:
+  intent_id: "apply-acr-icard-voluntary"
+  category: "acr-icard"
+  tags: ["SRRV","SIRV","Balikbayan"]
+service_overview: "面向依法豁免强制登记的外籍人士,提供自愿申领 ACR I-Card 的办理服务.适用于基于特别法律或政策入境并居留者(如 Balikbayan、SIRV、SRRV 等).持卡可用于在办理出入境检查、政府与商业机构业务时进行快速身份核验,减少重复提交资料并提升合规便利性,为签证变更、认证与证明办理提供一致的登记信息基础."
+applicability:
+  items:
+    balikbayan-spouse-or-minor: "Balikbayan 入境的配偶或未成年子女希望持卡以便往返及办理银行、通信开户等事务."
+    srrv-retiree-efficiency: "持 SRRV 的退休人士为提升在政府与商业机构的身份识别效率而自愿办理."
+    sirv-or-other-special-permit: "持 SIRV 或其他由主管机构核发特别许可的长期停留者,需建立/完善在移民局的生物信息与登记档案."
+    ecc-and-certifications: "办理 ECC、认证、记录类证明时需提供稳定一致的 ACR 号和卡面资料以加快审核."
+    future-changes-or-reissuance: "进行住址、婚姻状况变更或补发手续时,已持卡更利于系统快速检索与比对."
+preconditions:
+  required:
+    lawful-stay-and-valid-passport-visa: "申请人处于合法停留状态,护照与签证或入境记录有效."
+    present-passport-original: "递件时出示护照原件供核验,随后退还."
+    filing-order-legal-size-folder: "申请资料按清单顺序装订于法式长页文件夹(Legal size 8½×14 in.)."
+    biometrics-in-person: "申请人须到场完成指纹与影像采集,照片及身份证明为最新版本."
+    derogatory-record-check: "柜台先行查询是否存在不良记录(derogatory record),如有须按指引先行处置."
+  not_eligible:
+    overstay-or-blacklist: "停留逾期未处置、存在未结案件/通报、被列入拒绝出入境或黑名单且未依法撤销者."
+    incomplete-or-noncompliant-forms: "申请表不完整、材料顺序/规格不符或缺乏必要原件核验者."
+    no-personal-appearance-no-proper-authorization: "无法亲自到场采集生物信息且未提交合规授权文件的委托递件."
+    falsified-documents: "提交与事实不符、涂改或疑似伪造的证件与证明."
+    photo-mismatch: "近期证件照片与申请人相貌差异明显、无法完成比对者."
+pre_required_documents:
+  mandatory:
+    application-letter: "致移民局局长并经外籍登记处处长转递的申请函,说明自愿申办目的."
+    bi-form-2014-08-006: "填妥的 ACR I-Card 申请表(BI Form 2014-08-006 Rev 0)."
+    passport-and-visa-copies: "护照资料页、签证实施页、最近一次入境章与获准停留期限页复印件."
+    supervising-agency-id-copy: "主管机构签发的有效身份证件复印件(如 PRA、BOI、PEZA、CEZA 等),如适用."
+  conditional:
+    balikbayan-relationship-proof:
+      trigger: "如属 Balikbayan 入境情形"
+      documents: ["结婚证复印件","出生证明复印件"]
+    prior-paper-acr:
+      trigger: "如曾持纸本 ACR"
+      documents: ["纸本 ACR 原件(供收存或比对)"]
+    additional-supporting-docs:
+      trigger: "移民局视核查需要"
+      documents: ["先前登记记录","在菲住址证明","旧 ACR 号相关证明"]
+    submission-by-authorized-representative:
+      trigger: "由授权代表提交申请"
+      documents: ["移民局认证机构/律所的有效认证身份证复印件","针对该申请人的原始特别授权委托书(SPA)","受托人政府签发身份证复印件"]
+process:
+  steps:
+    step-1-window-5-initial-assessment:
+      order: "1"
+      title: "前台受理与初审(Window 5)"
+      description: "递交完整申请材料,核对信息并查询不良记录;通过后签发缴费指令单 OPS(约15分钟)."
+    step-2-cash-section-payment:
+      order: "2"
+      title: "收银缴费(Cash Section,Windows 13–16)"
+      description: "按 OPS 缴纳费用并取得官方收据 OR(约10分钟)."
+    step-3-return-or-and-biometrics:
+      order: "3"
+      title: "回递收据并信息编码(Window 5 → ARD-Biometrics)"
+      description: "提交 OR 后进行系统编码,转至采集指纹拍照,并签发领卡凭条(约20分钟)."
+    step-4-backoffice-card-production:
+      order: "4"
+      title: "后台制卡与审核(ARD-OSAU & Data Trail)"
+      description: "完成后台复核、制卡与流转(约3个工作日)."
+    step-5-claim-card-window-4:
+      order: "5"
+      title: "领卡(Window 4)"
+      description: "凭领卡凭条及必要附件领取成卡,当场核对卡面信息(约3分钟)."
+  variants: {}
+  notes: "办理完成取卡时:需提交申请人护照资料页复印件;未成年人由父/母任一方出示其有效身份证;旅行社/律所代领须提交该机构的移民局认证卡复印件;其他授权代表代领须提供原始 SPA 与受托人有效身份证复印件."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    general-applicant:
+      label: "通用 · 申请人"
+      details:
+        i-card-fee:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "I-Card 本体费;按 BSP 当日汇率折算后以 PHP 缴纳."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "I-Card 制卡与出证加速,常规计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "ACR 登记费(视个案计入,常在登记/认证组合中出现)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(对除头税与罚款外的移民费用按项计收;I-Card 相关一般为 PHP 10)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        other-possible-fees:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "其他可能费用(如认证费、证明费等),以当日 OPS/OR 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "多币种与是否计入组合项存在差异;示例:USD 50(I-Card)+ PHP 500(Express)+(如计)PHP 1,000(ACR Fee)+ LRF PHP 10;以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "完成办理后签发 ACR I-Card 实体卡及相关收据/凭条."
+  items:
+    acr-i-card:
+      name: "ACR I-Card 实体卡"
+      usage: "作为在菲境内登记身份证件用于身份核验与信息比对."
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费凭证,供后续查询与对账."
+    ops-payment-order:
+      name: "缴费指令单(OPS)"
+      usage: "指引缴费项目与金额."
+    claim-stub:
+      name: "领卡凭条"
+      usage: "领取成卡时出示以核发卡片."
+kpis:
+  processing_time: "正常情形下整体约 6天5小时48分钟(节假日顺延)."
+risks:
+  items:
+    noncompliant-docs-return:
+      text: "资料不完整或不合规将被退件或要求补件."
+    derogatory-record-hold:
+      text: "存在不良记录将暂停流程,需先完成澄清/处置."
+    false-docs-liability:
+      text: "逾期停留、虚假材料或伪造文书将导致拒办并可能承担法律责任."
+    card-data-correction-required:
+      text: "卡面信息错误需按“条目变更”流程更正并可能重新制卡与缴费."
+info_collection:
+  applicant:
+    name-prefix:
+      label: "姓名前缀(如 Mr/Ms/Dr)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MR"
+      notes: "与护照一致,英文大写录入."
+    last-name:
+      label: "姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SMITH"
+      notes: "与护照一致,英文大写录入."
+    first-name:
+      label: "名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "与护照一致,英文大写录入."
+    middle-name:
+      label: "中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ADAMS"
+      notes: "如无填 N/A."
+    name-suffix:
+      label: "姓名后缀(如 Jr/Sr/III)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JR"
+      notes: ""
+    alias:
+      label: "别名/曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JOHNNY"
+      notes: "如无填 N/A."
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MALE"
+      notes: "可选:MALE/FEMALE."
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MARRIED"
+      notes: "单身/已婚/离异/丧偶/宣告无效."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-01-31"
+      notes: "表格示例格式 [DD-MMM-YYYY] 可接受."
+    place-of-birth-city:
+      label: "出生城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SEOUL"
+      notes: ""
+    place-of-birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "KOREA"
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JAPAN"
+      notes: ""
+    ethnicity:
+      label: "种族/族别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    height-cm:
+      label: "身高(厘米)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 175
+      notes: ""
+    weight-kg:
+      label: "体重(千克)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 70
+      notes: ""
+    skin-color:
+      label: "肤色"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "FAIR"
+      notes: ""
+    hair-color:
+      label: "发色"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BLACK"
+      notes: ""
+    eye-color:
+      label: "眼睛颜色"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BROWN"
+      notes: ""
+    body-build:
+      label: "体型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MEDIUM"
+      notes: ""
+    distinctive-marks:
+      label: "明显体征"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    blood-type:
+      label: "血型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "O"
+      notes: "如无资料可填 N/A."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "TOKYO"
+      notes: ""
+    passport-issuance-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2020-05-20"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-05-19"
+      notes: ""
+    current-visa-type:
+      label: "当前签证/许可类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SRRV"
+      notes: "如 SRRV/SIRV/Balikbayan 等."
+    current-visa-number:
+      label: "签证/许可号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    latest-entry-admission-category:
+      label: "最近一次入境准许入境类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BALIKBAYAN"
+      notes: ""
+    admitted-until:
+      label: "准许停留期限(至)"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-12-31"
+      notes: ""
+    current-stay-status:
+      label: "当前停留状态"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LEGAL"
+      notes: ""
+    previous-acr-number:
+      label: "以往 ACR 号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    crn-number:
+      label: "证件号码(CRN)(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    tin-number:
+      label: "税号(TIN)(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "+63 2 8123 4567"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "APPLICANT@EXAMPLE.COM"
+      notes: ""
+    address-line1:
+      label: "居住地址(门牌/街道/社区-村)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 MAIN ST, VILLAGE"
+      notes: "菲律宾境内地址."
+    address-barangay:
+      label: "Barangay"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BARANGAY 123"
+      notes: ""
+    address-city:
+      label: "市/镇"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    address-province:
+      label: "省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: "^[0-9]{4}$"
+      example: "1200"
+      notes: ""
+    supervising-agency-name:
+      label: "主管机构名称(如 PRA/BOI/PEZA/CEZA)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PRA"
+      notes: ""
+    supervising-agency-id-number:
+      label: "主管机构证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    plan-depart-within-30-days-after-issuance:
+      label: "是否计划在卡片签发后30日内离境"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+  spouse:
+    last-name:
+      label: "配偶姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "配偶名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father:
+    last-name:
+      label: "父亲姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "父亲名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "父亲中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  mother: {}
+  children:
+    child-full-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如需联动办理/证明亲属关系时填写."
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-relationship-proof:
+      label: "亲属关系证明类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "出生证明"
+      notes: ""
+  dependents: {}
+  employment: {}
+  authorization:
+    claimant-name:
+      label: "领卡人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    claimant-relationship:
+      label: "与申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPOUSE"
+      notes: ""
+    spa-number:
+      label: "特别授权委托书(SPA)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "授权代表代办/代领时提供."
+    representative-gov-id-number:
+      label: "受托人政府签发身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bia-accreditation-id-number:
+      label: "移民局认证卡编号(机构/律所)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "旅行社/律所代办/代领时适用."
+    representative-phone:
+      label: "受托人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    representative-email:
+      label: "受托人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "REP@EXAMPLE.COM"
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance: {}
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    timeline:
+      question: "正常情况下多久可以领到卡?"
+      answer: "窗口受理与缴费当天完成采集,后台审核与制卡约需3个工作日,整体约6天5小时48分钟;节假日或补件将顺延."
+    usd-payment:
+      question: "ACR I-Card 的 USD 费用如何缴纳?"
+      answer: "I-Card 费为 USD 50,按 BSP 当日汇率折算后以 PHP 在收银窗口缴纳;其他费用(如 Express、LRF、ACR 登记费)直接以 PHP 计收."
+    incomplete-docs:
+      question: "材料不齐会怎样处理?"
+      answer: "前台将列明缺件并暂缓处理,待补齐后重新出具 OPS 才能继续流程;超过规定期限未补交可能需重新排队受理."
+    authorized-representative:
+      question: "可以由他人代为申请或领取卡片吗?"
+      answer: "可以.代办/代领须提交移民局认证机构/律所身份证复印件,或出具原始 SPA(针对每名申请人),并附受托人政府签发身份证;未成年人由父/母代领需出示其有效身份证."
+    depart-within-30-days:
+      question: "如果计划在发卡后30天内离境怎么办?"
+      answer: "请在申请表如实勾选“是”,并与窗口确认发卡时间;如无法在离境前领取,可授权代表凭凭条及合规文件代领."
+    card-correction:
+      question: "领卡时发现姓名或出生日期有误如何处理?"
+      answer: "请在 Window 4 立即提出更正申请;按“条目变更”办理,通常需缴变更费与 Express/LRF,并可能重新制卡."
+    derogatory-record:
+      question: "出现不良记录提示会被直接拒绝吗?"
+      answer: "不会立即签发.需先按移民局要求完成澄清或提交证明;待不良记录问题妥善解决后,方可继续制卡流程."
+    not-passport:
+      question: "ACR I-Card 是否可替代护照使用?"
+      answer: "不可.ACR I-Card 用于在菲律宾境内证明登记身份与配合执法核验,不等同于护照或签证;出入境与国际旅行仍须凭护照和相应签证/许可."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用以当日 OPS/OR 为准,部分项目是否计入组合项可能存在差异."
+    usd-to-php-bsp-rate: "涉及 USD 项目按菲律宾央行(BSP)当日汇率折算后以 PHP 收取."
+    icard-not-passport: "ACR I-Card 非护照或签证的替代文件."
+service_related:
+  links: {}

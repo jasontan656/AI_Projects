@@ -1,0 +1,623 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "外籍船员离港通知迟报/未报之罚款缴纳与补报(Notice of Departure, NOD)"
+slug: "penalty-for-late-filing-non-filing-of-notice-of-departure"
+type: "reference"
+semantic_profile:
+  intent_id: "penalty-for-late-filing-of-nod"
+  category: "penalties"
+  tags: []
+service_overview: "本服务适用于航运公司或经授权的人力代理,因未在规定时限内向移民局提交外籍船员离港通知(Notice of Departure,NOD)而需补报并缴纳相关罚款与规费的情形.通过在海湾服务科(Bay Service Section,BSS)集中办理,可完成资料补报、费用缴纳与核准出具,确保外籍船员遣返或离船安排获得移民局认可.及时完成该项补报与缴费,有助于避免口岸查验受阻、船员无法顺利离境或后续监管处罚等风险,并完善船舶与船员出入境记录的合规性与可追溯性."
+applicability:
+  items:
+    late-submission-after-berthing: "邮轮或商船靠泊前后,代理未及时送交船员离港通知,需事后补报并缴付行政罚款."
+    emergency-crew-change-or-repatriation: "船员紧急换班或遣返(含医疗、家事等突发情况),导致未能按时提交NOD."
+    voyage-or-port-plan-changes: "航次或靠泊港口临时调整,导致原提交流程中断或遗漏,需补交离港通知材料."
+    no-departure-record-found-at-inspection: "现场查验发现系统无离港登记记录,为避免延误登轮/离境,需即刻补报并缴费."
+    agent-change-gap: "船东更换本地代理或人力公司,致接续期间的离港申报出现空档需补办."
+preconditions:
+  required:
+    local-company-or-authorized-agent: "由本地航运公司或经正式授权的人力代理作为办理主体;若由联络专员递件,须附公司工作证复印件(首次提交时)."
+    late-filing-letter-and-explanation: "备妥补报函与原因说明函,清楚叙述未能及时提交NOD的事实与原因."
+    complete-voyage-and-crew-info: "提供完整航次信息与船员清单,包含护照资料页与海员证信息."
+    no-derogatory-verification: "同步完成不良记录查核,需取得“无不良记录”验证(No Derogatory)或依指引先行办理清理手续."
+    legal-size-binding: "所有纸质文件按官方清单顺序编排,使用法定纸张尺寸Legal(8½ x 14英寸)文件夹装订."
+  not_eligible:
+    forged-or-altered-documents: "发现伪造、涂改或虚假文件."
+    unpaid-fines-or-pending-cases: "仍有未清的移民行政罚金或既往违规案件未结清."
+    no-valid-authorization-or-id: "无法出示办理主体的有效授权或身份凭证."
+    derogatory-case-unresolved: "经不良记录查核存在未清偿案件且拒不办理清理/认证手续."
+    improper-order-or-late-submission: "未按清单顺序或逾时提交致窗口无法受理的情形."
+pre_required_documents:
+  mandatory:
+    submission-order-and-legal-folder: "所有材料须按“材料顺序清单”排列,置于Legal尺寸(8½ x 14英寸)文件夹中,逾期或不按顺序将不予受理."
+    liaison-officer-company-id-copy: "由指定联络专员递件者,应附所属航运/人力公司的工作证复印件于首页."
+    late-filing-letter-2-copies: "补报函(致移民局)2份,说明本次办理为“外籍船员离港通知迟报/未报”的补交."
+    explanation-letter-to-commissioner: "原因说明函(致移民局局长/专员),由航运/人力公司或授权代表签发,阐明未能按规定提前发送到港/离港信息的原因."
+    vessel-and-voyage-info: "船舶与航次资料:抵港/离港时间(ETA/ETD)、航次号、停靠港列表."
+    crew-list-copy-marked: "船员名单(Crew List)复印件,标注本次离港人员."
+    crew-list-visa-or-copy: "船员签证/费用凭证:船员名单签证费(Crew List Visa)缴费正式收据复印件(如适用)."
+    no-derogatory-stamp-or-proof: "不良记录核验结果:加盖“无不良记录”验证章(No Derogatory Stamp)或附同等核验凭据."
+    authorization-letter-and-company-id: "办理授权文件:若由代理或联络专员办理,提供授权书与公司ID复印件."
+    passport-bio-and-expiry-copy: "护照资料页复印件(含有效期页)."
+    seaman-book-pages-copy: "海员证(Seaman’s Book)相关页面复印件."
+    previous-ph-visa-or-stamps-copy: "既往在菲签证或入境章复印件(如有)."
+  conditional:
+    derogatory-hit-found:
+      trigger: "如查得不良记录(Derogatory Hit),须先行至认证与清算科(CCS)办理清理/认证相关文件,再返回BSS续办."
+      documents: ["清理/认证相关文件(CCS出具)"]
+    voyage-or-port-changes:
+      trigger: "如航次或靠港信息变更,需增列变更说明及相关证明."
+      documents: ["变更说明", "相关证明材料"]
+    other-authority-supplement:
+      trigger: "其他主管机关或口岸执勤单位要求的补充材料(窗口将以书面方式通知)."
+      documents: ["按书面通知提交的补充材料清单"]
+process:
+  steps:
+    window-intake-and-initial-review-bss:
+      order: "1"
+      title: "窗口受理与初审(BSS)"
+      description: "递交完整档案,按清单核对材料、编排与授权;同步进行不良记录查核.预计20分钟."
+    issue-order-of-payment-slip-ops:
+      order: "2"
+      title: "出具缴款单(OPS)"
+      description: "资料符合受理条件后,BSS开具缴款通知单(Order of Payment Slip,OPS).预计5分钟."
+    cashier-payment:
+      order: "3"
+      title: "收银缴费(Cash Section)"
+      description: "持OPS至收银窗口缴纳行政罚款及相关规费,取得正式收据(Official Receipt,OR).预计10分钟."
+    return-or-and-approval-bss:
+      order: "4"
+      title: "回传收据与审批(BSS)"
+      description: "携OR返回BSS,科长复核并完成批准,打印/发放补报核准函(用于后续登轮或离境查验).预计15分钟."
+    filing-and-closing:
+      order: "5"
+      title: "案件归档与结案"
+      description: "受理人员在封面注明“资料完整”确认,申请单位留存核准函副本与OR以备查.预计5分钟."
+  variants:
+    express-processing:
+      name: "快速通道(Express)"
+      trigger: "选择加急办理"
+      description: "可申请快速通道,是否提供与出件速度依窗口业务量与现场安排确定."
+      extra_requirements: ["加收快速通道费(Express)PHP 500(以OPS为准)"]
+    with-derogatory-clearance:
+      name: "触发不良记录清理/认证"
+      trigger: "查得不良记录(Derogatory Hit)"
+      description: "须先至认证与清算科(CCS)办理清理/认证,取得“无不良记录”验证后再回BSS续办."
+      extra_requirements: ["提交CCS出具的清理/认证文件", "办理时效顺延,以书面通知为准"]
+  notes: "服务时长参考:常规办理约45–55分钟(以现场排队与是否触发清理/补件为准).如出现不良记录或需补件,时限顺延,以书面通知为准.可申请快速通道(Express),视窗口负荷安排."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "行政罚款与流程依据移民局公民宪章2025第1版;通用费目(LRF、Express、Certification等)参照2025价目口径"
+  items:
+    nod-late-filing-main:
+      label: "NOD迟报/未报 · 主流程"
+      details:
+        admin-penalty-nod:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "针对未按时提交离港通知的行政罚款;按案件计收;以OPS与OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律研究费(LRF);通用法定检索费(除头税与罚款外各项均计LRF);以OPS与OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费;选择加急办理时收取;以OPS与OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crew-list-visa:
+          amount:
+            currency: "PHP"
+            display: "PHP 100/人"
+            value: 100
+          notes: "船员名单签证费;按人计收;另加LRF 10/人;按批办理可能合并Express 500;如适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification-proof:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证/证明类(如需:无案证明/记录证明等);证书费;另加LRF 10;如加急另收Express 500;视案情."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        motion-for-reconsideration:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "复议动议(MR,若对处理结果提请复议);另加LRF 10;是否适用视个案."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "具体以现场OPS与OR为准,因是否加急、是否涉及按人计收及证明类费用而变化."
+deliverables:
+  description: "完成缴费与审批后,由BSS出具补报核准函;申请单位应留存正式收据(OR)与核准函副本备查."
+  items:
+    approval-letter-for-nod:
+      name: "补报核准函"
+      usage: "用于后续登轮或离境查验."
+    official-receipt-or:
+      name: "正式收据(OR)"
+      usage: "缴费凭证,随案留存备查."
+kpis:
+  processing_time: "常规办理约45–55分钟(以现场排队与是否触发清理/补件为准)."
+risks:
+  items:
+    border-control-delay:
+      "未完成补报与缴费,口岸移民执勤人员可拒绝放行或要求立即补办,可能导致船员延误离境与航次延误."
+    repeated-violations-or-false-docs:
+      "重复迟报、提交虚假材料或拒不办理清理的,除行政罚款外,可能被列入重点稽核;文件伪造将移交执法机关处理."
+    data-inconsistency-rejection:
+      "补报函、原因说明函与实际航次/船员数据不一致将导致补件甚至驳回."
+info_collection:
+  applicant:
+    company-name-cn:
+      label: "公司全称(中文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "某某航运有限公司"
+      notes: ""
+    company-name-en:
+      label: "公司全称(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Co., Ltd."
+      notes: ""
+    company-address-line1:
+      label: "公司地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Harbor Road, Pasay City"
+      notes: ""
+    company-postal-code:
+      label: "公司邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1300"
+      notes: ""
+    company-registration-number:
+      label: "统一注册号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-tax-number:
+      label: "税号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-last-name:
+      label: "授权代表姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Wang"
+      notes: ""
+    authorized-representative-first-name:
+      label: "授权代表名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Li"
+      notes: ""
+    authorized-representative-middle-name:
+      label: "授权代表中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-id-type:
+      label: "授权代表身份证件类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Company ID / Passport"
+      notes: ""
+    authorized-representative-id-number:
+      label: "授权代表身份证件号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-last-name:
+      label: "联络专员姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-first-name:
+      label: "联络专员名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-middle-name:
+      label: "联络专员中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-position:
+      label: "联络专员职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Liaison Officer"
+      notes: ""
+    company-phone-mobile:
+      label: "公司联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+    company-email:
+      label: "公司邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "ops@shipping.example.com"
+      notes: ""
+    company-id-copy-number:
+      label: "公司工作证复印件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "联络专员递件时必须."
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorization-letter-available:
+      label: "是否提供办理授权书"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    no-derogatory-verified:
+      label: "是否已取得“无不良记录”验证"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    materials-arranged-legal-folder:
+      label: "材料是否按清单顺序装订于Legal尺寸文件夹"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MV Example"
+      notes: ""
+    vessel-imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234567"
+      notes: ""
+    voyage-number:
+      label: "航次号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "VOY-2025-001"
+      notes: ""
+    bill-of-lading-number:
+      label: "提单号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    eta:
+      label: "预计抵港时间(ETA)"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-01-15T08:30:00"
+      notes: ""
+    etd:
+      label: "预计离港时间(ETD)"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-01-16T18:00:00"
+      notes: ""
+    port-calls:
+      label: "停靠港列表与次序"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila → Subic → Cebu"
+      notes: ""
+    agent-change-occurred:
+      label: "是否存在代理更换"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-change-start-date:
+      label: "代理更换起始日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-change-end-date:
+      label: "代理更换结束日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    crew-last-name:
+      label: "船员姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Garcia"
+      notes: ""
+    crew-first-name:
+      label: "船员名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan"
+      notes: ""
+    crew-middle-name:
+      label: "船员中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    crew-nationality:
+      label: "船员国籍"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    crew-rank:
+      label: "船员职务(Rank)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Able Seaman"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2028-06-30"
+      notes: ""
+    seaman-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-issuing-authority:
+      label: "海员证签发信息(机构/国家)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-10"
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "NAIA"
+      notes: ""
+    expected-exit-date:
+      label: "预计离境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-16"
+      notes: ""
+    expected-exit-port:
+      label: "预计离境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila Seaport"
+      notes: ""
+    crew-list-visa-or-number:
+      label: "船员名单签证费OR号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用,提供OR复印件编号."
+    crew-list-visa-or-date:
+      label: "船员名单签证费OR日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-ph-visa-info:
+      label: "既往在菲签证/许可信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有,提供签注页复印件."
+    derogatory-record-flag:
+      label: "是否曾有不良记录提示"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "办理全程需要多长时间?"
+      answer: "常规约45–55分钟,含受理、缴费与核准出具.不良记录清理或补件将顺延,以窗口书面通知为准."
+    penalty-charging-basis:
+      question: "行政罚款是按人头还是按案件收取?"
+      answer: "按案件计收,但仍须随案附全体相关船员材料与签证缴费凭证,便于窗口核对."
+    express-available:
+      question: "是否可以申请加急(Express)?"
+      answer: "可以,按加收PHP 500计取,是否提供与出件速度依窗口业务量与现场安排确定."
+    no-crew-list-visa-or:
+      question: "没有船员名单签证费收据怎么办?"
+      answer: "若该环节适用,须先补缴或补提OR复印件后方可受理.具体以BSS审核意见为准."
+    derogatory-hit-can-continue:
+      question: "查到不良记录(Derogatory Hit)还能继续办吗?"
+      answer: "需先至认证与清算科(CCS)办理清理/认证,取得“无不良记录”验证后再回BSS续办."
+    after-departure-still-file:
+      question: "船舶已离港还能补报吗?"
+      answer: "可补报,但须提交完整原因说明与相关证明,是否准予受理与罚款认定以窗口审核为准."
+    refund-policy:
+      question: "费用能否退还?"
+      answer: "已入账的行政罚款与规费原则上不予退还;如对处理结果有异议,可在规定期限内提出复议动议(MR)."
+    process-at-port:
+      question: "可以在口岸现场直接处理吗?"
+      answer: "本服务原则上在BSS集中受理;如因航次紧急,可先与窗口协调,依指引就近办理相关配套事项并尽快补报."
+disclaimers:
+  items:
+    fees-based-on-ops-and-or: "一切费用以OPS与OR为准;Express与认证类费用如有加收,将在OPS中明列,未经开单的收费不予认可."
+    version-and-basis-2025: "行政罚款与流程依据移民局公民宪章2025第1版;通用费目(LRF、Express、Certification等)参照2025价目口径."
+    legacy-forms-guidance: "早期表格(如BI FORM 2014-10-021 Rev 0)的填写指引仍可沿用,费用以新版公民宪章为准(已更新至2025官方版本)."
+service_related:
+  links: {}

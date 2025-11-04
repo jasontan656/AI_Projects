@@ -1,0 +1,1564 @@
+version: v1
+updated_at: '2025-10-30T04:03:47.987160+08:00'
+meta:
+  agency_id: bi
+  agency_name: Bureau of Immigration
+  description: Bureau of Immigration service index
+  locale: zh-CN
+services:
+  AccreditationOfSchoolRepresentativeLiaisonOfficer:
+    name: Accreditation of School Representative (Liaison Officer)
+    path: KnowledgeBase/BI/AccreditationOfSchoolRepresentativeLiaisonOfficer/AccreditationOfSchoolRepresentativeLiaisonOfficer.yaml
+    overview: This service is handled by BI field offices and allows BI-accredited
+      schools to nominate and approve school representatives (liaison officers). Approved
+      representatives receive a BI-issued ID that is required to process foreign student
+      matters, including enrollment reporting, permit applications, and follow-up
+      coordination. Processing covers dossier review, payment of fees, and routing;
+      once accepted, the field office forwards the file to the Student Visa Section
+      for card production and release, and the applicant collects the ID according
+      to the release notice.
+    applicability_summary:
+    - A BI-accredited school needs to designate or replace the staff member responsible
+      for foreign student transactions.
+    - The school is opening a new campus or has increased volume and must add liaison
+      officers to meet compliance and daily processing needs.
+    - The current representative has resigned, been reassigned, or the credential
+      expired, requiring a personnel change or renewal.
+    - The school plans to resume a previously suspended foreign student intake program
+      and must re-establish the official liaison credentials.
+    - An audit finding or corrective notice requires the school to regularize or replace
+      liaison qualifications and documents.
+  AccreditedOfficialOfForeignGovernment9E:
+    name: Accredited Foreign Government Official (9E) Visa Upgrade and Dependent Annotation
+      Guide
+    path: KnowledgeBase/BI/AccreditedOfficialOfForeignGovernment9E/AccreditedOfficialOfForeignGovernment9E.yaml
+    overview: This service supports foreign government officials formally recognized
+      by the Philippine government and endorsed by the DFA, together with their dependents.
+      It covers two flows--converting an existing entry class to the courtesy 9E visa
+      and filing dependent annotations for family members. The 9E visa generally carries
+      no government fees and relies on DFA endorsements and diplomatic notes. Applicants
+      must compile the dossier according to the BI CDR checklist; once approved, the
+      processing office applies the passport visa annotation and updates BI systems.
+    applicability_summary:
+    - A DFA-recognized foreign government official in the Philippines must convert
+      or upgrade an existing entry privilege to the 9E visa.
+    - The official's dependents (spouse, minor children) need BI dependent annotations
+      so they can reside with the principal.
+    - The official arrived on a short-term visa (such as 9A) and, based on DFA endorsement,
+      must upgrade to 9E after entry.
+    - A child born in the Philippines to the official requires a processed birth certificate
+      and a dependent annotation.
+    - Attendants, aides, or domestic staff accompanying the official need aligned
+      entry/residence arrangements consistent with the official's status, subject
+      to DFA endorsement.
+  ACRICardCertification:
+    name: ACR I-Card Certification (Grace Period, Record, Cancellation)
+    path: KnowledgeBase/BI/ACRICardCertification/ACRICardCertification.yaml
+    overview: This service is for holders of Philippine permanent or temporary residence
+      visas who already possess an ACR I-Card. The BI Alien Registration Division
+      issues an ACR I-Card certification to confirm whether the card is in grace period,
+      on record, or cancelled. The certified document provides official proof for
+      government agencies, courts, banks, employers, or other third parties during
+      compliance reviews.
+    applicability_summary:
+    - The cardholder is within an approved grace period and needs BI to state the
+      card status to support compliance in ongoing transactions.
+    - A historical registration record of the ACR I-Card is required for employment
+      vetting, bank onboarding, compliance audits, or other official reviews.
+    - The card has been cancelled and the applicant must show the cancellation fact
+      and effective date to a third party.
+    - Court proceedings, government checks, overseas visa applications, or internal
+      corporate compliance require an authenticated copy or status certificate from
+      BI.
+    - Other immigration processes (such as exit clearance, annual report, visa processing)
+      need an ACR I-Card status or record certification as supporting documentation.
+  ACRICARDIssuance:
+    name: ACR I-Card Issuance (Alien Registration Identity Card)
+    path: KnowledgeBase/BI/ACRICARDIssuance/ACRICARDIssuance.yaml
+    aliases:
+    - ACR I-CARD Issuance
+    overview: The ACR I-Card is a biometric registration card issued by the BI for
+      foreign nationals who stay in the Philippines for more than 59 days. The application
+      must be filed together with the corresponding visa case, and the card is encoded
+      and released once the visa is approved.
+    applicability_summary:
+    - Visitors entering on a 9A temporary visitor visa and staying more than 59 days
+      must obtain the registration card.
+    - When applying for convertible or extendable visas that require registration
+      (such as 9G, 13A, 9F student visas), the ACR I-Card must be filed alongside
+      the main visa process.
+    - Permanent residents who previously held paper ACRs and need to replace or reissue
+      the card because of delayed filing.
+    - Applications handled by BI-accredited or properly authorized representatives
+      who process the visa and registration card on the applicant's behalf.
+  ACRICardWaiver:
+    name: ACR I-Card Waiver (Approved Grace Period)
+    path: KnowledgeBase/BI/ACRICardWaiver/ACRICardWaiver.yaml
+    aliases:
+    - ACR I-Card Waiver
+    - Approved Grace Period
+    - Grace Period Waiver
+    overview: The ACR I-Card Waiver (Approved Grace Period) is a temporary exemption
+      BI issues when an applicant cannot present the ACR I-Card because it is lost,
+      stolen, damaged, under renewal, or awaiting release, yet immigration or travel
+      transactions must continue. Once approved, it allows lawful processing while
+      the card is unavailable and may serve as supporting proof at ports of entry/exit.
+      It applies to those granted a grace period or who can reasonably explain why
+      the card cannot be shown. BI Main Office handles the filing; after approval
+      the applicant must personally claim the waiver with passport and claim stub.
+      The waiver remains valid only while the original card is unusable, so the applicant
+      should promptly replace or recover the card to stay compliant.
+    applicability_summary:
+    - The card has been lost or stolen, the incident has been reported or an affidavit
+      executed, and immigration or travel transactions must proceed before the replacement
+      card is issued.
+    - The card is damaged or unreadable (including chip failure) and transactions
+      must continue while a replacement card is being processed.
+    - The ACR I-Card renewal or re-issuance is in progress and the card is still being
+      produced or awaiting release while the applicant needs to extend visas, secure
+      an ECC, or travel.
+    - The applicant received an Approved Grace Period notice and must depart, arrive,
+      or transact with BI within that grace period.
+    - Travel is imminent and the card cannot be retrieved or replaced in time; the waiver plus supporting documents (such as ECC or RP/SRC) must be used to depart.
+  AdministrativeFineImposedOnAForeignCrewMemberIfNotProperlyDocumented:
+    name: Administrative Fine for Foreign Crew with Incomplete Documents (Port Entry)
+    path: KnowledgeBase/BI/AdministrativeFineImposedOnAForeignCrewMemberIfNotProperlyDocumented/AdministrativeFineImposedOnAForeignCrewMemberIfNotProperlyDocumented.yaml
+    overview: This service covers cases where foreign crew members arrive at Philippine
+      ports without a 9(c) seafarer visa or without being listed on the visaed crew
+      manifest, and are therefore tagged as improperly documented. By settling the
+      administrative fine and associated charges, the vessel regularizes the crew's
+      entry and stay status and secures official receipts to show during subsequent
+      inspections or follow-on procedures such as waivers, manifest corrections, and
+      disembarkation, reducing inspection issues or delays caused by documentation
+      gaps.
+    applicability_summary:
+    - Upon arrival, some or all foreign crew lack 9(c) seafarer visas or are missing
+      from the visaed crew manifest.
+    - Voyage changes, emergency berthing, or dispatch adjustments require paying the
+      fine and related fees at the port.
+    - Crew data differ from the visaed manifest (additions, replacements, mismatched
+      names or passport numbers) and the discrepancy is confirmed during boarding
+      inspection.
+    - The vessel or manning agency failed to submit voyage memoranda or itinerary
+      documents, leading inspectors to classify the documentation as incomplete.
+    - The ship intends to regularize the port status of on-duty or disembarking crew
+      (obtaining waivers, disembarkation certificates, etc.) and needs to settle the
+      fines and fees at the same time.
+  AffirmationOfRecognitionAsFilipinoCitizen:
+    name: Affirmation of Recognition as Filipino Citizen and IC Issuance
+    path: KnowledgeBase/BI/AffirmationOfRecognitionAsFilipinoCitizen/AffirmationOfRecognitionAsFilipinoCitizen.yaml
+    overview: This service is for individuals who already obtained an Identification
+      Certificate (IC) from BI but still require affirmation by the Department of
+      Justice. By submitting supporting evidence, paying the fees, completing biometrics
+      capture, and undergoing review, the Special Inquiry Committee can finalize recognition
+      and issue or update the IC so the applicant can assert Filipino citizenship
+      in future government transactions.
+    applicability_summary:
+    - BI has preliminarily recognized the applicant and issued an IC, but DOJ affirmation
+      is still pending and must be completed.
+    - The applicant claims Filipino citizenship by blood and must prove that a parent
+      held Philippine citizenship at the time of birth.
+    - The applicant is a minor, and the parents or legal guardian file and describe
+      the claim on the child's behalf.
+    - The applicant is an adult who will personally submit documents proving parental
+      citizenship and the facts of birth.
+    - The Special Inquiry Committee issued a compliance notice and additional documents
+      must be filed within the prescribed period to continue.
+  AmendmentCorrectionOfAdmission:
+    name: Amendment/Correction of Admission - Philippine Jurisdiction
+    path: KnowledgeBase/BI/AmendmentCorrectionOfAdmission/AmendmentCorrectionOfAdmission.yaml
+    overview: This service assists foreign nationals who entered through BI field
+      offices in the Philippines but received an incorrect admission class or endorsement
+      because required documents were not presented or counter procedures were erroneous.
+      By submitting evidence and explanations, the Immigration Regulation Division
+      (IRD) issues a corrective order, and the receiving office implements the correction
+      on the passport, restoring the proper admission status and stay privileges.
+      A corrected admission record keeps later extensions, registration cards, exit
+      permits, and visa conversions aligned with system records, preventing overstays,
+      denials, or extra reviews.
+    applicability_summary:
+    - The traveler should have received Balikbayan admission but the counter failed
+      to mark, stamp, or encode it, so the entry must be corrected.
+    - The traveler entered with a long-term or special visa (e.g., 9G, 13A, 9F, SRRV)
+      but the counter omitted the flag, causing the system and passport endorsement
+      to disagree with the actual visa.
+    - Supporting evidence for accompanying spouse or child (marriage or birth documents)
+      was not shown at entry, leading to an incorrect classification that now needs
+      correction.
+    - The counter mistakenly recorded a non-9(a) status as a temporary visitor or
+      another class, and documents now prove the correct category.
+    - An erroneous admission recorded in a Philippine sub-port (satellite field office)
+      must be elevated to IRD headquarters for approval before the receiving office
+      executes the fix.
+  AnnualReport_AR:
+    name: Annual Report
+    path: KnowledgeBase/BI/AnnualReport_AR/AnnualReport_AR.yaml
+    overview: Foreign nationals registered with BI and holding an ACR (I-Card or paper
+      ACR) must complete the Annual Report within the first 60 days of each calendar
+      year to confirm their residence information and pay the prescribed fee; late
+      filing incurs a monthly penalty. Minors under 14 may report through a parent
+      or legal guardian, and reporting is available via BI counters, virtual annual
+      report, or the official mobile annual report channel.
+    applicability_summary:
+    - Foreign nationals registered with BI and holding a valid ACR I-Card or paper
+      ACR must report between January 1 and March 1 (first 60 days).
+    - For registrants under 14 years old, a parent or legal guardian must report on
+      their behalf.
+    - If reporting online, the registrant must review and confirm the system-recorded
+      information and retain proof of payment such as the official receipt.
+    - Those planning to secure an ECC, depart, or extend a visa should ensure the
+      annual report status is updated to avoid issues.
+    - Applicants unable to appear in person may use the Virtual Annual Report or participate
+      in the official Mobile/Remote AR program when eligible.
+  ApplicationForRetentionReAcquisitionOfPhilCitizenship:
+    name: Application for Retention/Re-Acquisition of Philippine Citizenship (RA 9225)
+    path: KnowledgeBase/BI/ApplicationForRetentionReAcquisitionOfPhilCitizenship/ApplicationForRetentionReAcquisitionOfPhilCitizenship.yaml
+    overview: This service assists former natural-born Filipinos who lost Philippine
+      citizenship through naturalization in a foreign country. By submitting the required
+      documents and taking the oath of allegiance, the applicant re-acquires Philippine
+      citizenship and receives the supporting documents (Board Resolution, Order of
+      Approval, Identification Certificate). Minor children may be petitioned for
+      derivative recognition at the same time.
+    applicability_summary:
+    - A former natural-born Filipino who became a citizen of another country now wishes
+      to retain or re-acquire Philippine citizenship.
+    - Children who were minors when the parent re-acquired citizenship under RA 9225
+      may be included so long as they are still under 18 at filing.
+    - The applicant is registered with BI as a foreign national and needs to update
+      records and submit proof of loss of Philippine citizenship.
+    - Supporting information across different documents shows inconsistencies (e.g.,
+      spelling variants, middle name usage) and must be harmonized through the application.
+    - The applicant is presently abroad and cannot take the oath in the Philippines,
+      so coordination with Philippine posts or consular offices is required for execution
+      and submission.
+  BiClearanceCertification:
+    name: BI Clearance Certificate
+    path: KnowledgeBase/BI/BiClearanceCertification/BiClearanceCertification.yaml
+    aliases:
+    - BI Clearance Certificate
+    - No Record Certificate
+    - BI No Record Certificate
+    overview: Issued by the Certification and Clearance Section (CCS), this certificate
+      confirms whether an individual has unresolved derogatory, watchlist, or pending
+      cases within BI systems. It serves as documentary proof requested by courts,
+      employers, investment boards, corporate secretaries, or other authorities, and
+      the certification fee is collected per transaction.
+    applicability_summary:
+    - Required before visa conversion, extension, downgrading, or departure clearance
+      to show there are no derogatory records.
+    - Requested when the applicant will migrate, invest, or conduct business abroad
+      and needs to prove a clean BI record.
+    - Employers onboarding foreign workers with compliance-sensitive positions may
+      ask for the BI clearance certificate.
+    - During notarization or consular authentication, the BI clearance can be presented
+      as supporting proof of status.
+    - If the applicant is overseas and cannot appear, an authorized representative
+      with proper SPA or letter of authority may lodge the request.
+  CancellationOfAccreditation:
+    name: BIAU Accreditation Cancellation
+    path: KnowledgeBase/BI/CancellationOfAccreditation/CancellationOfAccreditation.yaml
+    overview: When an accredited entity or representative voluntarily ends operations
+      or BI orders the revocation of its accreditation, the Bureau of Immigration
+      Accreditation Unit (BIAU) formally cancels the privilege. The BIAU issues a
+      Cancellation Order that terminates the authority to transact under the accreditation
+      and instructs concerned offices to deactivate records.
+    applicability_summary:
+    - The entity is ceasing the business or service covered by the accreditation and
+      must surrender the privilege.
+    - There is a change in corporate structure, merger, or dissolution--requiring cancellation
+      of the existing accreditation.
+    - Key accredited officers or representatives resigned or were dismissed, so the
+      organization will no longer maintain the roster.
+    - Compliance audits uncovered violations or regulatory findings that require termination
+      of the accreditation.
+    - The entity intends to apply for a new or different accreditation and must first
+      cancel the current one.
+  CancellationOfAccreditationIDs:
+    name: BIAU Accreditation ID Cancellation
+    path: KnowledgeBase/BI/CancellationOfAccreditationIDs/CancellationOfAccreditationIDs.yaml
+    overview: When accredited institutions restructure, terminate staff, or replace
+      authorized representatives, the Bureau of Immigration Accreditation Unit (BIAU)
+      cancels the corresponding accreditation IDs. Upon receipt of documentary requests,
+      BIAU issues the cancellation instruction and ensures inactive IDs are recorded
+      as void to protect the integrity of transactions.
+    applicability_summary:
+    - An accredited officer or representative resigns, is terminated, or no longer
+      handles BI transactions.
+    - The organization appoints new authorized personnel and must deactivate the old
+      accreditation IDs.
+    - During compliance reviews, the entity must align HR records with the list of
+      active accredited IDs.
+    - Internal control or audit requirements call for cancelling unused or dormant
+      accreditation IDs.
+  CancellationOfACRICard:
+    name: ACR I-Card Cancellation (De-registration)
+    path: KnowledgeBase/BI/CancellationOfACRICard/CancellationOfACRICard.yaml
+    overview: Foreign nationals who were issued an ACR I-Card must lodge a cancellation
+      when their visa status changes or is terminated. The Alien Registration Unit
+      (ARU) updates BI records to ensure admission data stays accurate, and the passenger
+      surrenders the card for issuance of the official cancellation receipt. Proper
+      cancellation prevents future system discrepancies when applying for visa conversion,
+      downgrading, or departure clearance.
+    applicability_summary:
+    - The underlying visa or permit was cancelled, downgraded, or allowed to expire,
+      so the ACR I-Card must also be cancelled.
+    - The alien is emigrating or permanently leaving the Philippines and must surrender
+      the card before departure.
+    - The cardholder has passed away and the surviving relatives or employer are arranging
+      for the cancellation.
+    - The card was lost but a cancellation with affidavit (and subsequent replacement)
+      must still be filed.
+    - The alien reacquired or confirmed Philippine citizenship and no longer needs
+      the ACR I-Card.
+  CancellationOfAlienCertificateOfRegistry_ACR:
+    name: Alien Certificate of Registration (ACR) Cancellation
+    path: KnowledgeBase/BI/CancellationOfAlienCertificateOfRegistry_ACR/CancellationOfAlienCertificateOfRegistry_ACR.yaml
+    overview: When a foreign national's visa is terminated, the individual departs
+      permanently, or BI confirms a change in nationality, the Alien Certificate of
+      Registration must be cancelled. The BI system records the cancellation so the
+      identity file is flagged as inactive, preventing duplicate annual reports or
+      unnecessary fees and providing proof for future immigration transactions. (Updated
+      per 2025 official guidance.)
+    applicability_summary:
+    - The underlying visa has been cancelled or downgraded and the corresponding ACR
+      must be rendered inactive.
+    - The alien has departed and is no longer residing in the Philippines, so the
+      ACR file should be closed.
+    - BI or a competent authority has affirmed that the individual is now a Philippine
+      citizen or has reacquired citizenship.
+    - The alien has died and relatives or the sponsoring company must secure cancellation
+      of the registry.
+    - The ACR I-Card was lost and will not be replaced; cancellation is required to
+      stop future obligations.
+  CertificateOfNonRegistrationRegistration:
+    name: Certification of Non-Registration/Registration
+    path: KnowledgeBase/BI/CertificateOfNonRegistrationRegistration/CertificateOfNonRegistrationRegistration.yaml
+    overview: This certificate, issued by the Alien Registration Division (ARD), attests
+      whether a person has an existing BI alien registration record. It is often required
+      by foreign embassies, schools, employers, local government units, or other institutions
+      that need proof of immigration registration status. By obtaining the certificate,
+      the requester confirms whether a BI record exists and resolves questions about
+      compliance or prior filings.
+    applicability_summary:
+    - A foreign national needs proof of registration status for visa processing, business
+      licensing, or other government transactions.
+    - Schools or employers onboarding foreign students or workers ask for official
+      confirmation of BI registration.
+    - Courts, LGUs, or other agencies require documentation of an individual's registration
+      history during proceedings.
+    - A company preparing compliance or audit submissions wants to verify the registration
+      records of foreign hires.
+    - An authorized representative is consolidating immigration profiles and must
+      obtain the certificate to support the summary.
+  CertificationForNotTheSamePerson:
+    name: Certificate of Not the Same Person (NTSP)
+    path: KnowledgeBase/BI/CertificationForNotTheSamePerson/CertificationForNotTheSamePerson.yaml
+    aliases:
+    - NTSP
+    - Certificate of Not The Same Person
+    overview: The Certificate of Not the Same Person (NTSP) is issued when multiple
+      immigration records match a traveler's identifiers but refer to different individuals,
+      potentially causing watchlist hits, visa holds, or clearance delays. The Certification
+      and Clearance Section evaluates the evidence and issues an NTSP to clarify that
+      the applicant is distinct from the derogatory record so travel, visa processing,
+      or compliance transactions can proceed.
+    applicability_summary:
+    - During arrival or departure, a watchlist or derogatory hit appears for a similar
+      name, requiring proof that the traveler is a different person.
+    - Visa conversion, extension, or downgrading reveals database matches that could
+      stall processing unless an NTSP is presented.
+    - Exit Clearance Certificate (ECC) or other clearances are held pending because
+      of identical-name records and need clarification.
+    - Airlines or shipping companies flag the passenger's booking due to BI alerts,
+      and the NTSP must be submitted to restore clearance.
+    - Courts or law-enforcement agencies request a BI-certified statement clearing
+      the applicant from mistaken identity cases.
+  CertifiedTrueCopyCertification:
+    name: Certified True Copy of Derogatory Records
+    path: KnowledgeBase/BI/CertifiedTrueCopyCertification/CertifiedTrueCopyCertification.yaml
+    aliases:
+    - Certified True Copy of Derogatory Records
+    overview: BI issues certified true copies of derogatory records when a party needs
+      official proof that a derogatory entry exists (or existed) in immigration systems.
+      The Certification and Clearance Section prepares the certified copy with embossed
+      seals to confirm authenticity, and the document can be presented to courts,
+      prosecutors, visa authorities, or investigative bodies.
+    applicability_summary:
+    - Courts or law-enforcement agencies require a certified copy of derogatory records
+      for ongoing investigations or hearings.
+    - Visa processing or immigration compliance requires the applicant to disclose
+      whether they were flagged under BI derogatory listings.
+    - Before applying for clearances, the applicant or representative needs to review
+      the historical derogatory entry.
+    - The concerned party is overseas and authorizes a representative to obtain certified
+      copies for submission.
+    - Corporate compliance or due diligence needs documentary proof of whether an
+      individual is associated with derogatory records.
+  ChildBornAbroadOfImmigrantMother:
+    name: Child Born Abroad of Immigrant Mother
+    path: KnowledgeBase/BI/ChildBornAbroadOfImmigrantMother/ChildBornAbroadOfImmigrantMother.yaml
+    overview: This service converts the admission status of a child who was born abroad
+      while the mother held Philippine resident status, so the child can hold the
+      same immigrant visa and corresponding ACR I-Card. The process involves pre-assessment,
+      payment, document verification, biometrics capture, and card release; required
+      documents must be submitted in the prescribed format and timeline.
+    applicability_summary:
+    - The child enters the Philippines and the mother is an immigrant visa holder;
+      the birth occurred while the mother was already a resident.
+    - The child has newly arrived and must obtain the same immigrant visa within five
+      days of arrival.
+    - The child previously entered under a visitor status and now needs conversion
+      to the parent's immigrant visa.
+    - The family plans to apply simultaneously for the child's ACR I-Card.
+    - If a representative files on behalf of the parents, proper authorization documents
+      must be presented.
+  ChildBornSubsequentToIssuanceOfImmigrantVisaOfAccompanyingParent:
+    name: 13C Immigrant Visa for Child Born After Parent's Immigrant Visa Issuance
+    path: KnowledgeBase/BI/ChildBornSubsequentToIssuanceOfImmigrantVisaOfAccompanyingParent/ChildBornSubsequentToIssuanceOfImmigrantVisaOfAccompanyingParent.yaml
+    overview: This program grants a 13C visa to a child born in the Philippines to
+      a parent who already holds a valid immigrant visa (e.g., 13A, 13G, 13Q). It
+      allows the child to share the parent's residence status, secure an ACR I-Card,
+      and be included in immigration reporting and transactions.
+    applicability_summary:
+    - The parent holds a valid 13-series immigrant visa and the child was born in
+      the Philippines under that status.
+    - The child is currently in the Philippines and needs to stay with the immigrant
+      parent.
+    - The family will obtain an ACR I-Card for the child for use in reporting and
+      future applications.
+    - If a parent cannot appear, an authorized representative may file with proper
+      authority documents.
+  ChildBornSubsequenttotheIssuanceofImmigrantVisaoftheAccompanyingParent:
+    name: 13C Visa Conversion for Child Born After Parent's Immigrant Visa Issuance
+    path: KnowledgeBase/BI/ChildBornSubsequenttotheIssuanceofImmigrantVisaoftheAccompanyingParent/ChildBornSubsequenttotheIssuanceofImmigrantVisaoftheAccompanyingParent.yaml
+    overview: This conversion grants a 13C visa to a child born in the Philippines
+      after the accompanying parent obtained an immigrant visa, ensuring the child
+      holds lawful residence status alongside the parent and receives an ACR I-Card.
+      It keeps immigration records consistent for travel, reporting, schooling, and
+      healthcare transactions.
+    applicability_summary:
+    - The child was born in the Philippines after the parent secured an immigrant
+      visa, and now needs conversion to 13C.
+    - One or both parents hold valid immigrant visas and are legally residing in the
+      Philippines, supporting the derivative application.
+    - The family wishes to regularize the child's stay, complete visa implementation,
+      and obtain the ACR I-Card.
+    - The child's information must align with family-based processes such as school
+      enrollment, medical coverage, or government registration.
+    - The family is filing within the required timeframe to avoid gaps or penalties
+      in immigration records.
+  ConsultancyOrCorporations:
+    name: Consultancy or Corporations Accreditation
+    path: KnowledgeBase/BI/ConsultancyOrCorporations/ConsultancyOrCorporations.yaml
+    overview: BI grants accreditation to consultancy firms, law offices, human-resource
+      agencies, and corporations that regularly transact with the Bureau on immigration
+      matters. Accreditation allows designated liaison officers to obtain identification
+      cards, post cash bonds when required, and represent clients efficiently for
+      visa processing, extensions, or compliance filings.
+    applicability_summary:
+    - A consultancy, law office, BPO, or corporate group needs BI accreditation to
+      handle recurring visa and immigration filings.
+    - An existing accreditation is expiring and must be renewed to maintain authorized
+      access.
+    - The organization will deploy liaison officers or representatives who must be
+      registered under the accreditation.
+    - A company expanding immigration-related services wants to formalize its relationship
+      with BI and comply with regulatory requirements.
+  ConsultancyOrCorporationsRepresentativeOrLiaisonOfficer:
+    name: Consultancy/Corporation Liaison Officer Accreditation (Renewal)
+    path: KnowledgeBase/BI/ConsultancyOrCorporationsRepresentativeOrLiaisonOfficer/ConsultancyOrCorporationsRepresentativeOrLiaisonOfficer.yaml
+    overview: This service renews the Bureau of Immigration Accreditation Unit (BIAU)
+      IDs of liaison officers from accredited consultancies, law firms, recruitment
+      agencies, and corporate entities. Renewal keeps the representatives authorized
+      to transact, submit, and follow up immigration cases on behalf of clients while
+      validating compliance with BI rules against fraud or unauthorized handling.
+    applicability_summary:
+    - The accredited company is renewing liaison officers whose IDs are about to expire.
+    - Existing accredited representatives have resigned or completed assignments and
+      replacements need IDs.
+    - A branch or satellite office is being activated and requires designated officers
+      under the accreditation.
+    - Internal compliance requires replacing inactive or non-compliant accredited
+      staff with updated personnel.
+    - The entity is expanding services and adding more liaison officers to handle
+      client workload.
+  DeroProcessing:
+    name: Derogatory List and Order (ALO/BLO) Processing Guide
+    path: KnowledgeBase/BI/DeroProcessing/DeroProcessing.yaml
+    overview: This guide covers inquiries, certification, and coordination involving
+      Alien Landing Orders (ALO) and Blacklist Orders (BLO). It explains how to verify
+      a person's derogatory status, seek relief, coordinate endorsements, or file
+      the necessary motions so that qualified travelers can regularize their situation
+      before arrival or departure and avoid unnecessary interception.
+    applicability_summary:
+    - A traveler or representative needs to confirm if the individual is subject to
+      an ALO or BLO and identify appropriate remedies.
+    - Legal counsel prepares motions or endorsements to lift, defer, or modify derogatory
+      orders.
+    - Employers or sponsoring entities must understand compliance steps when key personnel
+      appear on derogatory listings.
+    - Families or representatives need guidance to coordinate with BI so arrivals
+      or departures can proceed despite existing orders.
+    - The case may require supporting documents such as NTSP or other BI certifications
+      to resolve mistaken identity.
+  DowngradingOfVisa:
+    name: Downgrading of Visa
+    path: KnowledgeBase/BI/DowngradingOfVisa/DowngradingOfVisa.yaml
+    overview: This procedure covers BI's formal downgrading of visas when employment
+      ends, contracts are completed, or a new immigration status is required. It includes
+      converting 9G holders to temporary visitor status, cancelling unused ACR I-Cards,
+      or securing fresh records before applying for 47(a)(2) or other visa categories.
+      The guide explains documentary requirements, timelines, and coordination steps
+      so compliance is maintained while moving to a new status.
+    applicability_summary:
+    - A 9G work visa holder is separating from the employer and must revert to 9A
+      temporary visitor status before departure or change of sponsor.
+    - The ACR I-Card associated with the work visa must be cancelled through an official
+      Order and supported by DOLE cancellation of the AEP.
+    - The alien plans to switch to a new visa category, such as 47(a)(2), and needs
+      to clear the previous status first.
+    - The I-Card was lost or damaged and cannot be surrendered, so a downgrade with
+      waiver or affidavit must be filed.
+    - BI requires proof that all downgrade steps were completed before accepting the
+      next visa application.
+  EmigrationClearanceCertificate:
+    name: Emigration Clearance Certificate (ECC/EEC) Processing Guide
+    path: KnowledgeBase/BI/EmigrationClearanceCertificate/EmigrationClearanceCertificate.yaml
+    overview: This guide consolidates Bureau of Immigration rules for securing Emigration
+      Clearance Certificates. It covers which passengers must obtain ECCs before departure,
+      how to settle fees, coordinate with BI counters, and ensure supporting requirements
+      such as visa cancellation, ACR I-Card surrender, and travel scheduling are complete
+      so departure is cleared smoothly.
+    applicability_summary:
+    - Temporary visitor visa holders (9A) with stays beyond six months must secure
+      an ECC before departure.
+    - Infants and children require special handling--infant ECCs and additional photo
+      requirements; minors on first departure file ECC-A.
+    - Work visa holders (9G or other immigrant visas) ending employment must cancel
+      ACR I-Cards, downgrade to 9A if needed, and secure ECC-B.
+    - Married migrants or residents processing downgrades and re-entry permits need
+      the ECC to finalize travel clearances.
+    - Students or missionaries on 9F and 47(a)(2) visas must obtain ECC-B together
+      with SRC/RP documents before leaving.
+  FailedToStampEncoded:
+    name: Failed to Stamp - Encoded
+    path: KnowledgeBase/BI/FailedToStampEncoded/FailedToStampEncoded.yaml
+    aliases:
+    - Failed to Stamp (Encoded)
+    overview: This remedy corrects cases where immigration systems show that an entry
+      or departure was encoded but the corresponding passport stamp is missing. The
+      Immigration Regulation Division reviews the evidence, authorizes stamping on
+      the proper page, and aligns digital records with the physical passport so future
+      extensions, conversions, clearances, or departures can proceed without inconsistencies.
+    applicability_summary:
+    - The system indicates that a traveler was encoded upon arrival, but the passport
+      lacks the arrival stamp.
+    - Departure records exist in the system, yet no exit stamp appears on the passport.
+    - An arrival or departure was encoded under a new passport or travel document
+      without manually stamping the booklet.
+    - During audit or counter checks, the traveler's movements are verified in the
+      system but the passport pages are blank.
+    - Operational issues (busy counters, airline handling, automation) caused missed
+      stamping and require BI to validate and stamp retroactively.
+  FailedToStampNotEncoded:
+    name: Failed to Stamp - Not Encoded
+    path: KnowledgeBase/BI/FailedToStampNotEncoded/FailedToStampNotEncoded.yaml
+    overview: This procedure addresses situations where no system entry exists and
+      no stamp was placed on the passport, resulting in a missing record for arrival
+      or departure. BI validates the travel through supporting documents, encodes
+      the movement retroactively, and stamps the passport accordingly so physical
+      and electronic histories match.
+    applicability_summary:
+    - Immigration counters experienced outages or equipment failure, leaving the traveler
+      without a stamp or system record.
+    - Automated gates or expedited channels let the traveler through without manual
+      stamping, creating a blank entry.
+    - A traveler replaced a passport during the trip and needs the arrival or departure
+      properly encoded and stamped in the new booklet.
+    - Visa or compliance audits by airlines, embassies, or schools require proof of
+      actual travel movements.
+    - Transfers between vessels or land borders caused incomplete recording and must
+      be reconciled in BI systems.
+  FilipinoSupernumerary:
+    name: Filipino Supernumerary (On-Board Embarkation/Disembarkation)
+    path: KnowledgeBase/BI/FilipinoSupernumerary/FilipinoSupernumerary.yaml
+    aliases:
+    - Filipino Supernumerary Embarkation Permit
+    - Supernumerary Crew Permit
+    overview: Handled by the Boarding Section and Seaport Section (BSS), this service
+      processes Filipino citizens who join or leave vessels as supernumerary crew--often
+      spouses or children of foreign seafarers. BSS records the movement, verifies
+      documents, and coordinates with the ship and immigration systems to ensure lawful
+      embarkation or disembarkation.
+    applicability_summary:
+    - A shipping company needs to replace or deploy Filipino crew members outside
+      normal complement requirements.
+    - A Filipino spouse or child of a foreign seafarer will join the vessel and travel
+      abroad.
+    - Filipino crew must disembark or transfer, requiring immigration clearance and
+      documentation.
+    - Operational or emergency schedules require quick boarding/disembarkation of
+      Filipino staff with BI supervision.
+    - Maritime planners intend to convert a Filipino worker's status for future deployment
+      and must secure proper documentation first.
+  ForeignSupernumerary:
+    name: Foreign Supernumerary (Embarking)
+    path: KnowledgeBase/BI/ForeignSupernumerary/ForeignSupernumerary.yaml
+    overview: This service coordinates the embarkation of foreign supernumerary crew--those
+      not part of the vessel's original complement--who need to join a ship in the
+      Philippines. The Boarding and Seaport Section reviews documents, secures clearances,
+      and updates systems so the embarkation is lawful. As a general guide the process
+      requires approximately 63 working hours, subject to earlier completion when
+      requirements are complete.
+    applicability_summary:
+    - A shipping company must board an additional foreign specialist or replacement
+      crew member in the Philippines.
+    - Maintenance or repair teams composed of foreign personnel need to embark temporarily
+      while a vessel is in port.
+    - Surveyors, auditors, or training staff from abroad must join the vessel for
+      official duties.
+    - Equipment failures or emergency operations require designated foreign experts
+      to board immediately.
+    - Foreign trainees or interns will temporarily embark under the supervision of
+      their sponsoring company.
+  ImmigrantVisaByMarriage13A:
+    name: Immigrant Visa by Marriage (13A)
+    path: KnowledgeBase/BI/ImmigrantVisaByMarriage13A/ImmigrantVisaByMarriage13A.yaml
+    aliases:
+    - 13A
+    overview: The 13A immigrant visa is granted to foreign spouses of Filipino citizens,
+      allowing them to reside in the Philippines as immigrants. Applicants undergo
+      probationary status, comply with annual reporting, and may be granted permanent
+      status once the marriage and residency requirements are met. The visa also allows
+      dependent children under 21 to obtain derivative benefits and includes ACR I-Card
+      issuance.
+    applicability_summary:
+    - A foreign spouse married to a Filipino citizen entered on a temporary visa (such
+      as 9A) and now seeks conversion to 13A.
+    - A newly married couple is applying for the initial probationary 13A visa.
+    - Existing probationary 13A holders need assistance with the conversion to permanent
+      status and supporting documentation.
+    - Derivative applications cover qualifying minor children under 21 who will follow
+      the principal spouse.
+    - Families residing long-term in the Philippines must keep the 13A records and
+      annual reports updated for each dependent.
+  InclusionOfDependentsUnderRA9225:
+    name: Inclusion of Dependents under RA 9225
+    path: KnowledgeBase/BI/InclusionOfDependentsUnderRA9225/InclusionOfDependentsUnderRA9225.yaml
+    overview: This service allows dependents to be included when a principal applicant
+      retains or re-acquires Philippine citizenship under Republic Act 9225. It ensures
+      children or qualified dependents obtain derivative recognition, identification
+      certificates, and dual citizenship documentation so they can reside, study,
+      or work in the Philippines with the same rights as the principal.
+    applicability_summary:
+    - The petitioner has been approved for retention/re-acquisition and now seeks
+      to include unmarried children under 18 as derivative beneficiaries.
+    - Children born abroad are relocating to the Philippines and require recognition
+      as dual citizens alongside the parent.
+    - The family previously filed separately and now consolidates dependents who were
+      left out or delayed.
+    - Records across documents show inconsistent details for the dependents and need
+      harmonization during inclusion.
+    - Dependents must update ACR I-Card or Certificate of Re-acquisition entries to
+      reflect their new status after inclusion.
+  InterimExtensionGracePeriod:
+    name: Interim Extension / Grace Period (9G Transition)
+    path: KnowledgeBase/BI/InterimExtensionGracePeriod/InterimExtensionGracePeriod.yaml
+    aliases:
+    - Interim Extension
+    - Grace Period
+    overview: When a 9G work visa is expiring and renewal or conversion is still pending,
+      BI may grant an interim extension or grace period so the foreign national can
+      continue lawful stay and work while documents are finalized. The extension preserves
+      legal status until the new visa order is released and avoids gaps that could
+      disrupt employment, travel, or compliance.
+    applicability_summary:
+    - The 9G work visa is under renewal or conversion and processing will exceed the
+      current validity.
+    - Company operations would be disrupted if the foreign national must cease work
+      while waiting for the new visa.
+    - Economic zones (such as PEZA) or special projects need uninterrupted presence
+      of the foreign consultant or manager.
+    - Technical specialists must finish installation, commissioning, or training tasks
+      before the visa order is issued.
+    - Dependents of the 9G holder likewise require lawful stay during the transition
+      period.
+  IssuanceOfShowCauseAndBarOrders:
+    name: Issuance of Show Cause and Bar Orders (BIAU)
+    path: KnowledgeBase/BI/IssuanceOfShowCauseAndBarOrders/IssuanceOfShowCauseAndBarOrders.yaml
+    aliases:
+    - BIAU
+    - Show Cause
+    - Bar Order
+    - Lifting of Bar Order
+    overview: The BI Accreditation Unit (BIAU) issues Show Cause Orders when accredited
+      entities or representatives are alleged to have violated regulations, requiring
+      them to explain and submit evidence. If the explanation fails, BIAU may issue
+      a Bar Order suspending or revoking the privilege. This service also covers requests
+      to lift an existing Bar Order.
+    applicability_summary:
+    - A complaint or audit report alleges violations by an accredited entity or liaison,
+      prompting BI to demand explanation.
+    - BIAU inspectors observe practices that may breach accreditation conditions and
+      notify the concerned party.
+    - The organization receives a Show Cause Order and must file a formal response
+      with supporting documents.
+    - A Bar Order has been issued and the entity seeks relief or lifting after addressing
+      deficiencies.
+  JoiningFilipinoSeaman:
+    name: Joining (Sign-On) Filipino Seafarer
+    path: KnowledgeBase/BI/JoiningFilipinoSeaman/JoiningFilipinoSeaman.yaml
+    aliases:
+    - Joining (Sign-On) Filipino Seafarer
+    overview: This service covers Filipino seafarers who will sign on to vessels at
+      Philippine ports. The Boarding and Seaport Section verifies documentation, coordinates
+      with shipping companies, and issues the necessary clearances so the crew can
+      embark in compliance with immigration requirements.
+    applicability_summary:
+    - A Filipino seafarer is signing on locally and must complete BI embarkation formalities.
+    - Crew are joining from staging areas such as seafarer centers or airports and
+      need BI authorization before boarding.
+    - Shipping or manning agencies coordinate sign-on schedules for multiple Filipino
+      crew members.
+    - Crew previously disembarked or were on leave and now require updated embarkation
+      clearance.
+    - Supporting documents (contracts, assignments, training) must be validated to
+      finalize the sign-on process.
+  JoiningForeignSeaman:
+    name: Joining (Sign-On) Foreign Seafarer
+    path: KnowledgeBase/BI/JoiningForeignSeaman/JoiningForeignSeaman.yaml
+    overview: This service facilitates the embarkation of foreign seafarers joining
+      vessels in Philippine ports. The Boarding and Seaport Section reviews documents,
+      assesses fees, and encodes movements so the crew can lawfully board and depart
+      with the ship.
+    applicability_summary:
+    - Foreign crew are scheduled to sign on at Philippine seaports, airports, or anchorages.
+    - Crew members holding valid 9(c) seafarer visas need their embarkation properly
+      encoded.
+    - The shipping company must board additional personnel during repairs, dry-docking,
+      or crew change operations.
+    - A crew member without a 9(c) visa must file supporting documents and obtain
+      clearance before joining.
+    - Historical records require updating to reflect the embarkation of foreign crew
+      for compliance or audit purposes.
+  LawOffice:
+    name: Law Office Accreditation
+    path: KnowledgeBase/BI/LawOffice/LawOffice.yaml
+    overview: This accreditation is issued by the BI Accreditation Unit (BIAU) to
+      law offices and legal practitioners who regularly transact with the Bureau on
+      behalf of clients. Accreditation grants an official certificate, allows designation
+      of authorized liaison IDs, and enables the firm to file immigration petitions
+      or follow-ups efficiently while remaining accountable to BI regulations.
+    applicability_summary:
+    - A law office or legal practitioner needs BI accreditation in order to represent
+      clients in immigration filings and appearances.
+    - An existing accreditation requires renewal or the firm must replace liaison
+      IDs for newly assigned attorneys or staff.
+    - The law office has changed name, address, or ownership and must align its accreditation
+      records with BI.
+    - Compliance monitoring requires updating the roster of accredited lawyers and
+      support staff responsible for BI work.
+    - BI or the firm's internal governance calls for submitting undertakings, training
+      records, or other proofs that personnel remain qualified.
+  LawOfficeRepresentativeOrParalegal:
+    name: Law Office Representative / Paralegal Accreditation
+    path: KnowledgeBase/BI/LawOfficeRepresentativeOrParalegal/LawOfficeRepresentativeOrParalegal.yaml
+    overview: This accreditation, issued by the BIAU, covers paralegals and representatives
+      of accredited law offices who submit, follow up, and represent clients before
+      BI. Accreditation validates their authority to process immigration dockets,
+      collect documents, and coordinate with BI counters while observing confidentiality
+      and anti-fixer rules.
+    applicability_summary:
+    - Law office support staff, paralegals, or runners regularly file or inquire on
+      immigration cases and must be accredited.
+    - Filings for multiple clients require designated representatives to transact
+      in BI offices on a continuing basis.
+    - The firm needs to renew or replace existing IDs because representatives have
+      changed roles or left.
+    - Updates to identifying information (name, address, tax data) must be reflected
+      in the accreditation records.
+    - BI suspended or cancelled prior accreditation and the firm is applying for reinstatement
+      after compliance.
+  MissionaryOrNonProfitOrganization:
+    name: Missionary or Non-Profit Organization Accreditation
+    path: KnowledgeBase/BI/MissionaryOrNonProfitOrganization/MissionaryOrNonProfitOrganization.yaml
+    overview: BI, through the Accreditation Unit (BIAU), accredits missionary and
+      non-profit organizations that engage in religious or charitable work requiring
+      immigration transactions. Accreditation recognizes the organization's legal
+      personality, allows it to sponsor foreign missionaries or volunteers, and enables
+      authorized officers to coordinate with BI in compliance with regulations.
+    applicability_summary:
+    - A registered missionary or non-profit group needs BI accreditation to sponsor
+      foreign missionaries, volunteers, or charity workers.
+    - The organization must designate liaison officers who will handle immigration
+      filings within BI offices.
+    - The group seeks to maintain custody of passports and coordinate visa-related
+      support with BI under accountable procedures.
+    - Compliance reviews require the organization to demonstrate transparency, funding
+      sources, or program controls.
+    - Existing accredited IDs must be renewed or updated when officers change.
+  MissionaryOrNonProfitOrganizationRepresentativesOrLiaisonOfficers:
+    name: Missionary / Non-Profit Organization Representatives Accreditation
+    path: KnowledgeBase/BI/MissionaryOrNonProfitOrganizationRepresentativesOrLiaisonOfficers/MissionaryOrNonProfitOrganizationRepresentativesOrLiaisonOfficers.yaml
+    overview: For missionary or non-profit organizations that already hold BI accreditation,
+      this service registers or renews their authorized representatives. Through the
+      BIAU and e-Services platform, the organization requests IDs for liaison officers,
+      pays OPS fees, and provides undertakings and compliance documents so the representatives
+      can transact on behalf of the organization.
+    applicability_summary:
+    - An accredited missionary or non-profit organization needs to add, renew, or
+      maintain authorized representatives.
+    - The organization has to update the status of existing IDs or replace representatives
+      whose assignments have ended.
+    - Roster changes--additions, removals, or corrections--must be reflected in the
+      accreditation records.
+    - Stakeholders or beneficiaries require a contact person recognized by BI to coordinate
+      immigration matters.
+    - Corporate documents (SEC/GIS, ITRs, business permits) or proof of ongoing programs
+      must be validated during the accreditation cycle.
+  MotionForReconsideration:
+    name: Motion for Reconsideration (MR)
+    path: KnowledgeBase/BI/MotionForReconsideration/MotionForReconsideration.yaml
+    overview: A Motion for Reconsideration is a formal remedy filed with BI to contest
+      adverse decisions such as visa denials, cancellations, Orders to Leave (OTL),
+      or derogatory findings. By presenting new evidence or clarifications, the applicant
+      seeks to overturn the ruling, suspend enforcement, or secure a more favorable
+      immigration outcome.
+    applicability_summary:
+    - A visa application (e.g., 13A, 9F, 9G) was denied or cancelled and the applicant
+      wishes to challenge the decision.
+    - Detention, hold departure, or watchlist actions were imposed and the party wants
+      BI to reconsider based on facts or humanitarian grounds.
+    - An Order to Leave or exclusion notice was issued and the traveler needs to stay
+      pending reconsideration.
+    - The applicant must depart soon but requests deferment while coordinating ECC,
+      NBI, or other clearances.
+    - Records show mistaken identity or conflicting entries (e.g., NTSP-related issues)
+      and the applicant seeks to align the records through MR.
+  PenaltyForLateFilingNonFilingOfNoticeOfDeparture:
+    name: Penalty for Late or Non-Filing of Notice of Departure (NOD)
+    path: KnowledgeBase/BI/PenaltyForLateFilingNonFilingOfNoticeOfDeparture/PenaltyForLateFilingNonFilingOfNoticeOfDeparture.yaml
+    overview: Shipping companies authorized to handle crew departures must file a
+      Notice of Departure (NOD) within the prescribed time. When the NOD is late or
+      missing, BI's Bay Service Section assesses penalties, guides the operator through
+      compliance steps, and regularizes the crew member's departure record to avoid
+      future immigration issues.
+    applicability_summary:
+    - A crew departure occurred without a timely NOD and the operator must settle
+      penalties and update records.
+    - Medical emergencies or operational changes prevented the on-time filing of the
+      required notice.
+    - Port coordinators discover that an NOD was overlooked during busy crew changes
+      and need to correct the omission.
+    - BI system audits reveal missing departure entries that must be reconciled before
+      clearance or future departures.
+    - Shipping agencies under compliance review must close out pending NOD filings
+      and submit updated reports.
+  PenaltyOnLateFilingNonFilingOfForeignSeafarersNoticeOfArrivalJoiningCrew:
+    name: Penalty for Late/Non-Filing of Foreign Seafarers Notice of Arrival (NOA)
+    path: KnowledgeBase/BI/PenaltyOnLateFilingNonFilingOfForeignSeafarersNoticeOfArrivalJoiningCrew/PenaltyOnLateFilingNonFilingOfForeignSeafarersNoticeOfArrivalJoiningCrew.yaml
+    overview: Foreign seafarers joining vessels in Philippine ports must be reported
+      to BI through a Notice of Arrival (NOA). When shipping agents fail to file on
+      time, the Bay Service Section assesses penalties, records the infraction, and
+      guides the agent through corrective actions so the crew can embark with a regularized
+      immigration record.
+    applicability_summary:
+    - Crew changes happened but the NOA was not submitted within the required 24-hour
+      period, triggering penalties.
+    - Weather disruptions or routing changes delayed NOA filing beyond 48 hours and
+      the agent must explain and settle fees.
+    - Joining crew were deployed without submitting NOA, and the agent needs to regularize
+      the oversight.
+    - Compliance reviews found outstanding NOA filings that must be updated before
+      future crew movements.
+    - Manual or system lapses at the port prevented timely reporting and now require
+      supplemental documentation and payment.
+  PendingVisaApplicationCertification:
+    name: Certificate of Pending Visa Application
+    path: KnowledgeBase/BI/PendingVisaApplicationCertification/PendingVisaApplicationCertification.yaml
+    aliases:
+    - Certificate of Pending Application
+    overview: Issued by the Certification and Clearance Section (CCS), this certificate
+      confirms that a visa application remains pending in BI records. It is used to
+      prove that a case is still under process and has not yet been decided, allowing
+      the applicant to explain status to other agencies or institutions.
+    applicability_summary:
+    - Courts, government agencies, or employers require proof that a visa petition
+      is still pending.
+    - Schools, embassies, or banks ask for confirmation that immigration status is
+      being processed.
+    - Immigration checkpoints or airport authorities need assurance that an extension
+      or conversion is awaiting decision.
+    - Applicants preparing travel must show that a motion or appeal is on file and
+      unresolved.
+    - Supporting documents must explain delays in submission or follow-up while BI
+      continues to review the case.
+  PermanentResidentVisaPRV:
+    name: Permanent Resident Visa (PRV) Guide
+    path: KnowledgeBase/BI/PermanentResidentVisaPRV/PermanentResidentVisaPRV.yaml
+    overview: The permanent resident visa grants foreign spouses of Filipino citizens--and
+      other qualified nationals--permanent residence in the Philippines. Applicants
+      typically pass through a probationary stage, comply with BI memorandum circulars,
+      and then convert to permanent status with ACR I-Card issuance. This guide explains
+      eligibility, documentary requirements, and follow-on obligations.
+    applicability_summary:
+    - A probationary resident is converting to permanent status after meeting the
+      required residence period.
+    - Nationals covered by BI Memorandum Circular MCL-07-021 (e.g., Chinese nationals
+      married to Filipinos) apply for conversion or renewal to permanent status.
+    - Foreign retirees or investors recognized by special laws (e.g., R.A. 7837) seek
+      permanent residence alongside their Filipino spouses or dependents.
+    - Families bring eligible dependent children under 21 to obtain derivative permanent
+      resident status.
+    - Current PRV holders need amendments or updates to reflect changes in personal
+      details, marital status, or dependent information.
+  PhilippineBornRegistration:
+    name: Philippine-Born Registration
+    path: KnowledgeBase/BI/PhilippineBornRegistration/PhilippineBornRegistration.yaml
+    overview: Foreign nationals born in the Philippines must register with the Alien
+      Registration Division (ARD) to obtain their original registration identifiers.
+      The process includes securing an ACR I-Card, the Native-Born Certificate of
+      Registration (NBCR), and updating biometric and demographic data for accurate
+      immigration records.
+    applicability_summary:
+    - A foreign national born in the Philippines has not yet undergone ARD registration
+      and must obtain the initial ACR I-Card.
+    - Children born to foreign parents who intend to study, work, or reside locally
+      need NBCR and ACR I-Card for school, employment, or business transactions.
+    - Existing ACR I-Card details (address, civil status, etc.) are outdated or the
+      card was lost/damaged, requiring replacement.
+    - Children reaching the reporting age must update biometrics and personal data
+      to keep immigration records current.
+    - Where parents legalized status under RA 7919 or EO 324, Philippine-born dependents
+      must complete registration and documentation.
+  PreArrangedEmploymentVisa9G:
+    name: Pre-Arranged Employment Visa (9G)
+    path: KnowledgeBase/BI/PreArrangedEmploymentVisa9G/PreArrangedEmploymentVisa9G.yaml
+    aliases:
+    - Pre-arranged Employment Visa (Chinese)
+    - 9G
+    - Pre-arranged Employment Visa
+    - Sec. 9(G)
+    overview: The Section 9(G) visa authorizes foreign nationals to work in the Philippines
+      for a specific employer. Once approved, the worker obtains an ACR I-Card and
+      may lawfully live and work in the country. The process requires coordination
+      with DOLE for the Alien Employment Permit and compliance with BI's documentary
+      checklist before visa implementation.
+    applicability_summary:
+    - A foreign professional hired by a Philippine company needs to convert from 9A
+      or another temporary status to 9G.
+    - An employer is onboarding specialized foreign staff who will receive salary
+      in the Philippines.
+    - Qualified dependents (spouse, minor children) of the 9G principal are applying
+      for derivative visas.
+    - The 9G visa is due for extension, amendment, or cancellation and supporting
+      documentation must be filed.
+    - Prior to 9G issuance, the worker may hold a Provisional Work Permit (PWP) to
+      lawfully commence duties.
+  ProvisionalWorkPermit:
+    name: Provisional Work Permit (PWP)
+    path: KnowledgeBase/BI/ProvisionalWorkPermit/ProvisionalWorkPermit.yaml
+    aliases:
+    - PWP
+    - Provisional Work Permit
+    - Temporary Work Permit
+    overview: The Provisional Work Permit allows foreign nationals to begin work while
+      waiting for their Alien Employment Permit (AEP) and 9G visa approval. It authorizes
+      employment for a specific project, role, or time frame, subject to BI conditions,
+      and must be supported by evidence that no qualified Filipinos are available
+      for the post.
+    applicability_summary:
+    - A foreign hire has an executed employment contract but the AEP and 9G visa are
+      still in process.
+    - Specialists need to commence installation, testing, or training services before
+      the regular work visa is issued.
+    - Seconded or project-based personnel require temporary authorization while their
+      9G conversion is pending.
+    - The employer submits justification that local manpower is not available to perform
+      the specialized work.
+    - The position is in education, research, or professional practice where immediate
+      continuity is essential pending full visa approval.
+  QuotaVisa13:
+    name: Quota Immigrant Visa (Section 13) Guide
+    path: KnowledgeBase/BI/QuotaVisa13/QuotaVisa13.yaml
+    overview: The quota immigrant visa allows foreign nationals from countries with
+      diplomatic relations to settle in the Philippines, subject to the statutory
+      limit of fifty (50) visas per nationality each year. Applicants must show they
+      meet the qualifications, offer economic or social value, and comply with BI's
+      documentary requirements leading to ACR I-Card issuance and visa implementation.
+    applicability_summary:
+    - Foreign nationals from treaty or friendly nations intend to reside in the Philippines
+      under the annual quota.
+    - Investors, executives, or professionals with notable contributions seek long-term
+      residence through the quota visa.
+    - Temporary visa holders wish to convert to quota immigrant status for permanent
+      residence.
+    - Families plan to include spouses or minor children as derivative beneficiaries
+      under the quota visa.
+    - Applicants must observe the limited slots per nationality and secure endorsements
+      before approval.
+  RecognitionAsFilipinoCitizen:
+    name: Recognition as Filipino Citizen
+    path: KnowledgeBase/BI/RecognitionAsFilipinoCitizen/RecognitionAsFilipinoCitizen.yaml
+    overview: BI processes recognition cases to confirm that an individual is a Filipino
+      citizen by birth, issuing an Identification Certificate (IC) once evidence is
+      validated. Recognition enables the applicant to claim the rights of Filipino
+      citizenship, update civil records, and transact with government agencies as
+      a Filipino.
+    applicability_summary:
+    - An individual currently treated as a foreign national can prove that at least
+      one parent was a Filipino citizen at the time of birth.
+    - The applicant did not register earlier and must submit authenticated civil registry
+      documents (with Apostille or consular legalization).
+    - Parents or guardians are petitioning on behalf of minor children and will execute
+      the required affidavits.
+    - One parent resides abroad, so coordination with Philippine posts is needed to
+      submit notarized or authenticated documents.
+    - Applicants lack prior registration and must compile proof of parents' citizenship
+      and the applicant's birth facts.
+  ReIssuanceOfACRICard:
+    name: Re-Issuance of ACR I-Card for Native-Born Aliens
+    path: KnowledgeBase/BI/ReIssuanceOfACRICard/ReIssuanceOfACRICard.yaml
+    overview: This process covers native-born foreign nationals whose ACR I-Card is
+      expiring, damaged, lost, or in need of data updates. BI verifies registration
+      status, collects updated biometrics, and issues a replacement card so the immigration
+      record stays consistent with the holder's current circumstances.
+    applicability_summary:
+    - The native-born alien's valid ACR I-Card is nearing expiration and must be renewed
+      before continuing immigration transactions.
+    - The card was lost, stolen, or damaged and a replacement is required.
+    - Personal details (name spelling, civil status, address) changed and the card
+      must reflect the updated information.
+    - The registrant is reaching the age for regular annual reporting and needs an
+      updated card.
+    - The alien plans to travel or process other immigration documents within 30 days
+      and must ensure the card is current.
+  RenewalACRICard:
+    name: ACR I-Card Renewal
+    path: KnowledgeBase/BI/RenewalACRICard/RenewalACRICard.yaml
+    overview: This service renews existing ACR I-Cards by verifying registration data,
+      updating biometrics, and issuing a new card before expiration. The workflow
+      covers document validation, fee payment, and release so the holder maintains
+      a valid identification record for all immigration transactions.
+    applicability_summary:
+    - An ACR I-Card is expiring and the registered information (visa type, status,
+      address) remains current.
+    - Visa approvals or extensions require an updated ACR I-Card to match the new
+      validity period.
+    - Holders of 9A, 9G, 13-series, TRV, or student visas must keep their cards active
+      to reflect ongoing status.
+    - Foreign nationals maintaining lawful stay need a renewed card to avoid gaps
+      in proof of registration.
+    - Fingerprints, signatures, or other personal data must be revalidated during
+      renewal to keep records consistent.
+  RepatriatingForeignSeaman:
+    name: Repatriating Foreign Seafarer (Sign-Off) Guide
+    path: KnowledgeBase/BI/RepatriatingForeignSeaman/RepatriatingForeignSeaman.yaml
+    aliases:
+    - Sign-Off Processing
+    - Repatriation Handling
+    overview: This guide covers the procedures for foreign crew members signing off
+      or being repatriated at Philippine ports. The Boarding and Seaport Section (BSS)
+      validates documents, assesses fees, updates BI systems, and coordinates with
+      port authorities to ensure a lawful and orderly disembarkation.
+    applicability_summary:
+    - A foreign crew member is completing contract service and the shipping/manning
+      agency is arranging official sign-off.
+    - Crew substitutions or rotations require immediate disembarkation after relieving
+      officers arrive.
+    - Medical emergencies necessitate hospital transfer and the crew's immigration
+      records must reflect proper sign-off.
+    - Travel documents were lost or damaged and BI must document the exit and clearances.
+    - Visa or 9(c) information differs from records and must be reconciled during
+      disembarkation.
+  ReStampingOfVisa:
+    name: Re-stamping of Visa
+    path: KnowledgeBase/BI/ReStampingOfVisa/ReStampingOfVisa.yaml
+    overview: When a visa has been approved but the actual stamp was not applied--or
+      the passport was lost, damaged, or replaced--BI re-stamps the visa so the physical
+      passport matches the electronic record. BSS coordinates with the approving office
+      (PEZA/Bureau) and validates documents before re-issuing the stamp.
+    applicability_summary:
+    - A visa was approved through PEZA or the BI main office but the passport was
+      never stamped.
+    - The passport containing the visa was lost or replaced and the new passport needs
+      the visa re-stamped.
+    - The holder received a new passport before travel and wants the existing visa
+      transferred.
+    - System or manual audits show a mismatch between electronic records and physical
+      stamps that must be corrected.
+    - Employers or sponsoring agencies submit several passports for re-stamping to
+      keep visa records consistent.
+  ReStampingOfVisaRA7919:
+    name: Re-stamping of Visa (RA 7919 Amnesty)
+    path: KnowledgeBase/BI/ReStampingOfVisaRA7919/ReStampingOfVisaRA7919.yaml
+    overview: For beneficiaries of Republic Act 7919 (Alien Social Integration), this
+      service re-stamps approved visas when the passport needs replacement or the
+      original stamp is missing. BI updates both the physical passport and electronic
+      record to ensure the amnesty visa remains valid and recognized in future transactions.
+    applicability_summary:
+    - The RA 7919 visa was approved but the stamp must be reissued on the passport.
+    - The recipient requires proof of the amnesty visa for visa extensions, clearances,
+      or other services.
+    - A new passport was issued or the old one was lost/damaged, so the RA 7919 stamp
+      must be transferred.
+    - The RA 7919 unit instructed the applicant to secure re-stamping as part of compliance.
+    - Dependent family members need the same re-stamping or correction to keep records
+      aligned.
+  ReturningFormerNaturalBornFilipinoCitizen13G:
+    name: Returning Former Natural-Born Filipino (13G)
+    path: KnowledgeBase/BI/ReturningFormerNaturalBornFilipinoCitizen13G/ReturningFormerNaturalBornFilipinoCitizen13G.yaml
+    overview: This immigrant visa serves former natural-born Filipinos who lost Philippine
+      citizenship and are returning to reside in the Philippines. It grants residency
+      together with derivative benefits for qualified dependents and involves document
+      evaluation, visa implementation, and ACR I-Card issuance.
+    applicability_summary:
+    - A former natural-born Filipino who became a citizen of another country now wishes
+      to resettle in the Philippines under 13G.
+    - Spouses and unmarried children under 21 accompany the principal applicant and
+      need derivative status.
+    - The applicant is abroad or on a temporary stay and wants to convert to 13G before
+      or upon returning.
+    - The process requires securing appointments, interviews, and visa implementation
+      at BI, followed by ACR I-Card release.
+    - Applicants arranging travel after June 2014 must submit medical and documentary
+      clearances as required.
+  ReturningResident13E:
+    name: Returning Resident Visa (13E) Guide
+    path: KnowledgeBase/BI/ReturningResident13E/ReturningResident13E.yaml
+    overview: The 13E returning resident visa reinstates permanent residence for foreign
+      nationals who previously held permanent resident status in the Philippines but
+      stayed abroad beyond the allowed period. The process involves pre-assessment,
+      payment of fees, submission of supporting documents, and issuance of a new ACR
+      I-Card to restore residency privileges.
+    applicability_summary:
+    - A former permanent resident exceeded the allowable stay abroad and needs to
+      restore permanent residence in the Philippines.
+    - The applicant stayed overseas for more than five years and must explain the
+      reasons for extended absence.
+    - Supporting documents such as Re-entry Permit (RP) or Special Return Certificate
+      (SRC) must be updated or reissued.
+    - Dependents (spouse and unmarried minor children) will be included as derivatives
+      in the 13E filing.
+    - Changes during the absence (employment, marital status, address) require updated
+      documentation to align BI records.
+  Revalidation:
+    name: Revalidation
+    path: KnowledgeBase/BI/Revalidation/Revalidation.yaml
+    aliases:
+    - Revalidation
+    - Validation Review
+    overview: Revalidation confirms the validity of visas that were approved while
+      the foreign national was abroad and need to be implemented upon arrival in the
+      Philippines. BI verifies the approval, annotates the passport, updates records,
+      and ensures the visa takes effect so the traveler can lawfully stay.
+    applicability_summary:
+    - A visa was approved overseas and the holder is now entering the Philippines
+      to implement it.
+    - The applicant arrived on a short-term status and must convert the previously
+      approved immigrant or work visa.
+    - 9G, 13-series, TRV, or temporary visas approved abroad require stamping and
+      activation upon arrival.
+    - Medical, business, or travel delays prevented immediate visa implementation
+      and revalidation is needed.
+    - System records must be synchronized to show the visa is active and matches the
+      passport annotations.
+  SchoolAccreditation:
+    name: School Accreditation (Private ESL / Foreign Student Admission)
+    path: KnowledgeBase/BI/SchoolAccreditation/SchoolAccreditation.yaml
+    aliases:
+    - School Accreditation
+    - ESL School Accreditation
+    overview: BI accredits private schools, including ESL centers, that admit foreign
+      students so they can sponsor student visas, issue required certifications, and
+      coordinate immigration reporting. Accreditation ensures the school maintains
+      compliance with BI standards for curriculum, facilities, and regulatory approvals.
+    applicability_summary:
+    - A private ESL or academic institution in the Philippines plans to enroll foreign
+      students and must secure BI accreditation.
+    - The school offers foreign-student programs and needs authorization to issue
+      acceptance and other immigration support documents.
+    - Administrators must prove that facilities, staffing, and records meet BI requirements
+      for foreign student management.
+    - Accreditation renewal requires updated compliance evidence and validation visits.
+    - The school must present permits or recognition from agencies such as FAAP, TESDA,
+      CHED, or DepEd to qualify for BI accreditation.
+  SigningOffFilipinoSeaman:
+    name: Signing-Off Filipino Seafarer Guide
+    path: KnowledgeBase/BI/SigningOffFilipinoSeaman/SigningOffFilipinoSeaman.yaml
+    overview: This service manages the disembarkation of Filipino crew members at
+      Philippine ports. The Boarding and Seaport Section coordinates the schedule,
+      validates documents, and records the sign-off to ensure compliance with immigration
+      regulations and quick turnover for the ship.
+    applicability_summary:
+    - A Filipino seafarer is ending contract service and must sign off locally.
+    - Medical or family emergencies require immediate disembarkation.
+    - Crew rotations or company reassignments call for scheduled sign-off and replacement.
+    - The vessel is in dry-dock or repair and crew must disembark for the duration.
+    - Operations or management decisions need temporary removal of crew with proper
+      documentation.
+  SpecialEmploymentVisaForOffshoreBankingUnit:
+    name: Special Employment Visa for Offshore Banking Unit (OBU)
+    path: KnowledgeBase/BI/SpecialEmploymentVisaForOffshoreBankingUnit/SpecialEmploymentVisaForOffshoreBankingUnit.yaml
+    overview: Presidential Decree 1034 authorizes a special employment visa for foreign
+      nationals employed by offshore banking units (OBUs) in the Philippines. The
+      visa allows the expatriate to reside and work for the licensed bank, with derivative
+      benefits for qualified dependents, while keeping tax and reporting compliance
+      aligned with banking regulations.
+    applicability_summary:
+    - A foreign executive or technical specialist hired by an offshore banking unit
+      must convert to the OBU special employment visa.
+    - Existing OBU visa holders need extensions to continue their employment.
+    - Dependents (spouse and unmarried minor children) of the OBU visa holder require
+      derivative visas.
+    - The employer ensures continuity of visa validity, ACR I-Card issuance, and compliance
+      with revenue and regulatory agencies.
+    - Transfers within the banking group or assignments among OBUs require amendments
+      or further extensions of the visa.
+  SpecialStudyPermit:
+    name: Special Study Permit (SSP)
+    path: KnowledgeBase/BI/SpecialStudyPermit/SpecialStudyPermit.yaml
+    aliases:
+    - Special Study Permit
+    - SSP
+    overview: The Special Study Permit authorizes foreign nationals, especially minors,
+      to pursue short-term language, non-degree, or specialized courses in the Philippines.
+      It ensures the student's stay is lawful for study purposes while the principal
+      visa (often 9A) remains in effect.
+    applicability_summary:
+    - A foreign student will enroll in language or short-term programs (such as ESL)
+      that do not confer a degree.
+    - Minors below 18 will attend elementary or high school programs and need BI authorization.
+    - Students taking non-degree or certificate courses must secure SSP in addition
+      to school admission.
+    - Participants in industry-specific or vocational training require BI clearance
+      for the study period.
+    - Temporary visitors under 9A intend to remain in the country to study without
+      converting to a 9F visa.
+  SpecialVisaForEmploymentGeneration:
+    name: Special Visa for Employment Generation (SVEG)
+    path: KnowledgeBase/BI/SpecialVisaForEmploymentGeneration/SpecialVisaForEmploymentGeneration.yaml
+    aliases:
+    - SVEG
+    overview: The SVEG grants residency to foreign investors or executives who generate
+      at least ten full-time jobs for Filipino workers through legitimate enterprise
+      in the Philippines. It allows the principal, spouse, and qualifying children
+      to reside in the country while keeping BI informed of business operations and
+      employment levels.
+    applicability_summary:
+    - A foreign investor establishes or operates a business that will employ at least
+      ten Filipino workers.
+    - An existing enterprise expanding operations needs to convert the principal investor's
+      status to SVEG.
+    - The business demonstrates verifiable employment records supporting the ten-employee
+      requirement.
+    - The investor currently holds another visa (such as 9G or tourist) and seeks
+      conversion to SVEG.
+    - The family of the investor (spouse and minor children) intends to reside in
+      the Philippines as dependents under SVEG.
+  SpecialVisaUnderEO226AmendedByRA8756:
+    name: Special Visa under EO 226 (as amended by RA 8756)
+    path: KnowledgeBase/BI/SpecialVisaUnderEO226AmendedByRA8756/SpecialVisaUnderEO226AmendedByRA8756.yaml
+    overview: This special visa is granted to foreign executives and highly qualified
+      staff of Regional Headquarters (RHQ) or Regional Operating Headquarters (ROHQ)
+      under EO 226 as amended by RA 8756. It authorizes residence and employment in
+      the Philippines, with dependents eligible for derivative status.
+    applicability_summary:
+    - A foreign executive assigned to an RHQ/ROHQ in the Philippines seeks initial
+      issuance or conversion to the EO 226 special visa.
+    - Existing visa holders require extensions to continue their assignment.
+    - Spouses and unmarried children under 21 will be included as dependents.
+    - The company establishes or maintains an RHQ/ROHQ and needs to register eligible
+      officers under the special visa.
+    - Transfers, reassignment, or replacement of executives necessitate amendments
+      or reissuance of the visa.
+  SpecialVisaunderEO226asamendedbyRA8756:
+    name: Special Visa under EO 226 (RA 8756) Conversion/Extension
+    path: KnowledgeBase/BI/SpecialVisaunderEO226asamendedbyRA8756/SpecialVisaunderEO226asamendedbyRA8756.yaml
+    overview: This service processes conversions or extensions of the EO 226 special
+      visa for foreign executives of Regional Headquarters (RHQ) and Regional Operating
+      Headquarters (ROHQ). It maintains lawful residence for the principal and qualified
+      dependents while the assignment continues in the Philippines.
+    applicability_summary:
+    - An RHQ/ROHQ executive is converting from another status to the EO 226 special
+      visa.
+    - Current EO 226 visa holders require extensions to continue their mandate.
+    - Dependents (spouse and unmarried minor children) are applying for derivative
+      extensions.
+    - Executives assigned to RHQ/ROHQ roles meet the USD 12,000 salary threshold and
+      submit the required documentation.
+    - Travel, transfers, or ACR I-Card updates necessitate amendments during the validity
+      period.
+  SpecialWorkPermitArtistsAthletes:
+    name: Special Work Permit (SWP) - Artists and Athletes
+    path: KnowledgeBase/BI/SpecialWorkPermitArtistsAthletes/SpecialWorkPermitArtistsAthletes.yaml
+    overview: The Special Work Permit authorizes foreign artists, entertainers, and
+      professional athletes to perform or train in the Philippines for short-term
+      engagements, typically three to six months. The sponsoring organizer secures
+      the permit so the talent can work legally while complying with tax and immigration
+      regulations.
+    applicability_summary:
+    - Foreign performers or production crew will stage concerts, festivals, or entertainment
+      events in the Philippines.
+    - Professional athletes are joining competitions, training camps, or exhibition
+      matches and need temporary work authority.
+    - Event organizers bring in foreign participants for rehearsals or pre-production
+      activities.
+    - Film, TV, or advertising shoots require foreign talent or technical staff for
+      limited periods.
+    - Corporate or sports engagements involve foreign specialists whose stay will
+      be shorter than a regular 9G employment visa.
+  SpecialWorkPermitCommercial:
+    name: Special Work Permit (Commercial)
+    path: KnowledgeBase/BI/SpecialWorkPermitCommercial/SpecialWorkPermitCommercial.yaml
+    overview: The commercial Special Work Permit allows foreign professionals to undertake
+      short-term commercial engagements--such as product launches, corporate events,
+      trainings, or consultancy--without converting to a 9G visa. Each SWP is valid
+      for three months and may be renewed once for a total stay of up to six months.
+    applicability_summary:
+    - Foreign professionals delivering projects, trainings, or services for a limited
+      period.
+    - Corporate events or trade shows featuring foreign specialists, presenters, or
+      technical teams.
+    - Film, media, or advertising productions requiring foreign crew for short shoots.
+    - Consultants or instructors providing seminars, workshops, or niche expertise
+      to companies or schools.
+    - Media coverage, brand promotions, or corporate meetings that necessitate temporary
+      foreign participation.
+  StudentVisa9F:
+    name: Student Visa (9F) Guide
+    path: KnowledgeBase/BI/StudentVisa9F/StudentVisa9F.yaml
+    overview: The 9F student visa authorizes foreign nationals to pursue college,
+      graduate, or higher-level studies in the Philippines. It covers new applications,
+      conversions from temporary visitor status, and extensions, including ACR I-Card
+      issuance and coordination with schools.
+    applicability_summary:
+    - Foreign students aged 18 and above plan to enroll in tertiary or graduate programs
+      in the Philippines.
+    - Tourist (9A) holders need to convert to 9F to commence studies.
+    - Existing 9F students require extensions for continuing semesters or program
+      changes.
+    - Specialized fields such as medicine or allied health must present CHED or regulatory
+      endorsements.
+    - Students coordinating travel abroad during their course must secure ECC/SRC
+      in line with 9F requirements.
+  TemporaryResidentVisaTRV:
+    name: Temporary Resident Visa (TRV) Guide
+    path: KnowledgeBase/BI/TemporaryResidentVisaTRV/TemporaryResidentVisaTRV.yaml
+    aliases:
+    - TRV
+    overview: The TRV grants temporary residence to foreign nationals who meet specific
+      qualifications, allowing them to live in the Philippines with their spouses
+      and unmarried minor children. It provides an ACR I-Card and supports lawful
+      stay while participants comply with BI conditions and designated programs.
+    applicability_summary:
+    - A foreign national lawfully in the Philippines wishes to convert from 9A or
+      other temporary status to TRV.
+    - Existing TRV holders require extensions or renewals, including dependent coverage.
+    - Spouses and unmarried children under 21 need derivative TRV status to remain
+      with the principal.
+    - Applicants under specific programs (e.g., ADD-01-038) must follow prescribed
+      documentation for TRV extensions.
+    - Changes in employment, address, or personal details necessitate updates to TRV
+      records and the ACR I-Card.
+  TemporaryVisitorVisa9A:
+    name: Temporary Visitor Visa (9A) Extension / Visa Waiver Guide
+    path: KnowledgeBase/BI/TemporaryVisitorVisa9A/TemporaryVisitorVisa9A.yaml
+    overview: The 9A visa extension program allows visitors to extend their stay beyond
+      the initial 30 days, either through a 29-day visa waiver or successive extensions
+      of one, two, or six months. BI evaluates the application, collects fees, and
+      updates the stay status so visitors remain in legal tourist status.
+    applicability_summary:
+    - A tourist under the 30-day visa-free entry wants an additional 29 days via visa
+      waiver.
+    - Visitors need one- or two-month extensions to continue tourism, family visits,
+      or short-term activities.
+    - Travelers require longer stay authorizations (up to six months) for exploration,
+      investment scouting, or personal matters.
+    - Students or dependents awaiting conversion to other visas must keep 9A status
+      valid.
+    - Long-stay tourists nearing six months must secure follow-on extensions and documentation
+      to avoid overstaying.
+  TransferOfAdmissionStatus:
+    name: Transfer of Admission Stamp
+    path: KnowledgeBase/BI/TransferOfAdmissionStatus/TransferOfAdmissionStatus.yaml
+    aliases:
+    - Transfer of Admission Stamp
+    overview: When a passport is lost, replaced, or renewed, BI transfers the admission
+      stamp to the new travel document so records remain accurate. The process validates
+      prior entry, encodes the correct details, and preserves visa status for future
+      transactions.
+    applicability_summary:
+    - A traveler renewed or replaced a passport and needs the latest admission stamped
+      on the new booklet.
+    - The original passport was lost or damaged, requiring the admission data to be
+      re-entered in a replacement.
+    - Existing visa or stay conditions must be carried over to the new passport before
+      extensions or conversions.
+    - Stakeholders need confirmation that the admission record is accurately reflected
+      for compliance audits.
+    - Schools, employers, or immigration processes require proof that the entry record
+      matches the current passport.
+  TravelAgencyOfficeOfLiaisonOfficers:
+    name: Online Renewal - Missionary Organizations, Travel Agencies, Corporations,
+      Consultants, and Liaison Officers
+    path: KnowledgeBase/BI/TravelAgencyOfficeOfLiaisonOfficers/TravelAgencyOfficeOfLiaisonOfficers.yaml
+    overview: Accredited missionary organizations, travel agencies, corporate entities,
+      and consultancy firms use the BIAU e-Services platform to renew their accreditation
+      and liaison IDs. The online renewal updates organizational and liaison information,
+      submits compliance documents, processes payments, and releases new certificates
+      or IDs to keep accreditation active.
+    applicability_summary:
+    - An accredited organization's certificate is nearing expiry and must be renewed
+      online.
+    - Liaison officer IDs need renewal to remain valid under the existing accreditation.
+    - Corporate information (address, officers, responsible persons) has changed and
+      must be updated during renewal.
+    - Cash bonds or guarantees are maturing and the renewal process synchronizes payments
+      and records.
+    - Regulators require the latest client lists, tax filings, or compliance documents
+      to be uploaded during the renewal.
+  TravelRecordsCertification:
+    name: Travel Records Certification
+    path: KnowledgeBase/BI/TravelRecordsCertification/TravelRecordsCertification.yaml
+    overview: BI issues certified travel records that show an individual's entries
+      and exits as captured in immigration databases. The certification is used for
+      legal, employment, compliance, or personal documentation purposes and is generated
+      after verification and payment of applicable fees.
+    applicability_summary:
+    - Courts or investigative bodies require proof of travel history.
+    - Employers, POEA, or regulatory agencies request official confirmation of entries
+      and departures.
+    - Applicants need to compare self-kept records with BI data before visa or status
+      processing.
+    - Clearances such as BI clearance or ECC require travel history as part of supporting
+      documents.
+    - Individuals applying for foreign immigration benefits or personal documentation
+      need certified travel records.
+  TreatyTraderOrInvestor9D:
+    name: Treaty Trader or Treaty Investor Visa (9D)
+    path: KnowledgeBase/BI/TreatyTraderOrInvestor9D/TreatyTraderOrInvestor9D.yaml
+    overview: The 9D visa is granted to citizens of countries with which the Philippines
+      has treaty relations on commerce and navigation (currently the United States,
+      Japan, and Germany). It allows qualified traders or investors to reside in the
+      Philippines to conduct substantial trade or investment activities, with derivative
+      benefits for spouse and minor children.
+    applicability_summary:
+    - A treaty country national launching or managing trade/investment operations
+      in the Philippines seeks conversion to 9D.
+    - Existing 9D visa holders require extensions to continue their projects.
+    - Dependents (spouse and unmarried children under 21) are applying for derivative
+      status.
+    - A company needs to assign new managers or specialists under the 9D category
+      to support treaty trade.
+    - Changes in the enterprise's capital, structure, or business plan require updates
+      to the visa record.
+  TreatyTraderorTreatyInvestor9D:
+    name: Treaty Trader/Treaty Investor Visa (9D) Processing Guide
+    path: KnowledgeBase/BI/TreatyTraderorTreatyInvestor9D/TreatyTraderorTreatyInvestor9D.yaml
+    overview: This guide details the conversion and extension of 9D visas for nationals
+      of treaty countries engaging in substantial trade or investment in the Philippines
+      (currently the United States, Japan, and Germany). It covers requirements, timelines,
+      and ACR I-Card issuance for principals and dependents.
+    applicability_summary:
+    - A treaty trader/investor is converting from another status to the 9D visa.
+    - Japanese or U.S. companies are assigning executives to manage Philippine operations
+      and need 9D status.
+    - German investors establishing a branch or subsidiary require 9D visas for key
+      personnel.
+    - Existing 9D holders seek one- or two-year extensions to continue treaty business.
+    - Dependents must secure corresponding 9D visas and ACR I-Cards to remain with
+      the principal investor.
+  TrustedTravelerProgram:
+    name: Trusted Traveler Program (TTP) - Expedited Immigration Lane
+    path: KnowledgeBase/BI/TrustedTravelerProgram/TrustedTravelerProgram.yaml
+    aliases:
+    - TTP
+    overview: BI's Trusted Traveler Program provides expedited lanes for frequent,
+      low-risk travelers. By passing background checks and meeting eligibility criteria,
+      members use dedicated counters to reduce queueing time while maintaining security
+      standards.
+    applicability_summary:
+    - Travelers who entered the Philippines at least once in the last 12 months and
+      each stay was within 30 days.
+    - Executives, investors, or professionals with frequent business trips who need
+      faster clearance.
+    - Corporate clients seeking priority processing for visiting business partners
+      or delegations.
+    - Passengers transiting through busy airports who require reliable fast-track
+      service.
+    - Applicants willing to undergo background checks and supply accurate travel history
+      and personal data.
+  VisaCrewlistFee:
+    name: Visa Crew List Fee
+    path: KnowledgeBase/BI/VisaCrewlistFee/VisaCrewlistFee.yaml
+    overview: This fee covers BI endorsement of crew lists when foreign seafarers
+      do not hold individual 9(c) visas. The shipping company obtains a visa crew
+      list for arrival or departure and settles the corresponding charges through
+      the Bay Service Section.
+    applicability_summary:
+    - A vessel arrives with crew members lacking 9(c) visas and must secure a visa
+      crew list endorsement.
+    - Shipping companies prepare consolidated crew lists for embarkation or disembarkation
+      where individual visas are pending.
+    - Crew who are signing on or off under time constraints require a visa crew list
+      for legal clearance.
+    - Emergency or short-notice crew changes necessitate payment of the crew list
+      fee before processing.
+  VisaUponArrivalSEVUA:
+    name: Visa Upon Arrival (SEVUA) Guide
+    path: KnowledgeBase/BI/VisaUponArrivalSEVUA/VisaUponArrivalSEVUA.yaml
+    aliases:
+    - SEVUA
+    - Visa Upon Arrival
+    - Arrival Visa
+    overview: The SEVUA program grants arrival visas to pre-approved foreign nationals
+      belonging to business, investment, or high-level visitor delegations. Sponsoring
+      agencies coordinate with BI so the traveler receives the visa upon landing,
+      ensuring swift clearance for official missions, negotiations, or events.
+    applicability_summary:
+    - Delegates endorsed by BOI, PRA, PCCI, or similar agencies require visas upon
+      arrival for investment or trade missions.
+    - Business chambers, multinational corporations, or international organizations
+      welcome foreign executives for conferences or meetings.
+    - State visits or reciprocal arrangements bring in high-level executives who need
+      expedited arrival clearance.
+    - Corporate or government hosts arrange SEVUA for project negotiations, signing
+      ceremonies, or strategic planning sessions.
+    - International events or exhibitions invite participants who qualify for arrival
+      visas under BI guidelines.
+  VoluntaryApplicationForACRICard:
+    name: Voluntary Application for ACR I-Card
+    path: KnowledgeBase/BI/VoluntaryApplicationForACRICard/VoluntaryApplicationForACRICard.yaml
+    overview: Foreign nationals who are not required to register may voluntarily obtain
+      an ACR I-Card--for example Balikbayan visitors, SIRV or SRRV holders, and other
+      special visa recipients. The card standardizes identity information for future
+      transactions and can expedite clearances, extensions, or proof of stay.
+    applicability_summary:
+    - Balikbayan visitors and their dependents want an ACR I-Card for easier identification
+      and transactions.
+    - Special resident retirees (SRRV) or investors (SIRV) prefer a uniform BI identification
+      card.
+    - Individuals planning to convert visas or engage in business activities need
+      consolidated registration data.
+    - Applicants seeking ECCs or other clearances benefit from an ACR I-Card that
+      aligns records.
+    - Those updating address or civil status wish to keep BI records consistent even
+      without mandatory registration.
+  WaiverForExclusionGround:
+    name: Waiver for Exclusion Ground (WEG)
+    path: KnowledgeBase/BI/WaiverForExclusionGround/WaiverForExclusionGround.yaml
+    overview: The WEG allows foreign minors under 15 to enter the Philippines when
+      traveling without a parent or legal guardian, provided an authorized adult escorts
+      them and BI approves the waiver. The Desk for Alien Control (DACA) validates
+      the documents, collects fees, and issues the waiver so the minor can pass immigration.
+    applicability_summary:
+    - A foreign minor below 15 is entering the Philippines without the parents and
+      must be accompanied by an authorized adult.
+    - The accompanying adult is a relative, teacher, or tour coordinator acting under
+      written authority from the parents.
+    - Parents or guardians execute affidavits allowing the escort to bring the minor
+      to the Philippines.
+    - Airlines require proof that BI has granted the waiver before boarding the minor.
+    - Supporting documents must be presented if the escort cannot immediately produce
+      them at ports of entry.

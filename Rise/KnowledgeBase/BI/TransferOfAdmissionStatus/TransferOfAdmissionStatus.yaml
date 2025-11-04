@@ -1,0 +1,536 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "Transfer of Admission Stamp"
+department: "BureauOfImmigration"
+name: "旧/遗失/注销护照之入境章转移(Transfer of Admission Stamp)"
+slug: "transfer-of-admission-stamp"
+type: "reference"
+semantic_profile:
+  intent_id: "transfer-of-admission-stamp"
+  category: "immigration-record-update"
+  tags: []
+service_overview: "针对因护照遗失、损坏、到期换发或被注销而更换旅行证件的外籍人士,将旧护照上的最新入境章与停留记录转移并更新至新护照/旅行证件.由外勤办(AACO)受理并转交移民管制处(IRD)核验与转移,完成后系统与新护照信息一致.本服务不涉及签证延期或变更,仅处理入境章与记录的转移."
+applicability:
+  items:
+    new-passport-requires-stamp-transfer: "旧护照到期或损坏,已获发新护照,需将最近一次入境章转移至新护照."
+    old-passport-lost-or-stolen: "旧护照遗失(含被盗),持旅行证件或新护照,需延续既有入境与停留记录."
+    passport-cancelled-by-issuing-state: "旧护照被原签发国注销或作废,需在新护照上继续体现合法入境依据."
+    upcoming-travel-worry-inconsistency: "近期计划出入境,担心因旧证件缺失或信息不一致而在边检受阻."
+    need-valid-passport-plus-admission-record: "需在银行开户、聘用、学校注册等场景出示“有效护照+合法入境记录”的人士."
+preconditions:
+  required:
+    new-passport-or-travel-document: "已取得新护照或由本国驻外馆处签发的有效旅行证件.
+"
+    proof-of-last-entry: "能证明最近一次入境菲律宾的事实与细节(日期、口岸、航班/船班)."
+    signed-ird01-qf-006-rev3: "备妥并签署移民局指定申请表 IRD01.QF.006 Rev 3."
+    submit-old-passport-if-still-held: "如仍持有旧护照,须一并提交原件以供核对."
+    loss-certificate-and-airline-proof-if-lost: "如旧护照遗失/被盗,应提供遗失声明或相关证明,并提交航空公司旅客清单(Passenger Manifest)或航空证明文件以佐证入境."
+  not_eligible:
+    no-verifiable-entry-evidence: "无法提供可核实的入境记录佐证(例如既无旧护照亦无航空/口岸记录)."
+    incomplete-docs-not-rectified: "申请材料不完整且经通知后未在期限内补齐."
+    identity-mismatch-without-ccs-proof: "申请人与记录信息不一致且未能通过认证与证明科(CCS)出具之核验文件消除疑义."
+    forgery-or-serious-records: "涉及伪造、篡改文件或存在严重不良移民纪录需先行处理的情形(将转其他程序或驳回)."
+    misuse-for-visa-change-or-extension: "以转移之名变相申请签证类型变更或停留期限延长(本服务不处理签证变更/延期)."
+pre_required_documents:
+  mandatory:
+    ird01-qf-006-rev3-application-form: "填妥并亲签之 IRD01.QF.006 Rev 3 申请表."
+    new-passport-or-travel-document-original: "新护照或旅行证件原件(含资料页与签发资料页)."
+    old-passport-original-if-available: "旧护照原件(如仍持有),含最近一次入境章页."
+    proof-of-arrival-flight-or-voyage: "入境航班/船班证明材料:航空公司旅客清单(Passenger Manifest)或航空/航运公司入境证明;或其他足以证明入境事实的官方记录摘要(如旅行记录证明)."
+  conditional:
+    lost-or-stolen-passport:
+      trigger: "旧护照遗失/被盗"
+      documents:
+        - "遗失声明/警方报案证明"
+        - "航空公司旅客清单(Passenger Manifest)或航空/航运公司出具的入境证明"
+    authorized-representative:
+      trigger: "由代理人递交/领取"
+      documents:
+        - "授权书"
+        - "受托人身份证明(有效身份证件)"
+    ccs-verification-required:
+      trigger: "窗口要求提供旅行记录证明或相关认证文件以核对入境日期/口岸"
+      documents:
+        - "旅行记录证明(由认证与证明科出具)"
+        - "相关认证文件(如同名非同人证明等)"
+    identity-discrepancy:
+      trigger: "姓名、出生日期、国籍等存在差异需额外身份校验"
+      documents:
+        - "身份校验/认证文件(如同名非同人证明等)"
+    minor-applicant:
+      trigger: "未成年人办理"
+      documents:
+        - "监护人身份证明"
+        - "关系证明(如出生证复印件)"
+        - "监护人签署的授权(如适用)"
+    id-photo-required:
+      trigger: "窗口要求贴附证件规格照片"
+      documents:
+        - "证件规格照片(按现场指引)"
+process:
+  steps:
+    precheck-and-queue:
+      order: "1"
+      title: "资料预检与取号(AACO/外勤窗口,约5–10分钟)"
+      description: "申请人或授权代理人提交表格与材料,窗口核对完整性并发放收件凭条."
+    intake-and-transfer:
+      order: "2"
+      title: "收件登记与转交(AACO→IRD,约当日完成)"
+      description: "办事处登记后统一打包转送至总部移民管制处(IRD);如选快递转送,现场确认方式与费用."
+    verification-and-transfer:
+      order: "3"
+      title: "记录核验与转移(IRD,约7个工作日)"
+      description: "IRD核对系统入境记录与申请材料;如有疑问由办事处通知补件或要求额外证明(如旅行记录证明、同名非同人证明等)."
+    result-return-and-notice:
+      order: "4"
+      title: "成果回传与通知(AACO,0.5个工作日内)"
+      description: "完成后,新护照贴注/标记完成转移,随案卷退回外勤办;办事处通过短信/电话/告示通知领取或按约定寄送."
+    pickup-and-confirmation:
+      order: "5"
+      title: "领取与确认(AACO,约10分钟)"
+      description: "申请人凭收件联与身份证明领取新护照,现场核对入境章/批注是否正确并签收结案."
+    supplementation-or-appeal:
+      order: "6"
+      title: "补件/异议处理(如发生)"
+      description: "材料不齐或记录不符时按通知补件;如需复核,依指引提交证明或申请复议动议(MR)等程序,时长视材料与排程而定."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "TransferOfAdmissionStatus.md"
+  items:
+    general-main-1x:
+      label: "通用 · 主申请人 · 单次"
+      details:
+        gov-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "入境章转移本身无专属政府规费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        courier-transfer:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "文件快递/转送费,依承运商或办事处公告,递件时确认."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "申请旅行记录/证明文件时适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "随认证费等按项计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道(认证/递件)常见加收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        travel-record-certificate:
+          amount:
+            currency: "PHP"
+            display: "PHP 510–1,010"
+            value: null
+            range:
+              min: 510
+              max: 1010
+          notes: "旅行记录证明(如需),含认证费、LRF与如选Express加急时的合计上限."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+        certified-true-copy:
+          amount:
+            currency: "PHP"
+            display: "PHP 510–1,010"
+            value: null
+            range:
+              min: 510
+              max: 1010
+          notes: "档案真实副本认证(如需),含认证费、LRF与如选Express加急时的合计上限."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "按所需证明/加急/快递项目组合计收,以现场开单与官方收据(OR)为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "完成后,新护照贴注完成入境章转移并同步更新系统记录."
+  items:
+    admission-stamp-updated:
+      name: "新护照完成入境章/批注转移"
+      usage: "在新护照上体现合法入境与停留依据,便于查验与通关."
+    system-record-updated:
+      name: "移民局系统入境记录同步更新"
+      usage: "确保系统与证件信息一致,避免出入境受阻."
+kpis:
+  processing_time: "约7–10个工作日(IRD约7个工作日,另加文件转送与领取时间)."
+risks:
+  items:
+    incomplete-or-inaccurate-info-delay: "信息不实或材料缺漏可能导致IRD退补与延迟."
+    insufficient-evidence-rejection: "旧护照遗失且无法提供可核实记录,可能不予受理或被驳回."
+    travel-during-processing-risk: "办理中出入境可能受阻,建议待记录转移完成后再出行."
+    overstay-penalty: "本服务不延长停留期限;逾期停留将按每月PHP 500计罚并可能影响后续出入境."
+    forged-docs-liability: "提交虚假或伪造文件属严重违法,将被驳回并可能面临行政或刑事责任."
+    identity-data-discrepancy: "姓名/出生日期/国籍等与系统记录不一致,可能需先行认证与证明后再继续."
+    contact-update-required: "联系方式或住址变更未及时告知可能导致通知失败与延误."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SMITH"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "男/女/其他"
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-01-01"
+      notes: ""
+    nationality:
+      label: "国籍(当前有效)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    address-line1:
+      label: "在菲住址(地址行)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    new-passport-number:
+      label: "新护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    new-passport-issue-date:
+      label: "新护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    new-passport-expiry-date:
+      label: "新护照到期日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    old-passport-number:
+      label: "旧护照号码(如知悉)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    travel-document-number:
+      label: "旅行证件号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    travel-document-issue-date:
+      label: "旅行证件签发日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    travel-document-expiry-date:
+      label: "旅行证件到期日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorize-agent:
+      label: "是否授权代理"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "是/否"
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-id-number:
+      label: "代理人身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-phone:
+      label: "代理人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-letter-number:
+      label: "授权书编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-admission-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    port-of-entry:
+      label: "入境口岸(机场/港口名称)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    flight-or-vessel-number:
+      label: "航班/船班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PRxxxx/5Jxxxx"
+      notes: ""
+    entry-purpose:
+      label: "入境目的/类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "例如:旅游/商务/工作等"
+  travel_history: {}
+  compliance:
+    passenger-manifest-number:
+      label: "航空公司旅客清单编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    airline-proof-reference-number:
+      label: "航空/航运公司入境证明编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    travel-record-certificate-number:
+      label: "旅行记录证明受理号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    collection-method:
+      label: "领取方式"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "现场领取/邮寄"
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请人须在 IRD01.QF.006 Rev 3 申请表上亲笔签署,确认所填信息与提交文件真实准确."
+faq:
+  qas:
+    lost-passport-applicable:
+      question: "旧护照遗失还能办理吗?"
+      answer: "可以.需提交新护照(或旅行证件)及航空公司旅客清单/航空证明等可核查的入境佐证;如有遗失/被盗,请同时提交遗失声明或报案证明."
+    processing-time:
+      question: "办理需要多久?"
+      answer: "标准作业为IRD处理约7个工作日,外加文件转送与领取时间;整体通常约7–10个工作日,请合理安排出行."
+    not-extend-visa:
+      question: "这项服务会延长我的停留期限或改变签证吗?"
+      answer: "不会.本服务仅转移入境章与系统记录;如停留将届满,请另行办理延期或签证手续,否则可能产生每月PHP 500的逾期罚款."
+    gov-fee-required:
+      question: "是否需要缴交政府规费?"
+      answer: "本服务本体通常无专属政府规费;但如需申请旅行记录证明、档案认证或选择加急,需按通用价目(如认证费PHP 500、LRF PHP 10、Express PHP 500)支付;另有文件快递/转送成本."
+    no-passenger-manifest-alternative:
+      question: "没有Passenger Manifest可以用什么替代?"
+      answer: "可尝试由航空公司出具登机/运送证明,或向移民局认证与证明科申请旅行记录证明;材料以可核实、可追溯的官方记录为准."
+    representative-allowed:
+      question: "可由他人代为递交与领取吗?"
+      answer: "可以.需提交申请人签署的授权书与受托人有效身份证明;窗口将留存复印件核对."
+    supplementation-impact-timeline:
+      question: "如被要求补件或复核,是否会影响时限?"
+      answer: "会.补件期间处理时钟暂停;个案需视材料到齐与IRD排程而定,建议尽快按通知准备与提交."
+disclaimers:
+  items:
+    pricing-subject-to-or:
+      text: "费用以窗口开单与官方收据(OR)为准."
+service_related:
+  links: {}

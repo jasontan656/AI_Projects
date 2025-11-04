@@ -1,0 +1,3 @@
+- [x] 收集并确认所有包含中文注释的代码位置，给出替换建议。
+- [x] 将中文注释改写为简洁英文或直接删除冗余注释，并复核特殊注释（如 pragma）是否仍符合语义。
+- [ ] 运行 `python3 -m compileall app.py src/interface_entry src/foundational_service` 或等效检查，确保无语法/缩进回归。

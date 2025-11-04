@@ -1,0 +1,4 @@
+- [ ] 清点并删除旧的 prompt registry 依赖：`business_service/conversation/service.py`、`primitives.py`、`conversation/models.py`、`foundational_service/contracts/registry.py` 以及配置文件中的相关条目。
+- [ ] 实现新的 `behavior_agents_bridge` 直接调用 OpenAI Responses API（使用 `AsyncOpenAI`），返回 `text` 与 `usage` 等最小字段。
+- [ ] 精简会话服务与业务逻辑包装器，生成/消费新的结果模型；更新 specs。
+- [ ] 运行 `openspec validate refactor-conversation-direct-llm --strict` 并启动应用验证（`PYTHONPATH=src python3 app.py`）。

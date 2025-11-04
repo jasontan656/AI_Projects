@@ -1,0 +1,6 @@
+- [x] Scaffold `src/business_logic/` package structure with conversation and knowledge submodules plus typed models.
+- [x] Split current `TelegramConversationService` into Business Service primitives and a new Business Logic flow; update imports accordingly.
+- [x] Introduce knowledge orchestrator in Business Logic and adjust bootstrap wiring to consume it.
+- [x] Rewire interface handlers/bootstrap to rely on Business Logic abstractions while keeping transport-specific behaviours intact.
+- [x] Add/adjust unit tests for Business Service primitives and new Business Logic flows; ensure knowledge refresh scenarios are covered.
+- [x] Run `python -m compileall src`, execute logic-focused pytest suites, and validate specs via `openspec validate refactor-business-logic-layer --strict`.

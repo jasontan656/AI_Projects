@@ -1,0 +1,743 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "9D 条约商人/投资者签证(Treaty Trader or Treaty Investor)"
+slug: "treaty-trader-or-investor-9d"
+type: "reference"
+semantic_profile:
+  intent_id: "visa.9d.treaty-trader-investor"
+  category: "non-immigrant-visa"
+  tags: ["9D","treaty-trader","treaty-investor","conversion","extension","dependents"]
+service_overview: "面向与菲律宾签订通商航海条约国家(目前为美国、日本、德国)的公民,因贸易或投资目的入境菲律宾而申请9D非移民签证的转换、延期及新增受养人办理.该签证可为主申请人及其配偶、21岁以下未婚子女提供在菲从事实质性贸易、管理投资的合法停留身份."
+applicability:
+  items:
+    first-time-conversion: "第一次以贸易/投资项目身份在菲长期驻留,需要从短期停留转换为9D签证."
+    extension-1-2-years: "已持有9D签证且即将到期,需延长1–2年效期."
+    add-dependents: "需要为配偶或21岁以下未婚子女新增为受养人,共享签证效期."
+    multiple-key-personnel: "企业业务扩张,需要为同一贸易/投资实体下的多名管理或关键岗位办理9D."
+    update-info-changes: "现有贸易/投资结构发生变更,需要更新签证信息或受养人信息."
+preconditions:
+  required:
+    treaty-national-and-substantive-trade-investment: "申请人系条约国(目前:美国、日本、德国)公民,且在菲律宾有实质性贸易往来或经实缴的投资计划/项目."
+    lawful-entry-and-no-pending-cases: "持有合法入境记录(含最新入境章),且无未结移民或刑事案件."
+    enterprise-proof-and-funds: "能提供企业主体注册及合法经营证明(如SEC注册)、资金来源与资本投入证明、贸易合同与收付汇凭证、雇佣与运营计划."
+    dependents-proof: "如含受养人,需提供与主申请人的合法关系证明、共同居住计划及必要的在学/医疗保险证明."
+  not_eligible:
+    project-not-meeting-treaty-or-no-substance: "贸易/投资项目未达条约要求或无实质运营,或无法证明资金来源合规."
+    adverse-records-or-pending-cases: "申请人存在未了结的移民/刑事案件或被列入不良记录清单."
+pre_required_documents:
+  mandatory: {}
+  conditional:
+    conversion-to-9d:
+      trigger: "申请“转换为9D(Conversion)”"
+      documents:
+        - "BI FORM V-NI-002 Rev.1 Checklist(官方清单)及所列支撑文件"
+        - "BOC04.QF.002《CGAF for Non-Immigrant Visa》主表;如含子女,另附 BOC04.QF.003"
+        - "企业与贸易/投资证明:SEC注册文件、章程/董事名册、贸易合同、发票、装运/提单记录、银行入账/收付汇记录、投资到位凭证、雇佣与运营计划、近期财务报表"
+        - "护照原件(含资料页与最新入境章复印件)、既有I-Card或SRRV(如有)"
+        - "外文材料的中文/英文译本及经认证文件(Apostille或领事认证,视签发地要求)"
+    9d-extension:
+      trigger: "申请“9D延签(Extension)”"
+      documents:
+        - "BI FORM V-NI-003 Rev.1 Checklist、续期版CGAF、现行9D签证及ACR I-Card"
+        - "更新版营业/投资报表与近期待税记录/纳税证明,持续运营证明材料"
+    add-dependents:
+      trigger: "办理“受养人新增”"
+      documents:
+        - "结婚证/出生证原件及认证件(Apostille/领馆认证)"
+        - "在学证明(适用于学龄子女,如有)"
+        - "共同居住声明及有效期内医疗保险证明"
+process:
+  steps:
+    step-1-data-prep:
+      order: "1"
+      title: "资料准备与表单填写(客户侧,约2–3天)"
+      description: "完成CGAF、按Checklist整理贸易/投资/合规证明,安排翻译与公证/认证."
+    step-2-cru-precheck:
+      order: "2"
+      title: "CRU预审(BI窗口,约30–45分钟)"
+      description: "提交全套资料进行初核,获取OPS(Order of Payment Slip)."
+    step-3-cashier-payment:
+      order: "3"
+      title: "收银缴费(Cashier,约15分钟)"
+      description: "按OPS缴纳转换/延签及受养人相关费用,领取OR(Official Receipt)."
+    step-4-submit-or-and-schedule:
+      order: "4"
+      title: "回交缴费凭证与排程(CRU)"
+      description: "提交OR,预约听证及生物信息采集时间."
+    step-5-hearing-and-biometrics:
+      order: "5"
+      title: "听证与生物信息采集(Alien Registration Division)"
+      description: "面谈说明贸易/投资计划与持续性,完成影像与指纹采集;10岁以下儿童免指纹."
+    step-6-approval-sticker-icard:
+      order: "6"
+      title: "审批、贴签与I-Card制卡"
+      description: "获批后提交护照贴签;ACR I-Card制作完成后通知领取或邮寄(以BI安排为准)."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "TreatyTraderOrInvestor9D.md"
+  items:
+    conversion-main-1y:
+      label: "Conversion · 主申请人 · 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 9,620"
+            value: 9620
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-spouse-1y:
+      label: "Conversion · 配偶 · 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 8,120"
+            value: 8120
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-dependent-under16-1y:
+      label: "Conversion · 受养人(未满16岁)· 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 7,870"
+            value: 7870
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-dependent-under14-1y:
+      label: "Conversion · 受养人(未满14岁)· 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 7,370"
+            value: 7370
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-main-2y:
+      label: "Conversion · 主申请人 · 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 13,650"
+            value: 13650
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-spouse-2y:
+      label: "Conversion · 配偶 · 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,950"
+            value: 11950
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-dependent-under16-2y:
+      label: "Conversion · 受养人(未满16岁)· 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,700"
+            value: 11700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    conversion-dependent-under14-2y:
+      label: "Conversion · 受养人(未满14岁)· 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,200"
+            value: 11200
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    extension-main-1y:
+      label: "Extension · 主申请人 · 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 6,550"
+            value: 6550
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    extension-spouse-children-1y:
+      label: "Extension · 配偶/子女 · 1年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 5,850"
+            value: 5850
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    extension-main-2y:
+      label: "Extension · 主申请人 · 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 10,580"
+            value: 10580
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    extension-spouse-children-2y:
+      label: "Extension · 配偶/子女 · 2年"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 9,680"
+            value: 9680
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    add-dependent-spouse-1y:
+      label: "新增受养人 · 配偶 · 1年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 8,120"
+            value: 8120
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    add-dependent-under16-1y:
+      label: "新增受养人 · 未满16岁 · 1年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 7,870"
+            value: 7870
+          notes: ""
+          attr:
+            amount:
+              currency:
+                "str"
+              value: "int"
+            notes: "str"
+    add-dependent-under14-1y:
+      label: "新增受养人 · 未满14岁 · 1年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 7,370"
+            value: 7370
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    add-dependent-spouse-2y:
+      label: "新增受养人 · 配偶 · 2年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,950"
+            value: 11950
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    add-dependent-under16-2y:
+      label: "新增受养人 · 未满16岁 · 2年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,700"
+            value: 11700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    add-dependent-under14-2y:
+      label: "新增受养人 · 未满14岁 · 2年(与主签同效期)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Php 11,200"
+            value: 11200
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    acr-icard-1y:
+      label: "ACR I-Card · 1年卡"
+      details:
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算,以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    acr-icard-2y:
+      label: "ACR I-Card · 2年卡"
+      details:
+        acr-icard:
+            amount:
+              currency: "USD"
+              display: "USD 100"
+              value: 100
+            notes: "按BSP汇率折算,以OPS/OR为准."
+            attr:
+              amount:
+                currency: "str"
+                value: "int"
+              notes: "str"
+    pwp-reference:
+      label: "PWP(Provisional Work Permit)参考价"
+      details:
+        work-permit-pwp:
+          amount:
+            currency: "PHP"
+            display: "Php 4,040(约)"
+            value: 4040
+          notes: "如主申请人拟在菲受薪或担任本地职位,须另行申请;以OPS为准,费用与9D分别计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    swp-reference:
+      label: "SWP(Special Work Permit)参考价"
+      details:
+        work-permit-swp:
+          amount:
+            currency: "PHP"
+            display: "Php 6,440–6,940(范围)"
+            value: null
+            range:
+              min: 6440
+              max: 6940
+          notes: "以OPS为准,费用与9D分别计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+deliverables:
+  description: "获批后在护照上贴签9D签证,并签发ACR I-Card作为在菲居留身份证件."
+  items:
+    9d-visa-sticker:
+      name: "9D签证贴纸"
+      usage: "证明签证获批与停留期限."
+    acr-i-card:
+      name: "ACR I-Card"
+      usage: "外侨登记身份证件,用于在菲合法居留与办理相关事务."
+kpis:
+  processing_time: ""
+risks:
+  items:
+    insufficient-trade-investment-evidence: "若贸易/投资规模不足、资金来源不明或运营连续性证据不足,BI可要求追加审计材料、安排复核或直接驳回."
+    work-authorization-required: "9D为非移民签证,不赋予受薪资格;如需受薪或担任职位,须另行取得PWP/SWP."
+    biometrics-and-appearance: "除10岁以下儿童外,生物信息采集与面谈通常需本人到场;授权代表出席以BI现场要求为准."
+    ops-subfees-may-apply: "OPS金额可能包含Express/LRF/贴纸费等子费,实际以现场开单为准,请保存OR."
+    extension-requires-updated-compliance: "延签需提交最新运营、纳税与合规更新材料,材料不全将影响排程与审批."
+    plan-third-party-timelines: "涉及翻译、公证、认证与银行文件出具周期,应提前规划以避免听证排期延误."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名字"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: ""
+    middle-name:
+      label: "中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "United States"
+      notes: "须为条约国国籍(目前:美国/日本/德国)."
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    visa-history:
+      label: "签证记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "既往菲律宾签证/停留记录."
+    acr-icard-number:
+      label: "现有ACR I-Card号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    marriage-certificate:
+      label: "婚姻登记信息/证明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女性氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多个,请按序重复提供."
+    child-first-name:
+      label: "子女名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多个,请按序重复提供."
+    child-middle-name:
+      label: "子女中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    child-birthdate:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2012-05-20"
+      notes: ""
+    child-passport-number:
+      label: "子女护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-school-status:
+      label: "在学状态/学校"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    enterprise-name:
+      label: "企业名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    enterprise-registration:
+      label: "注册地/注册编号(如SEC等)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    industry:
+      label: "行业"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    investment-amount:
+      label: "贸易额/投资额"
+      type: "number"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "请结合凭证注明币种."
+    investment-currency:
+      label: "币种"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "USD"
+      notes: "ISO 4217 货币代码(如 USD、PHP、JPY)."
+    fund-source:
+      label: "资金来源"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employee-count:
+      label: "雇员人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "25"
+      notes: ""
+    business-address-line1:
+      label: "在菲营业地址-地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-city:
+      label: "在菲营业地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-province:
+      label: "在菲营业地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-country:
+      label: "在菲营业地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    business-address-postal-code:
+      label: "在菲营业地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: "^[0-9A-Za-z- ]+$"
+      example: ""
+      notes: ""
+    local-bank:
+      label: "在菲银行账户"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "账户名称/账号信息."
+  authorization: {}
+  arrival_info:
+    last-entry:
+      label: "最新入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-07-15"
+      notes: ""
+    intended-stay:
+      label: "计划停留期限"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "12个月"
+      notes: ""
+  travel_history:
+    travel-history:
+      label: "出入境历史"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    tax-clearance:
+      label: "税务/海关合规声明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    pending-case:
+      label: "是否有未结案"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "提交CGAF及相关材料即视为同意数据隐私与使用声明."
+  certification_statement: "申请人需在CGAF/声明页签署真实性与承诺(Certification/Affidavit of Undertaking)."
+faq:
+  qas:
+    eligible-countries:
+      question: "目前哪些国家可申请9D条约商人/投资者签证?"
+      answer: "截至目前,菲律宾移民局列明的条约国为美国、日本、德国.如有扩充将由BI另行公告."
+    remote-processing:
+      question: "办理是否可远程完成?"
+      answer: "核心步骤需亲赴BI办理,听证与生物信息采集通常要求申请人本人或经授权代表到场."
+    extension-documents:
+      question: "9D延签需要再次提交完整的贸易/投资材料吗?"
+      answer: "需提交最新的运营证明与纳税记录,以证明业务持续且合规;是否需要补充更多细节以BI审理意见为准."
+    can-work-on-9d:
+      question: "取得9D后,是否可以直接在本地公司受薪工作?"
+      answer: "不可以.9D不赋予受薪资格;如需受薪或担任职位,须另行申请PWP或SWP并获批后方可合法受薪."
+disclaimers:
+  items:
+    fees-subject-to-ops: "上述金额依据BI公布标准执行,具体以OPS与OR为准,OPS可能包含Express/LRF/贴纸费等子费."
+    acr-icard-exchange-rate: "ACR I-Card费用按BSP汇率折算,以BI现场开单为准."
+    work-authorization-separate: "工作许可(PWP/SWP)为独立事项,与9D费用与审批分别计收."
+service_related:
+  links: {}

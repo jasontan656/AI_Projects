@@ -1,0 +1,11 @@
+version: v1
+updated_at: '2025-10-30T04:15:00+08:00'
+services:
+  - id: labor_permit_advisory
+    name: 外籍雇员许可咨询
+    path: KnowledgeBase/DOLE/labor_permit_advisory.yaml
+    overview: 面向计划在菲雇佣或受聘外籍人员，涉及 AEP 申请、续期及罚则咨询。
+    aliases: ['aep-advisory','labor-permit']
+    scenarios: []
+    required_docs: []
+    summary_text: ''

@@ -1,0 +1,613 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "文件不齐全外籍船员行政罚款办理(港口口岸)"
+slug: "administrative-fine-imposed-on-a-foreign-crew-member-if-not-properly-documented"
+type: "reference"
+semantic_profile:
+  intent_id: "admin-fine-foreign-crew-doc-deficiency"
+  category: "FinesAndPenalties"
+  tags: ["9c", "crewlist", "port", "WEG", "CE-Waiver"]
+service_overview: "本服务适用于外籍船员抵达菲律宾港口口岸时,因未持9(c)海员签证或未列入签证化船员名单而被认定“文件不齐”的情形.通过缴纳行政罚款及相关费用,规范其入境与停留状态,获取官方缴款凭证,用于后续登轮查验或继续办理豁免、名册更正及离船等相关手续,降低因手续瑕疵导致的查验与滞延风险."
+applicability:
+  items:
+    missing-9c-or-unvisaed-crewlist: "船舶抵达菲律宾港口,部分/全部外籍船员未持9(c)海员签证或未列入经签证化的船员名单."
+    last-minute-arrival-need-onsite-payment: "因航次临时变更、紧急靠泊或调度原因,需在口岸补缴罚款与相关费用."
+    crewlist-mismatch-after-boarding-check: "船员信息与既有签证化名册不一致(增减、替换、姓名/护照号不符)且经登轮核查属实."
+    voyage-memo-missing: "船方或派员公司遗漏提交航次备忘/行程文件,导致现场查验时被判定“文件不齐”."
+    concurrent-weg-or-offsigner-arrangements: "拟为当班/离船人员同步理顺口岸状态(如办理豁免、离船证明等)且需一并缴清相关罚金与费用."
+preconditions:
+  required:
+    explanation-letter-from-master-or-authorized-agent: "由船长或被授权代理人出具并签署的说明函,明确未能取得9(c)或签证化船员名单的具体原因."
+    original-crewlist-submitted: "提交与实际抵港人员一致的船员名单原件(由船长/船长代表填报签署)及必要复印件."
+    voyage-memo-itinerary: "提交航次备忘/行程单(Voyage Memo/Itinerary),与抵港事实相符."
+    cdr-binding-legal-size: "资料按照“文件清单(CDR)”顺序装订,使用法式长夹(8½×14英寸)递交."
+    adverse-record-check-and-onboard-verification: "接受移民局不良记录核查(加注“无不良记录”章)及登轮核对;同一航次信息需保持一致."
+  not_eligible:
+    materials-inconsistent-or-suspected-forgery: "提交材料与实际船员状况不符、签章权限存疑或存在明显涂改、伪造痕迹."
+    no-signed-explanation-letter: "未能提供由船长/授权代理人正式签署之说明函或原始名册."
+    applicant-not-associated-or-auth-chain-unclear: "申请人与航次/船舶无关联或授权链条不清(无法核验代理身份与公司ID)."
+    holder-of-valid-9c-or-should-use-other-process: "船员已持有效9(c)签证且名册一致,或案件应另循其他专门流程(例如纯离船“CE Waiver”单独办理)."
+    involved-watchlist-or-control-measures: "涉及治安通缉、黑名单或其他移民管制情形,依法转入调查或拒收."
+pre_required_documents:
+  mandatory:
+    explanation-letter: "船务/派员公司出具的说明函(致移民局,说明未能取得相应海员签证/签证化名册之原因),由船长或授权代表签署."
+    original-crewlist: "船长/船长代表填报并签署的船员名单原件(Crew List Original),附必要复印件."
+    voyage-memo: "航次备忘或航行计划(Voyage Memo/Itinerary),由船长/船长代表填报."
+    adverse-record-check-result: "不良记录核查结果(“无不良记录”戳记/页),由移民局授权人员加注;如已持有原件可随件附上."
+  conditional:
+    arrival-notice-and-vessel-profile:
+      trigger: "用于核对与费用评估."
+      documents: ["抵港通知", "船舶基本资料页(船名、IMO编号、航次号、靠泊时间/泊位等)"]
+    authorization-and-ids:
+      trigger: "由联络官/代理提交时."
+      documents: ["公司ID复印件", "授权书"]
+    weg-related-forms:
+      trigger: "同步申请现场排除理由豁免(WEG)时."
+      documents: ["按口岸指引的WEG表单/材料"]
+    other-supporting-documents:
+      trigger: "移民局认为必要的个案补充."
+      documents: ["其他必要的支持性文件"]
+process:
+  steps:
+    intake-and-formal-check:
+      order: "1"
+      title: "接件与形式审查(Assessor,约2分钟)"
+      description: "提交说明函、原始船员名单、航次备忘及附随材料;核对签章、授权与装订顺序."
+    substantive-verification-and-records-check:
+      order: "2"
+      title: "实质核对与不良记录查验(Assessor/Boarding Unit/Records,约3分钟)"
+      description: "将名册与抵港实际人员逐项核对,并完成不良记录核查(加注“无不良记录”章)."
+    fee-assessment-and-ops-issuance:
+      order: "3"
+      title: "费用评估与开具缴费单(OPS,约5分钟)"
+      description: "按人数与案由计算行政罚款、签证/名册费、法律检索费与快速通道费,打印缴费单."
+    cashier-payment-and-or-release:
+      order: "4"
+      title: "收银缴费与取票(Cash Section,约3分钟)"
+      description: "持缴费单至收银窗口支付,领取官方收据(OR)及相关凭证."
+    confirmation-and-filing:
+      order: "5"
+      title: "结果确认与归档(即时)"
+      description: "登记已缴款状态;船方/代理妥善保存OR与附件,以备登轮查验或后续调取."
+  variants:
+    with-weg:
+      name: "同步办理WEG"
+      trigger: "船员未持9(c)且需立即入境处理"
+      description: "与行政罚款一并受理WEG,增加相应费用与材料."
+      extra_requirements: ["提交WEG相关表单/材料", "按人头加收WEG费用与对应行政罚/LRF/快速通道费"]
+    with-ce-waiver:
+      name: "同步办理CE Waiver(离船)"
+      trigger: "涉及离船人员需办理CE Waiver"
+      description: "与行政罚款一并受理离船CE Waiver及对应费用."
+      extra_requirements: ["提交CE Waiver所需材料", "加收CE Waiver费用及对应LRF/快速通道费"]
+  notes: "现场等候时间随业务量变化.单笔常规用时约10分钟;批量递件或联办WEG等将相应延长."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    per-crew:
+      label: "常规 · 每名船员"
+      details:
+        administrative-fine:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "文件不齐之罚金."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crewlist-visa:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "船员签证费/船员名单签证费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(通用LRF)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "按人头计收,实际汇总以OPS/OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    per-transaction:
+      label: "快速通道 · 每批/每笔"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(按批/笔计)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ce-weg-express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "CE/WEG快速通道费(每名或每笔,依口岸口径)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否按批或按人计收以现场执行为准(OPS/OR)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    additional-per-crew:
+      label: "附加项目 · 每名船员"
+      details:
+        weg:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "排除理由豁免(WEG),仅在无9(c)且需当场豁免时加收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        weg-admin-fine:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "WEG对应行政罚,与WEG并收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        weg-lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "WEG对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ce-waiver:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "离船豁免(CE Waiver),仅离船情形适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ce-waiver-lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "CE Waiver对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "附加项目按人头累加,最终以OPS/OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "缴费完成后取得官方收据,用于口岸查验及后续联办手续."
+  items:
+    official-receipt:
+      name: "官方收据(OR)"
+      usage: "证明已缴纳行政罚款及相关费用,供登轮查验或后续业务处室调取."
+kpis:
+  processing_time: "常规单笔约10分钟;批量或并办WEG/其他事项视现场量能顺延."
+risks:
+  items:
+    signed-explanation-letter-required: "说明函必须由船长或授权代理亲笔签署,信息应与航次事实一致;模糊或不符可能导致补件或加重处罚."
+    crewlist-must-match-actual: "船员名单须与登轮实际人员逐一对应;如姓名/护照号不符或人数不一致,受理可拒收或要求更正."
+    binding-and-deadline: "文件应按CDR顺序装订于法式长夹,逾期或散件将影响受理时效,严重者不予接件."
+    keep-ops-and-or: "OPS与OR是唯一缴纳凭证,应妥善保存,后续登轮查验或联办其他口岸业务时需出示."
+    may-require-weg: "完全未持9(c)且需立即入境处理,可能需同步办理WEG,费用与流程将增加,船期应预留时间."
+    forgery-consequences: "任何伪造、变造或隐匿重要事实的行为,除被拒办外,可能引发行政调查、加重罚款、移民管制乃至刑事责任."
+    overstay-or-change-penalties: "若出现逾期停留或未依法申报变更等情形,可能另行计收逾期罚款或行政罚(按月累加,设年度上限的项目除外)."
+    peak-season-delay: "口岸业务量高峰将显著拉长等候时间,建议提前与口岸单位沟通预约."
+    other-matters-follow-own-process: "涉及其他并办事项(如离船CE Waiver、后续签注)按相应专门流程执行;本服务仅处理“文件不齐”的行政罚与关联费项."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WEI"
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "无中间名可留空."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "按护照页填写."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    position-title:
+      label: "职务/岗位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如:甲板、机舱、餐务等."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    dependent-last-name:
+      label: "随行人员姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-first-name:
+      label: "随行人员名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-middle-name:
+      label: "随行人员中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-relationship:
+      label: "与船员关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-date-of-birth:
+      label: "随行人员出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-travel-document-number:
+      label: "随行人员旅行证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  employment: {}
+  authorization:
+    ship-company-name:
+      label: "船公司名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "申请主体之一."
+    manning-agency-name:
+      label: "派员公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-name:
+      label: "指定联络官姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "递件联系人."
+    liaison-position:
+      label: "指定联络官职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address:
+      label: "公司地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-phone:
+      label: "公司联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    company-email:
+      label: "公司电邮"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-company-id-number:
+      label: "联络官公司ID号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "递件核验用."
+    authorization-letter-number:
+      label: "授权书编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "授权链核对."
+    authorization-letter-issue-date:
+      label: "授权书签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: "^[0-9]{7}$"
+      example: "9387421"
+      notes: ""
+    voyage-number:
+      label: "航次号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    voyage-route:
+      label: "航线"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    arrival-datetime:
+      label: "抵港时间"
+      type: "datetime"
+      required: "true"
+      format: "iso-datetime"
+      pattern: ""
+      example: ""
+      notes: ""
+    port-of-berth:
+      label: "靠泊港"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    berth-number:
+      label: "泊位号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-port:
+      label: "前一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    next-port:
+      label: "下一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance:
+    reason-no-9c-or-crewlist:
+      label: "未能取得9(c)/签证化名册之原因"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "在说明函中明确."
+    crewlist-person-count:
+      label: "涉案船员名单人数"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    crewlist-change-notes:
+      label: "船员名单变化情况说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "新增/替换/离船."
+    adverse-record-check-result:
+      label: "既往不良记录核查结果"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "应有“无不良记录”章."
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请主体/代理人确认所提交信息与文件真实、准确且经授权签署;说明函须由船长或授权代表签名."
+faq:
+  qas:
+    who-needs-to-pay:
+      question: "哪些人员需要缴纳“文件不齐”行政罚款?"
+      answer: "凡抵达时未持9(c)海员签证或未列入签证化船员名单、经口岸核实确认的外籍船员,均需由船方/代理办理缴纳."
+    how-long:
+      question: "办理一般需要多久?"
+      answer: "常规单笔从递件至缴费约10分钟;批量或并办WEG/其他事项的,视现场量能与查验深度顺延."
+    common-mistakes:
+      question: "材料常见错误有哪些?"
+      answer: "说明函未签名或授权不明、名册与实际不符、航次备忘缺页、未按CDR顺序装订、联络官未附公司ID复印件等,均会导致补件或暂缓受理."
+    why-fee-differs:
+      question: "费用为什么有差异?"
+      answer: "基础项目按人头计收,但快速通道费通常按批/笔计;若需办理WEG或离船CE Waiver,将另行计收相应费用,最终以OPS/OR为准."
+    need-report-to-other-units:
+      question: "缴费后是否还需要到其他单位报到?"
+      answer: "请妥善保存OR与附件,供口岸登轮单位或后续相关处室查验;如另有联办事项,按各自要求办理."
+    online-or-prepay:
+      question: "是否可以线上办理或提前支付?"
+      answer: "目前以现场窗口办理为主,凭现场开具的OPS至收银缴费;如当地另有试点安排,以口岸公告为准."
+    refund-possible:
+      question: "若船员随后补办了9(c)或更正名册,罚款可否退还?"
+      answer: "行政罚用于矫正既成违规状态,原则上不予退还;名册更正不影响已发生的行政处罚."
+    adverse-record-found:
+      question: "如果发现船员在不良记录名单上怎么办?"
+      answer: "将暂停本流程并移交进一步审查,是否允许入境或需采取其他措施由移民机关依法决定."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "实际金额与计费口径以现场开具的OPS/OR为准."
+service_related:
+  links: {}

@@ -1,0 +1,608 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "E.O.226 特别非移民签证(RA 8756 修订)"
+slug: "special-visa-under-eo226-amended-by-ra8756"
+type: "reference"
+semantic_profile:
+  intent_id: "special-non-immigrant-visa-eo226-ra8756"
+  category: "visa"
+  tags: ["EO226", "RA8756", "RHQ", "ROHQ"]
+service_overview: "面向在菲设立 RHQ/ROHQ 或跨国公司之外籍高管、专家及其家属,办理或延长依据 E.O.226(经 R.A. 8756 修订)的特别非移民签证;获签可长期居留、自由多次出入境,配偶与未满21周岁未婚子女可为家属同办."
+applicability:
+  items:
+    conversion-after-entry-for-rhq-rohq-executives: "首次调派至菲律宾的 RHQ/ROHQ 高管入境后由短期停留身份转换为 E.O.226 特别非移民签证."
+    extension-1y-2y: "既有签证即将到期,申请 1 年或 2 年期延展."
+    dependents-spouse-children: "配偶或未满 21 岁未婚子女作为家属随同主申请人一并办理转换/延签."
+    enterprise-new-or-expansion-batch-processing: "企业新设或扩编 RHQ/ROHQ,需要批量为多名高管办理."
+    change-of-employer-or-position: "因岗位或雇主实体变更,需重新进行签证转换并完成主管机关备案/通知."
+preconditions:
+  required:
+    employer-certified-by-dti-boi: "雇主为经 DTI/BOI 认证之 RHQ/ROHQ 或跨国公司实体,且申请人与该实体签有有效雇佣或派遣合同."
+    valid-passport-and-status: "申请人持有效护照、入境许可及当前合法移民身份;在菲停留记录无违法逾期."
+    employer-supporting-docs-ready: "公司已按移民局(BI)要求准备担保函、岗位与薪酬证明、财政能力证明及相关税务合规文件."
+  not_eligible:
+    employer-not-certified-or-not-operational: "雇主实体无 E.O.226 / RA 8756 认证或未在菲实际运营."
+    applicant-has-criminal-or-immigration-violations: "申请人存在未结案件的刑事或移民违规记录."
+pre_required_documents:
+  mandatory:
+    checklist-conversion-tvs-c-ve-2016-bi-form-v-ni-024-rev0: "Checklist TVS-C-VE-2016(BI FORM V-NI-024 Rev.0)."
+    tvs-cgaf-ve-2016-general-application-form-boc04-qf-002-2025-03: "TVS-CGAF-VE-2016 非移民签证通用申请表(BOC04.QF.002,2025/03 版)."
+    additional-info-on-applicants-children-boc04-qf-003: "如含子女:Additional Information on Applicant’s Children(BOC04.QF.003)."
+    employer-evidence-letters-and-registrations: "雇主证明文件:派遣/任命函、岗位描述、薪酬说明、RHQ/ROHQ 注册与认证文件(DTI/BOI)."
+    personal-ids-passport-acr-ssrv-copies: "个人证件:护照整本复印、最近入境章页、现持 ACR I-Card/SSRV(如有)影本."
+    checklist-extension-tvs-c-ve-2016-bi-form-v-ni-025-rev1-1: "Checklist TVS-C-VE-2016(BI FORM V-NI-025 Rev.1.1)."
+    extension-cgaf-visa-page-acr-icard-and-tax-proof: "续期 CGAF、既有签证页与现行 ACR I-Card 复印件、最近一期税务/合规证明."
+  conditional:
+    dependents-spouse-children:
+      trigger: "配偶/子女作为家属随同办理."
+      documents: ["结婚证", "出生证", "在学证明(如适用)"]
+    change-of-employer-or-position:
+      trigger: "更换雇主或岗位."
+      documents: ["新雇佣合同", "向 BOI/DTI 的变更/通知材料"]
+    minor-under-10:
+      trigger: "10 周岁以下未成年人."
+      documents: ["现场拍照(免指纹)"]
+process:
+  steps:
+    document-preparation:
+      order: "1"
+      title: "资料准备(客户方 2–3 天)"
+      description: "按清单完成 CGAF、公司担保与合规证明的签章与汇总."
+    cru-pre-screening:
+      order: "2"
+      title: "CRU 预审(BI | 约 30 分钟)"
+      description: "递交原件/复印件,由客户接待单元(CRU)核对完整性与有效性."
+    get-ops-assessment:
+      order: "3"
+      title: "领取 OPS 缴费单(同日)"
+      description: "按主申请人与家属人数生成缴费指引与金额明细."
+    cashier-payment:
+      order: "4"
+      title: "收银缴费(Cashier | 约 15 分钟)"
+      description: "依 OPS 缴交转换/延签费用及 ACR I-Card 相关费用."
+    submit-or-and-appointment:
+      order: "5"
+      title: "回交 OR 并预约(CRU/评审官)"
+      description: "递交 Official Receipt,安排面谈与影像/生物信息采集."
+    interview-and-visa-acr-processing:
+      order: "6"
+      title: "面谈与实施签注(Alien Registration Division)"
+      description: "进行面谈、拍照与指纹;核准后护照贴签并办理/更新 ACR I-Card."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "BI OPS/OR 与 2025 年公民宪章"
+  items:
+    conversion-main-applicant:
+      label: "转换 · 主申请人"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,530"
+            value: 5530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 5,530"
+          value: 5530
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    conversion-dependent-spouse:
+      label: "转换 · 家属(配偶)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 4,530"
+          value: 4530
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    extension-main-applicant:
+      label: "延签 · 主申请人"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,530"
+            value: 4530
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 4,530"
+          value: 4530
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    extension-dependents:
+      label: "延签 · 家属(配偶/子女)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,030"
+            value: 4030
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 4,030"
+          value: 4030
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    acr-icard-1y:
+      label: "ACR I-Card · 1 年"
+      details:
+        acr-icard-fee:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按 BSP 汇率折算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "USD"
+          display: "USD 50"
+          value: 50
+        notes: "按 BSP 汇率折算."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    acr-icard-2y:
+      label: "ACR I-Card · 2 年"
+      details:
+        acr-icard-fee:
+          amount:
+            currency: "USD"
+            display: "USD 100"
+            value: 100
+          notes: "按 BSP 汇率折算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "USD"
+          display: "USD 100"
+          value: 100
+        notes: "按 BSP 汇率折算."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    common-addons:
+      label: "常见附加与通用费用"
+      details:
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法律检索费(LRF):每适用项目常见 PHP 10/20/30/40/50(以 OPS/OR 为准)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(如计入)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "如适用贴签."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "核准后护照贴签并办理/更新 ACR I-Card."
+  items:
+    visa-sticker:
+      name: "护照贴签"
+      usage: ""
+    acr-icard:
+      name: "ACR I-Card"
+      usage: ""
+kpis:
+  processing_time: "资料准备约 2–3 天;CRU 预审约 30 分钟;收银缴费约 15 分钟."
+risks:
+  items:
+    outdated-forms-may-be-rejected: "使用旧版 Checklist/CGAF 可能被退件."
+    boi-dti-cert-must-be-valid: "RHQ/ROHQ 的 BOI/DTI 认证过期或缺失将导致审理搁置."
+    company-representative-may-be-required: "BI 可能要求公司授权代表到场核实."
+    minors-photo-requirement: "未成年人须至少到场一次完成影像采集;10 周岁以下可免指纹但必须拍照."
+    change-of-employer-requires-reconversion: "岗位或雇主实体变化需按“转换”流程重办签证并完成 BOI/DTI 通知."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LIHUA"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AN"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "PE1234567"
+      notes: ""
+    current-immigration-status:
+      label: "当前入境类别/身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Temporary Visitor (9A)"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "FANG"
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "PA7654321"
+      notes: ""
+    marriage-certificate-number:
+      label: "结婚证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-first-name:
+      label: "子女名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-middle-name:
+      label: "子女中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-birthdate:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-06-01"
+      notes: ""
+    children-count:
+      label: "子女人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 2
+      notes: ""
+    student-certificate-provided:
+      label: "是否提供在学证明(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC ROHQ Inc."
+      notes: ""
+    position-title:
+      label: "职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Executive Director"
+      notes: ""
+    contract-term:
+      label: "合同期限"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-01-01 至 2026-12-31"
+      notes: ""
+    monthly-salary:
+      label: "月度薪酬"
+      type: "number"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: 5000
+      notes: "请注明币种."
+    rhq-rohq-registration-number:
+      label: "RHQ/ROHQ 注册编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ROHQ-2024-00123"
+      notes: ""
+    office-address-line1:
+      label: "机构办公地址-地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Ayala Ave"
+      notes: ""
+    office-address-city:
+      label: "机构办公地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    office-address-province:
+      label: "机构办公地址-省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    office-address-country:
+      label: "机构办公地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    office-address-postal-code:
+      label: "机构办公地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+  authorization: {}
+  arrival_info:
+    residence-address-line1:
+      label: "在菲住址-地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 10A, XYZ Condo"
+      notes: ""
+    residence-address-city:
+      label: "在菲住址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Taguig"
+      notes: ""
+    residence-address-province:
+      label: "在菲住址-省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    residence-address-postal-code:
+      label: "在菲住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1630"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    last-entry-date:
+      label: "最近入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-15"
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card 号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ICR1234567890"
+      notes: ""
+    acr-icard-expiry:
+      label: "ACR I-Card 到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-03-15"
+      notes: ""
+  travel_history: {}
+  compliance:
+    pending-tax-or-labor-issues:
+      label: "税务/劳工罚款或未决合规事项说明(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "提交 CGAF 即视为同意 BI 的数据隐私与告知条款."
+  certification_statement: "申请人于 CGAF 上签署确认所填信息与提交材料真实准确."
+faq:
+  qas:
+    validity-duration:
+      question: "可申请多长效期?"
+      answer: "通常核发 1 年或 2 年期,结合 ACR I-Card 年限选择,具体以 OPS/审批为准."
+    change-employer-need-conversion:
+      question: "更换雇主是否需重新转换?"
+      answer: "需要.须按“转换(Conversion)”重新提交完整申请,并提供新实体的 BOI/DTI 认证或变更证明."
+    minors-attendance:
+      question: "未成年子女是否必须到场?"
+      answer: "需至少出席一次影像采集;10 周岁以下可免指纹但必须拍照."
+    is-acr-included:
+      question: "费用里是否包含 ACR I-Card?"
+      answer: "ACR I-Card 费用单列计收:1 年 USD 50、2 年 USD 100,按 BSP 汇率折算;如适用,I-Card 快通费 PHP 500 等通用费用将体现在 OPS."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用以现场 OPS/OR 为准."
+    bi-may-adjust-fees: "BI 保留依公告调整费用之权利."
+service_related:
+  links: {}

@@ -1,0 +1,442 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "BIAU"
+  - "Show Cause"
+  - "Bar Order"
+  - "Lifting of Bar Order"
+department: "BureauOfImmigration"
+name: "Show Cause 与 Bar Order 的签发/解除(BIAU)"
+slug: "issuance-of-show-cause-and-bar-orders"
+type: "reference"
+semantic_profile:
+  intent_id: "issuance-of-show-cause-and-bar-orders"
+  category: "enforcement"
+  tags:
+    - "BIAU"
+    - "Show Cause"
+    - "Bar Order"
+    - "Lifting"
+service_overview: "由移民局内部单位 BIAU 针对涉嫌违规的认证机构或联络官发出责令说明(Show Cause Order)或限制令(Bar Order),要求限期提交经公证的书面说明与证据;经审查后可决定维持、解除或发出 Bar Order.本指引亦适用于 Bar Order 的解除(Lifting)情形."
+applicability:
+  items:
+    complaint-or-referral-received: "收到第三方投诉或其他 BI 内部单位移交的涉嫌违规线索."
+    routine-audit-detected-irregularities: "BIAU 日常核查发现认证单位/联络官存在疑似违规或不当行为."
+    received-show-cause-need-to-respond: "当事机构/联络官已被发出 Show Cause Order,需要在期限内提交说明与证据."
+    under-bar-order-apply-for-lifting: "已被列入 Bar Order 但现已履行整改义务,拟申请解除限制."
+preconditions:
+  required:
+    case-lead-formed-with-registry-number: "BIAU 已形成立案线索(如投诉、移交资料或内部核查发现),并有相应登记编号."
+    respond-to-show-cause-with-notarized-explanation: "若已收到 Show Cause Order:须在函文指定期限内提交经公证的书面说明及支撑证据."
+    lifting-application-proof-of-remediation: "申请解除 Bar Order:须提交足以证明整改完成或不应继续限制的材料(如法院/主管机关相关证明等)."
+  not_eligible:
+    missed-deadline-or-format: "未按期限或未按要求格式提交说明与证据."
+    incomplete-unverifiable-uncertified-materials: "材料明显不完整、未公证、或无法核验来源."
+    improper-influence-attempts: "试图以不当方式影响调查处理的申请."
+pre_required_documents:
+  mandatory:
+    proof-of-service-or-notice-copy: "送达回证或相关通知文件复印件(证明已被正式通知/送达)."
+    notarized-written-explanation: "经公证的书面说明(针对 Show Cause Order 的逐条答复)."
+    evidence-list-and-copies: "证据目录与对应证据复印件(如业务记录、通讯往来、交易凭证、内部管控记录等)."
+    institution-qualification-and-loa-copies: "认证机构资质与联络官任命/授权证明复印件(含有效期)."
+    submission-cover-or-application-form: "递交收件封面/申请表(含案件参考号、联系人、电话与电子邮箱)."
+  conditional:
+    judicial-or-competent-authority-documents:
+      trigger: "用于申请解除 Bar Order 或证明合规时,需提交司法或主管机关文件."
+      documents:
+        - "法院裁定/判决"
+        - "POEA/DOLE 等主管机关证明"
+        - "撤案/合规证明"
+    authorization-by-agent:
+      trigger: "由代理人代为提交的情形."
+      documents:
+        - "经公证的授权书"
+        - "代理人身份证明"
+    originals-for-verification:
+      trigger: "BIAU 要求核验原件时."
+      documents:
+        - "关键证据原件备查(提交复印件并加注“与原件相符”)"
+process:
+  steps:
+    case-intake-and-initial-assessment:
+      order: "1"
+      title: "立案受理与初步评估(BIAU)"
+      description: "接收投诉/移交资料,登记并完成快速评估;预计约25分钟."
+    draft-and-issuance-of-show-cause-order:
+      order: "2"
+      title: "拟制与核发 Show Cause Order(BIAU-OIC/技术助理)"
+      description: "起草文书、签核并移交档案室对外寄送/送达;预计约1个工作日."
+    submission-of-explanation-and-evidence:
+      order: "3"
+      title: "当事方准备并提交说明(申请人/机构)"
+      description: "按函文期限提交经公证的说明与证据;递交至 BIAU 并取得收件凭证;时长取决于当事方准备."
+    substantive-review-and-recommendation:
+      order: "4"
+      title: "实体审查与拟定决议(BIAU)"
+      description: "对说明与证据进行审查,形成处理建议(维持/解除/发出 Bar Order)."
+    approval-and-final-order:
+      order: "5"
+      title: "审批与出具命令(BIAU-OIC/技术助理)"
+      description: "审批并签发最终命令,向当事方送达;从完成材料审查起,内部处理预计约1天4小时."
+    post-execution-and-system-update:
+      order: "6"
+      title: "后续执行与信息更新(档案/业务系统)"
+      description: "将决定同步至内部名录和限制清单;如为解除,通知相关业务窗口恢复权限."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    all-applicants:
+      label: "所有申请情形"
+      details:
+        government-fees:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "BIAU 办理环节不收取任何政府规费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        notarization-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "公证费由当事方自行承担,按第三方机构规则执行."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        courier-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "邮寄/快递费用由当事方自理,按第三方机构规则执行."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        bi-official-receipt:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "本流程无移民局收费票据(无 BI OR)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "涉及第三方费用,无法统一汇总;政府规费为 0."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "可能出具的命令与决定文件."
+  items:
+    show-cause-order:
+      name: "责令说明(Show Cause Order)"
+      usage: "通知当事方在限定期限内提交经公证的说明与证据."
+    bar-order:
+      name: "限制令(Bar Order)"
+      usage: "对认证机构/联络官的办理权限进行限制."
+    lifting-of-bar-order:
+      name: "解除限制命令(Lifting of Bar Order)"
+      usage: "确认解除限制,并通知相关窗口恢复权限."
+kpis:
+  processing_time: "内部流程参考:初步评估约25分钟;拟制与签发 Show Cause Order 约1个工作日;自完成材料审查起至最终命令签发约1天4小时;其他环节取决于当事方准备."
+risks:
+  items:
+    deadline-management: "未在期限内提交经公证的说明,可能触发或维持 Bar Order."
+    evidence-sufficiency: "证据不足、来源不明或未经公证,可能被认定为不合格提交."
+    compliance-proof: "申请解除 Bar Order 时需提交与争议事项直接关联、由有权机关出具的合规或结案证明."
+    service-and-proof-of-receipt: "需保留往来函件、收件凭证与回执,作为程序性合规的关键证据."
+    system-impact: "处于 Bar Order 期间相关对外办理权限可能被暂停或限制,直至解除命令生效并完成系统更新."
+    supplemental-and-investigation: "BIAU 可根据案情要求追加材料或面谈;不配合可能影响结论."
+    information-consistency: "提交信息应与 BI 既有登记档案一致;如有差异,应说明原因并提交更正依据."
+info_collection:
+  applicant:
+    organization-name:
+      label: "机构名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Accreditation Agency"
+      notes: "用于匹配 BI 认证档案."
+    certification-number:
+      label: "机构认证编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ACC-2023-00123"
+      notes: ""
+    liaison-officer-name:
+      label: "联络官姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: "确认涉案人员身份."
+    liaison-officer-id-number:
+      label: "联络官身份证明号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-987654321"
+      notes: ""
+    address-line1:
+      label: "注册地址(地址行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Pioneer St., Brgy. 123"
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Mandaluyong"
+      notes: ""
+    address-province:
+      label: "省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: "^[0-9]{4,6}$"
+      example: "1550"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "contact@example.com"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-agent-name:
+      label: "授权代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: ""
+    authorized-agent-id-number:
+      label: "授权代理人身份证明号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-11223344"
+      notes: ""
+    authorization-scope:
+      label: "委托范围"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "提交与领取文件;接收通知"
+      notes: ""
+    authorization-valid-until:
+      label: "授权有效期至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-12-31"
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    external-doc-ref-no:
+      label: "外部机关文件文号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOLE-2024-0001"
+      notes: ""
+    external-doc-issuing-agency:
+      label: "签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOLE"
+      notes: ""
+    external-doc-expiry:
+      label: "外部文件有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-01-31"
+      notes: ""
+  additional_details:
+    order-reference-number:
+      label: "Show Cause/Bar Order 参考号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SCO-2024-00123"
+      notes: "用于锚定案件."
+    order-issue-date:
+      label: "签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-10-15"
+      notes: ""
+    allegation-summary:
+      label: "指控/关切事项要点"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "涉嫌未按规定保存客户记录"
+      notes: ""
+    remediation-actions:
+      label: "已采取的整改措施"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "制定并实施内控流程,开展合规培训"
+      notes: ""
+    remediation-timeline:
+      label: "整改时间线"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2024-08 至 2024-10"
+      notes: ""
+    evidence-catalog:
+      label: "证据目录"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "EXH-001 合同;EXH-002 邮件往来"
+      notes: ""
+    evidence-numbering:
+      label: "证据编号规则"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "EXH-###"
+      notes: ""
+    notarization-date:
+      label: "公证日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-10-20"
+      notes: ""
+    notarization-agency:
+      label: "公证机构"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "XYZ Notarial Services"
+      notes: ""
+    notarization-reference:
+      label: "公证参考号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NOT-2024-00999"
+      notes: ""
+    desired-outcome:
+      label: "期望的救济结果"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "解除"
+      notes: "可选:解除 / 维持 / 其他说明."
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    response-deadline-after-show-cause:
+      question: "收到 Show Cause 后的答复期限是多少?"
+      answer: "以正式函文载明的期限为准;请尽早准备并在期限前提交,经公证并附证据."
+    consequence-of-missed-deadline:
+      question: "未在期限内答复会怎样?"
+      answer: "可能被直接列入或维持 Bar Order,导致办理权限受限."
+    how-to-apply-lifting-of-bar-order:
+      question: "Bar Order 如何申请解除?"
+      answer: "提交经公证的说明与充分佐证,证明不应继续限制或已完成整改;BIAU 审查后作出是否解除的决定."
+    any-fees-required:
+      question: "此流程是否需要缴费?"
+      answer: "BIAU 不收取办理费用;但公证、邮寄等第三方费用由当事方自理."
+    originals-required:
+      question: "提交材料是否必须原件?"
+      answer: "通常提交经公证的复印件并备原件备查;BIAU 如要求核验原件,应按指示提供."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

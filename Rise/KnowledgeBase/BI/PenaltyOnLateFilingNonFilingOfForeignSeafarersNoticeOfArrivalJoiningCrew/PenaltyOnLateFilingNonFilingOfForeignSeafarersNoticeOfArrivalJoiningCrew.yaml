@@ -1,0 +1,542 @@
+version: ""
+updated_at: "2025"
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "迟报/未报外籍海员抵港通知(Notice of Arrival, NOA)补报与罚款缴纳"
+slug: "penalty-on-late-filing-non-filing-of-foreign-seafarers-notice-of-arrival-joining-crew"
+type: "reference"
+semantic_profile:
+  intent_id: "noa-late-non-filing-penalty-joining-crew"
+  category: "BayServiceSection"
+  tags: ["NOA","seafarers","joining-crew","penalty","BSS"]
+service_overview: "面向航运公司或其在菲人力代理,在外籍海员入境加入船舶时未能按时向移民局海湾服务处(BSS)提交NOA的情形,办理补报并缴纳行政罚款,以恢复登轮、出境及口岸查验等环节的合规状态.一次性补交完整资料、说明原因并完成不良记录核查与缴费后,可继续办理相关放行手续."
+applicability:
+  items:
+    manila-port-late-over-24h: "船舶国际航次抵达马尼拉港,因通讯或系统异常未在24小时内提报NOA,需要补报并缴罚."
+    other-ports-late-over-48h: "外港(非马尼拉)靠泊,因靠泊计划临时调整导致NOA在48小时内未提报或逾时提报."
+    add-joining-crew-found-missing-noa: "增补 joining crew 名单时发现原NOA缺漏或未提交,需集中补报并说明原因."
+    agent-changed-responsibility-gap: "更换当地代理或人力公司期间,NOA责任主体变更导致空档未报,需要由新代理补提."
+    cruise-multiple-ports-first-port-missed: "邮轮多港停靠,首港未及时申报,后续港口办理登轮/下船受阻,需要先完成首港补报与缴罚."
+preconditions:
+  required:
+    designated-liaison-and-authorization: "由航运公司/人力代理的指定联络员代表办理,并出示公司身份证件或授权证明."
+    submit-complete-noa-and-voyage-info: "一次性提交完整的NOA、船员名单及航次/停靠信息,内容真实可核."
+    obtain-no-derogatory-stamp: "先完成不良记录核查并取得“无不良记录”戳记;如有不良记录,须先完成清理或取得相关放行证明."
+    written-explanation-with-company-seal: "就迟报/未报原因出具加盖公司签章的书面说明,并附可佐证文件."
+    within-bss-deadline-pay-fines: "应在BSS指定期限内补报并缴清罚款后,方可继续办理登轮/放行等后续手续."
+  not_eligible:
+    philippine-crew-or-domestic-route: "申请涉及菲律宾籍船员或纯国内航线(非涉外航次)的船舶."
+    no-written-explanation: "未能提供书面解释函或无法说明迟报/未报的合理原因."
+    derogatory-not-cleared: "不良记录尚未清理且无法取得许可或放行的案件."
+    false-or-contradictory-docs: "资料明显虚假、伪造或存在重大矛盾,无法通过初审."
+    non-joining-crew-unrelated-requests: "非加入船员(非joining crew)且与本事项无直接关联的其他业务请求."
+pre_required_documents:
+  mandatory:
+    explanation-letter-to-commissioner: "向移民局局长致函的解释信(由航运/人力公司或其授权代表出具),说明未能提前发送NOA的原因."
+    crew-list-copy: "船舶船员名单复印件(crew list)."
+    no-derogatory-stamp-result: "不良记录核查结果(加盖“无不良记录”戳记)."
+    noa-two-copies: "抵港通知(NOA)正副各1份(共2份),含抵港时间、港口、上一/下一港、靠泊/锚地、航次号等."
+  conditional:
+    if-available-voyage-or-berthing-plan:
+      trigger: "航次或停靠港计划表、码头安排或移泊计划(如有)."
+      documents: ["sailing-schedule-or-berthing-plan"]
+    agent-change-or-authorization:
+      trigger: "代理更换或由授权代表递件时."
+      documents: ["proof-of-agent-change","authorization-letter","company-id-copy"]
+    comms-or-system-failure:
+      trigger: "因通信或系统故障导致未报."
+      documents: ["incident-or-fault-proof","email-screenshots","system-ticket"]
+    force-majeure:
+      trigger: "因不可抗力(如恶劣天气、医疗紧急等)迟报."
+      documents: ["supporting-evidence"]
+    port-maritime-customs-coordination:
+      trigger: "涉及港务/海事、海关联动检查."
+      documents: ["notices-or-coordination-docs"]
+process:
+  steps:
+    precheck-and-queue-bss:
+      order: "1"
+      title: "预检与取号(BSS)"
+      description: "指定联络员在BSS窗口递交材料,接受完整性初审与不良记录核查指引;必要时先至认证与证明科办理核查盖章.约5–10分钟."
+    derogatory-record-check:
+      order: "2"
+      title: "不良记录核查(如适用)"
+      description: "办理“无不良记录”戳记;若存在不良记录,先行按要求完成清理或取得许可后再回BSS续办.约10–30分钟(视记录复杂度而定)."
+    acceptance-and-ops-issuance:
+      order: "3"
+      title: "受理与制单(BSS)"
+      description: "资料通过初审后,由窗口制发缴费单(Order of Payment Slip,OPS).约2–5分钟."
+    payment-cashier:
+      order: "4"
+      title: "缴费(收银)"
+      description: "持OPS至移民局现金窗口缴纳罚款及相关费用,获取官方收据(Official Receipt,OR).约3–5分钟."
+    return-to-counter-and-completion:
+      order: "5"
+      title: "回柜确认与办结(BSS)"
+      description: "持OR返还BSS,完成补报登记,领取已批注的补报凭证/批注件.约3–5分钟."
+    follow-up-coordination:
+      order: "6"
+      title: "后续联动(如需)"
+      description: "凭补报完成的凭证办理登轮、签注核验或口岸查验等后续环节.时长依口岸现场为准."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "依据2025年版公民宪章;如有地方执行差异,以实际OPS/OR为准."
+  items:
+    per-vessel:
+      label: "每艘船舶"
+      details:
+        non-filing-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,000"
+            value: 5000
+          notes: "未提交通知(Non-filing)行政罚款,按每艘计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        late-filing-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,000"
+            value: 5000
+          notes: "逾时提交(Late filing):马尼拉港超过24小时、其他港口超过48小时未报,按每艘计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "快速通道费(每艘)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        other-concurrent-fees:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "其他并办费用(如认证/证明)按对应票据另行计费,以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "补报登记完成后形成的批注/凭证及缴费票据,用于后续登轮、核验与查验放行."
+  items:
+    annotated-completion-proof:
+      name: "补报完成批注/凭证"
+      usage: "用于口岸登轮、签证核验或查验放行."
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费完成证明,留存备查."
+    order-of-payment-slip-ops:
+      name: "缴费单(OPS)"
+      usage: "办理缴费与回柜确认所需."
+kpis:
+  processing_time: "各步骤约5–10分钟、10–30分钟、2–5分钟、3–5分钟、3–5分钟;后续联动依口岸现场为准."
+risks:
+  items:
+    repeated-late-reporting-scrutiny: "重复迟报将被重点关注."
+    false-or-concealed-information: "如发现虚假材料或隐瞒实情,除罚款外,可能引发更严厉行政处置或刑事移交."
+    incomplete-docs-may-be-rejected: "材料不全可被退件或要求补件."
+    incomplete-or-unpaid-causes-delays: "补报未完成或逾期未缴罚,可能导致登轮、核验与出境许可延误,影响航线与商业安排."
+    onsite-variations-impact-timeline: "个别口岸窗口可能根据工作负荷与安保等级调整办理时长与次序,以现场指引为准."
+info_collection:
+  applicant:
+    company-name-english:
+      label: "公司名称(英文全称)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Co., Ltd."
+      notes: "与授权文件一致."
+    company-name-local-registered:
+      label: "公司名称(本地登记名)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Philippines Inc."
+      notes: ""
+    address-line1:
+      label: "公司地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于票据与联系."
+    address-postal-code:
+      label: "公司邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1000"
+      notes: ""
+    company-registration-number:
+      label: "公司注册号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    company-license-number:
+      label: "公司执照号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用."
+    liaison-name:
+      label: "指定联络员姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: "递件与领件人."
+    liaison-position:
+      label: "指定联络员职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Agency Coordinator"
+      notes: ""
+    liaison-phone:
+      label: "指定联络员联系电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "+63 917 000 0000"
+      notes: ""
+    liaison-company-id-number:
+      label: "联络员公司ID编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-123456"
+      notes: "递件验证."
+    liaison-company-id-copy-ref:
+      label: "联络员公司ID复印件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-email:
+      label: "联系邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "ops@agency.example"
+      notes: "接收通知与补件要求."
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "非法定代表人递件时填写."
+    authorization-letter-number:
+      label: "授权书编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-issue-date:
+      label: "授权书签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    vessel-callsign:
+      label: "呼号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    vessel-imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "IMO 1234567"
+      notes: ""
+    voyage-number:
+      label: "航次号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "VOY-001"
+      notes: ""
+    operation-number:
+      label: "作业编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OP-2025-0001"
+      notes: ""
+    flag-state:
+      label: "船旗国"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Panama"
+      notes: ""
+    vessel-type:
+      label: "船舶类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Container Ship"
+      notes: ""
+    arrival-datetime:
+      label: "抵港日期与时间"
+      type: "datetime"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于计算是否逾期."
+    arrival-port:
+      label: "港口"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Port of Manila"
+      notes: ""
+    terminal:
+      label: "码头"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    anchorage:
+      label: "锚地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-port:
+      label: "上一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    next-port:
+      label: "下一港"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance:
+    consent-derogatory-check:
+      label: "同意移民局核查不良记录与必要的跨部门验证"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "合规声明."
+  additional_details:
+    noa-count:
+      label: "NOA件数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 2
+      notes: ""
+    noa-reference-numbers:
+      label: "NOA编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NOA-2025-001, NOA-2025-002"
+      notes: ""
+    noa-submission-date:
+      label: "NOA提交日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    reason-late-or-non-filing:
+      label: "迟报/未报原因"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "简述经过与责任环节."
+    supporting-documents-list:
+      label: "佐证材料清单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "通信记录、系统工单、通知函"
+      notes: ""
+    total-joining-crew:
+      label: "joining crew总人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 12
+      notes: "与crew list一致."
+    crew-list-version:
+      label: "crew list名单版本号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "v1.2"
+      notes: ""
+    crew-list-date:
+      label: "crew list日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    minors-or-special-permit-present:
+      label: "是否含未成年人或需特别许可人员"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "风险提示."
+    ops-number:
+      label: "OPS编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OPS-2025-000123"
+      notes: "缴费单追踪."
+    or-number:
+      label: "OR编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OR-2025-987654"
+      notes: "官方收据编号."
+    payment-date:
+      label: "缴费日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    payer-name:
+      label: "付款主体名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "票据抬头一致性."
+acknowledgement_flags:
+  data_privacy_consent: "申请人/代理同意移民局核查不良记录与必要的跨部门验证."
+  certification_statement: ""
+faq:
+  qas:
+    when-is-late-or-non-filing-defined:
+      question: "多久视为迟报或未报?"
+      answer: "马尼拉港抵港起24小时、其他港口48小时为提交通知的时限;超时为迟报,完全未提交则为未报,均按每艘计罚."
+    is-penalty-per-head:
+      question: "罚款是否按人头计算?"
+      answer: "否,按每艘船舶计收,不按joining crew人数叠加.但其他并办项目(如认证/证明)可能另行计费."
+    submitted-noa-with-omissions-penalty:
+      question: "已经提交了NOA但内容缺漏,是否仍会被处罚?"
+      answer: "由BSS评估具体缺漏与影响程度;如构成逾时报或实质性未报,需补正并缴纳相应罚款与快速通道费."
+    derogatory-check-required:
+      question: "办理时一定要先做不良记录核查吗?"
+      answer: "是.需取得“无不良记录”戳记后方可进入缴费与办结环节;如有不良记录,应先完成清理或取得许可."
+    online-payment-or-representative:
+      question: "能否线上支付或由他人代办?"
+      answer: "以现金窗口为主,部分办事处可能提供指定电子渠道;可由指定联络员或授权代表代办,但须附公司ID及授权文件."
+    lost-or:
+      question: "OR丢失怎么办?"
+      answer: "尽快向受理窗口说明并申请票据核对或出具在案证明;如需认证副本,依认证费标准另行缴费."
+    agent-change-who-responsible:
+      question: "如果更换了当地代理,谁来负责补报?"
+      answer: "通常由现任代理负责补报与缴罚,并提交代理变更与授权证明;也可由原代理与现代理协调提交联合说明."
+    other-fees-involved:
+      question: "是否会涉及其他费用(如签证或crew list签注)?"
+      answer: "本事项为NOA迟报/未报的行政罚款,与签证或crew list签注无直接关联;若现场另有并办项目,按对应票据另计."
+disclaimers:
+  items:
+    pricing-subject-to-ops-or: "本服务未在全局价格参考表中单列,金额以2025年版公民宪章为准;如有地方执行差异,以实际OPS/OR为准."
+    usd-conversion-by-bsp: "如涉及以美元计价的其他并办项目,费用按菲律宾央行(BSP)汇率折算."
+    onsite-variance: "个别口岸窗口可能根据工作负荷与安保等级调整办理时长与次序,以现场指引为准."
+    submission-deadline-enforced: "应在规定期限内提交,否则窗口可不予受理."
+service_related:
+  links: {}

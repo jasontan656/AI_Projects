@@ -1,0 +1,786 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "在线办理未满15岁外籍未成年人排除理由豁免(WEG)"
+slug: "waiver-for-exclusion-ground"
+type: "reference"
+semantic_profile:
+  intent_id: "weg-online-minor"
+  category: "entry-waiver"
+  tags: ["WEG","minors","online","Philippines","immigration"]
+service_overview: "本服务为未满15周岁且入境时父母不随行的外籍未成年人提供“排除理由豁免”(WEG)线上申请通道,由移民局委员办公室审核并签发电子核准文件与电子官方收据,支持在线提交、缴费、补件与通知,便于在抵达口岸时依法顺利通关."
+applicability:
+  items:
+    minor-traveling-alone: "未成年人独自旅行入境菲律宾,父母均不随行."
+    accompanied-by-non-parents: "未成年人由非父母之成年人(亲属、教师、旅行社领队、家属朋友等)陪同入境."
+    parental-consent-online: "父母或法定监护人需在儿童抵达前完成线上授权与同意手续."
+    visa-required-nationality: "未成年人所持国籍或旅行证件需事先取得入境签证(如属签证国)."
+    avoid-port-risks: "申请人希望避免口岸临场补办或无法在口岸即时提供充分文件的风险."
+preconditions:
+  required:
+    applicant-eligibility: "申请人须为未成年人的父母或法定监护人,或经正式授权的代理人."
+    age-and-accompaniment: "未成年人年龄为未满15周岁,且入境时父母不随行."
+    eservices-account: "持有移民局电子服务平台(E-Services)账号与有效电子邮箱(用于接收受理/补件/核准通知)."
+    visa-preobtained-if-required: "依据国籍或所持旅行证件,如属签证国,须在申请WEG前已取得有效菲律宾入境签证."
+    originals-at-arrival: "所有提交的扫描件清晰可辨,且在入境时能出示全部正本(护照、宣誓书、同意书、机票等)."
+  not_eligible:
+    incomplete-or-poor-quality: "材料不全、扫描质量不达标或未按顺序与格式要求提交."
+    payment-not-confirmed: "在线支付失败或款项未确认入账."
+    originals-not-presented: "无法在入境口岸出示所要求的全部文件正本."
+    forged-or-unlegalized: "存在虚假、伪造或未依法认证的文书."
+    unclear-relationship-or-missing-guardianship: "申请人与未成年人关系不清、授权链条不完整或法律监护文件缺失."
+pre_required_documents:
+  mandatory:
+    letter-to-commissioner: "致移民局委员的申请信(由父母或法定监护人签署)."
+    parental-consent-affidavit: "父母任一方出具的旅行同意宣誓书(须原件并经公证;亦可采用支持与保证宣誓书ASG形式)."
+    minor-passport-bio-page: "未成年人护照资料页复印件/扫描件(入境时携带护照正本)."
+    parent-guardian-passport-bio-page: "父母/法定监护人的护照资料页复印件/扫描件(或旅行证件)."
+    weg-payment-or: "WEG缴费官方收据(电子OR,系统生成,入境时备查)."
+  conditional:
+    accompanied-by-non-parent:
+      trigger: "如由非父母成年人陪同."
+      documents: ["随行成年人之护照资料页"]
+    itinerary-ticket:
+      trigger: "按行程要求提交."
+      documents: ["往返或续程机票行程单(建议包含航班号与抵达时间)"]
+    invitation-or-host-proof:
+      trigger: "如适用学习、探亲、活动等场景."
+      documents: ["邀请方/接待单位证明或行程安排说明"]
+    visa-page-if-visa-national:
+      trigger: "如国籍或证件属签证国."
+      documents: ["已获批的有效入境签证页"]
+    spa-when-agent:
+      trigger: "如由授权代表代办."
+      documents: ["每位申请人的特别授权书(SPA)正本","代理人有效政府签发身份证复印件或移民局认证机构从业ID复印件"]
+    legal-guardianship-proof:
+      trigger: "如涉及监护关系、父母一方不在等情形."
+      documents: ["法定监护关系证明/死亡证明/离异判决与监护权归属等民事登记文书(在菲签发须为PSA原件;境外文书须经菲驻外机构或DFA认证,并附英文译文如为他国语种)"]
+    offline-supplement-or-verification:
+      trigger: "如被要求线下补件或核验."
+      documents: ["按法定纸张尺寸(Legal 8.5×14英寸)提交纸本并依清单顺序装订成册"]
+process:
+  steps:
+    register-and-login:
+      order: "1"
+      title: "在线注册与登录"
+      description: "使用父母/监护人账号进入WEG模块,阅读须知并开始申请;约1分钟."
+    fill-and-upload:
+      order: "2"
+      title: "填报信息与上传材料"
+      description: "录入未成年人、父母/监护人、随行成年人、行程与联系方式等信息,按清单顺序上传扫描件;提交后生成参考号;约5–10分钟."
+    online-payment:
+      order: "3"
+      title: "在线缴费"
+      description: "通过Landbank Link.Biz或Maya完成支付,系统回写交易成功状态并发送邮件确认;约1分钟."
+    review-and-rfi:
+      order: "4"
+      title: "审核与补件"
+      description: "委员办公室进行形式审查与实质评估,如需补件将通过注册邮箱通知;补件需在指定时限内完成;一般审核约30分钟(不含补件等待)."
+    approval-and-issuance:
+      order: "5"
+      title: "批准与出具"
+      description: "核准后系统发送WEG核准令与电子官方收据(OR);承诺办结不超过1日32分钟,其中核准发文不超过10小时30分钟."
+    arrival-inspection:
+      order: "6"
+      title: "抵达查验"
+      description: "未成年人抵达入境口岸时,随行成年人共同出示护照正本、WEG核准令、电子OR及所有原件供移民官核查;放行后入境."
+    offline-verification-if-required:
+      order: "7"
+      title: "线下核验(如被要求)"
+      description: "按通知前往CRU或相关窗口出示未成年人护照正本供扫描,扫描后即时退还."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    weg-minor-online:
+      label: "未成年人WEG · 线上办理"
+      details:
+        weg-bundle-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,120.00"
+            value: 3120
+          notes: "含豁免费、服务费、法律检索费、快速通道费;不含支付渠道手续费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        channel-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "线上支付平台(如 Link.Biz、Maya)按其费率另计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以移民局出具的电子官方收据(OR)为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    port-crew-weg-reference:
+      label: "参考 · 口岸船员WEG(非本服务)"
+      details:
+        crew-weg-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "适用于无9(c)船员之口岸现场办理."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        admin-fine:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        fast-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,010"
+          value: 3010
+        notes: "与未成年人WEG场景不同,以上为区分参考."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "审批通过后,系统出具电子版核准与缴费凭证,供入境查验使用."
+  items:
+    weg-approval-order:
+      name: "WEG核准令(电子)"
+      usage: "抵达口岸时向移民官出示以完成放行."
+    electronic-official-receipt:
+      name: "电子官方收据(OR)"
+      usage: "线上缴费凭证,入境口岸备查."
+kpis:
+  processing_time: "一般审核约30分钟(不含补件等待);承诺办结不超过1日32分钟,其中核准发文不超过10小时30分钟."
+risks:
+  items:
+    late-submission:
+      text: "临近出发提交,补件或审核拥堵可能导致无法在抵达前取得核准,影响行程."
+    originals-required:
+      text: "核准后入境仍须出示全部原件(护照、宣誓书、申请信、机票、签证等),否则可能被拒绝入境."
+    non-refundable:
+      text: "WEG为政府规费,缴费后不予退还."
+    document-compliance:
+      text: "宣誓书须原件并公证;PSA原件与境外文书DFA/驻外机构认证及英文译文要求."
+    additional-docs-may-be-required:
+      text: "移民局可因核验需要要求补交支持材料(如监护文件、邀请函、关系证明)."
+    offline-verification-possible:
+      text: "个案可能被要求至CRU出示护照正本扫描,需预留时间."
+    visa-precondition:
+      text: "属签证国者须先持有效签证后方可申请WEG;WEG不代替签证."
+    data-inconsistency:
+      text: "姓名、出生日期、护照号等与护照不一致将导致延误或驳回."
+    forged-docs-consequence:
+      text: "提供伪造或不实文件将被拒绝并可能追究法律责任."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "与护照一致."
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2013-08-25"
+      notes: ""
+    birth-place:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING, CHINA"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: ""
+    travel-document-type:
+      label: "所持旅行证件类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Passport"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MINISTRY OF FOREIGN AFFAIRS"
+      notes: ""
+    passport-expiry-date:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-06-30"
+      notes: "建议剩余有效期≥6个月."
+    residence-address-line1:
+      label: "当前居住地址(境外)- 街道与门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 MAIN ST"
+      notes: ""
+    residence-address-city:
+      label: "当前居住地址(境外)- 城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SHANGHAI"
+      notes: ""
+    residence-address-province:
+      label: "当前居住地址(境外)- 省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SHANGHAI"
+      notes: ""
+    residence-address-country:
+      label: "当前居住地址(境外)- 国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(境外手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+8613712345678"
+      notes: "用于接收通知与紧急联络."
+  spouse: {}
+  father:
+    last-name:
+      label: "父亲姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "父亲名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "父亲中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "父亲国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "父亲护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry-date:
+      label: "父亲护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "父亲电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "父亲手机号"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  mother:
+    last-name:
+      label: "母亲姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "母亲名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "母亲中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "母亲国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "母亲护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry-date:
+      label: "母亲护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "母亲电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "母亲手机号"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    applicant-relationship-to-minor:
+      label: "与未成年人关系(父/母/监护人)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "父"
+      notes: "关系证明或法律文书依据."
+    authorized-representative:
+      label: "是否通过授权代表代办"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "特别授权书(SPA)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "代理代办场景适用."
+    spa-issue-date:
+      label: "SPA签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    guardian-full-name:
+      label: "法定监护人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    guardian-relationship:
+      label: "监护关系类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Legal guardian"
+      notes: ""
+    guardian-passport-number:
+      label: "监护人护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    guardian-passport-expiry-date:
+      label: "监护人护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    expected-arrival-date:
+      label: "预计抵达日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-07-15"
+      notes: ""
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PR359"
+      notes: ""
+    port-of-entry:
+      label: "入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MNL - Ninoy Aquino International Airport"
+      notes: ""
+    in-ph-address-line1:
+      label: "在菲停留地址-街道与门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    in-ph-city:
+      label: "在菲停留地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    in-ph-province:
+      label: "在菲停留地址-省"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    in-ph-contact-name:
+      label: "在菲联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    in-ph-contact-phone:
+      label: "在菲联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history:
+    onward-or-return-ticket-itinerary:
+      label: "往返或续程机票行程单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "建议包含航班号与抵达时间."
+  compliance:
+    consent-affidavit-notarization-date:
+      label: "旅行同意宣誓书公证日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    consent-affidavit-notarization-place:
+      label: "旅行同意宣誓书公证地点"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    consent-affidavit-notary-name:
+      label: "旅行同意宣誓书公证人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-doc-legalization-method:
+      label: "外国文书认证方式(FSP/DFA)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DFA"
+      notes: "境外签发文书须经菲驻外机构或DFA认证."
+    translation-language:
+      label: "译文语言(如非英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "English"
+      notes: "如为他国语种需附英文译文."
+  additional_details:
+    invitation-or-host-proof:
+      label: "邀请方/接待单位证明或行程安排说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    payment-reference-number:
+      label: "付款参考号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "线上缴费凭证追溯."
+    electronic-or-number:
+      label: "电子官方收据(OR)编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    other-supporting-docs:
+      label: "其他支持文件说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    accompanying-adult-full-name:
+      label: "随行成年人姓名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    accompanying-adult-nationality:
+      label: "随行成年人国籍(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    accompanying-adult-passport-number:
+      label: "随行成年人护照号码(如适用)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    accompanying-adult-passport-expiry:
+      label: "随行成年人护照有效期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    accompanying-adult-relationship:
+      label: "随行成年人与未成年人关系(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Relative / Teacher / Family friend"
+      notes: ""
+    accompanying-itinerary-scope:
+      label: "陪同行程范围说明(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "落地后接送与照管说明."
+acknowledgement_flags:
+  data_privacy_consent: "申请人确认并同意为办理WEG之目的收集、使用与处理所提交的个人信息."
+  certification_statement: "申请人声明所提交信息与文件真实、准确、完整,知悉虚假陈述之法律后果."
+faq:
+  qas:
+    deadline-for-submission:
+      question: "最晚什么时候必须提交WEG申请与缴费?"
+      answer: "应在预计抵达前至少72小时内完成提交与支付,以确保审查和签发在行前完成."
+    refund-policy:
+      question: "付款后能否取消或退款?"
+      answer: "不能.WEG为政府规费,缴费后不予退还,请务必先行核对材料与行程."
+    carry-originals:
+      question: "核准后是否仍需携带纸本或正本?"
+      answer: "需要.除电子核准令与电子OR外,入境时必须出示所有原件供移民官核查."
+    change-of-companion:
+      question: "更换随行成年人需要重新办理吗?"
+      answer: "如随行成年人发生变化,应在出行前及时通过系统更新并提交新的随行人身份证明与父母同意文书;未经更新可能导致口岸延误或拒绝."
+    age-15-threshold:
+      question: "未成年人已满15周岁是否还需要WEG?"
+      answer: "不需要.WEG适用于未满15周岁且父母不随行的情形;满15周岁不再适用该要求,但仍须遵守其他入境规定."
+    visa-before-weg:
+      question: "如为签证国家,签证尚未获批能否先办WEG?"
+      answer: "不能.属于签证国的申请人须先持有效入境签证,再行申请WEG,否则将被退件或延后处理."
+    lost-eor-or-approval:
+      question: "电子OR或核准令丢失怎么办?"
+      answer: "可登录E-Services下载或通过注册邮箱查收历史通知与附件;必要时联系移民局相关单位协助重发."
+    late-submission-impact:
+      question: "没能在72小时之前提交,会有什么影响?"
+      answer: "临近出发提交通常因补件或审核拥堵导致无法在抵达前获得核准,建议调整行程或由父母同行以免受阻."
+disclaimers:
+  items:
+    fees-subject-to-or: "所有金额以移民局出具的官方收据(OR)为准."
+    channel-fees-extra: "线上支付可能产生渠道手续费,按支付平台规则另计."
+    weg-not-visa: "WEG不代替签证,属签证国者须先行取得有效签证."
+    legal-paper-size: "线下补件纸本须使用Legal尺寸(8.5×14英寸)并按清单顺序装订."
+service_related:
+  links: {}

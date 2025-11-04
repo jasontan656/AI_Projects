@@ -1,0 +1,666 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "外国政府认可官员(9E)签证升级及家属依附注记办理指南"
+slug: "accredited-official-of-foreign-government-9e"
+type: "reference"
+semantic_profile:
+  intent_id: "9e-upgrade-and-dependent-annotation"
+  category: "visa"
+  tags: []
+service_overview: "面向经菲律宾政府承认且由外交部(DFA)认可的外国政府官员及其家属,提供两类办理:将现持他类入境资格升级为9E,以及为官员家属办理依附注记.9E属礼遇性签证,通常免收政府规费,办理以DFA背书与照会为核心依据.申请人应按移民局CDR清单备齐并依序装订材料,由受理单位审核通过后实施护照签注与系统注记."
+applicability:
+  items:
+    dfa-recognized-official-needs-9e-conversion: "已由DFA正式认可的外国政府官员,在菲需将现有入境资格转换/升级为9E."
+    family-dependent-annotation: "官员家属(配偶、未成年子女)在移民局办理依附注记以随同居留."
+    arrive-on-9a-then-upgrade-to-9e: "官员赴任先持短期签证(如9A)入境,到菲后依DFA背书办理升级为9E."
+    native-born-dependent-annotation: "在菲出生的官员子女需补办出生证明并办理依附注记."
+    attendants-servants-staff-per-dfa: "官员随员、仆役或雇员等随同办理与官员身份一致的入境/居留安排(以DFA背书为准)."
+preconditions:
+  required:
+    recognized-by-dfa: "申请人为经DFA认可且被菲律宾政府承认的外国政府官员,或其家属/随行依附对象."
+    dfa-endorsement-and-note-verbale: "持有DFA出具的正式背书及相应照会(Note Verbale)."
+    valid-passport-and-entry-record: "具有效护照与最新入境记录(含最近一次入境章/入境许可)."
+    cdr-complete-and-binding: "按移民局文件清单(CDR)备齐并按顺序装订于法式长纸夹(Legal size 8½×14英寸)."
+    authorized-representative-requirements: "由授权代表递交的,须备BI认证代表证或每位申请人的SPA及代理人有效政府身份证件复印件."
+  not_eligible:
+    no-dfa-backing: "无DFA背书/照会,或身份未被菲律宾政府承认的人员."
+    incomplete-or-late-submission: "材料未按CDR顺序、未在规定期限内提交,或明显不完整."
+    falsified-documents: "提供虚假、不实或涂改文件."
+    mismatch-identity-or-relationship: "申请人与DFA背书身份不一致,或依附关系无法证实."
+    unrectified-cases: "其他经移民局认定需补正而未完成补正的案件."
+pre_required_documents:
+  mandatory:
+    main-dfa-endorsement-and-note-verbale-copy: "主申请人:DFA背书(endorsement)及照会(Note Verbale)复印件."
+    main-passport-bio-and-last-entry-copy: "主申请人:护照资料页及最近一次入境记录复印件."
+    main-dfa-latest-visa-page-copy: "主申请人:DFA签发的最近一次签证页复印件(如适用)."
+    dep-dfa-endorsement-and-note-verbale-copy: "家属依附注记:DFA背书及照会复印件(载明依附关系)."
+    dep-passport-bio-and-last-entry-copy: "家属依附注记:家属护照资料页与最近入境记录复印件."
+    dep-birth-certificate-native-born-copy: "家属依附注记:在菲出生的依附子女之出生证明(Birth Certificate)复印件."
+    dep-dfa-latest-visa-page-copy: "家属依附注记:DFA最近签证页复印件(如适用)."
+  conditional:
+    application-form-2014-10-020:
+      trigger: "按需提交或依受理单位指示."
+      documents: ["BI FORM 2014-10-020(填写并签名)"]
+    authorized-representative:
+      trigger: "授权代办时."
+      documents: ["BI认证代表证复印件", "每名申请人的SPA原件", "代理人有效政府身份证件复印件"]
+    relationship-proof:
+      trigger: "当DFA照会未明确或移民局要求核验时."
+      documents: ["结婚证", "子女出生证明"]
+    additional-documents-upon-request:
+      trigger: "移民局为进一步核验而要求的补充材料(以书面通知为准)."
+      documents: ["受理单位书面通知列示的补充材料"]
+process:
+  steps:
+    step-1-precheck-and-prep:
+      order: "1"
+      title: "预审与准备(申请人/使团)"
+      description: "依据DFA背书与照会按清单备齐文件,并填写申请表BI FORM 2014-10-020.预计1–3个工作日(视资料收集)."
+    step-2-filing-at-cru:
+      order: "2"
+      title: "递件与登记(CRU)"
+      description: "按CDR顺序装订后提交至移民局中央受理单位或指定窗口.现场排队与受理约30–90分钟(以现场为准)."
+    step-3-evaluation:
+      order: "3"
+      title: "资格与文件评估(评审单位)"
+      description: "核对身份、依附关系、入境记录与DFA照会一致性;必要时通知补件.通常3–10个工作日,复杂核查顺延."
+    step-4-approval-and-instruction:
+      order: "4"
+      title: "核准与签注指令(签发单位)"
+      description: "审批通过后签发办理指令;涉及护照贴签者按通知提交护照原件."
+    step-5-visa-implementation-and-release:
+      order: "5"
+      title: "签证实施与证件返还(签注窗口/现金窗口)"
+      description: "在护照上实施9E签注及依附注记;确认系统记录更新并领取护照与回执.预计0.5–2个工作日."
+    step-6-filing-and-aftercare:
+      order: "6"
+      title: "案件归档与后续管理(申请人/使团)"
+      description: "妥善保管批文与回执;后续家属入境或新生儿登记时按相同步骤办理依附注记."
+  variants: {}
+  notes: "无法亲办者可由授权代表持BI认证代表证或SPA递交.受理单位可要求补件与进一步核查;未按时补件将影响时效或被终止办理."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    9e-applicants:
+      label: "9E签证及相关费用"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "Gratis / 无"
+            value: 0
+          notes: "9E为礼遇性签证类别,通常不收取政府规费(以BI与DFA政策执行)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "无"
+            value: 0
+          notes: "护照签注贴纸费通常不收取;如政策更新以窗口告知为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "可选:记录/认证类证明(示例:Certification 500 + LRF 10 + Express 500,如选加急);是否需要视案情."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        mr:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "可选:复议动议(MR),参考通用标准:MR 500 + LRF 10 + Express 500(如适用);仅于发生程序性问题时产生."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "上述费用多为可选/情形性项目,实际以开单与收据(OR)为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "在护照上实施9E签注及家属依附注记,并提供相关批文/回执以供查验与后续办理."
+  items:
+    9e-visa-endorsement-stamp:
+      name: "9E签证签注/贴签"
+      usage: "作为在菲合法居留与身份识别之凭证."
+    dependent-annotation:
+      name: "家属依附注记"
+      usage: "确认家属依附于主申请人之法律居留依据."
+    official-receipt-and-approval:
+      name: "回执与批文/核准指令复印件"
+      usage: "备查、续办或出入境查验时使用."
+kpis:
+  processing_time: "预审1–3个工作日;评估3–10个工作日;签注0.5–2个工作日(以现场排程为准)."
+risks:
+  items:
+    improper-binding-or-late-submission: "未按CDR顺序装订或逾期提交将不予受理或退件."
+    dfa-inconsistency: "申请信息与DFA背书/照会不一致将导致延误或拒绝."
+    supplementary-requirements-delay: "未按时补件将延长审批时长或导致驳回."
+    falsified-or-altered-documents: "提交伪造/变造文件将被拒绝,严重者可能触发移民与刑事责任."
+    status-changes-not-updated: "任期、职衔或依附关系变更未及时更新,可能影响记录有效性与后续办理."
+    overstay-risk: "现有入境许可临近到期未及时递交或协调,可能形成逾期停留记录."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文,如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    last-name-local:
+      label: "姓(本国语言拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name-local:
+      label: "名(本国语言拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name-local:
+      label: "中间名(本国语言拼写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-type:
+      label: "现有签证类型(含DFA签证,如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-expiry:
+      label: "现有签证到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    mission-name:
+      label: "驻菲机构/使团名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "应与DFA照会一致."
+    mission-address-line1:
+      label: "使团地址-地址行1"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mission-address-city:
+      label: "使团地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mission-address-province:
+      label: "使团地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mission-address-postal-code:
+      label: "使团地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mission-address-country:
+      label: "使团地址-国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    official-title:
+      label: "职衔"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    term-start-date:
+      label: "任期开始日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    term-end-date:
+      label: "任期结束日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dfa-endorsement-number:
+      label: "DFA背书编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dfa-endorsement-date:
+      label: "DFA背书日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    note-verbale-number:
+      label: "照会(Note Verbale)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    note-verbale-date:
+      label: "照会(Note Verbale)日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    dep-last-name:
+      label: "家属姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-first-name:
+      label: "家属名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-middle-name:
+      label: "家属中间名(英文,如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    relationship-to-applicant:
+      label: "与主申请人关系(配偶/子女等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-passport-number:
+      label: "家属护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-passport-expiry:
+      label: "家属护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-birth-date:
+      label: "家属出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-birth-place:
+      label: "家属出生地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dep-birth-certificate-number:
+      label: "在菲出生子女出生证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    annotation-request-type:
+      label: "依附注记需求(首次/变更/新增)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  employment: {}
+  authorization:
+    use-authorized-representative:
+      label: "是否由授权代表递交"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-gov-id-number:
+      label: "代表政府身份证件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-present:
+      label: "是否提供SPA原件"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-id:
+      label: "BI认证代表证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-visa-class:
+      label: "最近一次入境许可类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如9A等."
+  travel_history: {}
+  compliance:
+    previous-immigration-record-number:
+      label: "既往在菲移民记录/案件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    native-born-registration-receipt:
+      label: "在菲出生子女登记回执/认证信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    delivery-address-line1:
+      label: "送达地址-地址行1"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于补件或领证通知."
+    delivery-address-city:
+      label: "送达地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    delivery-address-province:
+      label: "送达地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    delivery-address-postal-code:
+      label: "送达地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    delivery-address-country:
+      label: "送达地址-国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    delivery-contact-person:
+      label: "送达联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请表需由申请人或授权代表签名确认所填信息真实完整."
+faq:
+  qas:
+    is-9e-fee-required:
+      question: "9E签证申请是否需要缴费?"
+      answer: "通常不收取政府规费(Gratis).但如需额外记录证明或发生程序性复议等,相关通用费用可能另计,具体以受理窗口开单为准."
+    who-can-apply-9e:
+      question: "谁可以申请9E升级与依附注记?"
+      answer: "经DFA认可并由菲律宾政府承认的外国政府官员,以及其配偶、未成年子女等家属可办理;随员、仆役或雇员等情形以DFA照会内容为准."
+    need-personal-appearance:
+      question: "必须本人到场吗?"
+      answer: "可由授权代表递交,但须提供移民局认证代表证或每位申请人的原件SPA及代理人有效政府身份证件复印件.是否需本人出席,以受理单位通知为准."
+    incomplete-docs-consequence:
+      question: "材料不全会怎样?"
+      answer: "未按CDR顺序或材料不全的申请可能不予受理;受理后若需补件,须在规定时间内补齐,否则将延误或被终止办理."
+    processing-time:
+      question: "审批需要多久?"
+      answer: "常见案件自受理起约3–10个工作日完成评估与签注,复杂核查或信息不一致的情况将顺延,具体以受理窗口排程与通知为准."
+    native-born-child:
+      question: "在菲出生的子女如何办理?"
+      answer: "提供出生证明,并随同DFA背书与照会办理依附注记;如出生信息未在照会中明确,可能需要额外关系证明材料."
+    change-of-term-or-rank:
+      question: "任期或职衔变更需要重新办理吗?"
+      answer: "涉及身份关键信息变更时,须通过使团向DFA更新并据此向移民局办理相应变更或注记,确保记录一致与有效."
+    visa-expiring-while-pending:
+      question: "如当前签证即将到期但9E升级未完成怎么办?"
+      answer: "应尽早递交申请并与使团/DFA协调临时安排;如涉及程序性逾期,可能需按通用规则提交复议动议(MR)并承担相关通用费用."
+disclaimers:
+  items:
+    fees-and-policy-may-change: "费用与政策以受理窗口与正式收据(OR)为准,可能随时调整."
+    submission-order-and-format: "文件须按CDR顺序装订于8½×14英寸法式长夹,否则将不予受理或退件."
+    additional-docs-may-be-required: "受理单位可为核验与评估需要要求补充资料,未按时补件将影响时效或导致驳回."
+    translation-may-be-requested: "外文材料如受理单位要求,建议附授权译文."
+service_related:
+  links: {}

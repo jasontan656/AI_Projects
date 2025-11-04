@@ -1,0 +1,519 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["Certificate of Pending Application"]
+department: "BureauOfImmigration"
+name: "待处理申请证明(Certificate of Pending Application)"
+slug: "certificate-of-pending-application"
+type: "reference"
+semantic_profile:
+  intent_id: "certificate-of-pending-application"
+  category: "certification"
+  tags: ["CCS", "pending-application", "BI"]
+service_overview: "由认证与证明科(CCS)签发,证明申请人在移民局系统内存在尚未结案的在办事项,仅用于佐证“案件仍在办理中”,不代表任何结论或结果.流程简明,可由授权代表代办,通常自缴费起3个工作日内可领取有章原件."
+applicability:
+  items:
+    court-or-prosecution-evidence: "作为向法院或检调机关提交的在办状态佐证材料,避免因信息不对称造成不利后果."
+    prove-pending-to-foreign-missions-employers: "向外国使领馆、移民机关或用人单位证明本人在菲移民事务仍在处理中,便于对方审理或展期."
+    school-bank-employment-checks: "申请学校注册、银行合规审查、雇佣背景核验等需要证明“案件未决”的场景."
+    controlled-exit-entry-explanation: "出入境受控或审查期间,说明本人非逾期或逃避审理,而是有正式在办案号."
+    explain-not-provide-final-approval: "需要向第三方解释暂未能提交最终批复文件的原因,提供过渡性证明."
+preconditions:
+  required:
+    has-pending-case-and-receipts: "申请人在移民局确有“未决/在办”的正式案件,且能提供受理凭证(如受理通知、缴费收据等)."
+    submit-ccs-a-cpa-2016-with-endorsement: "正确填写并提交《待处理申请证明申请表》(BI Form No. CCS-A-CPA-2016),由案件承办/听证官员签注后方可受理."
+    fill-form-uppercase-english-no-blanks: "所有表格内容须以英文大写字母填写(仅限英文字母与数字),不得留空项;不适用项填写“N/A”."
+    bind-docs-legal-size-folder: "资料按清单顺序装订成合法纸尺寸(8½×14英寸)文件夹,便于审查与归档."
+    authorized-representative-requirements: "如由授权代表办理,须具备移民局认证资质证件(BI Accreditation ID)或每位申请人各自的原件委托书(SPA),并附代理人政府签发的有效身份证明."
+  not_eligible:
+    case-not-pending-or-closed: "无法证明案件仍处于未决状态,或系统查询显示已核准、已否决、已撤回或已归档."
+    form-not-endorsed-or-invalid-characters: "申请表未由经办官签注、填写不全、使用非英文或含系统不识别字符(如 ñ、é、ü、ç 等)."
+    evidence-inconsistent-or-forged: "证据材料与系统记录不一致、有伪造/涂改痕迹,或经通知补件未能在限定时间内补齐."
+    improper-binding-or-paper-size: "文件未按清单顺序装订或未使用规定尺寸文件夹,现场整改后仍不符合要求."
+    non-cooperation-in-verification: "申请人或授权代表拒不配合进一步核验的."
+pre_required_documents:
+  mandatory:
+    ccs-a-cpa-2016-endorsed-form: "《待处理申请证明申请表》BI Form No. CCS-A-CPA-2016(由案件承办/听证官签名签注)."
+    proof-of-pending-case-or-or-ops-copies: "在办案件的受理/在案证明:如受理通知、缴费收据(OR)、缴费指示单(OPS)复印件等."
+    passport-biodata-page-copy: "申请人有效护照资料页复印件(请携带原件以便核对)."
+    purpose-statement: "申请用途说明(Purpose),简述该证明拟用于何种机关或事项."
+    contact-and-ph-address: "联系方式与在菲住址信息(与表格一致),便于必要时补充核实."
+  conditional:
+    authorized-representation:
+      trigger: "由授权代表办理."
+      documents: ["移民局认证资质证书(BI Accreditation ID)复印件或每位申请人各自的原件委托书(SPA)", "代理人有效政府身份证明原件以供查验"]
+    philippine-civil-registry-documents:
+      trigger: "涉及菲律宾民事登记文件."
+      documents: ["由菲律宾统计署(PSA,原NSO)签发之原件"]
+    foreign-issued-documents:
+      trigger: "涉及境外出具文件."
+      documents: ["签发地主管菲律宾外事机构认证(FSP)或由菲律宾外交部(DFA)认证之原件", "外文文件需附英文译文"]
+    additional-supporting-documents:
+      trigger: "CCS为核验在案事实需要补充材料或说明."
+      documents: ["按CCS书面要求提交的其他支撑材料或说明"]
+process:
+  steps:
+    pre-check-and-consultation:
+      order: "1"
+      title: "预检与咨询(CCS窗口)"
+      description: "咨询用途、核对是否属于在办案件范围,领取/核校表格与清单(约5–10分钟)."
+    form-filling-and-endorsement:
+      order: "2"
+      title: "填表与签注"
+      description: "按要求以英文大写填写表格,并向案件承办/听证官员办理签注(时间依部门安排)."
+    submission-and-acceptance:
+      order: "3"
+      title: "提交与受理(CCS窗口)"
+      description: "提交表格与佐证材料,CCS核对一致性与完整性,出具缴费指示单OPS(约15分钟;如总局示例为窗口23)."
+    payment-at-cashier:
+      order: "4"
+      title: "缴费(现金柜台)"
+      description: "持OPS至收银缴费,领取官方收据OR(约10分钟)."
+    confirm-and-claim-stub:
+      order: "5"
+      title: "回柜确认与取回领证联"
+      description: "出示OR,登记并领取领证凭条(Claim Stub)(约3分钟)."
+    wait-for-issuance:
+      order: "6"
+      title: "等待制证"
+      description: "CCS制作并签章原件,通常自缴费日起3个工作日内完成(内部流程)."
+    pickup:
+      order: "7"
+      title: "领取成品"
+      description: "申请人或授权代表凭Claim Stub与有效身份证件到CCS窗口领取(约5分钟).签发后30日未领取的证书将自动取消."
+    correction-and-reissuance:
+      order: "8"
+      title: "勘误与补制(如需)"
+      description: "如信息与在案记录不符,现场提出更正申请并按指引修正或重制(时间依现场安排)."
+    extra-copies:
+      order: "9"
+      title: "备份与加印(如需)"
+      description: "追加份数按份计费,依OPS与OR为准."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "PendingVisaApplicationCertification.md"
+  items:
+    standard-regular-per-copy:
+      label: "常规 · 每份"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具在案证明的标准收费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "移民局通用检索费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: "不含加急"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    standard-expedite-per-copy:
+      label: "含加急 · 每份"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具在案证明的标准收费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "移民局通用检索费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(选用),如申请加急/认证加急时收取"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "常见整包总额"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "签章原件的待处理申请证明,用于向司法机关、使领馆、用人单位及其他主管机构核验在办状态."
+  items:
+    certificate-original:
+      name: "待处理申请证明原件(有章)"
+      usage: "用于核验在办状态的权威证明材料"
+kpis:
+  processing_time: "一般自缴费起3个工作日内完成制证(高峰期或补件核验将顺延)"
+risks:
+  items:
+    rejection-for-non-english-or-invalid-characters: "表格未用英文大写或包含系统不识别字符将不予受理."
+    cancellation-if-not-claimed-30-days: "证书签发后30日未领取将自动取消,需重新申请并缴费."
+    inconsistency-may-trigger-investigation: "材料与系统记录不一致或存在伪造/涂改,可能触发调查并依法追究责任."
+    additional-documents-may-delay: "审查可要求补充材料或到场说明,未按时补件将暂缓出证."
+    foreign-use-may-require-authentication: "提交至境外机构可能需额外公证/认证手续,请提前确认并预留周期."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(无则填N/A)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "N/A"
+      notes: "如无中间名请填写“N/A”."
+    aliases:
+      label: "其他姓名/别名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期(DD-MMM-YYYY)"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: "^\\d{2}\\s[A-Z]{3}\\s\\d{4}$"
+      example: "01 JAN 1990"
+      notes: "按DD-MMM-YYYY填写(英文月份缩写大写)."
+    sex:
+      label: "性别(M/F)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "M"
+      notes: "限填M或F."
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING, CHINA"
+      notes: ""
+    citizenship-nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINESE"
+      notes: ""
+    address-line1:
+      label: "在菲住址(门牌/街道/Barangay)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 123, 1st Ave, Barangay 123"
+      notes: ""
+    address-city:
+      label: "在菲住址—城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "在菲住址—省"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "在菲住址—邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    address-country:
+      label: "在菲住址—国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    phone-landline:
+      label: "联系电话—座机"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "联系电话—手机"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "+63 917 000 0000"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    organization-name:
+      label: "单位/学校名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    organization-address:
+      label: "单位/学校地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person:
+      label: "联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-phone:
+      label: "联系人电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    related-case-number:
+      label: "关联案号/文号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    representative-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-phone:
+      label: "代理人联系方式"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-gov-id:
+      label: "代理人政府签发身份证件信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "领取时需出示原件."
+    representative-bi-accreditation-id:
+      label: "代理资质(BI Accreditation ID)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与SPA二选一."
+    spa-availability:
+      label: "是否提供原件委托书(SPA)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "与BI Accreditation ID二选一."
+    representation-scope:
+      label: "代办范围"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representation-valid-until:
+      label: "代办有效期限"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    recent-arrival-date:
+      label: "近期入境日期(如需)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如需核对在案记录时提供."
+    recent-arrival-port:
+      label: "近期入境口岸(如需)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如需核对在案记录时提供."
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    pending-application-type:
+      label: "移民局在办案件类型(Pending application for)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9G转换/展延、ECC等"
+      notes: ""
+    receipt-reference-number:
+      label: "受理凭证编号(如OPS/OR编号)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    purpose:
+      label: "申请用途(Purpose)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请表须由案件承办/听证官签名签注后方可受理."
+faq:
+  qas:
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "从缴费之日起,一般3个工作日内完成制证;高峰期或需补件核验的案件将顺延."
+    representation:
+      question: "可以委托他人代办与代领吗?"
+      answer: "可以.需提交代理资质(BI Accreditation ID)或每位申请人的原件委托书(SPA),并在领取时出示代理人的有效政府身份证件与领证凭条."
+    case-already-closed:
+      question: "受理后发现案件其实已结案怎么办?"
+      answer: "CCS将不予出证并告知事实.费用与后续处理以现场政策与票据为准,请在申请前先确认案件状态."
+    form-language:
+      question: "表格是否可以用本国语言填写?"
+      answer: "不可以.表格必须使用英文大写字母填写,且仅限英文字母与数字;不适用项请写“N/A”."
+    lost-claim-stub:
+      question: "丢失领证凭条(Claim Stub)怎么办?"
+      answer: "请尽快到CCS窗口说明并出示有效身份证件与OR,按指引办理挂失与身份核验后方可领取."
+    expedite-availability:
+      question: "是否可以加急?加急费用如何计算?"
+      answer: "是否提供加急以窗口当日安排为准;如启用加急,通常加收快速通道费PHP 500,合计常见为PHP 1,010/份."
+    foreign-legalization:
+      question: "用于境外机构(如使领馆)是否需要额外认证?"
+      answer: "请事先向拟提交机构确认要求;若需外事认证或公证,请自行安排并预留额外时间."
+    multiple-copies:
+      question: "我能获取多份原件吗?"
+      answer: "可以,按“每份”计费.请在递件时说明份数,以便一次性开单."
+disclaimers:
+  items:
+    pending-only-not-approval: "本证明仅证明“案件在办”,不等于任何许可或签证之批准."
+    ops-or-prevail: "如遇最新政策调整,以窗口实际OPS/OR为准."
+    per-copy-charging: "费用按证书“每份”计收,如需多份按份累加."
+    foreign-use-legalization: "用于境外机构时可能需额外公证/认证手续,请提前确认."
+    auto-cancel-30-days: "证书签发后30日未领取将自动取消."
+service_related:
+  links: {}

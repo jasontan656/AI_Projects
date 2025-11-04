@@ -1,0 +1,952 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "特殊工作许可(SWP)签发(艺人与运动员)"
+slug: "special-work-permit-artists-athletes"
+type: "reference"
+semantic_profile:
+  intent_id: "special-work-permit-swp-artists-athletes"
+  category: "work-permit"
+  tags: ["SWP", "artists", "athletes", "Philippines", "BureauOfImmigration"]
+service_overview: "特殊工作许可(Special Work Permit, SWP)适用于计划在菲律宾短期(通常为3–6个月)受雇或执行业务的外籍艺人、演出人员、职业运动员、教练及制作团队成员.本服务协助申请人及主办单位在合规前提下,完成材料准备、窗口递交、缴费与领取许可的全流程,确保活动期间用工合法、税务合规并具主管机关背书."
+applicability:
+  items:
+    foreign-performing-arts-concerts-commercial-shows: "外籍歌手/乐队/舞团赴菲举办演唱会、商演或巡演,含随行制作与技术团队."
+    professional-athletes-coaches-staff-competitions: "外籍运动员参加在菲举办的职业联赛、国际赛事、表演赛或训练营,含教练、训练与随队工作人员."
+    religious-speakers-short-term-ministry-training: "宗教组织安排短期布道/培训活动,需要外籍讲员/传道人在菲短期讲道或授课."
+    film-tv-commercial-short-term-shoot: "广告/综艺/影视短期拍摄项目,境外制作公司在菲进行为期数周至数月的制作活动."
+    short-term-expert-lectures-technical-exchange: "企业邀请境外专家短期授课/技术交流,时间跨度不构成长期雇佣且以特定项目交付为主."
+preconditions:
+  required:
+    registered-sponsor-and-petition-letter: "申请主体为在菲注册的主办单位/用人单位/赛事组织方,并出具致移民局署长的申请函,列明人员名单、行程并承诺依法代扣代缴并申报相关税款."
+    valid-stay-and-entry-proof: "申请人须持有效的临时访客身份(如9(a))或其他有效停留资格,护照资料页、最近一次入境章与当前授权停留期限清晰可辨."
+    competent-authority-endorsement: "具备活动主管机关的背书文件,按活动类型分别提供(演出、体育、宗教等)."
+    tin-and-service-contract: "每位申请人应具税号(TIN),并有服务合约/任命或派遣文件,载明工作内容、期间与报酬."
+    corporate-compliance-consistency: "公司登记合规(SEC/DTI、公司章程、最新GIS/注册信息),董事会授权与税务申报资料与事实一致."
+  not_eligible:
+    missing-endorsement-or-authenticity: "无相应主管机关背书或无法证明活动真实性、合规性者."
+    insufficient-authorized-stay: "授权停留期不足以覆盖拟核发许可的期间,或申请人无法证明合法入境与在菲状态."
+    lack-of-contract-or-tin: "缺乏即将执行的服务合约/活动合同,或无法提供税号及代扣代缴承诺."
+    documents-unverified-or-tampered: "文书来源不明、未按要求认证/翻译,或存在伪造/涂改迹象."
+    conflict-with-long-term-employment-or-watchlist: "与长期雇佣安排相矛盾、拟从事与申报不一致之工作,或已被列入移民局警示名录且未取得无阻证明."
+pre_required_documents:
+  mandatory:
+    petition-letter-to-commissioner: "申请函(致移民局署长),载明外籍人员清单、行程并承诺依法代扣代缴并申报相关税款."
+    cgaf-forms-two-originals: "统一申请表(CGAF)2份原件,按“工作许可”类别填写;一份随本申请,另一份用于(如被要求)办理ACR I-Card."
+    passport-biodata-entry-visa-copies: "护照资料页、最新入境章与有效停留凭证复印件各1份;原件用于CRU/前台扫描后返还."
+    endorsements-by-competent-authorities: "主管机关背书(依活动类型):演出(AMP/OPM + FILSCAP版权授权)、体育(PSC/POC或认可体育组织)、宗教(CBCP/PCEC/INC/JIL等)."
+    notarized-company-affidavit-declaration: "公司宣誓/声明书(经公证):确认为首次申请或展延申请,并承诺申请人仅在该公司/组织及申报职位下工作."
+    tin-proof: "税号证明(TIN):TIN卡或其他可证明TIN的文件(如BIR表格1901/1904,或含TIN的AEP等凭证)."
+    bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+    service-contract-or-appointment: "服务合约/任命或派遣文件原件,明确项目内容、工作地点、期限与报酬方式(境内/境外支付须如实说明)."
+    roster-and-itinerary: "人员/行程清单与活动日程(与申请函一致)."
+  conditional:
+    company-tax-compliance:
+      trigger: "公司与税务合规文件(视公司类型与设立年限)"
+      documents: ["SEC注册证书、公司章程及最新GIS;或DTI商号登记", "董事会决议/授权书(授权办理本案)", "最近一期所得税申报与缴税凭证;或新设实体的BIR登记与季度缴税凭证", "活动所在地市政府营业许可(Mayor’s Permit)"]
+    swp-extension:
+      trigger: "展延(SWP Extension)加提资料"
+      documents: ["既往SWP核准令及官方收据复印件", "继续雇用与税务合规承诺声明(经公证)", "如有行程变更,更新后的背书与日程"]
+    authorized-representation:
+      trigger: "授权代理递件"
+      documents: ["代理人之移民局认证ID复印件", "每位申请人的特别授权书(SPA)原件", "代理人政府签发身份证复印件"]
+    foreign-doc-authentication:
+      trigger: "境外文书认证与翻译要求"
+      documents: ["属地菲律宾使领馆认证或DFA认证之原件", "非英文文件之英文译本"]
+    acr-icard-if-required:
+      trigger: "如被处室要求办理ACR I-Card"
+      documents: ["第二份CGAF", "ACR I-Card申请所需配套材料(依窗口指引)"]
+process:
+  steps:
+    step-1-precheck-and-passport-scan:
+      order: "1"
+      title: "预审与护照扫描(约15分钟)"
+      description: "地点:中央收件单位(CRU)或受理前台.事项:提交完整材料夹(法定长纸尺寸8.5×14英寸),出示护照供扫描;按清单核对文件顺序与完整性."
+    step-2-intake-and-ops-issuance:
+      order: "2"
+      title: "受理与缴费单开具(约15分钟)"
+      description: "地点:Special Permit Unit(窗口2/3).事项:核查是否有警示记录并开具缴费单(OPS),说明应缴费用与缴费指引."
+    step-3-cashier-payment:
+      order: "3"
+      title: "收银缴费(约10分钟)"
+      description: "地点:Cash Unit(窗口26/27).事项:按OPS缴纳政府费用(通常合计PHP 6,440),领取官方收据(OR)与领取凭条."
+    step-4-or-return-and-adjudication:
+      order: "4"
+      title: "回递收据与审理(约1–2个工作日)"
+      description: "地点:Special Permit Unit.事项:提交OR回执,系统录入申请,签发核准令草案;经审核官与外国人控制官(ACO)分级审查与批示."
+    step-5-release-and-closing:
+      order: "5"
+      title: "领证与结案(约5分钟)"
+      description: "地点:Special Permit Unit.事项:凭领取凭条或授权书,领取护照、SWP核准令、BI Clearance Certificate与收据,签收归档."
+  variants: {}
+  notes: "个案可能被要求补充材料或说明;如存在警示记录,需先向认证与证明科(CCS)申请相关证明后方可继续."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "以缴费单(OPS)与官方收据(OR)为准"
+  items:
+    swp-standard-total:
+      label: "SWP · 政府规费(标准总额)"
+      details:
+        standard-total:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,440"
+            value: 6440
+          notes: "常见合计口径,含申请、证书、快速通道与LRF等组合项;缴费地点:收银处窗口26/27."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 6,440"
+          value: 6440
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    swp-breakdown-some-offices:
+      label: "SWP费用明细(部分办事处口径)"
+      details:
+        swp-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 800"
+            value: 800
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        application:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,000"
+            value: 4000
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certificate:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        service:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 40"
+            value: 40
+          notes: "Legal Research Fee"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-filing:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "Express(Filing)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express(Certification)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 6,940"
+          value: 6940
+        notes: "各地执行可能差异;以当地OPS为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    bi-certification:
+      label: "BI无案/认证类费用(如另行开单)"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Certification"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express(如选/要求加急)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510–1,010"
+          value: null
+          range:
+            min: 510
+            max: 1010
+        notes: "Express为可选,最高PHP 1,010."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+            range:
+              min: "int"
+              max: "int"
+          notes: "str"
+    penalties-and-mr:
+      label: "逾期/复议通用项(如触发)"
+      details:
+        overstay-penalty-monthly:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "逾期每月罚金"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        mr:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "复议(MR)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF(复议附加)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否触发及合计以实际OPS为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    acr-icard-if-required:
+      label: "ACR I-Card(如被要求)"
+      details:
+        icard-fee-usd:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "I-Card费(按BSP汇率折算)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通费(如适用)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以当日BSP汇率及OPS/OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "完成申请后可领取许可批文及相关凭证."
+  items:
+    swp-approval-order:
+      name: "SWP核准令"
+      usage: "证明短期特定活动期间的合法工作资格."
+    bi-clearance-certificate:
+      name: "BI Clearance Certificate"
+      usage: "证明无未决记录或限制."
+    official-receipts:
+      name: "官方收据(OR)及缴费凭条"
+      usage: "费用支付凭证与存档."
+kpis:
+  processing_time: "约1–2个工作日"
+risks:
+  items:
+    scope-and-term-limit: "SWP仅覆盖短期特定活动(通常3–6个月),长期工作应办理9G或结合PWP."
+    endorsement-strictness: "演出需行业协会与版权授权并行;体育需PSC/POC或认可协会;宗教需权威宗教组织证明,缺失将退件."
+    tax-compliance: "须履行代扣代缴并申报;跨境支付需声明来源与申报路径,违背税法影响审理与合规."
+    document-consistency: "公司登记、授权、合约与报税信息须一致,信息不符将被要求更正或补充公证/认证."
+    watchlist-procedure: "命中警示需先向认证与证明科(CCS)申请相关证明方可继续."
+    legalization-and-translation: "境外文书须经使领馆或DFA认证,非英文需附英文译本;宣誓类文件须原件并公证."
+    authorized-representation: "代理须提供移民局认证ID或每位申请人的SPA及代理人政府ID,缺失将影响受理."
+    onsite-requirements: "原护照需供CRU/前台扫描;材料需按清单顺序与法定长纸装订."
+    noncompliance-consequences: "未按许可范围用工、逾期、伪造或隐匿信息,可能导致拒件、撤销、罚款、追诉及/或遣返."
+    aep-9g-consistency: "后续PWP/9G阶段职位、雇主与薪资需与SWP阶段一致,避免影响后续签证."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-01-01"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: ""
+    birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+    occupation:
+      label: "职业"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Singer"
+      notes: ""
+    position-intended:
+      label: "拟从事角色/职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Vocalist"
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    address-line1:
+      label: "在菲住址(门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Unit 1203"
+      notes: ""
+    address-street:
+      label: "在菲住址(街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Ayala Ave."
+      notes: ""
+    address-town:
+      label: "在菲住址(村镇/区)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Barangay Bel-Air"
+      notes: ""
+    address-city:
+      label: "在菲住址(市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "在菲住址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "在菲住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1226"
+      notes: ""
+    overseas-address:
+      label: "海外居住地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    tin-number:
+      label: "税号(TIN)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: ""
+    tin-proof-document-number:
+      label: "TIN证明文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-phone:
+      label: "配偶联系方式(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    children-count:
+      label: "子女数量"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 2
+      notes: "超过2名请使用“申请人子女信息表”专表."
+    child1-name:
+      label: "子女1姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child1-date-of-birth:
+      label: "子女1出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child2-name:
+      label: "子女2姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child2-date-of-birth:
+      label: "子女2出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    children-details-form-submitted:
+      label: "已提交子女信息表(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+  dependents:
+    character-reference-name:
+      label: "在菲联系人姓名(Character Reference)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    character-reference-address:
+      label: "在菲联系人住址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  employment:
+    employer-name:
+      label: "公司/组织名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    registration-number:
+      label: "注册号(SEC/DTI)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    entity-type:
+      label: "机构性质(商业/宗教/其他)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "商业"
+      notes: ""
+    registered-address:
+      label: "注册地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    office-phone:
+      label: "办公电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    office-email:
+      label: "办公邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-name:
+      label: "负责人或被授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-title:
+      label: "被授权代表职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    board-resolution-number:
+      label: "董事会授权/决议编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    representation-method:
+      label: "申请方式(本人/授权代表)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "授权代表"
+      notes: ""
+    rep-agency-name:
+      label: "代理机构/律师事务所名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-accreditation-number:
+      label: "移民局认证号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-contact-person:
+      label: "代理联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-phone:
+      label: "代理联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    latest-entry-stamp-image:
+      label: "最新入境章页图像"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可上传扫描件/照片"
+    current-authorized-stay-until:
+      label: "当前在菲授权停留最后日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history:
+    current-immigration-status:
+      label: "现有移民身份类别(如9(a))"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9(a)"
+      notes: ""
+    application-type:
+      label: "申请类型(首次/展延)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "首次"
+      notes: ""
+    intended-duration:
+      label: "拟申请期限(3个月/6个月)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "6个月"
+      notes: ""
+    acr-number:
+      label: "ACR号(如已持ACR/CRN)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-issue-date:
+      label: "ACR签发日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-expiry-date:
+      label: "ACR有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    activity-type:
+      label: "活动类型(演出/体育/宗教/拍摄/培训)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "演出"
+      notes: ""
+    itinerary-details:
+      label: "详细行程与日程(城市、场馆、日期)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contract-number:
+      label: "服务合约编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contract-signing-date:
+      label: "合约签订日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    contract-term:
+      label: "合约期限"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2025-01-01 至 2025-06-30"
+      notes: ""
+    remuneration-description:
+      label: "报酬说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    payment-path:
+      label: "支付路径(境内或境外)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "境内"
+      notes: ""
+    endorsing-agency-category:
+      label: "主管机关背书类别(AMP/OPM、FILSCAP、PSC/POC等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AMP + FILSCAP"
+      notes: ""
+    endorsement-reference-number:
+      label: "背书文号/参考号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    mayor-permit-number:
+      label: "市政府营业许可(Mayor’s Permit)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bir-withholding-arrangement:
+      label: "税务承诺与代扣代缴安排(BIR申报路径)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "提交CGAF及相关资料即表示同意依数据隐私要求收集与处理个人信息."
+  certification_statement: "申请函/宣誓/声明文件须由授权代表签署并经公证,所填资料真实完整且愿承担法律责任."
+faq:
+  qas:
+    validity-and-extension:
+      question: "SWP有效期多久?可否延长?"
+      answer: "SWP通常核发3–6个月.确需延长的,可提交展延申请并提供续期行程、合约与持续税务承诺;如工作性质转为长期,应办理9G或其他相应签证."
+    performance-copyright-authorization:
+      question: "我只有演出协会背书,能否先行递交,版权授权稍后补?"
+      answer: "不建议.演出场景须同时具备行业协会与版权授权(如AMP/OPM与FILSCAP),否则可能直接退件或要求补件,影响排期."
+    tin-before-apply:
+      question: "尚未取得TIN能否先申请?"
+      answer: "不可以.每位申请人需提交TIN或有效证明文件.主办单位亦须明确代扣代缴与申报承诺."
+    work-before-approval:
+      question: "在SWP核准前可以开始排练或少量工作吗?"
+      answer: "不得在未获许可前从事有报酬的工作或与许可范围相关的业务活动.提前开展工作可能构成违规."
+    fee-difference-across-offices:
+      question: "为什么不同办事处的SWP费用会有差异?"
+      answer: "多数页面显示总额PHP 6,440,但也有办事处按明细合计为PHP 6,940.以实际开具的缴费单(OPS)与官方收据(OR)为准."
+    authorized-representative:
+      question: "是否必须本人到场?可否授权他人办理?"
+      answer: "可授权代理办理.需提交移民局认证ID或每位申请人的SPA原件与代理人有效政府ID复印件;但评估/面谈环节可能要求申请人或请愿人携带原证件到场."
+    acr-icard-requirement:
+      question: "SWP是否一定需要ACR I-Card?"
+      answer: "一般不强制,但个别案件或按处室要求可能需办理ACR I-Card.若被要求,需提交第二份CGAF并另行缴纳I-Card费用(USD 50按BSP汇率折算+快通费PHP 500)."
+    itinerary-adjustment:
+      question: "如果行程临时调整怎么办?"
+      answer: "应及时提交更新后的行程、相应主管机关背书与公司宣誓说明;如已展延,需同步提供既往SWP核准令与官方收据复印件以维持材料连续性."
+disclaimers:
+  items:
+    ops-or-prevail: "以缴费单(OPS)与官方收据(OR)为最终依据."
+    supplementary-docs-may-be-required: "个案可能被要求补充材料或说明,具体以窗口审理意见为准."
+    foreign-doc-legalization: "境外文书须按要求认证并附英文译本;宣誓类文件须为原件并经公证."
+service_related:
+  links: {}

@@ -1,0 +1,679 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "新增联络官/代表资质认证(已获认证机构)"
+slug: "consultancy-or-corporations-representative-or-liaison-officer"
+type: "reference"
+semantic_profile:
+  intent_id: "biau-liaison-officer-addition"
+  category: "accreditation"
+  tags: ["BIAU","liaison-officer","representative","accredited-entities"]
+service_overview: "本服务面向已取得移民局认证处(BIAU)资质的旅行社、律师事务所、咨询公司及其他私营机构,用于新增或更换在移民局对接的联络官/代表,完成资格审查、缴费与领取新的BIAU身份证件(ID).通过本流程完成新增联络官,有助于机构合法、规范地办理客户涉移民事务,提升办理效率并确保遵守移民局防伪打假、数据隐私与廉政相关规定."
+applicability:
+  items:
+    business-growth-need-additional-liaison: "机构业务量增长,需增设新的联络官/代表以分担窗口办理工作."
+    replace-former-liaison: "原联络官离职、调岗或停用需更换为新任人员."
+    new-branch-needs-liaison: "机构新增分支(含异地办事处)需要配置对应联络官."
+    replace-noncompliant-liaison: "为满足移民局培训及合规要求,替换未达标或存在限制情形的联络人员."
+    short-term-staffing-for-bulk-processing: "短期内需补充可用人手以保障批量业务办理的连续性."
+preconditions:
+  required:
+    accredited-entity-valid-status: "机构须为已获BIAU正式认证且资质处于有效状态的私营主体(如旅行社、律师/顾问机构等)."
+    liaison-employed-and-trained: "拟任联络官已被机构正式任用/聘用,并完成移民局指定的联络官培训."
+    nbi-clearance-passed: "拟任联络官通过国家调查局(NBI)背景审查(提供有效NBI无犯罪证明)."
+    no-kinship-affidavit: "拟任联络官出具无亲属关联宣誓书,声明在移民局内不存在三等亲以内之血亲或姻亲."
+    affidavit-of-undertaking-notarized: "机构同意并提交经公证的承诺宣誓书(Affidavit of Undertaking),承诺不递交虚假材料、不从事“黄牛/跑单”行为,并遵守数据隐私与健康安全规范."
+  not_eligible:
+    not-accredited-or-suspended: "机构尚未取得或已被暂停/取消BIAU认证."
+    nbi-adverse-or-kinship-conflict: "拟任联络官NBI审查显示不良/涉案记录,或存在与移民局人员三等亲以内亲属关系."
+    training-incomplete-or-expired-or-fraud: "培训未完成或培训证明过期、材料不齐全或存在伪造嫌疑."
+    unresolved-violations-or-fines: "机构仍有未结清的违规案件、罚款或被调查投诉未妥善处理."
+    old-id-not-cancelled: "未按要求先行办理离职人员的旧联络官ID注销与交回."
+pre_required_documents:
+  mandatory:
+    application-letter: "机构申请函(加盖公章,说明新增原因与拟任人信息)."
+    application-forms-biau-and-2014-03-006: "指定申请表:BI指定格式之联络官/代表申请表(BIAU窗口提供)及 BI Form 2014-03-006."
+    employment-proof: "任用/雇佣证明文件(聘用书或任命书,载明职务与生效日期)."
+    nbi-clearance: "国家调查局(NBI)无犯罪证明(在有效期内)."
+    no-kinship-affidavit-notarized: "无亲属关联宣誓书(声明与移民局人员无三等亲以内血/姻亲关系,须经公证)."
+    affidavit-of-undertaking-notarized: "承诺宣誓书(Affidavit of Undertaking,须经公证):承诺不递交虚假材料、不从事“跑单/黄牛”、客户本人签名按印、离任即交回ID、接受移民局对保证金之罚没、接受暂停/禁办/取消认证、遵守健康防疫与数据隐私规则、仅在公司目的范围内执业等."
+    ids-and-corporate-docs: "机构与拟任联络官身份证明:机构证照复印件(营业执照/注册文件);机构ID/胸卡(如有)及拟任人员政府签发身份证件复印件."
+    specimen-signature-card: "签名样本卡(Specimen signature card,按BIAU格式)."
+    training-certificate: "联络官培训结业证明(最近一期培训,附期次信息)."
+    contact-info-and-supplementary-forms: "其他:联系信息单、电子邮箱与联系电话;如有BIAU要求的补充表格一并提交."
+  conditional:
+    replacement-or-removal:
+      trigger: "替换/移除原联络官"
+      documents: ["旧BIAU联络官ID原件以注销","如遗失,附遗失声明及警方报案证明"]
+    branch-expansion:
+      trigger: "异地分支增员"
+      documents: ["分支机构设立或授权文件"]
+    change-of-name-or-signature:
+      trigger: "名称/签字样变更"
+      documents: ["相关变更证明","更新后的签名样本卡"]
+process:
+  steps:
+    step-1-submission-and-intake:
+      order: "1"
+      title: "递交申请与收件预审(BIAU收件窗口,约1个工作日)"
+      description: "机构提交申请函、表格与全套材料;收件人员进行完整性检查并登记案件号."
+    step-2-review-and-ops:
+      order: "2"
+      title: "资料审查与出具缴费单(BIAU审核岗,约3个工作日)"
+      description: "BIAU进行资格核验,必要时书面要求补件;通过后签发缴费通知单(Order of Payment Slip, OPS)."
+    step-3-payment-and-proof:
+      order: "3"
+      title: "缴费与回传凭据(收银半日-1个工作日;BIAU复核约2-3个工作日)"
+      description: "机构持OPS至收银缴纳培训费与ID费,取得正式收据;将收据复印件回传BIAU,进入最终拟批阶段."
+    step-4-approval-and-id-issuance:
+      order: "4"
+      title: "审批与制证(OIC签批/技术复核)"
+      description: "由负责人(OIC)与技术人员复核签批;BIAU制作并发放新联络官ID或出具驳回函.全流程参考时长:约6个工作日(个案因补件/排队可能延长)."
+  variants: {}
+  notes: "具体时长以窗口排队、培训档期与补件次数而定;请预留缓冲并保持电话/邮件畅通以便联系."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "BIAU业务口径与公民宪章;以OPS/OR为准"
+  items:
+    per-officer-standard:
+      label: "标准费用 · 每位联络官"
+      details:
+        training-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,000"
+            value: 5000
+          notes: "每位联络官一次性收取,缴于收银(Cash Section)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        id-card-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "BIAU联络官ID制卡与发证费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        notary-and-copying:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "公证与复印等第三方费用,依实际发生,由申请机构自行承担,不计入移民局官方票据."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        resubmission-delay-cost:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "逾期补件/二次往返成本:非收费项目;可能延长办理时长."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "官方费用合计通常为 PHP 6,000(培训费+ID费),不含第三方费用;具体以OPS/OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "审批通过后可领取新的BIAU联络官身份证件(ID);如不通过,将出具驳回函."
+  items:
+    biau-liaison-id-card:
+      name: "BIAU联络官ID卡"
+      usage: "作为机构在移民局办理业务的授权身份凭证,供窗口核验."
+    rejection-letter:
+      name: "驳回函"
+      usage: "说明未获批准原因,指导后续补正或重新申请."
+kpis:
+  processing_time: "参考约6个工作日(因补件、培训排期与排队可能延长)."
+risks:
+  items:
+    undertaking-and-penalties:
+      "合规承诺与法律后果:如提交虚假材料或从事“跑单/黄牛”等违规,移民局可罚没保证金、暂停或取消认证,并对人员追究法律责任."
+    kinship-conflict:
+      "亲属回避:拟任联络官与移民局在职人员如存在三等亲以内血亲或姻亲关系,原则上不予受理;隐瞒不报将驳回并记入合规档案."
+    validity-of-training-and-nbi:
+      "培训与证件时效:培训结业证明与NBI无犯罪证明需在有效期内,过期将退件或延长周期."
+    old-id-management:
+      "旧证管理:更换/离职须交回旧联络官ID;遗失需提交遗失声明与警方报案凭证,否则影响新证核发."
+    authenticity-and-signature:
+      "资料真实性与签名:所有申请表须由拟任联络官本人签名并按指纹;提交材料须真实合法."
+    data-privacy:
+      "数据隐私:申请人同意为办理目的收集、使用与分享个人信息,并受《数据隐私法》约束."
+    scope-of-practice:
+      "业务边界:联络官仅在公司章程与认证范围内执业,不得超范围办理."
+    supplementation-and-interview:
+      "过程管理:BIAU可要求补件或面谈;未按期补件可能被视为放弃或需重新排队."
+    payment-and-receipts:
+      "费用与票据:官方费用须凭OPS至收银缴纳并索取OR;第三方费用自行承担."
+    timeline-advice:
+      "时限提示:全流程参考约6个工作日,高峰与补件情形建议预留更长时间."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与身份证一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Wang"
+      notes: ""
+    first-name:
+      label: "名(与身份证一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Li"
+      notes: ""
+    middle-name:
+      label: "中间名(如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-names:
+      label: "曾用名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多个请全部列出."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    national-id-number:
+      label: "公民身份证号/国家ID编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    residence-address-line1:
+      label: "居住地址-街道/门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    residence-address-city:
+      label: "居住地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    residence-address-province:
+      label: "居住地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    residence-address-country:
+      label: "居住地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    residence-address-postal-code:
+      label: "居住地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "name@example.com"
+      notes: ""
+    position-title:
+      label: "拟任职务"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Liaison Officer"
+      notes: ""
+    start-date:
+      label: "到岗/生效日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    gov-id-type:
+      label: "政府签发身份证件类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Passport / UMID / Driver’s License"
+      notes: ""
+    gov-id-number:
+      label: "政府签发身份证件编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gov-id-issue-date:
+      label: "政府证件签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    gov-id-expiry-date:
+      label: "政府证件到期日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-clearance-number:
+      label: "NBI无犯罪证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-issue-date:
+      label: "NBI签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-valid-until:
+      label: "NBI有效期限"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    training-batch:
+      label: "培训期次"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    training-completion-date:
+      label: "培训结业日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    training-certificate-number:
+      label: "培训证书编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    kinship-declaration:
+      label: "亲属关系声明(与移民局人员三等亲以内之有无)"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "true=存在亲属关系;false=不存在亲属关系."
+    signature-specimen:
+      label: "签名样本"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "按BIAU签名卡格式提交."
+    thumbprint:
+      label: "指纹(拇指印)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "按BIAU签名卡指定位置按印."
+    emergency-contact-name:
+      label: "紧急联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-relationship:
+      label: "紧急联系人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-phone:
+      label: "紧急联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-phone-mobile:
+      label: "配偶联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "未成年子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多名,请分别提供."
+    child-date-of-birth:
+      label: "未成年子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "如有多名,请分别提供."
+  dependents: {}
+  employment:
+    employer-legal-name-zh:
+      label: "机构全称(中文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与注册一致."
+    employer-legal-name-en:
+      label: "机构全称(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与注册一致."
+    registration-number:
+      label: "注册号/营业登记编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    entity-type:
+      label: "主体类型(公司/合伙/独资)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Company"
+      notes: ""
+    registered-address-line1:
+      label: "注册地址-街道/门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    registered-address-city:
+      label: "注册地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    registered-address-province:
+      label: "注册地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    registered-address-country:
+      label: "注册地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    registered-address-postal-code:
+      label: "注册地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    biau-accreditation-number:
+      label: "BIAU认证编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于核对资格状态."
+    biau-accreditation-expiry:
+      label: "BIAU认证有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-name:
+      label: "业务联系人姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-title:
+      label: "业务联系人职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-phone:
+      label: "业务联系人电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+    contact-person-email:
+      label: "业务联系人邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "contact@example.com"
+      notes: ""
+    branch-name:
+      label: "分支机构名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    branch-address-line1:
+      label: "分支机构地址-街道/门牌(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    branch-address-city:
+      label: "分支机构地址-城市(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    branch-authorization-doc-number:
+      label: "分支授权文件编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization: {}
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    data-privacy-consent:
+      label: "数据隐私告知与同意"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于办理目的之个人信息收集、使用与共享."
+    affidavit-of-undertaking-ack:
+      label: "承诺宣誓书提交确认"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "承诺不递交虚假材料、不从事跑单/黄牛等违规."
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "申请人已被告知并同意依据《数据隐私法》收集、使用与分享个人信息."
+  certification_statement: "申请人/机构提交并签署承诺宣誓书,相关表格需本人签名与拇指印确认."
+faq:
+  qas:
+    processing-time:
+      question: "办理周期一般多久?"
+      answer: "参考约6个工作日;如需补件或遇培训/审批排队会相应延长.按时提交齐备材料是缩短时长的关键."
+    nbi-validity:
+      question: "NBI无犯罪证明有有效期要求吗?"
+      answer: "建议提交近期出具的有效证明(通常以近6个月为宜);过期文件可能被要求更新后重报."
+    old-id-not-returned:
+      question: "原联络官离职未交回ID会怎样?"
+      answer: "需先办理注销并交回旧ID;遗失需提交遗失声明与警方报案证明.未妥善处理将影响新增人员证件核发."
+    fraud-consequence:
+      question: "若材料被判定为虚假或存在“跑单/黄牛”行为,会有什么后果?"
+      answer: "移民局可暂停或取消机构认证、罚没保证金、对责任人员提起刑事/行政程序,并将案件纳入合规记录,影响后续所有申请."
+    deposit-requirement:
+      question: "是否需要缴纳保证金或增加保证金额度?"
+      answer: "新增联络官仅缴纳培训费与ID费;既有保证金按原额度执行,除非移民局另有书面要求."
+    reapply-after-denial:
+      question: "申请被驳回后可以再次申请吗?"
+      answer: "可以.BIAU将出具驳回函并列明原因;机构按指示补正后可重新提出申请."
+    online-submission-payment:
+      question: "能否线上缴费或提交?"
+      answer: "以BIAU窗口收件与收银缴费为主;如开放线上渠道将由BIAU另行通知.请以OPS和窗口指引为准."
+    multiple-additions:
+      question: "是否可以一次性新增多名联络官?"
+      answer: "可以,但需为每位联络官分别提交完整材料并分别缴费;BIAU将逐一审查与制证."
+disclaimers:
+  items:
+    ops-or-prevails:
+      "所有金额与收费以BIAU签发的OPS及收银OR为准,若官方价目更新以最新版本为准."
+    documents-may-be-requested:
+      "BIAU有权要求补件、面谈或核验原件,未按期提交可能导致退件或延迟."
+    third-party-fees:
+      "公证、复印、快递等第三方费用由申请机构自行承担,不计入移民局官方票据."
+service_related:
+  links: {}

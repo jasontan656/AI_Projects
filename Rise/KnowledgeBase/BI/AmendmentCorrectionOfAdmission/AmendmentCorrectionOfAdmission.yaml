@@ -1,0 +1,603 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "入境类别更正(Amendment/Correction of Admission)—菲律宾辖区"
+slug: "amendment-correction-of-admission"
+type: "reference"
+semantic_profile:
+  intent_id: "amendment-correction-of-admission"
+  category: "entry-status-correction"
+  tags: ["IRD","Balikbayan","9G","13A","9F","SRRV","ACR-I-Card"]
+service_overview: "本服务面向在菲律宾移民外办辖区入境时,因未能出示必要文件或柜台作业疏漏,导致入境类别或批注错误的外籍人士.通过提交证明与说明,可由移民法规处(IRD)签发更正命令,由受理办公室在护照上实施更正,恢复并确认正确的入境身份与停留权益.入境类别更正可确保后续延签、登记卡、出境许可、签证转换/展延等事项时,身份信息与系统记录一致,降低逾期停留、手续被拒或额外复核的风险."
+applicability:
+  items:
+    balikbayan-missed-annotation: "入境时应获“Balikbayan”待遇但因柜台未勾选/未盖章/未编码而未获相应批注,需要补件更正."
+    long-term-visa-mismatch: "持长期或特别签证(如 9G、13A、9F、SRRV 等)入境时,因“未勾选/未编码/未盖章”导致系统与护照批注与实际签证不一致."
+    family-proof-not-shown: "同行配偶/子女系权利性身份的证明未当场出示(结婚证/出生证明等),入境被错误归类,需要补交证明更正."
+    wrong-category-recorded: "入境窗口误将非 9(a) 身份登记为临时访客或其他类别,需按证据恢复正确类别."
+    subport-cases-forward-to-ird: "经菲律宾辖区子港(分港)递件的错误入境记录需转送 IRD 总部核准后由受理处执行更正."
+preconditions:
+  required:
+    personal-submission-or-authorized: "申请人须亲签提交,或由授权代表递交并附授权书与双方身份证件复印件."
+    passport-and-supporting-documents: "提交护照原件(含最新入境章)及与申称身份相符的支持文件."
+    within-ph-jurisdiction: "案件必须属于菲律宾移民外办辖区入境并由其受理;非菲律宾入境者应向相应办公室申请."
+    clean-record-check: "申请人须在移民局无不良记录(由 IRD/BSI 进行核查)."
+    clear-reason-matching-form: "申请理由明确且与表格选项一致(如“未勾选/未编码/未盖章”等),并提供书面说明."
+  not_eligible:
+    visa-9a-not-covered: "9(a) 临时访客签证情形不在本更正范围内."
+    non-ph-entry-or-other-office: "非菲律宾辖区入境或需其他处室专属流程之案件."
+    false-or-inconsistent-docs: "提交虚假文件、信息不实或与系统记录明显不符且无法合理解释者."
+    duplicate-or-adjudicated: "同一事项重复申办未撤回或已有裁决在先."
+    pending-removal-proceedings: "涉及遣返/驱逐等强制程序未结案者."
+pre_required_documents:
+  mandatory:
+    cgaf-ird01qf006: "综合通用申请表(BI FORM NO. IRD01.QF.006 Rev. 03;勾选“Amendment/Correction of Admission Status”,填写“Reason/Explanation”,签署数据隐私同意与申请人/授权代表签名)."
+    passport-original-with-latest-entry: "护照原件(个人信息页、最新入境章页,建议另附复印件各1份)."
+    boarding-pass-or-itinerary: "最新入境信息辅助材料(如登机牌/行程单,如有)."
+    contact-and-address: "联系方式与地址信息(菲律宾居留地址、手机/座机、电子邮箱)."
+  conditional:
+    visa-holder:
+      trigger: "持长期或特别签证(如 9G、13A、9F、SRRV 等)"
+      documents: ["签证贴签页复印件","ACR I-Card 登记卡复印件(如已签发)"]
+    balikbayan:
+      trigger: "Balikbayan 情形需证明与菲律宾公民/前菲律宾公民或其配偶/父母关系"
+      documents: ["结婚证复印件(如配偶关系)","出生证明复印件(如亲子关系)"]
+    authorized-representative:
+      trigger: "授权代表代办"
+      documents: ["授权书","代办人身份证件复印件"]
+    identity-verification:
+      trigger: "身份识别或同名核验需要时"
+      documents: ["同名不同人证明(NTSP)或旅行记录证明(如被要求)"]
+process:
+  steps:
+    submission-initial-screening:
+      order: "1"
+      title: "递交与初审(菲律宾外办接待窗口)"
+      description: "提交申请表与材料,窗口核对完整性与一致性,签收并出具领取凭条(约 5 分钟)."
+    forwarding-to-ird:
+      order: "2"
+      title: "转送与登记(如由子港递件)"
+      description: "对来自分港的案件制作转送清单并寄送 IRD 总部进行核准,产生第三方快递费用(转送约 2 天;本地直办无此环节)."
+    record-check:
+      order: "3"
+      title: "纪录核查(IRD)"
+      description: "进行不良纪录检核并建立处理批注(约 10 分钟,传输时间另计)."
+    review-and-issuance:
+      order: "4"
+      title: "审核与签发(IRD)"
+      description: "审核证据后签发“更正命令”(Amendment Order),回传至受理办公室(约 10 分钟,传输时间另计)."
+    implement-correction:
+      order: "5"
+      title: "执行更正(菲律宾外办)"
+      description: "依命令在护照上实施更正,并完成系统批注(约 10 分钟/本护照)."
+    release-passport:
+      order: "6"
+      title: "发还证件"
+      description: "申请人凭领取凭条领回护照,当场核对更正结果(约 1 分钟)."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "AmendmentCorrectionOfAdmission.md"
+  items:
+    gov-fee-main:
+      label: "政府规费 · 柜台更正"
+      details:
+        gov-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "本业务柜台更正不收取移民局规费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 0"
+          value: 0
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    third-party-courier:
+      label: "第三方费用 · 分港转送快递"
+      details:
+        courier:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "案件经分港转送之快递费按承运人标准计收(由申请人承担)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    optional-certification:
+      label: "可选增值服务 · 认证类证明"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Certification Fee(在案证明/记录认证/NTSP/旅行记录证明等)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        legal-research-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "可选加急服务(如选)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "最高合计(含可选加急)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "完成更正后,护照入境类别与系统记录一致."
+  items:
+    amendment-order:
+      name: "更正命令(Amendment Order)"
+      usage: "由 IRD 签发并回传受理处作为执行依据."
+    corrected-passport-annotation:
+      name: "护照入境类别批注已更正"
+      usage: "在护照上完成正确类别与停留权益之批注,供后续延签、登记卡、出境许可或签证转换/展延使用."
+kpis:
+  processing_time: "外办直接受理:约 36 分钟(不含候补与传输时间);分港转送:约 4 天 36 分钟(含转送与回传时间,实际以快递与批次为准)."
+risks:
+  items:
+    untimely-correction-impact: "未及时更正可能影响后续延签、登记卡、出境许可或签证转换/展延,甚至影响合法停留认定."
+    false-info-legal-consequence: "任何虚假陈述或伪造文件可导致即时驳回,并可能引发进一步法律行动."
+    scope-limitations: "本服务仅限菲律宾移民外办辖区且不适用于 9(a) 临时访客."
+    pending-alerts-may-delay: "办理前的不良记录核查如发现未结警示或案件,可能需先行处理或补充说明."
+    courier-and-transit-delay: "分港转送将产生快递费用与额外传输时间,整体进度受承运与批次影响."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名字(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(与护照一致,如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期(日-月-年)"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "15-08-1990"
+      notes: "请按护照载明的出生日期填写."
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: "按护照载明."
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "与证件一致."
+    passport-number:
+      label: "护照号码(现用)"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: "用于核对历史入境记录."
+    passport-number-previous:
+      label: "护照号码(旧护照,如适用)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于通知与补件."
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: "用于通知与补件."
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: "用于电子回执与通知."
+    residence-address-line1:
+      label: "菲律宾居住地址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 123, ABC Condo, 123 Main St"
+      notes: "登记地址."
+    residence-address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    residence-address-province:
+      label: "省/大都会区"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    residence-address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    residence-address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有多名,请逐一提供."
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "日-月-年."
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与所持签证相关且有助核验时提供."
+    employer-address-line1:
+      label: "雇主地址(街道/门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-contact-person:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-contact-phone:
+      label: "雇主联系电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "便于必要时核实."
+    school-name:
+      label: "学校名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address-line1:
+      label: "学校地址(街道/门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-contact-phone:
+      label: "学校联系电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    authorized-representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如由授权代表代办时填写."
+    authorized-representative-id-number:
+      label: "授权代表身份证件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-phone:
+      label: "授权代表联系电话"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-letter-number:
+      label: "授权书编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    latest-entry-date:
+      label: "最新入境日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "应与护照入境章一致."
+    flight-number:
+      label: "入境航班号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR123"
+      notes: "用于口岸比对."
+    bibs-number:
+      label: "BIBS 编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "移民系统引用号."
+    current-admission-status:
+      label: "当前记录的入境类别/状态"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9G"
+      notes: "用于识别需更正的条目."
+    application-category:
+      label: "申请类别勾选"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Amendment/Correction of Admission"
+      notes: "在 CGAF 表格中勾选."
+    reason-explanation:
+      label: "原因说明"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "未勾选/未编码/未盖章"
+      notes: "或其他简要事实说明."
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    visa-sticker-info:
+      label: "签证贴签信息(签证号)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如持长期/特别签证."
+    visa-validity:
+      label: "签证有效期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-icard-number:
+      label: "登记卡(ACR I-Card)号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如已签发."
+    acr-icard-expiry:
+      label: "登记卡(ACR I-Card)有效期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    relationship-proof-summary:
+      label: "关系证明要点(Balikbayan 情形)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "概述结婚证/出生证明关键信息."
+acknowledgement_flags:
+  data_privacy_consent: "申请表须签署数据隐私同意(Data Privacy Consent)."
+  certification_statement: "申请人/授权代表须在申请表上签署真实性声明/证明(Certification/Declaration)."
+faq:
+  qas:
+    not-ph-entry:
+      question: "不是在菲律宾入境,还能在菲律宾办理更正吗?"
+      answer: "不能.本服务限菲律宾移民外办辖区入境的案件,其他口岸须向对应的外办或主办单位提出."
+    government-fee:
+      question: "办理需要支付政府费用吗?"
+      answer: "柜台更正不收取移民局规费;如由分港转送,将产生由申请人承担的第三方快递费用."
+    processing-time:
+      question: "通常需要多长时间?"
+      answer: "菲律宾外办直接受理约 36 分钟;经分港转送者,整体约需 4 天 36 分钟(以转送与回传耗时为准)."
+    applicability-9a:
+      question: "9(a) 临时访客能否使用本服务?"
+      answer: "不适用.9(a) 情形不在“入境类别更正”范围内,应按对应延签或其他流程处理."
+    representative:
+      question: "可由他人代办吗?"
+      answer: "可以.需提供授权书、申请人与代办人身份证件复印件,并由申请人或授权代表在表格上签名."
+    wrong-category-previous:
+      question: "如果曾用错误类别办理了其他手续怎么办?"
+      answer: "应先完成入境类别更正,再由承办窗口评估既往手续是否需要复核或补充文件;具体以窗口要求为准."
+    need-acr-or-visa:
+      question: "是否需要提交登记卡或签证贴签?"
+      answer: "如持长期/特别签证且已签发登记卡或有签证贴签,请附相应复印件,以便比对与核验."
+    boarding-pass-missing:
+      question: "未能提供登机牌或行程单会影响办理吗?"
+      answer: "非必需,但建议提供以加速核对;受理以护照入境章与系统记录为准,必要时可被要求补件."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

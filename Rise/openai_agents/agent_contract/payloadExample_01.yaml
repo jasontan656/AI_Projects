@@ -1,0 +1,47 @@
+cache_session_id: sess_placeholder_12345  # Static session prefix reused across prompt sessions for caching
+messages:
+  - role: system
+    cache_control:
+      type: prompt_session
+      session_id: sess_placeholder_12345  # Must stay constant for the same conversation skeleton
+    content: |-
+      {{system_role_block}}
+
+  - role: system
+    cache_control:
+      type: prompt_session
+      session_id: sess_placeholder_12345
+    content: |-
+      {{input.chat_context_summary}}
+
+  - role: user
+    content:
+      user_prompt: "Hello, I need help with a passport renewal."
+      chat_context_summary: []  # Prior turn summaries (empty for skeleton bootstrap)
+      cached_state:
+        session_id: d3de5e15-87ab-4a80-9f65-b4e1a251cb2
+        created_at: "2025-11-01T17:16:00.000000+00:00"
+        updated_at: "2025-11-01T17:16:37.449967+00:00"
+        nextStep: judgement_v1
+        guard:
+          violations: 1
+          locked_until: null
+          last_violation_at: "2025-11-01T17:16:37.449967+00:00"
+        system_role_block: |-
+          You are Ms. Rise, a courteous service secretary from 4 Ways Group.
+          ...
+        context:
+          agency_index: agency_index_v1
+          knowledge_base_dictionary: {}
+          service_index: null
+        stages: {}  # Skeleton has not yet recorded stage outputs
+      runtime_directive: null  # Populate if the current turn injects extra instructions
+
+store_plan:
+  - stage_id: judgement_v1
+    type: prompt_input  # This tells the pipeline to persist the prompt payload for future stages
+    content:
+      user_prompt: "Hello, I need help with a passport renewal."
+      guard_snapshot:
+        violations: 1
+        locked_until: null

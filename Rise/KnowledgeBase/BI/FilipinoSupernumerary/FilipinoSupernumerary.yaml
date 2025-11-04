@@ -1,0 +1,812 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "菲律宾籍超编船员登船/换班许可"
+  - "超编船员许可"
+department: "BureauOfImmigration"
+name: "Filipino Supernumerary(菲律宾籍超编船员登船/换班许可)"
+slug: "filipino-supernumerary"
+type: "reference"
+semantic_profile:
+  intent_id: "filipino-supernumerary"
+  category: "crew-permit"
+  tags:
+    - "BSS"
+    - "supernumerary"
+    - "seafarer"
+    - "philippine-citizen"
+service_overview: "本服务由移民局海湾服务科(BSS)受理,面向不在原船员名单内、需临时增补的菲律宾籍人员(含随行配偶/子女如适用).BSS负责文件核验与不良纪录查核并形成审批意见,经科长核准后,由莱加斯皮移民区办完成系统编码与实施,确保申请人登船/换班的出入境手续合法、可追溯.流程前端统一收件与公告结果、后端一次性编码实施,适合紧凑航程下的合规登船或换班安排."
+applicability:
+  items:
+    temporary-augmentation-onboard:
+      "航运公司在靠泊期间临时增补不在原定名单内的菲律宾籍人员上船执行特定任务."
+    joining-spouse-or-child:
+      "为菲律宾籍配偶或未成年子女办理随同登船(joining spouse/child)手续,计划在国外港口离船."
+    emergency-replacement:
+      "既有船员突发疾病/离岗,由菲律宾籍超编人员短期替补并随船出境."
+    route-or-plan-adjustment:
+      "船舶调整航线或作业计划,增派菲律宾籍技术人员随船执行单次航段任务."
+    foreign-port-disembarkation-arranged:
+      "计划于下一外国港口为该菲律宾籍超编人员办理下船返国或转机,需提前落实相应签证与证明."
+preconditions:
+  required:
+    filipino-citizen-and-supernumerary:
+      "申请对象为菲律宾公民,且确属“超编/临增”性质,不在原船员名单内."
+    company-request-and-guarantee-letter:
+      "由航运/人力代理公司正式出具致移民局专员的申请函与原件担保函."
+    no-derogatory-stamp:
+      "通过不良纪录核验并取得“无不良纪录”验证(No Derogatory Stamp)."
+    vessel-arrival-or-deployment-proof:
+      "提供船舶抵港或派遣通知,清晰说明登船时间、航线与安排."
+    valid-travel-requirements:
+      "具备有效护照、旅行税或减免凭证;若在外国港口离船,须有返程票与目的国入境签证(如需)."
+  not_eligible:
+    non-philippine-or-not-related-purpose:
+      "当事人非菲律宾公民,或申请目的与“超编/临增登船”无关."
+    derogatory-without-clearance:
+      "命中不良纪录且未先至认证与清算科办理清算/证明."
+    critical-docs-missing-or-falsified:
+      "关键材料缺失、伪造、逾期或与事实不符,无法按规定顺序与格式提交."
+    vessel-already-departed-or-unverifiable:
+      "船舶已离泊或行程无法核验,导致审批目的与实施对象不成立."
+    unauthorized-liaison-without-id:
+      "由未授权联络员代为申办且未附公司身份证明影本."
+pre_required_documents:
+  mandatory:
+    application-letter-to-commissioner:
+      "致移民局专员的申请函(航运/人力代理公司出具)."
+    guarantee-letter-original:
+      "本地航运/人力代理公司出具的担保函(原件)."
+    no-derogatory-verification:
+      "不良纪录验证(No Derogatory Stamp)."
+    vessel-arrival-or-deployment-notice:
+      "船舶抵港通知/派遣通知."
+    passport-original-presentation:
+      "超编人员护照(原件出示)."
+    travel-tax-or-official-receipt-original:
+      "旅游税/减免税官方收据(DOT/TIEZA,原件出示)."
+    crew-contract-copy:
+      "船员合约(影本)."
+    crew-passport-bio-page-copy:
+      "船员护照资料页(影本)."
+    seamans-book-copy:
+      "海员证(Seaman’s Book,影本)."
+    applicant-passport-bio-page-copy:
+      "超编人员护照资料页(影本)."
+    travel-tax-or-receipt-copy:
+      "旅游税/减免税收据影本."
+    departure-card-completed:
+      "填妥的移民局出境卡(Departure Card)."
+  conditional:
+    designated-liaison-submission:
+      trigger: "由指定联络员/跑办员代为提交."
+      documents:
+        - "公司ID影本(联络员)"
+    namesake-or-hit-alert:
+      trigger: "系统出现名字相同/同名警示或别名命中."
+      documents:
+        - "非同一人证明(NTSP)"
+        - "其他认证或佐证文书(如需)"
+    foreign-port-disembarkation:
+      trigger: "计划在外国港口离船/入境/过境."
+      documents:
+        - "返程机/船票(原件出示)"
+        - "返程票影本(PNR/票据)"
+        - "外国港口入境/过境签证(原件出示,如需)"
+        - "外国港口签证影本(如需)"
+    joining-with-spouse-or-child:
+      trigger: "配偶/未成年子女随同行登船."
+      documents:
+        - "PSA结婚证原件(如为配偶)"
+        - "PSA结婚证明影本(如为配偶)"
+        - "PSA出生证原件(如为子女)"
+        - "PSA出生证明影本(如为子女)"
+    itinerary-or-port-change:
+      trigger: "行程或离船港口发生变更."
+      documents:
+        - "更新后的船方证明/抵港或派遣通知"
+        - "更新后的返程票据"
+        - "更新后的签证文件"
+process:
+  steps:
+    step-1-intake-and-initial-check:
+      order: "1"
+      title: "受理与初审(BSS窗口,约5分钟)"
+      description: "收件并核对材料完整性、格式与顺序;不合规当场退补."
+    step-2-record-check-and-approval:
+      order: "2"
+      title: "不良纪录查核与审批(BSS/VCD/科长,约40分钟)"
+      description: "发起不良纪录比对;若命中,指引先至认证与清算科办理清算/证明后再回BSS续办;主管审核后报科长核准."
+    step-3-result-announcement:
+      order: "3"
+      title: "结果公告与发放(BSS窗口,约3分钟)"
+      description: "通过现场广播/公告发布结果;向申请人发放核准副本与后续办理指引."
+    step-4-district-office-encoding:
+      order: "4"
+      title: "区办实施与编码(莱加斯皮移民区办,约15分钟)"
+      description: "申请人持核准文件前往区办,由承办官完成系统编码与实施."
+    step-5-case-closing-and-system-update:
+      order: "5"
+      title: "结案与系统更新(即时)"
+      description: "区办实施完毕即时回写系统.参考总耗时约63分钟(不含往返、补件与清算时间)."
+  variants: {}
+  notes: "前端统一收件与公告结果,后端由指定区办一次性编码实施.参考总耗时约63分钟(不含往返、补件与清算时间)."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "FilipinoSupernumerary/FilipinoSupernumerary.md"
+  items:
+    all-applicants:
+      label: "所有申请人"
+      details:
+        immigration-processing:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "超编许可受理与实施为非收费流程."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        travel-tax:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "旅行税/减免税费用依DOT/TIEZA标准及政策执行,以官方收据为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        foreign-visa-fee:
+          amount:
+            currency: "USD"
+            display: ""
+            value: null
+          notes: "外国港口入境/过境签证费依相关国家使领馆标准收取,币种与金额以使领馆实际为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        return-ticket:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "返程交通票证费用依票务机构标准收取,部分票证可能以USD计价;以出票机构为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        authentication-or-legalization:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "认证/公证等其他费用(DFA/FSP/公证处)按服务标准收取,触发时产生.涉及USD计价的项目按BSP当日汇率折算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "核准结果与区办实施完成后形成的凭证,可用于后续登船与出入境查验."
+  items:
+    approval-copy:
+      name: "核准副本"
+      usage: "作为获准登船/换班的依据,并用于前往区办办理系统编码实施."
+    district-office-encoding-record:
+      name: "区办系统编码实施记录"
+      usage: "证明已完成系统编码与实施,供出入境查验与后续合规存档."
+kpis:
+  processing_time: "约63分钟(不含往返、补件与清算时间)."
+risks:
+  items:
+    noncompliant-format-rejection:
+      "材料未按legal size装订或不符顺序格式,可能当场退补导致延误."
+    derogatory-record-clearance-delay:
+      "命中不良纪录需先至认证与清算科清算,否则不予核准实施并造成时程延宕."
+    itinerary-change-rework:
+      "船期或离船港口变更未同步更新通知、票据与签证,可能在区办实施被退回重办."
+    forgery-legal-liability:
+      "伪造、变造或隐匿重要事实将承担法律责任,并可能导致永久拒办."
+    namesake-extra-requirements:
+      "出现同名/别名警示时,可能被要求提交“非同一人证明”等补件,请预留处理时间."
+    holiday-or-maintenance-delay:
+      "遇法定节假日或系统维护,受理与实施可能顺延."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DELA CRUZ"
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JUAN"
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SANTOS"
+      notes: "若无可留空."
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: ""
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: "以PSA与护照为准."
+    birth-place:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Quezon City"
+      notes: "以PSA与护照为准."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: "须为菲律宾公民."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DFA NCR"
+      notes: ""
+    passport-issuance-date:
+      label: "护照签发日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2021-07-01"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2031-06-30"
+      notes: ""
+    seamans-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "S12345678"
+      notes: "如适用."
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Married"
+      notes: "已婚/未婚/其他."
+    address-line1:
+      label: "现住址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Mabini St., Barangay 123"
+      notes: "菲律宾境内地址."
+    address-city:
+      label: "城市/市镇"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila"
+      notes: ""
+    address-province:
+      label: "省/大都会区"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1000"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    phone-mobile:
+      label: "手机号"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    psa-civil-doc-number:
+      label: "PSA民事文件编号(结婚证/出生证)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MC-2020-0001234"
+      notes: "如适用."
+    travel-tax-or-number:
+      label: "旅行税官方收据号(DOT/TIEZA OR)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "OR-00112233"
+      notes: ""
+    join-port:
+      label: "上船港口"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Port of Manila"
+      notes: "与船方通知一致."
+    join-date:
+      label: "上船日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-15"
+      notes: ""
+    disembark-port:
+      label: "下船港口"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Port of Singapore"
+      notes: "如计划在外国港口离船."
+    disembark-date:
+      label: "下船日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-22"
+      notes: ""
+    foreign-disembark:
+      label: "是否在外国港口离船"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    return-ticket-pnr:
+      label: "返程票PNR/票号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABCD12"
+      notes: "如在外国港口离船需提供."
+    foreign-visa-info:
+      label: "外国港口签证信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Transit Visa, Singapore"
+      notes: "如需入境/过境签证时提供."
+  spouse:
+    last-name:
+      label: "配偶姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DELA CRUZ"
+      notes: ""
+    first-name:
+      label: "配偶名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MARIA"
+      notes: ""
+    middle-name:
+      label: "配偶中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "REYES"
+      notes: ""
+    birth-date:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1992-08-10"
+      notes: ""
+    nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P9876543B"
+      notes: ""
+    passport-expiry:
+      label: "配偶护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2032-04-30"
+      notes: ""
+    psa-marriage-doc-number:
+      label: "PSA结婚证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MC-2021-0005678"
+      notes: ""
+    return-ticket-pnr:
+      label: "配偶返程票PNR/票号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "EFGH34"
+      notes: "如在外国港口离船."
+    foreign-visa-info:
+      label: "配偶签证信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Tourist Visa, Japan"
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    last-name:
+      label: "子女姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DELA CRUZ"
+      notes: ""
+    first-name:
+      label: "子女名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PEDRO"
+      notes: ""
+    middle-name:
+      label: "子女中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SANTOS"
+      notes: ""
+    birth-date:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-11-05"
+      notes: ""
+    nationality:
+      label: "子女国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P1122334C"
+      notes: ""
+    passport-expiry:
+      label: "子女护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-09-15"
+      notes: ""
+    psa-birth-doc-number:
+      label: "PSA出生证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BC-2015-0012345"
+      notes: ""
+    return-ticket-pnr:
+      label: "子女返程票PNR/票号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "IJKL56"
+      notes: "如在外国港口离船."
+    foreign-visa-info:
+      label: "子女签证信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Transit Visa, Hong Kong"
+      notes: ""
+  dependents: {}
+  employment:
+    company-name-english:
+      label: "航运/人力代理公司名称(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Agency, Inc."
+      notes: ""
+    company-registered-address:
+      label: "公司注册地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Roxas Blvd, Manila"
+      notes: ""
+    company-registration-number:
+      label: "统一注册编号(SEC/DTI)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SEC-2020-123456"
+      notes: ""
+    company-tin:
+      label: "公司TIN(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: ""
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MV Ocean Star"
+      notes: ""
+    imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "IMO 9876543"
+      notes: ""
+    voyage-number:
+      label: "航次"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "VOY-2025-001"
+      notes: ""
+    port-of-berth:
+      label: "靠泊港口"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Port of Manila"
+      notes: ""
+    eta:
+      label: "预计靠泊时间(ETA)"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-03-14T10:30:00+08:00"
+      notes: ""
+    liaison-name:
+      label: "指定联络员姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Pedro Santos"
+      notes: ""
+    liaison-title:
+      label: "指定联络员职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Client Liaison Officer"
+      notes: ""
+    liaison-phone:
+      label: "联络员电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639189876543"
+      notes: ""
+    liaison-email:
+      label: "联络员邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "liaison@agency.com"
+      notes: ""
+    liaison-company-id-number:
+      label: "公司ID编号(联络员)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-2024-0001"
+      notes: "代办时须提交影本."
+    guarantee-letter-number:
+      label: "担保函编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "GL-2025-00321"
+      notes: ""
+    guarantee-letter-issue-date:
+      label: "担保函签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-10"
+      notes: ""
+    application-letter-number:
+      label: "申请函文号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "AL-2025-01025"
+      notes: ""
+    bss-receipt-number:
+      label: "BSS收件登记编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BSS-REC-2025-00123"
+      notes: ""
+  authorization: {}
+  arrival_info: {}
+  travel_history: {}
+  compliance: {}
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "整个流程需要多长时间?"
+      answer: "在材料齐全且无不良纪录命中的前提下,从BSS受理到区办实施约63分钟,不含往返、补件与清算时间."
+    submission-format:
+      question: "必须按什么格式提交材料?"
+      answer: "所有文件须按清单顺序装订于legal size文件夹内;PSA民事文件需原件;外文文件须经FSP或DFA认证,非英文附英文译文;指定联络员代办须附公司ID影本."
+    derogatory-hit-handling:
+      question: "命中不良纪录如何处理,会被直接拒绝吗?"
+      answer: "不会直接拒绝,但须先至认证与清算科办理清算/证明,完成后再回BSS续办.未清算的申请不予核准实施."
+    bi-fees:
+      question: "此流程是否需要缴纳移民局费用?"
+      answer: "不需要.本流程为非收费项目;但旅行税、返程票与外国港口签证等第三方费用仍需自行承担."
+    foreign-port-disembark-prep:
+      question: "如果计划在外国港口离船,需要准备什么?"
+      answer: "需提供有效返程票(机/船票)以及该外国港口的入境签证(如需);建议与船方确认离船安排并提前备妥签证."
+    itinerary-change:
+      question: "航程或船期临时变化怎么办?"
+      answer: "应由航运/人力代理公司出具更新后的抵港/派遣通知,并同步更新返程票与签证材料;区办实施以最新有效文件为准."
+    liaison-submission:
+      question: "可以由公司联络员代为递件吗?"
+      answer: "可以.指定联络员递件时须一并提交公司ID影本;未授权人员代办不予受理."
+    additional-docs:
+      question: "局方会否额外要求材料?"
+      answer: "可能.移民局可基于审核需要要求补充支持性文件,请保持联络畅通并按时补件."
+disclaimers:
+  items:
+    document-format-and-authentication:
+      "文件须按清单顺序装订并使用legal size文件夹;PSA民事文件需原件;外文文件须经FSP或DFA认证且附英文译文."
+    third-party-fees:
+      "旅行税、签证费与返程票等为第三方费用,金额以相应机构实际标准为准;涉及USD计价者按BSP当日汇率折算."
+    working-hours:
+      "受理与实施以公告的工作时间为准;遇法定节假日或系统维护可能顺延."
+    supplemental-documents:
+      "局方可根据审查需要要求补充材料."
+service_related:
+  links: {}

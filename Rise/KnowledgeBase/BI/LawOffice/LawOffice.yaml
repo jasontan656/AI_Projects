@@ -1,0 +1,647 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "律师事务所及代表 BIAU 认证(Law Office Accreditation)"
+slug: "law-office-biau-accreditation"
+type: "reference"
+semantic_profile:
+  intent_id: "law-office-biau-accreditation"
+  category: "accreditation"
+  tags: ["BIAU","law-office","representative-id","immigration"]
+service_overview: "本服务为拟在菲律宾移民局办理业务的律师事务所及其指定代表/法律助理提供 BIAU(移民局认证处)认证办理.通过认证,机构可获得认证证书,指定人员可获发联络人员识别证(ID),以合法、高效地代为办理客户移民相关事务,建立可追溯、可问责的代办体系,确保合规与办理规范."
+applicability:
+  items:
+    institutional-access-for-submissions: "律师事务所(公司制、合伙或个体执业)拟向移民局提交、跟进客户的签证、许可、证明等业务,需要获得机构级别的准入认证."
+    add-replace-renew-contact-id: "已有认证的机构需要增加、替换或续期其联络人员/法律助理的 ID."
+    update-registered-info-after-changes: "机构变更名称、注册地址、负责人后,需同步更新在移民局的登记与认证信息."
+    first-time-entry-to-agency-services: "新设机构首次进入移民代办领域,建立合规的业务流程与人员名册."
+    compliance-audit-supplement: "因审计或合规检查要求,机构需要补充提交承诺文件或培训记录以保持认证有效."
+preconditions:
+  required:
+    legal-establishment-and-permits: "机构具备合法设立与经营资格:公司应持有 SEC 注册文件;个体/商号应持 DTI 登记文件;并提供最新营业许可与税务登记证明."
+    good-standing-and-no-adverse-record: "机构负责人及指定联络人员具有良好信誉与合规记录:提交 NBI 无犯罪/无不良记录证明,并无在移民局工作的三等以内亲属关系."
+    valid-employment-or-appointment: "指定联络人员/法律助理与机构存在合法雇佣或委任关系,提供雇佣合同/委任书等佐证."
+    completed-required-training: "已完成移民局要求的相关培训,持有最新培训合格证书."
+    compliance-commitment: "承诺严格遵守移民局办理规范:不提交虚假或涂改文件,不从事“黄牛/协助违规办理”等活动;保证客户亲签申请表并按要求采集指纹/拇指印."
+  not_eligible:
+    invalid-or-unverifiable-documents: "机构或联络人员提交的登记、许可、税务文件未在有效期内,或无法核验真伪."
+    concealment-or-false-declaration: "存在隐瞒或虚假申报,如未如实申报与移民局工作人员的三等以内亲属关系."
+    missing-employment-or-training-records: "未能提供合法雇佣/委任证明,或培训记录缺失."
+    under-investigation-or-unresolved-violation: "被移民局调查或认定存在违规情形且尚未结案的."
+    noncompliance-with-originals-and-verification: "申请材料未按清单提供原件或经认证的副本,或拒不配合补件与核查."
+pre_required_documents:
+  mandatory:
+    application-letter: "书面申请函,说明申请目的、业务范围、拟指派联络人员名单与联系方式."
+    legal-entity-documents: "机构主体资格文件:SEC 公司注册资料(含最新一般信息表/章程)或 DTI 登记文件;个体/合伙适用相应证明."
+    business-permit-tax-itr: "最新营业许可(如市长许可/Mayor’s Permit)、税务登记与最近一年度所得税申报(ITR)."
+    ibp-or-professional-id: "菲律宾律师联合会证件(IBP)或其他能够证明负责人执业资格的有效身份证明(适用于律师主体)."
+    office-proof-and-utility-bills: "办公场所证明:产权证或租赁合同、最近水电/网通账单,用于核实实际办公地址."
+    service-scope-and-compliance-summary: "客户服务清单/业务范围说明与内部合规制度摘要(用于评估代办能力与风险控制)."
+    compliance-undertaking-signed: "负责人签署的承诺书,承诺遵守移民局办理规范与数据隐私规定."
+    biau-form-2014-03-006: "BIAU 指定表格(如 BI Form 2014-03-006,按最新版本填写并亲笔签名)."
+    employment-or-appointment-proof: "合法雇佣或委任证明:雇佣合同、任命书/授权书与公司身份证明."
+    nbi-clearance: "NBI 无犯罪证明(在有效期内)."
+    no-third-degree-relation-declaration: "无三等以内亲属在移民局任职之声明与承诺."
+    training-certificate-latest: "培训合格证书(最新一次培训记录)."
+    representative-id-and-photos-signature: "代表/法律助理的有效身份证件、近期证件照与签名样本."
+    previous-biau-id-if-renewal: "如为续期或更换,提供旧版联络人员 ID 原件."
+  conditional:
+    affidavit-of-undertaking-first-time:
+      trigger: "承诺书(Affidavit of Undertaking,首次出现时须公证;表单代码 COM11.QF.008,2024-09-04 版)."
+      documents: ["承诺书(Affidavit of Undertaking,COM11.QF.008,2024-09-04 版,经公证)"]
+    financial-capacity-or-bond-if-required:
+      trigger: "如 BIAU 书面要求,提供财务能力证明或保证金/保函."
+      documents: ["财务能力证明或保证金/保函及缴存/保函凭证(按 BIAU 书面要求)"]
+    corporate-resolution-or-secretary-certificate:
+      trigger: "机构或人员变更相关的公司决议/秘书证书(证明任命、变更或授权的真实性)."
+      documents: ["公司决议或秘书证书(经认证)"]
+    other-certified-copies-or-notarized-affidavits:
+      trigger: "其他经认证的副本或经公证的宣誓文件(根据审核意见补充)."
+      documents: ["经认证副本或经公证的宣誓文件(按审核意见)"]
+process:
+  steps:
+    step-1-intake-and-prep:
+      order: "1"
+      title: "领表与准备(约1个工作日)"
+      description: "到 BIAU 窗口领取最新清单与表格,确认机构与联络人员信息、材料要求与格式;完善内部签批与公证."
+    step-2-filing-and-initial-review:
+      order: "2"
+      title: "递件与初审(约3个工作日)"
+      description: "向 BIAU 提交纸本材料;受理并进行一致性与完整性初审;如需补件,当场或书面告知.初审通过后签发缴费通知单 OPS."
+    step-3-payment-and-or-submission:
+      order: "3"
+      title: "缴费与回递凭证(当日办理)"
+      description: "持 OPS 至收银缴纳相应费用,取得正式收据 OR,将 OR 复印件回交 BIAU 归档."
+    step-4-substantive-review-and-approval:
+      order: "4"
+      title: "复审与核签(约6个工作日)"
+      description: "BIAU 进行实质审查与背景核验,必要时电话/现场核实;拟准后报请负责人/值班主管(OIC)核签,并提交技术支持/评审环节完成审批."
+    step-5-release-and-card-printing:
+      order: "5"
+      title: "出证与制卡(1–3个工作日)"
+      description: "审批通过后,发放机构认证证书并制作联络人员 ID 卡;如未获通过,将出具书面告知与理由."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "LawOffice.md"
+  items:
+    lawoffice-main:
+      label: "律师事务所及代表"
+      details:
+        accreditation-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,000.00"
+            value: 5000
+          notes: "机构首次/续期认证的基础费用;凭 OPS 至收银缴费,回交 OR 复印件."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        representative-id-card:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000.00"
+            value: 1000
+          notes: "按每张 ID 计收;新增、续期或补制均据实计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        notarization:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "承诺书公证/认证等第三方费用,非移民局收费,按当地标准据实发生."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        training-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "培训/再培训费用由培训承办单位收取,按实际发生."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        bond-or-guarantee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "保证金/保函(如适用),非旅行社一般不收取;如被 BIAU 书面要求,按通知执行并提交缴存/保函凭证."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以 BIAU 现场 OPS/OR 为准;本项目通常不涉及 LRF 或快速通道费;币种统一为 PHP."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "认证完成后将签发机构认证证书并为指定联络人员制发 ID 卡."
+  items:
+    accreditation-certificate:
+      name: "机构认证证书"
+      usage: "证明机构通过 BIAU 认证,可在移民局合法开展代办业务."
+    representative-id-card:
+      name: "联络人员 ID 卡"
+      usage: "标识获授权的联络人员/法律助理以办理相关事务."
+kpis:
+  processing_time: "整体预计时长约20个工作日(以材料完整、补件及时为前提;遇系统维护或延伸核查时顺延)."
+risks:
+  items:
+    document-validity:
+      "材料时效性:SEC/DTI 登记、营业许可、税务与 NBI 证明须在有效期内;旧版或失效文件将导致退件或顺延."
+    integrity-and-affidavit:
+      "诚信与承诺:承诺书须经公证;任何虚假陈述或提交伪造/变造文件,将导致申请被拒、暂停/取消认证,情节严重者移送行政或刑事程序."
+    conflict-of-interest:
+      "利益冲突:负责人及联络人员须出具“无移民局三等以内亲属”声明;隐瞒不报一经查实,将被暂停或取消认证."
+    personnel-management:
+      "人员管理:联络人员离职或不再符合任职条件时,机构须及时收回并向移民局交回其 ID;新增或更换人员需重新报备与申请制卡."
+    client-signature-and-thumbmark:
+      "客户亲签:通过机构递交的客户申请表须由客户本人签名并按要求留存拇指印,禁止代签."
+    business-scope-boundary:
+      "业务边界:不得超越机构章程授权范围开展有偿服务,仅可代表机构的合法客户进行事务."
+    data-protection:
+      "数据保护:同意依数据隐私法收集、使用与分享办理所需个人信息,遵循透明、正当目的与最小必要原则."
+    process-control:
+      "流程控制:未按时补件或未在 OPS 载明期限内缴费,审理将中止直至完成纠正;应妥善保存收件回执、OPS 与 OR."
+    regulatory-actions:
+      "监管权力:在投诉或调查期间,如基于证据认为存在违规,移民局可处以罚款、扣押/没收保证金(如有)、暂停/禁止机构及其联络人员办理业务或取消认证."
+    communication-and-updates:
+      "公开沟通:涉及流程与费用以现场 OPS/OR 为准;遇系统维护或政策更新,以移民局最新公告执行."
+info_collection:
+  applicant:
+    org-legal-name:
+      label: "机构全称(与 SEC/DTI 登记一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Law Office"
+      notes: "用于比对注册信息"
+    registration-type:
+      label: "登记类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SEC/DTI"
+      notes: ""
+    registration-number:
+      label: "注册号(SEC/DTI)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SEC-1234567"
+      notes: ""
+    tin:
+      label: "税号(TIN)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: "用于税务合规核验"
+    business-address-line1:
+      label: "营业地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-city:
+      label: "营业地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-province:
+      label: "营业地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-address-country:
+      label: "营业地址(国家)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    business-address-postal-code:
+      label: "营业地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1000"
+      notes: ""
+    branches-info:
+      label: "分支机构信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    business-scope:
+      label: "业务范围"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    main-services:
+      label: "主要服务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    itr-last-year-filing-status:
+      label: "最近一年度 ITR 提交情况"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Filed on 2024-04-15"
+      notes: "税务履行证明"
+    mayors-permit-issuing-authority:
+      label: "营业许可签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "City Mayor's Office"
+      notes: ""
+    mayors-permit-expiry:
+      label: "营业许可有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-12-31"
+      notes: "有效性核查"
+    office-occupancy-type:
+      label: "办公场所证明(产权/租赁)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Lease"
+      notes: "场地真实性核验"
+    compliance-contact-name:
+      label: "合规与内控联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于补件/联络"
+    compliance-contact-phone:
+      label: "合规与内控联系人手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63xxxxxxxxxx"
+      notes: ""
+    compliance-contact-email:
+      label: "合规与内控联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "compliance@example.com"
+      notes: ""
+    organization-email:
+      label: "机构电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "office@example.com"
+      notes: "收受通知与预约"
+    organization-phone:
+      label: "机构电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63xxxxxxxxxx"
+      notes: ""
+    signatory-last-name:
+      label: "负责人(签署人)姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与任命/授权文件一致"
+    signatory-first-name:
+      label: "负责人(签署人)名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    signatory-middle-name:
+      label: "负责人(签署人)中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    signatory-position:
+      label: "负责人职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Managing Partner"
+      notes: ""
+    signatory-id-type:
+      label: "负责人身份证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Passport"
+      notes: ""
+    signatory-id-number:
+      label: "负责人身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "身份核验"
+    signatory-ibp-number:
+      label: "负责人 IBP 号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "IBP-XXXXXX"
+      notes: "资格核验(律师适用)"
+    signatory-practice-info:
+      label: "负责人执业信息(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    signatory-no-third-degree-relation:
+      label: "与移民局人员无三等以内亲属关系声明"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "利益冲突排查"
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    rep-last-name:
+      label: "联络人员/法律助理姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "身份信息"
+    rep-first-name:
+      label: "联络人员/法律助理名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-middle-name:
+      label: "联络人员/法律助理中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-date-of-birth:
+      label: "联络人员出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-01-01"
+      notes: ""
+    rep-nationality:
+      label: "联络人员国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    rep-id-number:
+      label: "联络人员身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "身份核验"
+    rep-id-expiry:
+      label: "联络人员身份证件有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-start-date:
+      label: "雇佣/委任起始日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "任职关系"
+    employment-end-date:
+      label: "雇佣/委任结束日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    training-course-name:
+      label: "培训课程名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "能力证明"
+    training-date:
+      label: "培训日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-clearance-number:
+      label: "NBI 证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "品行核验"
+    nbi-issue-date:
+      label: "NBI 签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    rep-phone-mobile:
+      label: "联络人员手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63xxxxxxxxxx"
+      notes: "日常联络"
+    rep-email:
+      label: "联络人员邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "rep@example.com"
+      notes: ""
+    biau-id-number:
+      label: "既有 BIAU ID 号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "续期或更换所需"
+    biau-id-expiry:
+      label: "既有 BIAU ID 到期日(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    data-privacy-consent:
+      label: "数据隐私同意与授权"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "依据数据隐私法进行处理"
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    service-list:
+      label: "需办理的业务清单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "资源与权限评估"
+    expected-frequency:
+      label: "预期办理频次"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Monthly"
+      notes: ""
+    has-return-or-penalty-last12m:
+      label: "近12个月是否有被退件/处罚记录"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "风险评估"
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意依据数据隐私法(Republic Act 10173)收集、使用与分享办理所需个人信息."
+  certification_statement: "申请主体与代表须签署承诺/声明(含 Affidavit of Undertaking),保证材料真实准确、客户亲签与拇指印规范留存."
+faq:
+  qas:
+    processing-time:
+      question: "整个审批需要多久?"
+      answer: "一般约20个工作日,取决于材料完整性与补件速度;遇延伸核查或系统维护可能顺延."
+    need-bond-for-law-office:
+      question: "律师事务所是否需要缴纳保证金?"
+      answer: "通常不需要.旅行社等特定行业可能被要求缴纳保证金或提供保函;如 BIAU 对律师事务所提出书面要求,请按通知执行."
+    training-required-for-representatives:
+      question: "联络人员必须参加培训吗?"
+      answer: "是.须提交移民局认可的最新培训合格证书,方可核发或续发联络人员 ID."
+    client-signature-allowed:
+      question: "客户的申请表可以由机构代签吗?"
+      answer: "不可以.客户需本人签名并按要求采集拇指印;代签将导致申请被拒,并可能引发行政/刑事责任."
+    handling-when-rep-resigns:
+      question: "若联络人员离职,机构应如何处理?"
+      answer: "应立即收回并向移民局交回其联络人员 ID,同时提交人员变更/注销申请;继续使用已离职人员证件将被视为违规."
+    rejection-or-revocation-cases:
+      question: "哪些情形会被拒绝或撤销认证?"
+      answer: "提交失效或虚假材料、隐瞒与移民局人员的三等以内亲属关系、从事“协助违规办理”、超越授权范围提供服务、屡次拒不配合检查与补件等情形,均可能被拒绝或撤销."
+    payment-and-proof:
+      question: "费用如何缴纳与证明?"
+      answer: "凭 BIAU 签发的 OPS 到收银缴费,妥善保管 OR 正本及复印件并回交备案;如需新增人员 ID,按“每张”计收工本费."
+    validity-and-renewal:
+      question: "认证有效期多久、如何续期?"
+      answer: "以证书标注与最新通知为准.到期前应完成续期递件与缴费,以避免业务中断."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

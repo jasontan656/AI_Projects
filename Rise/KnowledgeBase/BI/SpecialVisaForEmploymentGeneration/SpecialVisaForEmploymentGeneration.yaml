@@ -1,0 +1,869 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["SVEG"]
+department: "BureauOfImmigration"
+name: "特别就业创造签证(SVEG)"
+slug: "special-visa-for-employment-generation"
+type: "reference"
+semantic_profile:
+  intent_id: "special-visa-for-employment-generation"
+  category: "nonimmigrant-visa"
+  tags: ["employment-generation", "BI", "DOLE", "AEP", "ACR-I-Card"]
+service_overview: "特别就业创造签证(Special Visa for Employment Generation, SVEG)适用于拟在菲律宾合法、可持续的企业/贸易/产业中创造本地就业的合格非移民类外籍人士.核心要求为承诺并实际雇用至少10名菲律宾籍常规全职员工.获签后可在菲合法居留并从事相应商务活动,配偶与未婚未成年子女可作为家属随同或后续并入,整体由菲律宾移民局(BI)受理并组织听证与信息采集."
+applicability:
+  items:
+    new-investor-establishing-company: "外籍投资者在菲新设公司或工厂,计划在一年内稳定雇用≥10名菲律宾员工."
+    expansion-meets-10-regular-employees: "现有在菲企业的外籍经营者扩大产能与团队规模,满足常规用工≥10人并希望转换为SVEG."
+    turnaround-and-job-retention: "外籍企业家对困难企业实施重整/复苏,凭投资使至少10名菲律宾员工得以留岗."
+    from-other-status-with-aep: "已以短期或其他非移民身份在菲工作,取得AEP后拟转为SVEG以匹配用工规模."
+    with-dependents-spouse-children: "希望携带配偶与未婚未满法定年龄子女在菲长期共同居住、就读的申请人."
+preconditions:
+  required:
+    lawful-nonimmigrant-status: "符合“非移民类”外籍人士资格,当前在菲停留须处于合法授权期限内."
+    employ-at-least-10-filipino: "实际雇用或承诺雇用不少于10名菲律宾籍员工,且为常规全职用工."
+    dole-certification: "能提交DOLE签发的用工证明,载明业务/投资/企业已常规雇用≥10名菲律宾员工."
+    aep-if-employed: "如在公司任职(被选任或聘任职位),须提供外侨就业许可证(AEP)."
+    boq-medical-and-bi-clearance: "具备有效体检/健康证明(BoQ)与移民局无案证明(BI Clearance)."
+  not_eligible:
+    fail-to-meet-10-employees: "未能证明或持续满足“≥10名菲律宾员工”常规用工要求."
+    below-minimum-wage-or-no-sss-philhealth: "员工工资低于法定最低工资标准,或未按规定缴纳PhilHealth与SSS费用."
+    false-or-fabricated-documents: "提交材料不真实、不完整或经核验存在伪造、虚假陈述."
+    overstay-or-adverse-record: "逾期停留且未按规定完成补救程序,或存在不良纪录/警示信息."
+    non-cooperation-in-proceedings: "未能按要求参加听证、提交原件核验或配合指纹与影像采集."
+pre_required_documents:
+  mandatory:
+    application-letter-to-bi-commissioner: "致移民局局长的申请信,声明就业创造/留岗承诺(≥10名菲律宾员工)."
+    cgaf-two-originals: "填妥的综合通用申请表(CGAF,BI表格CGAF-002-Rev 3)一式两份原件(分别用于主案与ACR I‑Card)."
+    passport-bio-and-last-entry-copies: "护照资料页与最近一次入境章页复印件,且当前授权停留期有效."
+    boq-medical-certificate: "检疫局(BoQ)签发的有效体检/健康证明."
+    sworn-affidavit-employment-and-wage: "申请人经宣誓的声明书(需公证):员工姓名与住址清单、PhilHealth与SSS缴费承诺、无低于法定最低工资之薪资."
+    bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+  conditional:
+    entity-type-corporation-or-partnership:
+      trigger: "公司/合伙企业主体提交"
+      documents: ["SEC注册证书", "公司章程(Articles of Incorporation)", "本年度公司信息表(GIS,SEC收讫章版)"]
+    entity-type-sole-proprietor:
+      trigger: "个体工商户主体提交"
+      documents: ["DTI商号注册证书"]
+    employed-or-appointed-in-company:
+      trigger: "如申请人在公司中受聘/任职(被选任或聘任职位)"
+      documents: ["外侨就业许可证(AEP)经认证的真实副本"]
+    stayed-over-6-months:
+      trigger: "自首次抵菲之日起满6个月或更久方提出申请"
+      documents: ["国家调查局(NBI)无犯罪证明"]
+    with-dependents:
+      trigger: "如有配偶及/或未婚未满法定年龄子女随同或后续并入"
+      documents: ["家属CGAF(BI表格CGAF-002-Rev 3)", "家属护照资料页与最近入境章页复印件", "亲属关系证明(PSA原件或经FSP/DFA认证并附英文译本)", "BI无案证明(家属)"]
+    additional-docs-as-required:
+      trigger: "移民局或签证官为核实之目的所要求的补充材料(如适用)"
+      documents: ["其他补充材料(依通知提交原件/认证件)"]
+process:
+  steps:
+    1-get-cgaf:
+      order: "1"
+      title: "领取与填报CGAF"
+      description: "在PIAU或移民局网站获取CGAF并以英文大写填写,一式两份;预计即日完成."
+    2-precheck-and-filing:
+      order: "2"
+      title: "预检与递件(CRU/前台)"
+      description: "按清单顺序提交材料,接受形式审查;通过后发放付款指示单(OPS);预计即日."
+    3-payment:
+      order: "3"
+      title: "缴费(收银窗口)"
+      description: "依据OPS缴费并妥善保管正式收据(OR);预计即日."
+    4-return-or-and-schedule:
+      order: "4"
+      title: "回交收据与排期"
+      description: "提交OR复印件,确认或获取听证日期与地点(通常标注于OR);预计即日."
+    5-hearing:
+      order: "5"
+      title: "听证"
+      description: "按期参加签证官听证,说明企业用工、合规与材料细节;时程依排期."
+    6-biometrics-and-acr:
+      order: "6"
+      title: "影像与指纹采集(ARD)"
+      description: "完成人像与指纹采集,并递交ACR I‑Card相关申请材料;预计即日."
+    7-online-status-check:
+      order: "7"
+      title: "线上状态查询"
+      description: "通过移民局线上系统核验审批进度与结果;周期依个案与队列而定."
+    8-visa-implementation:
+      order: "8"
+      title: "签注实施(核准后)"
+      description: "获批后按通知提交护照原件办理签证贴签与实施;通常数个工作日."
+    9-claim-acr-icard:
+      order: "9"
+      title: "领取ACR I‑Card"
+      description: "按通知领取卡片;如授权代表代领,须按须知提交身份证明/授权;须在核准后90日内完成."
+  variants: {}
+  notes: "表格填写须英文大写并按清单顺序装订于8.5×14英寸法律纸文件夹;民事文件在菲签发者须提交PSA原件,境外文件须经FSP或DFA认证并附英文译本;所有宣誓与声明须原件公证;如由授权代表递交须附BI认证代理ID或每位申请人独立SPA及代理人有效政府身份证复印件.具体时程以移民局排期与个案为准,可能因补件、实地核查或假期调整."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    main-applicant:
+      label: "主申请人"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 29,330.00"
+            value: 29330
+          notes: "官方历史口径,更新至2014-03-06.以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    spouse-dependent:
+      label: "配偶(家属)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 29,330.00"
+            value: 29330
+          notes: "历史口径;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    dependent-b16:
+      label: "家属 Dependent B16(编码)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 29,330.00"
+            value: 29330
+          notes: "移民局收费编码;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    dependent-b14:
+      label: "家属 Dependent B14(编码)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 29,330.00"
+            value: 29330
+          notes: "移民局收费编码;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    common-charges:
+      label: "通用及附加费用"
+      details:
+        acr-icard-sveg-addon:
+          amount:
+            currency: "USD"
+            display: "USD 250.00"
+            value: 250
+          notes: "ACR I‑Card(SVEG专项附加),按BSP汇率折算;不含I‑Card快通."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100.00"
+            value: 100
+          notes: "视实施是否贴纸,由OPS列示."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            range:
+              min: 10
+              max: 50
+          notes: "法律检索费(LRF),通用附加,按票据分项计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+            tiers:
+              - value: 500
+                condition: "per OPS/OR"
+              - value: 1500
+                condition: "per OPS/OR"
+          notes: "快速通道费(Express Lane),依案件与处室口径,按OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        acr-registration:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000.00"
+            value: 1000
+          notes: "ACR登记费,如在同案计收,以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500.00"
+            value: 500
+          notes: "ACR I‑Card领卡加急,如适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "签证核准后的实施与证件发放."
+  items:
+    visa-sticker-endorsement:
+      name: "签证贴签/实施"
+      usage: "核准后在护照上加注,作为在菲合法停留与活动之依据."
+    acr-i-card:
+      name: "ACR I‑Card"
+      usage: "外侨登记身份证,用于身份识别与出入境/办理业务所需."
+kpis:
+  processing_time: "数周以上,取决于材料完整度、听证排期与案件复杂度."
+risks:
+  items:
+    failure-to-maintain-10-employees:
+      "未持续满足≥10人常规用工可能被要求限期整改,严重者拒批或撤销签证."
+    over-90-days-no-implementation:
+      "签证核准后90日内未完成签注实施与ACR I‑Card领取,将导致签证自动撤销与卡片停用."
+    false-statements:
+      "任何虚假陈述或伪造文件可当场驳回,并可能面临刑事起诉、行政程序与遣返."
+    non-attendance-hearing:
+      "未按要求出席听证、原件核验或采集,可能影响审批进度或导致否决."
+    payroll-and-contributions-noncompliance:
+      "员工薪资低于法定最低工资或未履行PhilHealth/SSS缴费承诺,可能被驳回或撤销."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文,按护照)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: "英文大写印刷体"
+    first-name:
+      label: "名(英文,按护照)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: "英文大写印刷体"
+    middle-name:
+      label: "中间名(英文,如无留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "可选:Male/Female"
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Married"
+      notes: "单身/已婚/分居/丧偶/婚姻撤销/离婚"
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1985-07-15"
+      notes: ""
+    birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Chinese"
+      notes: ""
+    height-cm:
+      label: "身高(cm)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 175
+      notes: ""
+    weight-kg:
+      label: "体重(kg)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 68
+      notes: ""
+    occupation:
+      label: "职业"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Entrepreneur"
+      notes: "与AEP/请愿公司一致"
+    position-title:
+      label: "职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Managing Director"
+      notes: "与AEP/合同一致"
+    tin:
+      label: "纳税人识别号(TIN,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "菲律宾联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    phone-mobile:
+      label: "菲律宾联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    address-line1:
+      label: "菲律宾住址(门牌/街道/社区)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Mabini St., Brgy. 123"
+      notes: ""
+    address-barangay:
+      label: "菲律宾住址(Barangay)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Brgy. 123"
+      notes: ""
+    address-city:
+      label: "菲律宾住址(市/城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "菲律宾住址(省)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "菲律宾住址(邮编)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    overseas-address-line1:
+      label: "海外常住地址(门牌/街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "56 King Rd."
+      notes: ""
+    overseas-address-city:
+      label: "海外常住地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    overseas-address-state:
+      label: "海外常住地址(州/省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    overseas-address-country:
+      label: "海外常住地址(国家)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    overseas-address-postal-code:
+      label: "海外常住地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "200000"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: "如适用"
+    spouse-first-name:
+      label: "配偶名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1987-09-01"
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: "每名子女分别填写一套字段"
+    child-first-name:
+      label: "子女性(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "XIAO"
+      notes: ""
+    child-middle-name:
+      label: "子女中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-05-20"
+      notes: "未婚且未满法定年龄"
+  dependents:
+    relationship:
+      label: "与主申请人关系"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Spouse"
+      notes: "配偶/子女等"
+    dependent-passport-number:
+      label: "家属护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+  employment:
+    company-name:
+      label: "请愿人/雇主公司名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Manufacturing Inc."
+      notes: ""
+    company-registration-number:
+      label: "公司注册号(SEC/DTI)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SEC-2024-123456"
+      notes: ""
+    organization-type:
+      label: "机构性质"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "商业"
+      notes: "商业/宗教/其他(注明)"
+    registered-address-line1:
+      label: "注册地址(门牌/街道)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 1001, 88 Paseo Rd."
+      notes: ""
+    registered-address-city:
+      label: "注册地址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Taguig"
+      notes: ""
+    registered-address-province:
+      label: "注册地址(省)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    registered-address-postal-code:
+      label: "注册地址(邮编)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1630"
+      notes: ""
+    contact-landline:
+      label: "公司座机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281230000"
+      notes: ""
+    contact-mobile:
+      label: "公司手机"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171112222"
+      notes: ""
+    contact-email:
+      label: "公司邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "hr@abcmfg.ph"
+      notes: ""
+    applicant-position:
+      label: "申请人在公司之职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Operations Director"
+      notes: ""
+    employment-contract-expiry:
+      label: "劳动合同到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-12-31"
+      notes: ""
+    aep-number:
+      label: "AEP编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AEP-2025-000123"
+      notes: "如被选任或聘任职位"
+    aep-valid-from:
+      label: "AEP生效日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-01"
+      notes: ""
+    aep-valid-until:
+      label: "AEP有效期至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-12-31"
+      notes: ""
+    monthly-salary-php:
+      label: "实际月度税前薪资(PHP)"
+      type: "number"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 150000
+      notes: "税前金额,PHP"
+    gis-year:
+      label: "本年度公司信息(GIS)年份"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 2025
+      notes: ""
+    articles-key-points:
+      label: "公司章程要点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与营业范围/治理结构相关要点"
+  authorization: {}
+  arrival_info:
+    latest-arrival-date:
+      label: "最近一次抵菲日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-10"
+      notes: ""
+    current-authorized-stay-until:
+      label: "当前授权停留截止日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-06-08"
+      notes: ""
+    current-immigration-status:
+      label: "现行移民身份类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Temporary Visitor (9A)"
+      notes: ""
+    acr-number:
+      label: "ACR编号(如已有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ACR-IC-1234567890"
+      notes: ""
+    acr-issue-date:
+      label: "ACR签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-10-01"
+      notes: ""
+    acr-expiry-date:
+      label: "ACR有效期至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-10-01"
+      notes: ""
+  travel_history: {}
+  compliance:
+    dole-certificate-number:
+      label: "DOLE用工证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DOLE-EMP-2025-0001"
+      notes: ""
+    dole-certificate-date:
+      label: "DOLE用工证明日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-04-15"
+      notes: ""
+    employee-list-provided:
+      label: "员工清单是否已提交"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: true
+      notes: "包含姓名与住址"
+    philhealth-sss-commitment:
+      label: "PhilHealth与SSS缴费承诺/记录"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    nbi-clearance-number:
+      label: "NBI无犯罪证明编号(如在菲≥6个月)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NBI-2025-123456"
+      notes: ""
+    nbi-clearance-issue-date:
+      label: "NBI无犯罪证明签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-05-01"
+      notes: ""
+    bi-clearance-number:
+      label: "BI无案证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BIC-2025-789012"
+      notes: ""
+    bi-clearance-issue-date:
+      label: "BI无案证明签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-05-05"
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意依据《数据隐私法》收集与处理个人数据,用于申请受理、审查与实施."
+  certification_statement: "申请人于CGAF及相关宣誓/声明文件中认证所填资料与提交文件真实准确,并按要求签名/拇指印."
+faq:
+  qas:
+    processing-time:
+      question: "SVEG的审批周期需要多久?"
+      answer: "周期取决于材料完整度、听证排期与案件复杂度.完成预检与缴费后,将由移民局安排听证与核查,建议预留数周以上并及时关注线上状态."
+    below-10-employees:
+      question: "公司阶段性低于10名菲律宾员工会怎样?"
+      answer: "SVEG以“就业创造/留岗”为核心条件.如未持续满足≥10人常规用工,可能被要求说明与限期整改,严重者可被拒批或撤销签证."
+    is-aep-mandatory:
+      question: "是否必须提供AEP?"
+      answer: "如申请人被公司选任或聘任担任职位(如董事、高管或专职人员),须提交AEP经认证的真实副本;纯投资者但未受聘任职的情形,按案审实际要求执行."
+    foreign-civil-doc-use:
+      question: "境外签发的结婚证/出生证如何使用?"
+      answer: "须提交原件并经FSP或DFA认证,如非英文须附英文译本;菲律宾境内签发的民事文件须为PSA原件."
+    not-implement-within-90-days:
+      question: "签证核准后未在90日内实施与领卡会如何?"
+      answer: "逾期未实施签注将导致签证自动取消,ACR I‑Card亦会停用.请按通知及时提交护照办理实施并领取卡片."
+    common-rejection-reasons:
+      question: "常见退件原因有哪些?"
+      answer: "CGAF未用英文大写或有缺项、未按清单顺序装订、宣誓文件未公证、缺DOLE用工证明、任职却未提交AEP、未附NBI(在菲≥6个月)等."
+    dependents-eligibility-docs:
+      question: "家属的资格与材料要求是什么?"
+      answer: "配偶与未婚、未满法定年龄的子女可作为家属;每名家属须分别提交CGAF、护照页复印件、亲属关系证明(PSA或经FSP/DFA认证并附译文)与BI无案证明."
+    fee-discrepancy:
+      question: "为什么网上看到的费用与柜台不一致?"
+      answer: "SVEG尚无统一对外公布的2025版官方总表;除基本签证费外,LRF、Express、ACR登记/贴纸等通用项会随OPS分项计收,且美元项目按BSP汇率折算,故可能与历史口径不同."
+disclaimers:
+  items:
+    form-filling-standard:
+      "CGAF须以英文大写填写,一式两份原件;文件按清单顺序装订于8.5×14英寸法律纸文件夹."
+    document-authentication:
+      "菲律宾境内民事文件须为PSA原件;境外文件须经FSP或DFA认证并附英文译本;所有宣誓与声明须原件公证."
+    hearing-discipline:
+      "听证日期通常标注于OR,须准时出席;未配合面谈、原件核验或采集,将影响审批."
+    representative-authorization:
+      "仅限BI认证代理或持每名申请人独立SPA之代表办理,并提交有效政府签发身份证件复印件."
+    fee-variability:
+      "SVEG暂无2025版官方统一费表;以OPS/OR为准,LRF与Express等通用项随票据计收,美元项目按BSP汇率折算."
+    data-protection:
+      "提交与处理个人数据遵循《数据隐私法》,仅用于申请受理、审查与实施."
+service_related:
+  links: {}

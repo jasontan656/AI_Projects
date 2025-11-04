@@ -1,0 +1,182 @@
+# ============================================================
+# Kobe 项目 Git 忽略规则
+# ============================================================
+
+# ------------------------------------------------------------
+# 环境变量和敏感配置
+# ------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.ppk
+secrets/
+
+# ------------------------------------------------------------
+# Python 相关
+# ------------------------------------------------------------
+# 字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+.Python
+
+# 分发和打包
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 单元测试和覆盖率
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# ------------------------------------------------------------
+# IDE 和编辑器
+# ------------------------------------------------------------
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ------------------------------------------------------------
+# 操作系统
+# ------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ------------------------------------------------------------
+# 日志和临时文件
+# ------------------------------------------------------------
+logs/
+*.log
+*.log.*
+*.tmp
+*.temp
+tmp/
+temp/
+
+# ------------------------------------------------------------
+# 数据库
+# ------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# MongoDB
+data/
+dump/
+
+# ------------------------------------------------------------
+# 文件上传和缓存
+# ------------------------------------------------------------
+uploads/
+downloads/
+media/
+static/collected/
+.static_storage/
+.media/
+
+# ------------------------------------------------------------
+# 项目特定
+# ------------------------------------------------------------
+# 任意包含 .venv 关键字的虚拟环境目录
+.venv*/
+**/.venv*/
+
+# WSL virtual environment mirror
+.venvwsl/
+
+# 本地工作空间缓存
+AI_WorkSpace/
+
+# 本地 home 目录快照
+$HOME/
+
+# 临时工具目录
+TempUtility/
+
+# 本地测试数据
+test_data/
+
+# Dev 计划草稿
+.DevPlan/
+
+# OpenAI agent runtime state 快照
+openai_agents/agent_contract/runtime_state/
+
+# 本地运行日志
+var/logs/
+

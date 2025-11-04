@@ -1,0 +1,1220 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "永久居民签证(PRV)办理指南"
+slug: "permanent-resident-visa-prv"
+type: "reference"
+semantic_profile:
+  intent_id: "permanent-resident-visa-prv"
+  category: "immigration-visa"
+  tags: ["PRV", "MCL-07-021", "R.A. 7837", "BI"]
+service_overview: "永久居民签证(PRV)为菲律宾移民局核发的长期居留资格,适用于已持一年期试行非配额移民身份者、与菲律宾公民结婚的中国籍人士(MCL-07-021),以及依法律享有权利的菲律宾二战退伍军人(已取得美国国籍)及其家属.获批后可在菲长期合法居留,并按规定持有 ACR I-Card.本文档说明资格条件、所需材料、流程、费用要点与合规要求,覆盖一般申请、婚姻类别及退伍军人类别及其家属情形."
+applicability:
+  items:
+    probationary-to-prv: "已持有为期一年的试行非配额移民签证(probationary)身份,拟转换为永久居民签证."
+    chinese-spouse-mcl07021: "中国籍人士与菲律宾公民依法结婚,拟申请试行永久居民签证转换/修正(MCL-07-021)并进一步办理为永久居民."
+    wwii-veteran-ra7837: "菲律宾二战退伍军人(已取得美国国籍)依据法律(R.A. 7837/1990年美国移民法相关认定)申请在菲永久居留,或其配偶、子女作为附属一并办理."
+    dependents-under-21: "主申请人拟携带未满21周岁的未婚子女作为家属(附属)共同申请或后续并案."
+    amendment-existing-prv: "已取得相关PRV身份但需进行修正(Amendment)或补充登记(如婚姻状态、长期同居声明、护照信息更新等)."
+preconditions:
+  required:
+    eligibility-general: "一般类:已持有效期为一年的试行非配额移民签证身份."
+    eligibility-chinese-spouse: "中国籍与菲配:与菲律宾公民合法结婚,且有合法入境与在菲授权停留记录(含最新入境章)."
+    eligibility-veteran: "退伍军人类:属菲律宾二战退伍军人,已取得美国国籍,并能证明曾为菲律宾公民及服役事实."
+    cgaf-forms: "提交综合通用申请表 CGAF(移民签证专用)两份原件,按新版表格规范填写."
+    civil-reg-psa: "所有民事登记文件(出生/结婚/死亡证明等)须为菲律宾统计局(PSA)出具的原件."
+    foreign-doc-auth: "外国文书需由具有属地管辖权的菲律宾驻外机构(FSP)或在菲外交部(DFA)认证,并附英文译文."
+    background-health: "满足背景审查与健康检疫要求(如NBI无犯罪证明、移民局无案证明、必要时的检疫局医学许可)."
+  not_eligible:
+    incomplete-docs: "资料不完整、表格未按规定填写或资料未按清单顺序编排装订."
+    invalid-stay: "缺乏合法入境或当前授权停留无效/已过期且未规范化处理."
+    fraud-docs: "提交虚假陈述或伪造文件."
+    no-appearance: "未按规定参加面谈/听证或未配合图像与指纹采集."
+    missing-boq: "属需额外许可但未满足(如来自指定国家且缺少检疫局医学许可)的情形."
+pre_required_documents:
+  mandatory:
+    cgaf-visa: "综合通用申请表 CGAF(移民签证用),两份原件,分别用于主案与ACR I-Card申请."
+    passport-copies: "护照资料页复印件及最新入境章页复印件,确保当前授权停留有效."
+    bi-clearance: "移民局无案证明(BI Clearance Certificate)."
+  conditional:
+    stay-6m-nbi:
+      trigger: "自首次入境日起在菲逗留已达或超过6个月"
+      documents: ["国家调查局无犯罪证明 NBI Clearance(15岁及以上适用)"]
+    children-info-form:
+      trigger: "有随同子女或需申报子女信息"
+      documents: ["申请人子女信息表(Consolidated General Application Form for Information on Applicant’s Child(ren))"]
+    mcl07021-probationary-conversion:
+      trigger: "中国籍与菲律宾公民结婚,申请试行永久居民签证转换(MCL-07-021)"
+      documents: ["主申与菲律宾籍配偶联名请示信(Joint Letter Request)", "CGAF 两份原件", "护照资料页及最新入境章复印件", "菲律宾籍配偶出生证明(PSA)或移民局IC认证复印件", "结婚证书/结婚合同(PSA)", "有效的 NBI Clearance(如自首次入境已满6个月)", "移民局无案证明(BI Clearance)", "BOQ 医学许可(来自SBM-14-059-A附录A国家且2014年6月后入境)"]
+    mcl07021-amendment-to-prv:
+      trigger: "中国籍与菲律宾公民结婚,修正为永久居民签证(Amendment to PRV)"
+      documents: ["联名请示信", "CGAF 两份原件", "护照资料页、既有签证实施页及最新入境章复印件", "持续同居联名宣誓书(Joint Affidavit of Continuous Cohabitation)", "有效的 NBI Clearance", "移民局无案证明(BI Clearance)", "BOQ 医学许可(如适用)"]
+    marriage-amendment-v-i-005-principal:
+      trigger: "通过婚姻的永久非配额移民签证修正(V-I-005)—主申请人"
+      documents: ["联名请示信(主申与菲律宾籍配偶)", "CGAF 两份原件", "持续同居联名宣誓书", "护照资料页、签证实施页、最新入境章复印件", "有效的 NBI Clearance", "移民局无案证明(BI Clearance)", "BOQ 医学许可(如适用)"]
+    marriage-amendment-v-i-005-dependent:
+      trigger: "通过婚姻的永久非配额移民签证修正(V-I-005)—家属(附属配偶/子女)"
+      documents: ["CGAF(每位附属单独填报)", "护照资料页、签证实施页、最新入境章复印件", "与主申之亲属关系证明(如结婚证/出生证等)", "15岁及以上:有效的 NBI Clearance", "移民局无案证明(BI Clearance)", "BOQ 医学许可(如适用)"]
+    wwii-veteran-ra7837:
+      trigger: "菲律宾二战退伍军人类别(R.A. 7837/1990年美国移民法)"
+      documents: ["CGAF 两份原件", "美国护照(原件及复印件)", "归化证书或其他入籍证明(原件及复印件)", "曾为菲律宾公民之证明(如出生证明、结婚证、曾持菲律宾护照之证明或前菲律宾公民声明书)", "军事服役证明(如荣誉退役证书等)", "近三个月内白底彩色2x2照片2张"]
+process:
+  steps:
+    1-get-forms:
+      order: "1"
+      title: "获取表格与指引"
+      description: "在BI主楼PIAU或官方网站下载并领取最新CGAF与清单."
+    2-prepare-and-precheck:
+      order: "2"
+      title: "材料准备与预核"
+      description: "按清单收集、翻译与认证文件;至CRU或授权移民办公室提交预审,确保项目完备与顺序正确."
+    3-payment-and-or:
+      order: "3"
+      title: "缴费与回执"
+      description: "按受理窗口费用联单至收银缴费,妥善保管OR(官方收据),后续听证安排以收据为准."
+    4-hearing-and-biometric:
+      order: "4"
+      title: "听证与采集"
+      description: "依OR载明时间地点参加听证、图像与指纹采集.生物采集:10岁及以下每次展延采集;11岁及以上每5年采集一次."
+    5-wait-and-track:
+      order: "5"
+      title: "审批等待与进度查询"
+      description: "约2–8周;可通过 e-services.immigration.gov.ph/VisaApprovalVerification 或 immigration.gov.ph/resources/visa-application-status/ 查询."
+    6-visa-implementation:
+      order: "6"
+      title: "贴签实施与护照提交"
+      description: "审批通过后按通知提交护照进行签证实施(贴签),并完成相关登记."
+    7-acr-icard-claim:
+      order: "7"
+      title: "领取 ACR I-Card"
+      description: "约2–4周;授权代表代领需提供BI认证ID或SPA及相应身份证件;未成年人由父母代领需出示有效身份证."
+    8-post-approval:
+      order: "8"
+      title: "后续管理"
+      description: "自签准之日起90日内未办理签证实施与ACR I-Card领取,将导致签证自动取消及I-Card停用."
+  variants:
+    chinese-spouse-mcl07021:
+      name: "中国籍与菲配(MCL-07-021)"
+      trigger: "与菲律宾公民合法结婚且在菲停留、入境记录合法"
+      description: "分为试行永久居民签证转换与修正为PRV两种路径,可能需提交持续同居宣誓书及BOQ医学许可."
+      extra_requirements: ["持续同居联名宣誓书(修正场景)", "BOQ医学许可(来自附录A国家且2014年6月后入境)"]
+    marriage-amendment-v-i-005:
+      name: "婚姻类别修正(V-I-005)"
+      trigger: "通过婚姻的永久非配额移民签证修正(含依亲并案)"
+      description: "主申请人与每一名家属分别提交材料;15岁及以上家属需NBI Clearance."
+      extra_requirements: ["家属亲属关系证明", "15岁及以上家属提供NBI Clearance"]
+    wwii-veteran-category:
+      name: "菲律宾二战退伍军人(R.A. 7837)"
+      trigger: "申请人为已入籍美国的菲律宾二战退伍军人或其配偶/子女"
+      description: "需提交美国护照、入籍证明、曾为菲律宾公民之证明与服役证明及照片."
+      extra_requirements: ["2x2白底彩照2张(近三个月)"]
+  notes: "退伍军人类别须在申请人预定航班起飞前至少48小时提交申请."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "PermanentResidentVisaPRV.md"
+  items:
+    general-main:
+      label: "一般PRV · 主申请人"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,620"
+            value: 8620
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "实际以窗口收费单与OR为准(含USD项目按BSP折算)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    general-dependent-spouse:
+      label: "一般PRV · 附属配偶"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,620"
+            value: 8620
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    general-dependent-b16:
+      label: "一般PRV · 附属B16(16岁以下)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 8,370"
+            value: 8370
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    general-dependent-b14:
+      label: "一般PRV · 附属B14(14岁以下)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 7,870"
+            value: 7870
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    mcl07021-main:
+      label: "中国籍与菲配(MCL-07-021)· 主申请人"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,710"
+            value: 6710
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    mcl07021-dependent-spouse:
+      label: "中国籍与菲配(MCL-07-021)· 附属配偶"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,710"
+            value: 6710
+          notes: ""
+          attr:
+            amount:
+              currency:
+                "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    mcl07021-dependent-b16:
+      label: "中国籍与菲配(MCL-07-021)· 附属B16(16岁以下)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,710"
+            value: 6710
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    mcl07021-dependent-b14:
+      label: "中国籍与菲配(MCL-07-021)· 附属B14(14岁以下)"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 6,710"
+            value: 6710
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以OR为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    common-addons:
+      label: "通用附加费用"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Certification Fee"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "可选快速通道费(按窗口)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "ACR登记费(视组合项而定)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "ACR I-Card快通"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        bi-clearance:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "按认证通用标准计收(Certification + LRF [+ Express]),以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        nbi-clearance:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "以NBI机构公布标准为准(非移民局收费)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        other-admin-fees:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "其他杂费与行政罚按通用规则(逾期、迟延、变更等),以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "审批通过后将实施贴签并发放/更新 ACR I-Card,用于合法居留与身份识别."
+  items:
+    prv-visa-sticker:
+      name: "PRV签证贴签"
+      usage: "在护照上实施签证,作为永久居留资格凭证."
+    acr-i-card:
+      name: "ACR I-Card"
+      usage: "外侨登记身份证,用于在菲合法居留与办理相关事务."
+kpis:
+  processing_time: "材料预审当日;听证1–4周安排;审批约2–8周;贴签与I-Card制卡约2–4周."
+risks:
+  items:
+    risk-incomplete:
+      text: "资料不完整或表格填写不规范可能被退件或延迟处理."
+    risk-invalid-stay:
+      text: "授权停留无效/过期未规范化处理将导致不受理或驳回."
+    risk-fraud:
+      text: "虚假陈述或伪造文件将被驳回并可能引发刑事追诉、驱逐."
+    risk-no-appearance:
+      text: "未按要求参加面谈/采集可能导致延宕或驳回."
+    risk-missing-boq:
+      text: "来自指定国家且未提交BOQ医学许可的申请可能被拒."
+    risk-late-claim:
+      text: "签准后90日内未完成贴签与I-Card领取将自动取消签证并停用I-Card."
+info_collection:
+  applicant:
+    full-name:
+      label: "姓名(英文全名)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOE, JOHN MICHAEL"
+      notes: "与护照一致,全大写"
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-21"
+      notes: "DD-MMM-YYYY可接受"
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "Male/Female"
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Married"
+      notes: "单身/已婚/分居/丧偶/婚姻撤销/离婚"
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: ""
+    birth-country:
+      label: "出生国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BEIJING"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+    last-entry-date:
+      label: "最新一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-15"
+      notes: ""
+    last-authorized-stay-until:
+      label: "在菲最后授权停留日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-15"
+      notes: ""
+    address-ph-line1:
+      label: "在菲住址-地址行1"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "UNIT 123, ABC TOWER"
+      notes: ""
+    address-ph-city:
+      label: "在菲住址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    address-ph-province:
+      label: "在菲住址-省/地区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    address-ph-postal-code:
+      label: "在菲住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1226"
+      notes: ""
+    address-ph-country:
+      label: "在菲住址-国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    address-foreign-line1:
+      label: "海外住址-地址行1"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 MAIN ST"
+      notes: ""
+    address-foreign-city:
+      label: "海外住址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SHANGHAI"
+      notes: ""
+    address-foreign-province:
+      label: "海外住址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SHANGHAI"
+      notes: ""
+    address-foreign-postal-code:
+      label: "海外住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "200000"
+      notes: ""
+    address-foreign-country:
+      label: "海外住址-国家"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    phone-landline:
+      label: "联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "+63 2 8123456"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    occupation:
+      label: "职业"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Engineer"
+      notes: ""
+    position:
+      label: "职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Manager"
+      notes: ""
+    tin:
+      label: "纳税识别号(TIN)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有"
+    existing-acr-number:
+      label: "既有ACR号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如持有"
+    existing-acr-issue-date:
+      label: "既有ACR签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    existing-acr-expiry:
+      label: "既有ACR有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "菲律宾籍配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SANTOS, MARIA"
+      notes: ""
+    spouse-former-names:
+      label: "其他曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    citizenship-proof-type:
+      label: "菲律宾公民身份证明方式"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PSA出生证明"
+      notes: "PSA出生证明或移民局IC"
+    citizenship-proof-id-number:
+      label: "公民身份证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    marriage-date:
+      label: "结婚登记日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2018-06-01"
+      notes: ""
+    marriage-place:
+      label: "结婚登记地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "QUEZON CITY"
+      notes: ""
+    marriage-psa-cert-number:
+      label: "PSA结婚证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    cohabitation-start-date:
+      label: "持续同居起始日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    cohabitation-address:
+      label: "持续同居地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-id-type:
+      label: "身份证件种类"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippine ID"
+      notes: ""
+    spouse-id-number:
+      label: "身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "每人单列"
+    child-birth-date:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-relationship-proof-type:
+      label: "亲属关系证明类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PSA出生证"
+      notes: ""
+    child-relationship-proof-number:
+      label: "亲属关系证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-last-entry-date:
+      label: "子女最新入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-from-appendix-a-country:
+      label: "是否来自附录A国家"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: "决定是否需BOQ许可"
+    child-nbi-required:
+      label: "是否需提交NBI(15岁及以上)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+  dependents:
+    dependent-full-name:
+      label: "家属姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "配偶/子女"
+    dependent-birth-date:
+      label: "家属出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-relationship:
+      label: "与主申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Spouse"
+      notes: ""
+    dependent-relationship-proof-type:
+      label: "关系证明类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "结婚证/出生证"
+      notes: ""
+    dependent-relationship-proof-number:
+      label: "关系证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-passport-number:
+      label: "家属护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-last-entry-date:
+      label: "家属最新入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-nbi-required:
+      label: "15岁及以上是否需NBI"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+  employment: {}
+  authorization:
+    agent-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-organization:
+      label: "机构名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-bi-cert-number:
+      label: "BI认证号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI-XXXX"
+      notes: ""
+    agent-contact:
+      label: "联系方式"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    agent-office-address:
+      label: "办公地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-type:
+      label: "授权文件类型"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI认证ID"
+      notes: "BI认证ID或SPA"
+    authorization-id-number:
+      label: "授权文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    from-appendix-a-country:
+      label: "是否来自SBM-14-059-A附录A国家"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: "影响BOQ医学许可要求"
+    entry-date:
+      label: "最新入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    entry-after-june-2014:
+      label: "是否于2014年6月后入境"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+  travel_history: {}
+  compliance:
+    bi-clearance-available:
+      label: "是否已取得BI无案证明"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    nbi-clearance-available:
+      label: "是否已取得NBI无犯罪证明"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "逗留满6个月适用"
+    boq-medical-clearance-available:
+      label: "是否已取得BOQ医学许可"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+  additional_details:
+    veteran-us-passport-number:
+      label: "美国护照号码(退伍军人)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    veteran-us-passport-expiry:
+      label: "美国护照有效期(退伍军人)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    veteran-naturalization-cert-number:
+      label: "入籍证明编号(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    veteran-naturalization-issuing-authority:
+      label: "入籍证明签发机关(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    former-ph-citizen-proof-type:
+      label: "曾为菲律宾公民之证明类型(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PSA出生证明"
+      notes: ""
+    former-ph-citizen-proof-number:
+      label: "曾为菲律宾公民之证明编号(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    military-service-proof-name:
+      label: "军事服役证明名称(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Honorable Discharge Certificate"
+      notes: ""
+    military-service-issuing-unit:
+      label: "军事服役证明签发单位(退伍军人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    photo-2x2-recent-count:
+      label: "近三个月内2x2白底彩照数量"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人知悉并同意在CGAF及相关流程中提交之个人资料用于移民审理与验证."
+  certification_statement: "申请人/请愿人声明所填资料与所提交文件真实、准确并愿承担法律责任;必要时签署宣誓/声明文件及拇指印/签名."
+faq:
+  qas:
+    processing-time:
+      question: "办理周期多长?"
+      answer: "材料预审通常当日完成;听证多在1–4周内安排;审批约2–8周不等;贴签与I-Card制卡一般需2–4周."
+    nbi-when-needed:
+      question: "NBI无犯罪证明何时需要?"
+      answer: "自首次入境已满6个月再提交申请原则上需提供有效的NBI Clearance(15岁及以上家属同样适用);首次入境未满6个月通常不需,但以窗口要求为准."
+    why-boq:
+      question: "来自部分国家为何要提交检疫局医学许可?"
+      answer: "若属SBM-14-059-A附录A所列国家且在2014年6月后入境,需提交检疫局医学许可(BOQ Medical Clearance)原件或经认证副本."
+    fee-difference:
+      question: "费用为什么与网上信息有差异?"
+      answer: "本指南列示的PRV主体费额参考2014年公示;以受理窗口实际开单与OR为准,USD项目按BSP汇率折算."
+    late-icard:
+      question: "未按时领取ACR I-Card会怎样?"
+      answer: "自签准之日起90日内未完成签证实施与I-Card领取,将导致签证自动取消及I-Card停用."
+    amendment-marriage:
+      question: "婚姻类“修正”需要哪些关键材料?"
+      answer: "需持续同居联名宣誓书、NBI Clearance、BI无案证明及(如适用)BOQ医学许可;家属并案需亲属关系证明与相应文件."
+    can-agent-handle:
+      question: "能否由代理人全程代办?"
+      answer: "可由持BI认证的旅行社/律所代办;非BI认证实体须提供每位申请人的SPA原件与代理人政府签发有效身份证复印件;申请人及/或请愿人可能需出席面谈或采集."
+    incomplete-docs:
+      question: "材料不全会被直接驳回吗?"
+      answer: "资料不全或格式不符可能被退件或延迟处理;移民局亦可要求补件与进一步核查."
+disclaimers:
+  items:
+    fees-subject-to-or:
+      text: "费用以窗口收费单与官方收据(OR)为准,USD项目按办理当日BSP汇率折算."
+    fee-table-vintage:
+      text: "主体费额参考2014年口径;如与现场不符,以最新公示为准."
+    supplemental-docs:
+      text: "移民局可根据核查需要要求补充证明或到场说明."
+service_related:
+  links:
+    visa-approval-verification: "https://e-services.immigration.gov.ph/VisaApprovalVerification"
+    visa-application-status: "https://immigration.gov.ph/resources/visa-application-status/"

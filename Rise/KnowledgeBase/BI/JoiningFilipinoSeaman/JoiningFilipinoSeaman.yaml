@@ -1,0 +1,789 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["Joining (Sign-On) Filipino Seafarer"]
+department: "BureauOfImmigration"
+name: "菲律宾籍船员登船(Sign-On)许可办理"
+slug: "joining-filipino-seaman"
+type: "reference"
+semantic_profile:
+  intent_id: "joining-filipino-seaman"
+  category: "immigration"
+  tags: []
+service_overview: "面向在菲律宾港口登船的菲律宾籍船员,由移民局海湾服务科(BSS)审核资料并核对不良纪录,符合条件签发核准函,供口岸移民据以放行;适合由航运公司或人力仲介集中办理,确保流程合规、减少因资料缺漏或分港登船要件不齐导致的延误."
+applicability:
+  items:
+    filipino-seafarer-joining-in-ph-ports: "菲律宾籍船员在本国港口加入国际航次船舶,需要移民局核准登船."
+    subport-embarkation-requires-notice-to-allow: "船员在分港(外港、次级口岸)登船,需另行提交“允许通知”以便当地移民放行."
+    agency-batch-processing: "航运/人力公司作为代理批量为同批次船员办理登船许可."
+    updated-vessel-or-port-schedule: "船员近期变更船舶或靠港安排,需更新登船资料并重新取得核准函."
+    derogatory-or-name-hit-cases: "曾有同名疑似、不良纪录需先行澄清后再办理登船许可的个案."
+preconditions:
+  required:
+    filipino-citizen-with-valid-passport-and-seaman-book: "申请人为菲律宾公民,持有效护照与海员证."
+    application-by-local-shipping-or-manning-agency: "由本地航运公司或人力派遣公司作为申请主体提出书面申请."
+    provide-vessel-and-eta-info: "提供船舶名称与预计靠港信息(到港通知/到港通知单)."
+    provide-employment-contract-and-oec: "提供有效雇佣合同与海外就业证明(OEC)."
+    pass-no-derogatory-check: "通过不良纪录核对(No Derogatory),无未结案件或移民限制."
+    subport-requires-notice-to-allow: "若在分港/外港登船,须准备“允许通知”(Notice to Allow)并按规定份数提交."
+    submit-departure-card: "递交已填写的移民出境卡(Departure Card)."
+  not_eligible:
+    incomplete-or-late-submission: "资料不全、顺序/格式不符规定或逾越规定提交时限."
+    derogatory-without-ccs-clearance: "命中不良纪录且未先取得认证与清算科(CCS)出具的清关/澄清文件."
+    inconsistent-letters-and-sailing-info: "申请函、担保函与航程/靠港信息不一致或存在明显矛盾."
+    unclear-port-call-or-unchanged-updates: "船舶靠港信息不明确、变更未同步更新且无正式更正文件."
+    unauthorized-representative-without-proof: "由非授权联络人递交且未附代理机构身份证明."
+pre_required_documents:
+  mandatory:
+    application-letter-to-commissioner-2-copies: "由航运/人力公司出具并致移民局局长的登船申请函(2 份),载明船名与靠港口岸."
+    no-derogatory-stamp-or-verification: "不良纪录核对结果(No Derogatory 盖章/验证)."
+    guarantee-letter-original-2-copies: "本地航运/人力公司出具的担保函原件(2 份)."
+    shipping-notice-advice-of-arrival: "船舶到港通知/到港通报(Shipping notice/advice of arrival)."
+    passport-data-page-original-and-copy: "船员护照资料页原件及复印件."
+    seaman-book-original-and-copy: "海员证原件及复印件."
+    employment-contract-original-and-copy: "雇佣合同原件及复印件."
+    oec-original-and-copy: "海外就业证明 OEC 原件及复印件."
+    immigration-departure-card: "填妥的移民出境卡(Immigration departure card)."
+  conditional:
+    designated-liaison-submission:
+      trigger: "指定联络官递件"
+      documents: ["代理公司工作证复印件", "公司证件复印件"]
+    derogatory-record-hit:
+      trigger: "命中不良纪录"
+      documents: ["CCS 澄清/无案证明(如需)"]
+    subport-or-outport-embarkation:
+      trigger: "分港/外港登船"
+      documents: ["“允许通知” Notice to Allow(BI Form 2014-10-008 Rev 0)2 份(致分港外侨管制官)"]
+    recommended-attachments:
+      trigger: "推荐附(便于核对)"
+      documents: ["船方/代理联系方式页", "最新靠港时间表"]
+process:
+  steps:
+    prepare-and-compile-documents:
+      order: "1"
+      title: "资料准备与装订(申请人/代理)"
+      description: "按材料清单与提交规范整理文件,确保原件与复印件齐备(约 10–20 分钟,依批量而定)."
+    file-submission-and-initial-check:
+      order: "2"
+      title: "递件与初审(BSS 窗口)"
+      description: "窗口核对材料顺序与有效性,同步发起不良纪录查询(约 35 分钟)."
+    review-and-approval:
+      order: "3"
+      title: "业务复核与核准(BSS 主管/科长)"
+      description: "对异常信息进行再核对,完成核准签发(包含在上一步时长)."
+    release-approval-letter:
+      order: "4"
+      title: "结果发放(BSS 窗口)"
+      description: "通过现场广播/叫号通知,代理领取核准函,用于口岸登船放行(约 2 分钟)."
+    port-clearance-execution:
+      order: "5"
+      title: "口岸执行(港口移民)"
+      description: "持核准函与人员证件于登船当日接受查验并完成放行;如为分港登船,须同步提交“允许通知”."
+  variants: {}
+  notes: "正常情形下,从递件至取件约 37 分钟完成;批量或异常核对将顺延.\n结果领取需出示递件凭据及代理身份证明,核准函请妥善保管直至登船完毕."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "JoiningFilipinoSeaman.md"
+  items:
+    sign-on-permit:
+      label: "登船许可 · 受理与相关"
+      details:
+        acceptance-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "官方未列出固定规费,按当前版本口径执行."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        agency-service-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "由代理机构自定;航运/人力公司可收取代办/文书费,双方自行确认."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "无统一固定规费;如涉及第三方或关联项目,费用以现场开单/正式收据为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    certification-related:
+      label: "认证类收费(如需证明/在案副本)"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Certification 费用;仅在被要求提交“无案证明/旅行记录/档案认证副本”等证明性文件时适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee(LRF)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如选加急(Express)加收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    crew-list-visa:
+      label: "船员名单签证(Crew List Visa)· 关联参考"
+      details:
+        crew-list-visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "每名 PHP 100;该项目面向外籍船员,菲律宾籍登船许可一般不适用,列作关联参考."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "每名 LRF PHP 10."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "加急(Express)按批处理加收 PHP 500."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "合计依人数与是否加急而变动."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    other-fees:
+      label: "其他杂费"
+      details:
+        miscellaneous:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "以现场通知为准(可能包含复印、公证、快递等第三方费用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "核准函用于口岸移民放行;如为分港/外港登船,需同时提交“允许通知”(Notice to Allow)."
+  items:
+    approval-letter:
+      name: "核准函(Sign-On 许可核准)"
+      usage: "供港口移民人员查验并据以放行登船."
+    notice-to-allow:
+      name: "允许通知(Notice to Allow)"
+      usage: "分港/外港登船时提交给当地外侨管制官以便放行."
+kpis:
+  processing_time: "正常情况下递件至取件约 37 分钟(批量或异常核对将顺延)."
+risks:
+  items:
+    noncompliant-submission-format:
+      text: "未按“文件清单(CDR)”顺序及法式(8½×14 英寸)文件夹提交,可能不予受理."
+    derogatory-not-cleared:
+      text: "命中不良纪录或同名疑似未先向 CCS 清案,将被搁置或驳回."
+    missing-notice-to-allow:
+      text: "分港/外港登船缺少“允许通知”将导致当地移民无法放行."
+    information-inconsistency:
+      text: "申请函、担保函、到港信息与合同内容不一致,窗口可能退件或要求更正."
+    originals-required-for-verification:
+      text: "护照、海员证、OEC 与合同可能要求出示原件核对;复印件需清晰可读."
+    late-submission-risks:
+      text: "靠港安排临近才递件存在滞后风险,变动需及时书面告知并补交更新文件."
+    fraud-or-falsification:
+      text: "伪造/变造文件或隐瞒不良纪录将面临拒办、行政处罚乃至刑责."
+    pickup-window-missed:
+      text: "未按公告与叫号及时取件,可能影响当日登船衔接."
+    supplemental-documents-may-be-required:
+      text: "移民局可要求补充材料以进一步核验;未按时补件可能导致延误或驳回."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Dela Cruz"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan"
+      notes: ""
+    middle-name:
+      label: "中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Reyes"
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "男"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "菲律宾"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DFA Manila"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-08-15"
+      notes: ""
+    seaman-book-number:
+      label: "海员证号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-expiry:
+      label: "海员证有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "juan@example.com"
+      notes: ""
+    permanent-address-line1:
+      label: "永久住址—地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    permanent-address-city:
+      label: "永久住址—城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    permanent-address-province:
+      label: "永久住址—省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    permanent-address-country:
+      label: "永久住址—国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    permanent-address-postal-code:
+      label: "永久住址—邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-address-line1:
+      label: "当前通讯地址—地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-address-city:
+      label: "当前通讯地址—城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-address-province:
+      label: "当前通讯地址—省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-address-country:
+      label: "当前通讯地址—国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-address-postal-code:
+      label: "当前通讯地址—邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    oec-number:
+      label: "OEC 编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    oec-issue-date:
+      label: "OEC 签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-contract-number:
+      label: "雇佣合同编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-contract-sign-date:
+      label: "雇佣合同签订日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-name:
+      label: "雇主名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    had-derogatory-record:
+      label: "是否曾被记录为不良纪录/命中名单"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有请说明并提供相关证明."
+    derogatory-record-notes:
+      label: "不良纪录说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse:
+    spouse-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-relationship:
+      label: "与子女关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    shipping-company-name:
+      label: "航运公司全称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    manpower-agency-name:
+      label: "人力公司全称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-line1:
+      label: "公司地址—地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-city:
+      label: "公司地址—城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-province:
+      label: "公司地址—省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address-country:
+      label: "公司地址—国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-registration-id:
+      label: "公司统一注册信息(SEC/DTI 注册号)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-name:
+      label: "指定联络官姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-title:
+      label: "联络官职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-phone:
+      label: "联络官电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-email:
+      label: "联络官电邮"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-officer-id-number:
+      label: "联络公司身份证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "递件需附相关证件复印件."
+  authorization: {}
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    vessel-imo-number:
+      label: "IMO 编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    port-of-call:
+      label: "预计靠港口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    terminal-berth:
+      label: "码头/泊位(若已知)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    eta-date:
+      label: "预计靠港日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    eta-time-window:
+      label: "预计靠港时间窗口"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "08:00–12:00"
+      notes: ""
+    voyage-number:
+      label: "航次号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    job-position:
+      label: "工作岗位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    embarkation-date:
+      label: "上船日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    subport-embarkation:
+      label: "是否为分港/外港登船"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    notice-to-allow-submitted:
+      label: "是否已准备“允许通知”"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "分港/外港登船需提交两份."
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    family-contact-phone:
+      label: "家属联系方式"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-name:
+      label: "紧急联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    emergency-contact-phone:
+      label: "紧急联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "提交的个人数据仅用于移民核验与放行用途."
+  certification_statement: "申请人/代理对所提交材料的真实性与完整性负责,虚假或隐瞒将导致拒办或处罚."
+faq:
+  qas:
+    fees-required:
+      question: "办理是否需要缴纳移民局费用?"
+      answer: "该登船许可未列官方固定规费.若被要求出具在案证明(如无案证明/旅行记录/档案认证)或由代理提供代办服务,可能产生相应费用,具体以现场开单与收据为准."
+    how-to-handle-derogatory:
+      question: "命中不良纪录如何处理?"
+      answer: "需先向认证与清算科(CCS)申请澄清/清关文件,通过后再向 BSS 递件.未清案的申请将被搁置或驳回."
+    subport-extra-materials:
+      question: "在分港/外港登船需要额外材料吗?"
+      answer: "需要.须提交两份“允许通知”(Notice to Allow,BI Form 2014-10-008 Rev 0),并致当地外侨管制官;缺件将无法放行."
+    standard-processing-time:
+      question: "标准办理时长是多少?"
+      answer: "正常情况下递件至取件约 37 分钟(含窗口审核与主管核准).批量递交或涉及异常核查的案件将顺延."
+    mismatch-oec-or-contract:
+      question: "OEC 或合同信息与申请函不一致会怎样?"
+      answer: "信息不一致属于高风险情形,窗口可能退件或要求补交更正证明;未能及时修正会影响核准与登船."
+    can-liaison-file:
+      question: "可由联络官代为递件吗?"
+      answer: "可以.指定联络官递件需一并提交公司身份证明复印件,且对材料真实性与完整性负责."
+    validity-and-schedule-change:
+      question: "核准函是否有使用期限?若靠港时间临时变动怎么办?"
+      answer: "核准函应与申报的靠港/登船信息一致并在该时间窗口内使用.若靠港计划变更,应立即提交更新文件并按窗口指引更换或重领核准函."
+disclaimers:
+  items:
+    form-versions:
+      text: "申请与清单格式:BI FORM 2014-10-007 Rev 0(标题“Joining (Sign-On) Filipino Seafarer”);分港允许通知:BI Form 2014-10-008 Rev 0(Notice to Allow)."
+    fee-remark-no-official:
+      text: "目前未检索到本服务的单独官方固定收费条目,标注为“暂无官方费用信息(待补充)”."
+    fee-fx-bsp:
+      text: "如费用含美元项目,统一按菲律宾央行(BSP)汇率折算."
+service_related:
+  links: {}

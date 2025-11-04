@@ -1,0 +1,999 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "ECC 出境许可一体化办理指引(Emigration Clearance Certificate, ECC/EEC)"
+slug: "emigration-clearance-certificate"
+type: "reference"
+semantic_profile:
+  intent_id: "emigration-clearance-certificate"
+  category: "immigration-exit-clearance"
+  tags: ["ECC", "ECC-A", "ECC-B", "RP", "SRC", "9A", "9F", "9G", "ACR I-Card", "CRTV"]
+service_overview: "整合菲律宾移民局(BI)ECC相关办理路径与材料规范,覆盖标准递交、非现身授权、婴儿与首次离境豁免、与I-Card注销/工作签降级联动、逾期整改后放行等场景,协助在菲完成离境审核准备与材料提交,规范缴费并领取BI签发的ECC证书或放行确认以顺利出境."
+applicability:
+  items:
+    standard-exit-9a: "标准离境:短期签证(9A)延签完成后,办理ECC并跟进护照释放与取证."
+    infants-and-children: "儿童/婴儿:婴儿ECC附带信函与照片;儿童首次国际离境申请ECC豁免."
+    9g-cancellation-or-downgrade: "9G/工作签撤销或降签:交回ACR I-Card、完成降签,转回9A后办理ECC."
+    overstay-rectification-then-exit: "逾期整改后离境:完成MR/罚款与必要补报,再办理ECC作为最终放行环节."
+    students-and-residents: "学生/居民类:9F学生离境的ECC+SRC组合,或需要ECC-B/RP/SRC的居民类出境."
+preconditions:
+  required:
+    in-ph-submission-or-authorized: "在菲可受理:本人或具有效授权的代表在菲律宾递交与取件;远程客户需安排可靠交接."
+    valid-status: "有效身份状态:通常以有效9A(或已降回9A)的在菲停留为基础;居民/学生类按其签证类别要求处理ECC-B/SRC."
+    prior-matters-completed: "前序已办结:按顺序完成应办事项(最近一期签证延长、降签/撤销、必要年报、逾期MR与罚款、I-Card注销/交回等)."
+    docs-and-payment-proof-ready: "材料与缴费凭证齐全:按清单准备护照、表格、收据与证明,确保缴费对账可追溯."
+  not_eligible:
+    legal-restrictions: "存在黑名单、驱逐令或未决法律程序等限制未解除."
+    must-appear-not-attended: "需主办移民局现场处理而未按要求到场(部分降签护照案例)."
+pre_required_documents:
+  mandatory:
+    passport-original-and-copies: "护照原件(含最近入境章与全部延签贴纸/批注页可复印件)"
+    ecc-application-forms-signed: "ECC申请表两份(完整填写并签名)"
+    latest-visa-or-downgrade-or: "最近一次签证延签或降签的官方收据/命令(OR/Order)"
+    payment-proof-and-payer-info: "费用付款凭证与缴费人信息(支持内部对账与BI OR核对)"
+  conditional:
+    authorized-representative:
+      trigger: "授权代表办理"
+      documents: ["经公证的SPA原件", "提交/取件指示", "联系人与电话"]
+    infant-ecc:
+      trigger: "婴儿ECC"
+      documents: ["家长说明信函(一次性上交)", "婴儿照片", "PSA出生证明", "婴儿及父母护照"]
+    first-exit-exemption:
+      trigger: "儿童首次国际离境ECC豁免"
+      documents: ["护照", "亲子关系宣誓书(公证)", "菲律宾离境同意书(签署原件)"]
+    icard-cancellation-or-turnover:
+      trigger: "I-Card注销/交回联动"
+      documents: ["ACR I-Card原件", "交付/注销凭证及交接确认"]
+    downgrade-or-9g-cancellation:
+      trigger: "降签/工作签撤销专案"
+      documents: ["工作签令", "降签令", "全部延签收据", "最新观光签证到达证明"]
+    after-overstay-rectification:
+      trigger: "逾期整改后办理ECC"
+      documents: ["MR申请及决定", "逾期罚款缴纳收据"]
+    travel-history-supplement:
+      trigger: "旅行记录补强(如被要求)"
+      documents: ["旅行记录证明(由CCS申请)"]
+    other-possible-requirements:
+      trigger: "其他可能要求"
+      documents: ["年报AR凭证", "NTSP(同名排除证明)", "无案证明等"]
+process:
+  steps:
+    precheck-and-intake:
+      order: "1"
+      title: "前序核验与受理准备"
+      description: "核对签证状态顺序是否完整(延签/降签/年报/MR),审阅护照与凭证,必要时先行确认最近入境记录.预计0.5–1个工作日."
+    forms-and-docs-preparation:
+      order: "2"
+      title: "表格与材料完善"
+      description: "填写ECC表格、准备婴儿/豁免函件与附件;如需完整出入境历史,同步向CCS申请旅行记录并跟进.预计0.5–1个工作日(旅行记录如加办按CCS时效)."
+    fee-estimation-and-payment:
+      order: "3"
+      title: "费用测算与缴费"
+      description: "依据签证类别与停留时长测算ECC、CRTV、ACR费、LRF及快通费等,在BI收银窗口缴费并留存OR;区分代理服务费与BI法定收费.预计当日完成."
+    counter-submission:
+      order: "4"
+      title: "窗口递交与受理回执"
+      description: "向BI提交ECC申请材料,获取受理凭证/OR,并确认取件时间与是否留存护照/I-Card原件.预计当日受理."
+    release-followup-and-claim:
+      order: "5"
+      title: "放行跟进与取证"
+      description: "跟踪文件审核与证书释放;如与I-Card注销/交回联动,按窗口指引同步办理.领取护照、ECC原件或放行证明.标准1–3个工作日,视BI工作量."
+    delivery-and-archiving:
+      order: "6"
+      title: "交付与归档"
+      description: "向客户交付ECC证书/放行确认、缴费OR、提交清单与注意事项;留存婴儿信函、I-Card上交等交接证明复本.预计当日完成."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "EmigrationClearanceCertificate.md"
+  items:
+    ecca-temp-visitor-common:
+      label: "ECC-A · 临时访客/9A · 常见组合"
+      details:
+        ecc-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-ecc:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "与ECC费同时收取"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-registration:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "窗口常与ECC并收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-acr:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "ACR登记费对应LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crtv:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "停留累计≥6个月触发"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-crtv:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "CRTV对应LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(如适用)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    eccb-rp-src-adult-1y:
+      label: "ECC-B + RP/SRC · 成人 · 1年"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: ">16岁适用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-total:
+          amount:
+            currency: "PHP"
+            display: "PHP 30"
+            value: 30
+          notes: "该组合对应LRF合计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    eccb-rp-src-adult-6m:
+      label: "ECC-B + RP/SRC · 成人 · 6个月"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: ">16岁适用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-total:
+          amount:
+            currency: "PHP"
+            display: "PHP 20"
+            value: 20
+          notes: "该组合对应LRF合计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    eccb-rp-src-minor:
+      label: "ECC替代为CE · 未成年人"
+      details:
+        ce-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 200"
+            value: 200
+          notes: "以CE替代ECC"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-ce:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "对应LRF,金额依窗口为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "按有效期收取,金额依窗口为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(如适用)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    student-9f-exit:
+      label: "学生9F离境 · 示例组合"
+      details:
+        src:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: ""
+          attr:
+            amount:
+              currency:
+                "str"
+              value: "int"
+            notes: "str"
+        lrf-total:
+          amount:
+            currency: "PHP"
+            display: "PHP 20"
+            value: 20
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "加急(如选)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    certification-common:
+      label: "认证/记录类 · 常见费用"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "旅行记录/各类证明"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-cert:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证对应LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-cert:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证类加急(如选)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ntsp-and-clearances:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "NTSP、无案证明、在案副本CTC等按认证标准计费,具体以窗口为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    overstay-and-addons:
+      label: "逾期与附加"
+      details:
+        overstay-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/月"
+            value: null
+            range: null
+            tiers:
+              - value: 500
+                condition: "per month"
+          notes: "逾期罚款按月计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        mr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "MR(复议)费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-mr:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "MR对应LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: ">16岁适用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证贴纸"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    icard-related:
+      label: "ACR I-Card · 如涉及"
+      details:
+        icard-fee:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "按BSP汇率折算如以PHP支付"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        icard-express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "I-Card快通"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "交付BI签发的出境许可结果及相关凭证,确保顺利离境与可追溯对账."
+  items:
+    ecc-original:
+      name: "ECC证书原件"
+      usage: "出境查验与留档"
+    release-clearance:
+      name: "放行确认/证明"
+      usage: "作为替代或补充放行依据(如适用)"
+    official-receipts:
+      name: "BI官方OR收据"
+      usage: "费用对账、补件或后续核验"
+    submission-checklist:
+      name: "提交材料清单"
+      usage: "核对提交项与补件指引"
+    handover-proofs:
+      name: "交接证明复本(婴儿信函、I-Card交回等)"
+      usage: "佐证材料留存备查"
+kpis:
+  processing_time: "1–3个工作日(标准,视BI工作量)"
+risks:
+  items:
+    sequence-critical:
+      "办理顺序为首要风险点:未完成延签、降签、年报或逾期整改,ECC将被拒收或延迟."
+    crtv-trigger:
+      "停留累计达6个月通常触发CRTV缴纳;需提前预算与安排时间."
+    original-retention:
+      "BI可能在审核期间暂存护照、I-Card或婴儿信函等原件;须确认归还时间与可否复印."
+    workload-and-expedite-limit:
+      "政策更新与排队压力影响时效;加急仅能缩短外部等待,无法改变内部审批节奏."
+    travel-records-supplement:
+      "如被要求补交出入境记录,应尽早向CCS申请旅行记录或无记录证明,以免延误取证."
+    main-office-on-site:
+      "部分降签护照或复杂个案需主办移民局现场办理,遇紧急离境应当日到场处理."
+    keep-receipts:
+      "付款凭证与案件编号需妥善留存,用于对账、补件或后续核验."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: ""
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: ""
+    middle-name:
+      label: "中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ALAN"
+      notes: "如无可留空"
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINESE"
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "如 Male/Female"
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-08-15"
+      notes: ""
+    address-line1:
+      label: "在菲住址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Mabini St."
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "儿童/婴儿姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BABY DOE"
+      notes: ""
+    psa-birth-certificate-number:
+      label: "PSA出生证明号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PSA-XXXXXX"
+      notes: ""
+    relationship-to-parent:
+      label: "与父母关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Son"
+      notes: ""
+    accompanying-parent-full-name:
+      label: "随行家长姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JANE DOE"
+      notes: ""
+    accompanying-parent-passport-number:
+      label: "随行家长护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P98765432"
+      notes: ""
+  dependents: {}
+  employment: {}
+  authorization:
+    spa-present-flag:
+      label: "是否提供经公证的SPA授权书"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    spa-reference-number:
+      label: "SPA编号/参考"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPA-2024-001"
+      notes: ""
+    authorized-representative-full-name:
+      label: "被授权人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "AGENT LEE"
+      notes: ""
+    authorized-representative-id-number:
+      label: "被授权人证件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-123456789"
+      notes: ""
+    authorized-representative-phone:
+      label: "被授权人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639181112223"
+      notes: ""
+  arrival_info:
+    planned-departure-date:
+      label: "计划离境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-15"
+      notes: ""
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: "^[A-Z]{2}\\d{2,4}$"
+      example: "PR356"
+      notes: ""
+    departure-port:
+      label: "离境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MNL NAIA T3"
+      notes: ""
+  travel_history:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-07-10"
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MNL NAIA"
+      notes: ""
+  compliance:
+    current-visa-category:
+      label: "当前签证类别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9A"
+      notes: "如 9A/9F/9G/其他"
+    current-visa-expiry:
+      label: "当前签证到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-31"
+      notes: ""
+    last-extension-or-number:
+      label: "最近一次延签OR编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "OR-123456789"
+      notes: ""
+    last-extension-or-date:
+      label: "最近一次延签OR日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-15"
+      notes: ""
+    cumulative-stay-6m-flag:
+      label: "是否已累计停留≥6个月"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "IC-0001234567"
+      notes: ""
+    acr-icard-category:
+      label: "ACR I-Card类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Temporary Visitor"
+      notes: ""
+    acr-icard-expiry:
+      label: "ACR I-Card有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-06-30"
+      notes: ""
+    overstay-flag:
+      label: "是否存在逾期"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+    mr-submitted-flag:
+      label: "是否已提交MR"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    mr-or-number:
+      label: "MR相关OR编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OR-987654321"
+      notes: ""
+  additional_details:
+    downgrade-order-number:
+      label: "降签命令编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DO-2024-00123"
+      notes: ""
+    work-visa-order-number:
+      label: "工作签令编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WG-2023-7788"
+      notes: ""
+    all-extension-or-receipts-provided-flag:
+      label: "是否已提供全部延签收据"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    icard-turnover-proof:
+      label: "I-Card交回凭证"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Turnover Slip No. 12345"
+      notes: ""
+    icard-cancellation-proof:
+      label: "I-Card注销凭证"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Cancellation Ref: CAN-2024-0099"
+      notes: ""
+    travel-records-required-flag:
+      label: "是否被要求补交出入境记录"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+    ccs-application-reference:
+      label: "CCS旅行记录申请参考号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CCS-REF-5566"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "本服务涉及签名/宣誓文件(如宣誓书、离境同意书等),申请人需按受理窗口要求签署并对提交信息的真实性负责."
+faq:
+  qas:
+    presence-required:
+      question: "办理ECC一定要本人到场吗?"
+      answer: "大多数情形要求本人在菲配合签名/取件;部分分局接受持护照与有效SPA的授权代办.以受理窗口口径为准,建议按“需本人”进行行程规划."
+    processing-time:
+      question: "办理周期多久?"
+      answer: "通常1–3个工作日,具体取决于BI工作量.即使选择加急,释放节奏仍由BI内部流程决定."
+    overstay-then-ecc:
+      question: "我已逾期,能直接申请ECC离境吗?"
+      answer: "可以,但应先完成MR及逾期罚款等整改,并取得相关OR,再进入ECC递交流程."
+    child-first-exit:
+      question: "儿童首次离境如何处理?"
+      answer: "可申请ECC豁免,需提供护照、亲子关系宣誓书(公证)、菲律宾离境同意书(签署).窗口会出具受理与收据,按指引执行."
+    infant-materials:
+      question: "婴儿需要准备哪些材料?"
+      answer: "婴儿ECC须提交家长说明信函与照片、PSA出生证明、婴儿及父母护照;说明信一般为一次性上交,请预留备份."
+    9g-exit-flow:
+      question: "9G工作签要离境如何办?"
+      answer: "先按要求降签/撤销并交回I-Card,恢复至9A身份后申办ECC;需提交降签令、工作签令与全部延签收据等链条材料."
+    travel-records:
+      question: "被要求补交出入境记录怎么办?"
+      answer: "向CCS申请旅行记录或无记录证明;如选认证/加急按Certification费标准收取,请预留办理时间与费用."
+    ecca-vs-eccb:
+      question: "ECC-A与ECC-B有什么区别?"
+      answer: "ECC-A多适用于临时访客(如9A)离境;ECC-B通常与RP/SRC搭配,适用于登记外侨/居民类离境,费用结构与材料组合不同.最终以窗口判定为准."
+disclaimers:
+  items:
+    amounts-subject-to-bi:
+      "上述费用为常见官方价目摘录与示例组合,最终金额以BI窗口开单与OR为准,可能因个案叠加项目有所差异."
+    timeline-not-guaranteed:
+      "办理时效受政策更新与窗口工作量影响;加急仅优化排队流程,不能保证审批释放时间."
+service_related:
+  links: {}

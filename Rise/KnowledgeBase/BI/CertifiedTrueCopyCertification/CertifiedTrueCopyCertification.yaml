@@ -1,0 +1,426 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "Certified True Copy of Derogatory Records"
+department: "BureauOfImmigration"
+name: "不良记录认证副本(Certified True Copy of Derogatory Records)"
+slug: "certified-true-copy-of-derogatory-records"
+type: "reference"
+semantic_profile:
+  intent_id: "certified-true-copy-derogatory-records"
+  category: "certifications"
+  tags:
+    - "derogatory"
+    - "certified-true-copy"
+    - "BI-CCS"
+service_overview: "由移民局认证与证明科出具个人在案不良纪录(derogatory)的认证真实副本,用于法院诉讼、移民申诉、签证审查或身份核验.文件加盖骑缝章与干印,具正式证明效力.可本人申请或授权代表代办;海外当事人可通过经公证及加附认证的授权书委托代理在菲办理."
+applicability:
+  items:
+    court-or-admin-submission: "需要向法院或行政机关提交本人涉移民不良纪录的认证副本,用于诉讼或复议."
+    visa-or-immigration-review: "申请签证、出入境许可或移民项目时,被要求说明是否存在相同姓名人员的不良纪录,并提供官方认证件."
+    precheck-before-other-certifications: "在办理无案证明、旅行纪录证明或其他认证前,先行调取并核验历史负面纪录."
+    overseas-entrustment: "海外当事人无法到场,由授权代表在菲律宾提交纸质申请并领取认证文件."
+    corporate-compliance-or-background-check: "单位合规审查、背景调查或内部风控需要核验同名人员是否与当事人为同一人."
+preconditions:
+  required:
+    purpose-and-letter: "明确说明用途,并提交致移民局长的书面申请函."
+    application-form-ccs-a-cdr-2016: "填写并提交“申请不良记录认证副本”BI Form No. CCS-A-CDR-2016."
+    id-or-authorization: "本人办理出示有效身份证件;代理办理需提供移民局认证代理身份证明或每名申请人的原始授权书(SPA)."
+    apostille-if-overseas: "授权文件如在境外出具,须经公证并办理加附认证;代理人提交政府核发有效身份证件复印件."
+    ntsp-if-name-unclear: "同名情形未能排除时,可能被要求先取得“非同一人证明”(NTSP)."
+  not_eligible:
+    improper-form-filling: "申请表未用黑色墨水填写、存在空项且未按要求填写“N/A”、或信息不完整不清楚的."
+    no-purpose-or-letter: "未提交用途说明或致局长申请函的."
+    invalid-authorization: "授权材料不符合规范(无公证/加附认证、签署主体不一致、缺少有效身份证)或疑似伪造的."
+    wrong-purpose: "申请目的与本服务功能不符(例如试图以本件替代“无案证明/清关证明”)."
+    noncooperation: "拒不配合身份核验或补件要求的."
+pre_required_documents:
+  mandatory:
+    letter-to-commissioner: "致移民局长的书面申请函(载明用途与所需认证的具体纪录)."
+    application-form-ccs-a-cdr-2016: "申请表(BI Form No. CCS-A-CDR-2016)正本一份."
+    applicant-valid-id: "申请人有效身份证件(在菲地址信息如有请一并提供)."
+    records-list-on-form: "待认证的具体纪录清单(在申请表“Documents to be certified”栏明确填写)."
+    payment-receipt: "费用缴纳凭证(支付后回 CCS 换领领证凭条时出示)."
+  conditional:
+    authorized-representative:
+      trigger: "由授权代表办理时"
+      documents:
+        - "移民局认证代理身份证明(BI Accreditation ID Certificate)或每名申请人的原始授权书(SPA)"
+        - "代理人政府核发有效身份证件复印件(领取时需出示身份证原件)"
+    overseas-authorization:
+      trigger: "海外授权"
+      documents:
+        - "授权书须经当地公证并完成加附认证(Apostille)"
+    same-name-ambiguity:
+      trigger: "同名疑义"
+      documents:
+        - "非同一人证明(NTSP)"
+    multiple-derogatory-records:
+      trigger: "若案件涉及多份不良纪录"
+      documents:
+        - "在申请表中逐项列明所有需认证的不良纪录,便于统一检索与计费"
+process:
+  steps:
+    submission-and-intake:
+      order: "1"
+      title: "递件受理(CCS 窗口23,约5分钟)"
+      description: "提交申请函、申请表与身份证明(以及授权材料,如适用),通过形式审查后领取受理/等候凭条."
+    record-retrieval-and-preparation:
+      order: "2"
+      title: "案卷检索与制作(CCS 内部处理,约40分钟)"
+      description: "调取相应不良纪录,完成核对与制版.如发现同名疑义或信息缺漏,将通知补件或建议先办 NTSP."
+    payment-and-claim-stub-issuance:
+      order: "3"
+      title: "缴费与换领凭条(现金窗口+CCS,缴费约10分钟,换条约3分钟)"
+      description: "凭开单(OPS)至现金柜台缴费并取得官方收据(OR),回到 CCS 换领“领取凭条”."
+    certificate-issuance-and-release:
+      order: "4"
+      title: "出证与领取(3个工作日制作,领取约5分钟)"
+      description: "CCS 于3个工作日内完成加盖章/干印的认证真实副本.申请人或授权代表凭领取凭条在约定时间领取正本."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "BI Citizen's Charter 2025;以 OPS/OR 现场为准"
+  items:
+    per-record-standard:
+      label: "每份纪录 · 常见标准"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证出具费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(对除头税/罚款外之移民费征收)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证/出证环节的加速与流程服务费;是否收取以实际开单(OPS)为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "每份不良纪录认证副本按份计费;以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "加盖认证与证明科骑缝章与干印的不良纪录认证真实副本(Certified True Copy of Derogatory Records)."
+  items:
+    certified-true-copy-of-derogatory-records:
+      name: "不良记录认证真实副本"
+      usage: "用于法院诉讼、移民申诉、签证审查或身份核验等需提交官方认证副本的场合."
+kpis:
+  processing_time: "3个工作日完成出证(不含受理与缴费等窗口等待)."
+risks:
+  items:
+    same-name-risk-ntsp: "若检索到与申请人同名的历史不良纪录,可能需先出具“非同一人证明(NTSP)”,否则暂缓认证副本发放."
+    authorization-compliance: "代理申请须提交认证代理身份证明或原始授权书(境外制作需公证并加附认证),领取时须出示代理人身份证原件."
+    form-filling-standard: "申请表须以黑色墨水填写,所有字段不得留空;不适用项填“N/A”.未按规范填写将不予受理."
+    release-and-claim: "通常3个工作日出证;领取需出示领取凭条.自签发之日起30日未领取的证书将自动取消."
+    function-boundary: "本件仅为既有不良纪录的认证复制,不能替代“无案证明”或“出境清关证”."
+    fees-and-or: "费用与票据以现场开单(OPS)与官方收据(OR)为准;如检索无纪录,免收费."
+    privacy-and-confidentiality: "提交与出具文件仅用于法定用途;应妥善保管领条与成品,避免信息泄露."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: ""
+    first-name:
+      label: "名字(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    middle-name:
+      label: "中间名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    other-names-aliases:
+      label: "其他姓名/别名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "01-JAN-1990"
+      notes: "按 DD-MMM-YYYY 填写."
+    sex:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "在菲住址-门牌号与街道/小区/村"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "在菲住址-城市/市镇"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "在菲住址-省份"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "在菲住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-landline:
+      label: "菲律宾联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "菲律宾联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    records-to-be-certified:
+      label: "拟认证的具体纪录清单(文件名称或案号)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    application-purpose:
+      label: "申请用途(用于法院、移民申请、审查等)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    agent-full-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-id-number:
+      label: "移民局认证代理身份证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-reference-info:
+      label: "授权书(SPA)信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-gov-id-type:
+      label: "代理人政府核发身份证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-gov-id-number:
+      label: "代理人政府核发身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    relationship-to-applicant:
+      label: "与申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-contact-phone:
+      label: "代理人联系方式(电话)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    filing-date:
+      label: "受理日期(由窗口填写)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    filing-time:
+      label: "受理时间(由窗口填写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    expected-release-date:
+      label: "预计出证日期(由窗口填写)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    expected-release-time:
+      label: "预计出证时间(由窗口填写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    claim-stub-number:
+      label: "领取凭条编号(Claim Stub)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    multiple-records-application:
+      question: "可以一次申请多份不良纪录的认证副本吗?"
+      answer: "可以,但费用按“每份纪录”计收,常见标准为每份 PHP 1,010."
+    no-records-fee:
+      question: "如果系统检索不到任何不良纪录,会收费吗?"
+      answer: "不会.CCS 将退回申请并说明原因,无需缴费."
+    authorized-representative-docs:
+      question: "授权代表代办需要准备哪些材料?"
+      answer: "需提交移民局认证代理身份证明或每名申请人的原始授权书(境外出具需公证并加附认证),并附代理人有效政府身份证件复印件;领取时须出示身份证原件与领取凭条."
+    processing-time-and-expedite:
+      question: "证书多久可以领取?能否加急?"
+      answer: "通常在缴费后3个工作日可领取.是否加急及相应费用以现场开单(OPS)为准."
+    improper-form-filling:
+      question: "未按要求填写申请表会怎样?"
+      answer: "未用黑色墨水、存在空项且未填“N/A”或信息不完整的申请将不予处理,需重新填报或补正."
+    lost-claim-stub:
+      question: "领取时丢失了领取凭条怎么办?"
+      answer: "请尽快联系 CCS 窗口进行身份核验与挂失处理,可能需补充身份证明并延长领取时间."
+    difference-ctc-vs-clearance:
+      question: "不良纪录认证副本与“无案证明”有何区别?"
+      answer: "前者是对既有不良纪录的认证复制,用于证明“有何纪录”;后者用于证明“无不良纪录/无未尽义务”,两者不能互相替代."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

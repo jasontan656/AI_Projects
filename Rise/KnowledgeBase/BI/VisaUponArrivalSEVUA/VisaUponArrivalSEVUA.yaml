@@ -1,0 +1,946 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["SEVUA", "Visa Upon Arrival", "签证落地"]
+department: "BureauOfImmigration"
+name: "签证落地(SEVUA,Visa Upon Arrival)办理指南"
+slug: "visa-upon-arrival-sevua"
+type: "reference"
+semantic_profile:
+  intent_id: "visa-upon-arrival"
+  category: "entry-visa"
+  tags: ["SEVUA", "VisaUponArrival"]
+service_overview: "签证落地(SEVUA)是菲律宾移民局为特定人群提供的便利入境安排.经政府部门、行业组织或主办方等担保/背书,申请人可在行前完成准备并于抵达口岸直接办理签注入境,无需境外先行办证.适用于外资投资者、商务人士、体育与会展代表、国际会议人员、政府/双边安排下的外籍高管,以及国际发展伙伴机构官员及其家属.签证载明有效期限,个案可延长或按团体安排执行,移民局可要求补充材料完成核验."
+applicability:
+  items:
+    endorsed-by-boi-pra-pcci-or-chambers: "受菲律宾投资委员会(BOI)、菲律宾退休署(PRA)、菲律宾工商总会(PCCI)或地方/外国商会背书的外籍投资者与商务人士入境洽谈与考察."
+    endorsed-sports-athletes-officials-exhibitions: "经赛事主办方或赞助方背书的外籍运动员、技术官员、代表团成员来菲参加体育赛事、展览或行业博览会."
+    endorsed-international-conferences: "由国际会议/研讨会/大会主办单位背书的与会代表、发言人或承办人员短期入境."
+    government-or-bilateral-endorsed-executives: "依据政府部门背书或双边安排入境的外资企业高管、跨国公司管理层及执行人员办理单次或多次入境."
+    international-development-partners-officers-and-family: "世界银行、亚洲开发银行等国际发展伙伴机构官员及其家属(符合资格者)临时公务访问."
+preconditions:
+  required:
+    eligibility-categories-must-fit: "申请人类别须符合:投资者/商务人士(由BOI、PRA、PCCI或商会背书)、赛事/会展代表(由主办或赞助方背书)、政府背书的投资者/高管、国际发展伙伴机构官员及其家属,或经移民局局长认定的其他人员."
+    request-letter-to-commissioner: "由担保方或主办/赞助方出具致移民局局长的请求函,内容须含护照信息、出生与国籍、海外住所与在菲住址、航班信息、来菲事由等要素."
+    gov-endorsement-letter-if-applicable: "如适用,需提交相应政府机构的背书函."
+    passport-biodata-and-flight-booking: "提供有效护照资料页复印件与在菲航班预订信息(含预订编码)."
+    bi-clearance-certificate: "提交移民局无案证明(BI Clearance Certificate)."
+  not_eligible:
+    ordinary-travelers-without-endorsement: "不属于规定适用人群、无任何担保或背书文件的普通旅行者."
+    invalid-or-fraudulent-documents: "提交的证件/公证/认证不符合要求,或存在伪造与不实陈述."
+    blacklisted-or-deportable: "申请人列入不良记录、受驱逐或禁止入境等管制名单."
+    purpose-mismatch: "目的与申请类别不符(如拟在菲就业但无相应工作许可/签证)."
+    late-submission-or-noncompliant-format: "逾期提交或材料顺序与版式不合规且未在限期内更正."
+pre_required_documents:
+  mandatory:
+    request-letter-to-commissioner: "担保人或主办/赞助机构致移民局局长的请求函(含姓名、出生/国籍、护照信息、住址、航班、来菲事由等要素)."
+    gov-endorsement-letter: "相应政府机构背书函(如适用)."
+    passport-biodata-copy: "申请人护照资料页复印件."
+    flight-itinerary-pnr: "航班信息/行程单(含预订编码)."
+    bi-clearance-certificate: "移民局无案证明(BI Clearance Certificate)."
+  conditional:
+    accompanying-family-members:
+      trigger: "家属随行"
+      documents: ["婚姻/亲属关系证明(出生/结婚证)原件", "相应认证(FSP/DFA)及英文译文(如适用)"]
+    authorized-representative-filing:
+      trigger: "授权代理递件"
+      documents: ["授权委托书(SPA)原件(每名申请人单独)", "代理人有效政府ID复印件", "移民局认证ID复印件"]
+    foreign-issued-corporate-or-event-docs:
+      trigger: "境外出具的企业或会议/赛事证明文件"
+      documents: ["经具管辖权的菲律宾驻外馆处(FSP)或DFA认证文件", "英文译本"]
+    additional-verification-or-supplemental:
+      trigger: "个案核验或补件通知"
+      documents: ["移民局要求的其他证明资料"]
+process:
+  steps:
+    obtain-checklist-and-consult:
+      order: "1"
+      title: "取得清单与咨询(0.5个工作日)"
+      description: "由担保/主办方或申请人至移民局窗口领取签证落地文件清单,确认适用类别与材料标准."
+    precheck-and-passport-scan-cru:
+      order: "2"
+      title: "预审与护照扫描(CRU,0.5个工作日)"
+      description: "提交护照原件供扫描,预检材料版式、顺序与真实性,不合规当场指引更正."
+    receive-order-of-payment-ops:
+      order: "3"
+      title: "领取缴费单(OPS,0.5个工作日)"
+      description: "前台或评估人员开具缴费通知单(Order of Payment Slip)."
+    pay-and-get-official-receipt:
+      order: "4"
+      title: "缴费与取回收据(Cashier,0.5个工作日)"
+      description: "按OPS金额在收银处缴纳费用,领取正式收据(Official Receipt)."
+    submit-complete-documents:
+      order: "5"
+      title: "递交完整材料(当日)"
+      description: "携正式收据与全套资料按清单顺序提交;必要时配合面谈或补件说明."
+    approval-and-visa-implementation:
+      order: "6"
+      title: "审批与签注实施(1–3个工作日,视案量)"
+      description: "审核通过后签证落地批示生效;如属抵境办理,由口岸签证窗口执行签注."
+    collect-approval-documents:
+      order: "7"
+      title: "领取批准文件(当日/通知后)"
+      description: "按通知领取批准的订单/批文与相关凭证;妥善留存以备查验."
+  variants: {}
+  notes: "具体时长因办事处人流、补件与核查而异;紧急情况可咨询是否提供加急通道."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: ""
+  items:
+    visa29d-9a-arrival:
+      label: "签证落地签证费(附加29天)· 免签入境且持9(a)临时访客身份者"
+      details:
+        visa-fee:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "抵境签注时计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "含USD项目,按BSP汇率折算,最终以OPS/OR为准."
+    business-dti-pcci-single:
+      label: "商务人士(DTI或PCCI背书)· 单次"
+      details:
+        visa-fee:
+          amount:
+            currency: "USD"
+            display: "USD 25"
+            value: 25
+          notes: "经贸背书的商务申请."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "含USD项目,按BSP汇率折算,最终以OPS/OR为准."
+    investment-facilitation-single:
+      label: "促进投资(单次入境)· 单次"
+      details:
+        visa-fee:
+          amount:
+            currency: "USD"
+            display: "USD 25"
+            value: 25
+          notes: "投资便利单次入境."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "含USD项目,按BSP汇率折算,最终以OPS/OR为准."
+    mnc-multiple-entry:
+      label: "跨国公司(多次入境)· 申请费"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 5,000"
+            value: 5000
+          notes: "多次入境安排."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 5,010"
+          value: 5010
+        notes: ""
+    group-india-china-3-19:
+      label: "团体(印度/中国大陆)3–19人"
+      details:
+        visa-fee-per-capita:
+          amount:
+            currency: "USD"
+            display: "USD 25/人"
+            value: 25
+          notes: "团体价."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "含USD项目且为人头计价,最终以OPS/OR为准."
+    group-india-china-20-plus:
+      label: "团体(印度/中国大陆)≥20人"
+      details:
+        visa-fee-per-capita:
+          amount:
+            currency: "USD"
+            display: "USD 15/人"
+            value: 15
+          notes: "团体价."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "含USD项目且为人头计价,最终以OPS/OR为准."
+    bi-clearance:
+      label: "移民局无案证明(BICC)"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "作为申请附件出具."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500(可选)"
+            value: 500
+          notes: "可选加急."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010(含加急)"
+          value: 1010
+        notes: "Certification + LRF + Express(可选)."
+    visa-sticker:
+      label: "签证贴纸费"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "如适用,与主流程一并收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 100"
+          value: 100
+        notes: ""
+    express-lane-general:
+      label: "快速通道费(通用)"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 或 PHP 1,500"
+            value: null
+            tiers:
+              - value: 500
+                condition: "常见"
+              - value: 1500
+                condition: "整包场景"
+          notes: "以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "按票据计收."
+    lrf-general:
+      label: "法律检索费(LRF)"
+      details:
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10/20/30/40/50"
+            value: null
+            tiers:
+              - value: 10
+                condition: "按票据分段计收"
+              - value: 20
+                condition: "按票据分段计收"
+              - value: 30
+                condition: "按票据分段计收"
+              - value: 40
+                condition: "按票据分段计收"
+              - value: 50
+                condition: "按票据分段计收"
+          notes: "按票据分段计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: ""
+deliverables:
+  description: "审批通过后,签发批准的订单/批文及在口岸实施的签证贴注(如适用)."
+  items:
+    approval-order:
+      name: "批准的订单/批文"
+      usage: "作为受理与批准凭证留存备查."
+    visa-sticker-or-annotation:
+      name: "签证贴纸/签注页"
+      usage: "口岸签证窗口执行签注后贴附护照,供边检查验."
+kpis:
+  processing_time: "1–3个工作日(视案量)"
+risks:
+  items:
+    materials-noncompliance: "材料未按清单顺序与规格提交、公证/认证缺失,可能导致退件或延后受理."
+    endorsement-mismatch: "担保/背书函信息与机票、护照记录不一致,将导致延误或退件."
+    overstay-penalty: "逾期停留每月处以PHP 500罚款,可能需复议(MR)并影响再次入境."
+    unauthorized-employment: "签证落地不授权就业,未经许可从事有偿活动将面临处罚与移民后果."
+    false-documents: "提供虚假文件或不实陈述将被即刻拒绝并可能移交执法,影响未来签证申请."
+    fees-variation: "部分费用以USD计价并按BSP汇率折算,Express与LRF分项计收,最终以OPS/OR为准."
+    additional-documents-request: "移民局可依核查需要要求补件,未按期提交将影响审批."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WEI"
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文,如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: ""
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Married"
+      notes: "用于家属核验."
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-07-15"
+      notes: ""
+    birth-place:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Beijing, China"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "E12345678"
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Beijing"
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2023-01-20"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2033-01-19"
+      notes: ""
+    overseas-address-line1:
+      label: "海外住址-地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Main St"
+      notes: "常住联系地址."
+    overseas-address-city:
+      label: "海外住址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    overseas-address-province:
+      label: "海外住址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    overseas-address-country:
+      label: "海外住址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    overseas-address-postal-code:
+      label: "海外住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "200000"
+      notes: ""
+    ph-address-line1:
+      label: "在菲住址-地址行1"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Hotel ABC, Roxas Blvd"
+      notes: "酒店/落地后住址."
+    ph-address-city:
+      label: "在菲住址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Pasay"
+      notes: ""
+    ph-address-province:
+      label: "在菲住址-省/区域"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NCR"
+      notes: ""
+    ph-address-country:
+      label: "在菲住址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    ph-address-postal-code:
+      label: "在菲住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1300"
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    job-title:
+      label: "职务/职称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Senior Manager"
+      notes: "与背书单位匹配."
+    travel-purpose:
+      label: "来菲事由"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "商务/会议/赛事/投资"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "HUA"
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(英文,如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    spouse-same-flight:
+      label: "配偶是否同航班入境"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "便于口岸协调."
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    child-first-name:
+      label: "子女名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LEI"
+      notes: ""
+    child-middle-name:
+      label: "子女中间名(英文,如无填N/A)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NA"
+      notes: ""
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "E99887766"
+      notes: ""
+    child-same-flight:
+      label: "子女是否同航班入境"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "便于口岸协调."
+  dependents: {}
+  employment: {}
+  authorization: {}
+  arrival_info:
+    port-of-entry:
+      label: "入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "NAIA T3"
+      notes: ""
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PR359"
+      notes: "含日期与时间."
+    arrival-date:
+      label: "到达日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-10"
+      notes: ""
+    arrival-time:
+      label: "到达时间"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "14:35"
+      notes: ""
+    pnr-code:
+      label: "预订编码(PNR)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC123"
+      notes: "与行程单一致."
+    intended-stay-days:
+      label: "预计停留时长(天)"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "30"
+      notes: "与申请类别匹配."
+    multiple-entry-needed:
+      label: "是否有多次入境需求"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: "跨国公司等情形."
+    carry-documents-list:
+      label: "随身携带文件清单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "护照、担保函、行程单、批准文件"
+      notes: "用于口岸查验."
+  travel_history:
+    has-previous-ph-visits:
+      label: "是否有既往来菲记录"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "便于无案与在案比对."
+    last-entry-date:
+      label: "上次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-11-20"
+      notes: ""
+    last-exit-date:
+      label: "上次出境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-05"
+      notes: ""
+  compliance: {}
+  additional_details:
+    sponsor-organization-name:
+      label: "担保/主办单位名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PCCI"
+      notes: "商会/机构/政府背书来源."
+    sponsor-registration-number:
+      label: "单位统一编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DTI-123456"
+      notes: ""
+    sponsor-address-line1:
+      label: "单位地址-地址行1"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 Business Rd"
+      notes: ""
+    sponsor-address-city:
+      label: "单位地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    sponsor-contact-person:
+      label: "单位联系人"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    sponsor-contact-phone:
+      label: "单位联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    sponsor-contact-email:
+      label: "单位联系邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "contact@pcci.org"
+      notes: ""
+    endorsement-letter-ref-no:
+      label: "背书函文号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PCCI-VOA-2025-001"
+      notes: ""
+    endorsement-letter-date:
+      label: "背书函日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-15"
+      notes: "注意有效期与盖章信息."
+    sponsor-commitments-summary:
+      label: "担保承诺要点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "负责接待与行程安排,确保按期离境"
+      notes: ""
+    group-roster-reference:
+      label: "团体名单(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "见附件《团体成员名单.xlsx》"
+      notes: "人员明细与职务应与航班对应."
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请所涉宣誓陈述/声明须签署并提交原件且经正式公证."
+faq:
+  qas:
+    target-audience:
+      question: "签证落地面向哪些人群?"
+      answer: "主要面向受政府部门/商会/主办方背书的投资者与商务人士、赛事代表、国际会议与展会代表,以及国际发展伙伴机构官员及其家属;移民局局长可依情形准予其他个案."
+    processing-time:
+      question: "办理周期需要多久?"
+      answer: "材料齐全、信息一致情况下,一般当日完成受理并于1–3个工作日内完成审批;紧急情况可咨询是否提供加急通道,实际以办事处通知为准."
+    flight-booking-required:
+      question: "是否必须先有航班预订?"
+      answer: "是.需提交含预订编码的航班信息;若航班变更,应同步更新担保函与行程单,确保与申请信息一致."
+    bi-clearance-payment:
+      question: "移民局无案证明如何缴费?"
+      answer: "作为证明文件出具时,按认证费用标准缴纳:Certification PHP 500 + LRF PHP 10;如选择加急,另加 Express PHP 500,常见合计 PHP 1,010."
+    overstay-consequence:
+      question: "如逾期停留会怎样?"
+      answer: "除需缴纳每月PHP 500逾期罚款外,可能需提交复议(MR)申请并缴费;情节严重者可被记录在案、影响未来入境或遭限制."
+    employment-permit:
+      question: "签证落地能否直接在菲工作?"
+      answer: "不能.签证落地属短期入境便利,不授权就业.如需工作须另行办理相应许可/签证(如PWP、SWP或9G等)."
+    multiple-entry-application:
+      question: "多次入境如何申请?"
+      answer: "跨国公司可申请“多次入境”项下的签证落地安排,按PHP 5,010(含LRF)收取申请费;需由单位与主办方向移民局提交相应背书与名单."
+    noncompliant-rejection:
+      question: "若材料不齐或格式不符会被拒收吗?"
+      answer: "会.文件须按清单顺序并在规定期限内提交;不符合格式(纸张规格、排序、公证/认证缺失)将被退件或延后受理."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用以菲律宾移民局OPS与OR为准,可能调整且不另行通知."
+    usd-conversion-bsp: "以USD标示的费用按菲律宾央行(BSP)汇率折算为PHP缴纳."
+    lrf-and-express-surcharges: "除头税与罚款外,多数移民费目需加计LRF;部分情形另收快速通道费(Express)."
+    not-a-work-visa: "签证落地不等同于工作签证,任何在菲就业须另行取得相应许可/签证."
+    additional-documents-right: "移民局可因核查需要要求补充材料,未按期补件将影响审批."
+service_related:
+  links: {}

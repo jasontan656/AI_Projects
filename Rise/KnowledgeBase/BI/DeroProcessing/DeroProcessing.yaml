@@ -1,0 +1,1026 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "ALO/BLO 不良名单与指令案件处理指引(Derogatory List & Order Handling Guide)"
+slug: "alo-blo-derogatory-list-order-handling-guide"
+type: "reference"
+semantic_profile:
+  intent_id: "derogatory-list-order-handling"
+  category: "immigration-compliance"
+  tags: ["ALO", "BLO", "Derogatory List", "NTSP", "ECC-A", "ECC-B", "RP/SRC"]
+service_overview: "本指引整合与 ALO(到港关注令)/BLO(黑名单指令)相关的查询、举证与撤销、通关协调、护送与再入境安排等流程与材料规范,供个人、雇主与法律团队在合法合规前提下制定可执行方案,降低通关与用工风险,避免程序冲突与不必要延误."
+applicability:
+  items:
+    suspected-or-confirmed-on-alo-blo: "个人疑似或确认被列入 ALO/BLO,需核实身份、了解限制并制定应对方案."
+    employer-or-legal-team-assistance: "雇主/律师团队为员工或客户办理撤销、放行、出入境或转机协调."
+    roster-check-and-risk-assessment: "政府机关或企业进行候选人/在职员工的名册核查与风险评估."
+    deportation-escort-or-transit-cases: "牵涉遣返、护送或第三国转机等需与移民局协同的特殊出入境个案."
+    ntsp-for-namesake-or-identity-mixup: "需为同名误列或身份混淆申请“非同一人证明”(NTSP)等更正性文件."
+preconditions:
+  required:
+    valid-identity-docs: "有效身份资料:护照信息页、签证页、近期入境记录(含入境章/电子记录)."
+    official-basis: "官方依据:移民局或相关机关的 ALO/BLO 通知、截图、参考编号或来函."
+    authorization-if-third-party: "授权文件:由第三方代理(雇主/律师/家属)办理时,提供合法授权或委任书."
+    compliance-commitment: "合规承诺:承诺遵循菲律宾移民局(BI)与相关机关程序,拒绝任何非法途径."
+  not_eligible:
+    no-illegal-intervention: "企图或要求采用非法手段干预名单/通关的申请."
+    falsified-or-unverifiable-docs: "提供虚假材料、篡改记录或拒不配合核验的情形."
+    insufficient-identity-or-case-info: "无法提供基本身份与案件识别信息(导致无法检索/比对)的情形."
+pre_required_documents:
+  mandatory:
+    passport-full-copy: "护照整本复印件(含生物信息页、有效签证/落地签页面、最新入境章)."
+    alo-blo-related-evidence: "ALO/BLO 相关文件:官方通知/截图、参考编号、签发机关与日期."
+    personal-affirmation-statement: "个人陈述书:对列管原因的事实说明与法律/政策依据引用."
+    contacts-and-authorization: "联系方式与授权:申请人/委托人联系方式、授权书/委任状(如适用)."
+  conditional:
+    same-name-or-identity-dispute:
+      trigger: "同名混淆或身份争议"
+      documents: ["出生证明", "旧护照", "别名/改名证明", "两寸证件照", "NTSP 佐证材料"]
+    employment-or-invitation:
+      trigger: "工作/邀请关系"
+      documents: ["雇佣合同", "公司证明", "邀请函", "公司注册/纳税信息"]
+    judicial-or-investigation:
+      trigger: "司法/调查关联"
+      documents: ["法院文件", "检方/执法机关函件", "调查结论或在案证明"]
+    itinerary-and-clearance-arrangement:
+      trigger: "行程与通关安排"
+      documents: ["机票行程单", "转机方案", "护送需求说明", "目的地接收证明"]
+    emergency-or-humanitarian:
+      trigger: "紧急/人道情形"
+      documents: ["医疗诊断书", "死亡/重病亲属证明", "外交/领事函"]
+    revocation-or-reconsideration-support:
+      trigger: "撤销/复议申请支持"
+      documents: ["相关证据", "法律意见书", "参考判例或政策备忘录"]
+process:
+  steps:
+    list-query-and-identity-matching:
+      order: "1"
+      title: "名单查询与身份比对(1-3 个工作日)"
+      description: "通过移民局查询通道或记录科/认证科(Records/CCS)核验 ALO/BLO 状态;必要时申请旅行记录或不良记录认证副本用于比对."
+    case-assessment-and-path-selection:
+      order: "2"
+      title: "案件评估与路径选择(1-3 个工作日)"
+      description: "研判列管原因、签发机关(如司法、DOJ、PEZA 等)与适用路径:更正(NTSP)、陈述与听证、撤销、执行与护送、转机协调等."
+    document-prep-and-filing:
+      order: "3"
+      title: "材料组装与递件(3-7 个工作日)"
+      description: "按所选路径准备陈述、证据与认证件,向 BI 或相关机关提交,获取收据/参考编号."
+    procedure-advancement-and-communication:
+      order: "4"
+      title: "程序推进与沟通(5-30 个工作日,视案情)"
+      description: "根据指引参加面谈/听证,补件答复;必要时同步办理 ECC(A/B)、RP/SRC、降签等避免出入境冲突."
+    clearance-and-escort-execution:
+      order: "5"
+      title: "通关与护送实施(按航班周期)"
+      description: "ALO 通关/护送、BLO 转机/不准入境处置、执行遣返或再入境安排,现场对接机场/港口窗口,确保程序与票据一致."
+    closure-and-status-recheck:
+      order: "6"
+      title: "结案与状态复核(1-3 个工作日)"
+      description: "取得撤销/更正结果或执行确认后,办理最终认证(如 BICC、记录证明),二次查询确认名单状态已更新."
+  variants:
+    alo-processing-and-clearance:
+      name: "ALO 名单查询/处理/撤销、到港通关与护送"
+      trigger: "涉及 ALO 个案"
+      description: "按需调用的查询、撤销与到港通关/护送处置."
+      extra_requirements: ["可能需旅行记录或不良记录认证副本", "必要时口岸窗口协调/护送"]
+    blo-coordination-and-revocation:
+      name: "BLO 入境/出境/转机协调、撤销或执行确认"
+      trigger: "涉及 BLO 个案"
+      description: "不准入境/转机协调,撤销或执行确认等路径."
+      extra_requirements: ["转机或不准入境处置需事先与口岸窗口确认"]
+    ntsp-and-record-certifications:
+      name: "同名排除(NTSP)、旅行记录证明、在案记录认证副本(用于举证)"
+      trigger: "同名混淆或需认证举证"
+      description: "通过认证件与比对材料完成同名排除与举证."
+      extra_requirements: ["提交出生证明/旧护照/照片等佐证"]
+    ecc-and-related-scheduling:
+      name: "与 ECC-A/ECC-B + RP/SRC、降签、年报等配套流程的时序协调"
+      trigger: "涉及出入境配套流程"
+      description: "与航班周期匹配,避免流程冲突."
+      extra_requirements: ["按航班周期预约柜台", "预留机票变更弹性"]
+  notes: "子流程要点可按案情择用;涉及多机关协作时应明确窗口与参考编号."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "DeroProcessing.md"
+  items:
+    certification-common:
+      label: "查询与认证类(常用于身份比对/举证)"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express 快速通道(如选)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "常见合计(含加急).适用:BICC、Travel Records、No Travel Record、Pending Application、不良记录副本认证、NTSP 等按认证通用标准计收."
+    motion-reconsideration:
+      label: "复议/迟延等动议类"
+      details:
+        mr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Motion for Reconsideration(MR)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "MR 对应 LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "如加急另计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        overstay-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/每月"
+            value: 500
+            tiers:
+              - value: 500
+                condition: "逾期停留每月罚款"
+          notes: "按逾期月数累加"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        annual-report-late-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 200/每月(年度封顶 PHP 2,000)"
+            value: 200
+            tiers:
+              - value: 200
+                condition: "年报逾期每月"
+          notes: "年度封顶 PHP 2,000"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否加急及逾期月数不一,实际以 OPS/OR 开单为准."
+    ecc-a-common:
+      label: "出入境配套(ECC-A 常见组合)"
+      details:
+        ecc-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "ECC-A 费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-ecc:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "ECC-A 对应 LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "ACR Fee(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-acr:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "ACR 对应 LRF(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        crtv:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "CRTV(累计停留 ≥6 个月适用)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-crtv:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "CRTV 对应 LRF(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express 快速通道"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax(>16 岁适用)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "组合项按个案与停留时长适用,实际以 OPS/OR 为准."
+    ecc-b-adult-1y:
+      label: "ECC-B + RP/SRC(成人 1 年)"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "RP/SRC(成人 1 年)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "ECC-B 费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 30"
+            value: 30
+          notes: "LRF(成人 1 年组合)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express 快速通道"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,880"
+          value: 2880
+        notes: ""
+    ecc-b-adult-6m:
+      label: "ECC-B + RP/SRC(成人 6 个月)"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "RP/SRC(成人 6 个月)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "ECC-B 费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 20"
+            value: 20
+          notes: "LRF(成人 6 个月组合)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express 快速通道"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,170"
+          value: 2170
+        notes: ""
+    ecc-b-minor:
+      label: "ECC-B + RP/SRC(未成年)"
+      details:
+        ce-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 200"
+            value: 200
+          notes: "Certificate of Exemption(CE)常见搭配"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-ce:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "CE 对应 LRF"
+          attr:
+            amount:
+              currency:
+                - "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "RP/SRC 费用同成人对应时长标准;组合金额随选择而变."
+    common-addons:
+      label: "通用附加与说明"
+      details:
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax(>16 岁)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "Visa Sticker(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "ACR I-Card(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        icard-express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "I-Card Express(如涉及)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf-tiers:
+          amount:
+            currency: "PHP"
+            display: "PHP 10/20/30/40/50(按项目计收)"
+            value: 10
+            tiers:
+              - value: 10
+                condition: "常见档"
+              - value: 20
+                condition: "常见档"
+              - value: 30
+                condition: "常见档"
+              - value: 40
+                condition: "常见档"
+              - value: 50
+                condition: "常见档"
+          notes: "除头税与罚款外,多数项目均计收 LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "以上金额为菲律宾移民局(2025 版)官方价目摘录,实际以现场 OPS/OR 开单为准."
+deliverables:
+  description: "根据案情与选择路径,出具认证件/撤销或执行结果,并完成名单状态复核."
+  items:
+    revocation-or-correction-decision:
+      name: "撤销/更正决定或执行确认"
+      usage: "作为通关、再入境或结案的正式依据."
+    certified-records:
+      name: "认证件(BICC、旅行/在案记录等)"
+      usage: "用于身份比对、举证与归档."
+    status-recheck-result:
+      name: "名单状态复核结果"
+      usage: "确认 ALO/BLO 状态已更新,降低后续处置风险."
+kpis:
+  processing_time: "核验与认证约 1-3 个工作日;复杂举证/听证与撤销视案情约 5-30 个工作日或更长."
+risks:
+  items:
+    illegal-intervention-risk: "严禁寻求或使用非法手段影响名单或通关."
+    procedure-conflict-risk: "出境安排与降签、ECC、年报等流程不同步,可能导致程序冲突或误机."
+    status-not-updated-risk: "未在航班前后复核名单状态,可能被拒绝放行或再次拦检."
+    alo-blo-difference-misunderstanding: "误解 ALO 与 BLO 差异可能导致错误决策(ALO 为到港关注,BLO 为禁止入境)."
+    data-privacy-risk: "个人与案件敏感信息泄露风险,应仅向授权机关与必要方共享."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Zhang"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "San"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Li"
+      notes: ""
+    alias-names:
+      label: "别名/曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Zhang Yi; Zhang Ming"
+      notes: "如有改名,提供证明."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: ""
+    sex:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "男"
+      notes: "与护照一致."
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-issuing-country:
+      label: "护照签发国"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2021-06-01"
+      notes: ""
+    passport-expiry-date:
+      label: "护照有效期至"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2031-05-31"
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "user@example.com"
+      notes: ""
+    address-ph-line1:
+      label: "在菲住址(地址行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 101, 123 Ayala Ave"
+      notes: ""
+    address-ph-city:
+      label: "在菲住址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-ph-province:
+      label: "在菲住址(省/大区)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-ph-postal-code:
+      label: "在菲住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    address-overseas-line1:
+      label: "境外住址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "88 King St"
+      notes: ""
+    address-overseas-city:
+      label: "境外住址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Shanghai"
+      notes: ""
+    address-overseas-country:
+      label: "境外住址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "CN"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主/公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Corp."
+      notes: ""
+    employer-address-line1:
+      label: "雇主地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "7th Ave, BGC"
+      notes: ""
+    employer-contact-person:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Ms. Reyes"
+      notes: ""
+  authorization:
+    authorized-representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    authorized-representative-relationship:
+      label: "与申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "律师/雇主/家属"
+      notes: ""
+    authorized-representative-phone:
+      label: "授权代表联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    authorized-representative-email:
+      label: "授权代表邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "lawyer@example.com"
+      notes: ""
+    authorization-document-type:
+      label: "授权文件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "授权书/委任状"
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-11-15"
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MNL(NAIA)"
+      notes: ""
+    last-entry-flight-number:
+      label: "最近一次入境航班号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR357"
+      notes: ""
+    planned-travel-type:
+      label: "拟定行程类型(出境/入境/转机)"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "出境"
+      notes: ""
+    planned-travel-date:
+      label: "拟定出/入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-20"
+      notes: ""
+    planned-departure-port:
+      label: "拟定出发口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MNL"
+      notes: ""
+    planned-arrival-port:
+      label: "拟定到达口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "HKG"
+      notes: ""
+    planned-flight-number:
+      label: "拟定航班号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CX906"
+      notes: ""
+  travel_history:
+    travel-history-summary:
+      label: "历史出入境记录摘要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "近24个月多次往返中菲"
+      notes: "用于同名排除与轨迹核验."
+  compliance:
+    current-visa-status:
+      label: "当前在菲签证/停留身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9(g) 工作签"
+      notes: ""
+    current-visa-expiry-date:
+      label: "当前签证到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-06-30"
+      notes: ""
+    acr-i-card-number:
+      label: "ACR I-Card 号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "A123456789"
+      notes: ""
+    alo-blo-type:
+      label: "ALO/BLO 类型"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ALO"
+      notes: ""
+    issuing-agency:
+      label: "签发机关"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BI/DOJ/法院"
+      notes: ""
+    reference-number:
+      label: "参考编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "REF-2024-00123"
+      notes: ""
+    issue-date:
+      label: "签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-10-01"
+      notes: ""
+    case-reason-summary:
+      label: "涉案原因概述"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "同名误列/签证合规争议"
+      notes: ""
+    related-case-numbers:
+      label: "关联司法/行政案件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOJ-INV-12345; RTC-Case-67890"
+      notes: ""
+  additional_details:
+    emergency-humanitarian-category:
+      label: "紧急/人道情形类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "医疗/丧亲/外交"
+      notes: ""
+    emergency-humanitarian-description:
+      label: "紧急/人道情形说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "直系亲属重病,需加急协调出入境"
+      notes: ""
+    inviter-name:
+      label: "邀请方名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "XYZ Ltd."
+      notes: ""
+    inviter-address-line1:
+      label: "邀请方地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "123 Nathan Rd"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意为查询、认证与递件之目的向移民局及相关机关提交并处理个人数据."
+  certification_statement: "申请人知悉并声明所提交陈述与材料真实、可核查;授权代表递办须附合法授权/委任文件并签署."
+faq:
+  qas:
+    how-to-confirm-alo-blo-status:
+      question: "如何确认自己是否在 ALO/BLO 名单上?"
+      answer: "提供护照资料与任何官方参考编号,可通过移民局查询;如需用于后续办理,可申请在案证明或不良记录认证副本(认证费标准:PHP 500 + LRF 10,选加急另加 PHP 500)."
+    how-to-handle-same-name:
+      question: "同名误列怎样处理?"
+      answer: "可向认证科(CCS)申请“非同一人证明(NTSP)”,费用按认证通用标准计收(最高 PHP 1,010,含加急),并提交出生证明、旧护照、照片等佐证."
+    can-still-enter-exit:
+      question: "被列入 ALO/BLO 是否还能出入境?"
+      answer: "ALO 通常为到港复检与管控,需按指引接受进一步审查或通关协调;BLO 属禁止入境,入境前须撤销或依法另行安排转机/护送.已在菲且涉及执行的个案应与移民局协调后续措施."
+    can-self-revoke-alo-blo:
+      question: "能自行撤销 ALO/BLO 吗?"
+      answer: "必须按移民局程序提交正式申请与证据,可能涉及面谈/听证;目前撤销本身无单列“撤销费”,但会产生认证、记录、MR 等相关费用."
+    processing-time:
+      question: "办理周期多久?"
+      answer: "简单核验与认证约 1-3 个工作日;复杂举证/听证与撤销视案情 5-30 个工作日或更长.建议尽早递件并预留机票变更弹性."
+    what-to-prepare-for-exit-cases:
+      question: "涉及出境我需要准备哪些配套?"
+      answer: "视停留时长与身份,可能需 ECC-A 或 ECC-B + RP/SRC、CRTV、头税等组合.请在拟定航班前完成费用测算与柜台预约,避免误机."
+disclaimers:
+  items:
+    pricing-subject-to-or: "以上金额为菲律宾移民局(2025 版)官方价目摘录,实际以现场 OPS/OR 开单为准."
+    exchange-rate-note: "如涉及 USD 项,按 BSP 汇率折算."
+    local-variance: "各地执行口径可能存在差异,部分 ECC-B/认证可用线上入口(因地而异)."
+    cooperation-requirement: "若涉及司法/调查,须按要求出席面谈/听证并完整配合补件."
+service_related:
+  links: {}

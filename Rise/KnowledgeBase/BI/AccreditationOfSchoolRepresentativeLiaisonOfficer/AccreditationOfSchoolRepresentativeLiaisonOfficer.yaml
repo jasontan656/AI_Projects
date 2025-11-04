@@ -1,0 +1,624 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "学校代表(联络员)认证"
+slug: "accreditation-of-school-representative-liaison-officer"
+type: "reference"
+semantic_profile:
+  intent_id: "accreditation-of-school-representative"
+  category: "accreditation"
+  tags: []
+service_overview: "本服务由移民局菲律宾外勤办公室受理,面向已获得移民局学校认证的院校,用于提名并核准学校代表(联络员)资格.获准的学校代表将持有移民局核发的代表证,作为处理外籍学生事务(含入学报备、许可申请、后续沟通)的必要前置条件.办理内容包括资料审核、费用缴纳与受理转送;经外办受理后,申请档案由外办统一转送至学生签证处制卡与核发,申请人根据通知领取代表证."
+applicability:
+  items:
+    designate-or-replace-liaison: "已获移民局认证的学校,拟指定或更换负责外籍学生事务的校方代表(联络员)."
+    increase-liaison-quota: "新增校区或业务量增长,需要增加联络员数量以满足合规对接与日常办理需要."
+    staff-change-or-renewal: "原代表离职、调岗或证件到期,需要办理人员变更或续办."
+    resume-student-admissions: "学校拟恢复暂停的外籍学生接收业务,需同步重建对接窗口与代表身份."
+    audit-or-rectification: "经稽核要求或整改通知,需要补办或规范代表的资格与证件."
+preconditions:
+  required:
+    valid-school-accreditation: "学校已通过移民局学校认证并在有效期内,且能提供经批准的学校认证命令复印件."
+    official-recommendation-letter: "由学校出具正式推荐函,明确拟任代表(联络员)的姓名、职位与职责范围."
+    current-employee-proof: "申请人须为该校正式在职员工,能提供有效的在职证明与校方工作证复印件."
+    nbi-or-police-clearance: "申请人须提交有效的警察或国家调查局(NBI)无犯罪记录证明,签发时间应接近申请日并在有效期内."
+    recent-2x2-photo: "近三个月内拍摄的2×2白底彩照,规格清晰、无帽无墨镜,符合证件制作要求."
+  not_eligible:
+    school-not-accredited-or-expired: "学校未获移民局认证或认证已失效的,不予受理代表认证."
+    document-mismatch-or-tampering: "推荐函、在职证明与学校主体不一致,或资料存在涂改、伪造、过期等情形."
+    not-a-regular-employee: "申请人非学校正式员工,或无法出具指派文件、有效身份凭证."
+    improper-binding-or-copies: "未按清单顺序装订于法式纸张(legal size)文件夹,或未提交所需复印件份数."
+    foreign-docs-not-authenticated: "提交的外文文件未经菲律宾驻外馆处(FSP)或外交部(DFA)认证,或缺少英译本(适用时)."
+pre_required_documents:
+  mandatory:
+    school-recommendation-letter: "学校推荐函(原件,载明拟任代表姓名、职位与职责)."
+    id-application-form-bi-2014-02-008: "代表证申请表 Accreditation ID Application Form(首次出现括注:BI FORM 2014-02-008 Rev 0)正本两份,完整填写并签字."
+    photos-2x2-white-background: "近三个月内拍摄的2×2白底彩色照片两张(清晰露耳眉、无反光)."
+    police-or-nbi-clearance: "有效的警察或 NBI 无犯罪记录证明."
+    school-id-and-employment-proof: "学校工作证复印件(加盖校章/注明核验方式),并附在职证明."
+    latest-foreign-students-report: "最新的外籍学生统计/报告(更新版,反映当前在读外籍学生信息)."
+    approved-school-accreditation-order-copy: "已批准的学校认证命令复印件(校方获BI学校认证的批文/命令页)."
+    or-receipt-copies: "代表证申请之官方收据(OR)复印件两份(缴费后补齐)."
+    checklist-cover-and-general-instructions: "清单封面与总说明表(General Instructions/Checklist,表格代码:BI FORM 2014-02-007 Rev 0)一份,随案附带(由受理人员核验并签注“文件齐备”)."
+  conditional:
+    authorized-representative-submission:
+      trigger: "如由授权代理递交"
+      documents:
+        - "移民局认证ID证书复印件"
+        - "针对每一申请人的特别授权书(SPA)原件"
+        - "代理人有效政府签发身份证复印件"
+    foreign-issued-documents:
+      trigger: "如涉及境外签发文件(如境外警察证明等)"
+      documents:
+        - "境外签发文件原件"
+        - "菲律宾驻外馆处(FSP)或外交部(DFA)认证证明"
+        - "英译本(非英文文件需附)"
+    photo-noncompliant:
+      trigger: "如照片不合规格或超过期限"
+      documents:
+        - "重新提交合规照片"
+    additional-supporting-documents:
+      trigger: "因核查而被要求补充其他材料"
+      documents:
+        - "其他支持性材料(以受理单位书面/系统通知为准)"
+process:
+  steps:
+    pre-check-and-binding:
+      order: "1"
+      title: "资料装订与预检(约5–10分钟)"
+      description: "按官方清单顺序装订于法式纸张文件夹并携全套原件备查;在外勤办指定窗口取号并接受形式审查,核对表格、照片、签字与份数."
+    acceptance-and-ops:
+      order: "2"
+      title: "受理与开单(约2–5分钟)"
+      description: "受理人员审阅并确认材料完整性,必要时现场点列补件;符合受理条件的,开具OPS(Official Payment Slip),列明费用项目与金额."
+    payment-and-or:
+      order: "3"
+      title: "缴费与取收据(约3–5分钟)"
+      description: "持OPS至收银(Cashier)缴费,获取官方收据(Official Receipt, OR);缴费后复印OR两份,按要求回填至案卷中."
+    return-counter-and-ack:
+      order: "4"
+      title: "回柜确认与收讫(即办)"
+      description: "将OR与案卷交回窗口,受理人员核销并出具收讫确认;由中央收件单位/受理人员在清单封面签注“文件齐备”."
+    forwarding-and-card-production:
+      order: "5"
+      title: "转送与后台制作(转送当日)"
+      description: "档案由外办通过LBC转送至学生签证处(Student Visa Section)进行后续制卡与核发;申请人依照学生签证处通知领取或接收代表证."
+  variants: {}
+  notes: "办理时长以资料完整度、后台排队量与核查要求为准;外办现场受理通常可于同日完成,制证及发放由学生签证处另行通知."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "本指南"
+  items:
+    liaison-representative:
+      label: "代表证申请受理费 · 单次"
+      details:
+        accreditation-id:
+          amount:
+            currency: "PHP"
+            display: "PHP 850"
+            value: 850
+          notes: "由外勤办收银窗口缴纳;用于代表证申请受理与转送."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 850"
+          value: 850
+        notes: ""
+    school-accreditation-application:
+      label: "学校认证 · 申请费"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: "Regular PHP 510 / Express PHP 1,010"
+            value: null
+            tiers:
+              - value: 510
+                condition: "Regular"
+              - value: 1010
+                condition: "Express"
+          notes: "适用于学校主体的资格认证申请,构成:Certification 500 + LRF 10;如加急另含 Express 500."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "按所选办理速度(Regular/Express)计费."
+    school-accreditation-fee:
+      label: "学校认证 · 认证费"
+      details:
+        accreditation-fee:
+          amount:
+            currency: "PHP"
+            display: "Regular PHP 510 / Express PHP 1,010"
+            value: null
+            tiers:
+              - value: 510
+                condition: "Regular"
+              - value: 1010
+                condition: "Express"
+          notes: "适用于学校主体的认证核发,口径同上."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "按所选办理速度(Regular/Express)计费."
+    third-party-costs:
+      label: "第三方成本 · 复印/装订/快递"
+      details:
+        third-party:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "非移民局收费,按市场价自理."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: ""
+    supplemental-certification-fee:
+      label: "可能的补充认证/证明费(如需)"
+      details:
+        supplemental-certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 起"
+            value: null
+          notes: "按“Certification Fee”通用标准(Certification 500 + LRF 10 + 可选 Express 500)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: ""
+deliverables:
+  description: "经学生签证处制证并核发的学校代表证."
+  items:
+    liaison-id-card:
+      name: "学校代表证(Accreditation ID)"
+      usage: "办理学校与移民局之间外籍学生相关事务的资格凭证与对接身份证明."
+kpis:
+  processing_time: "外办现场受理通常可于同日完成;制证及发放由学生签证处另行通知."
+risks:
+  items:
+    incomplete-docs-delay: "资料不完整、证件过期、格式不合(含照片)将被要求补件,影响办理周期."
+    forged-documents-penalty: "提供虚假或伪造文件将被驳回,并可能承担行政或刑事责任;学校资质亦可能受连带影响."
+    backend-audit-extra-docs: "后台抽查或系统比对异常,移民局有权要求提交额外支持文件."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与身份证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "WANG"
+      notes: "可按英文与本地文填写."
+    first-name:
+      label: "名(与身份证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LIHUA"
+      notes: "可按英文与本地文填写."
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    age:
+      label: "年龄"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "34"
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "统计用途."
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "统计用途."
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如涉及境外文件认证需匹配."
+    government-id-number:
+      label: "政府签发身份证号码(如 PhilID/UMID/护照号等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "住址-门牌与街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "住址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "住址-省份"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "住址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "住址-国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    job-title:
+      label: "职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Liaison Officer"
+      notes: "在校任职信息."
+    department:
+      label: "部门"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-start-date:
+      label: "入职日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-status:
+      label: "雇佣状态"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Regular"
+      notes: ""
+    employer-name:
+      label: "学校全称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与认证命令保持一致."
+    employer-short-name:
+      label: "学校简称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-type:
+      label: "学校类型(公立/私立/分校)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    certification-order-number:
+      label: "学校认证命令编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "证明资质有效."
+    certification-order-date:
+      label: "学校认证命令日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-line1:
+      label: "学校地址-门牌与街道"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-city:
+      label: "学校地址-城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-province:
+      label: "学校地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-postal-code:
+      label: "学校地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-email:
+      label: "学校统一对外邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: "便于核实."
+    employer-phone:
+      label: "学校对外联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: "便于核实."
+    authorized-signatory-name:
+      label: "授权签字人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "负责签署推荐函."
+    authorized-signatory-title:
+      label: "授权签字人职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-bi-accreditation-number:
+      label: "学校BI认证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "关联审查要点."
+    school-bi-accreditation-validity:
+      label: "学校BI认证有效期"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    agent-name:
+      label: "授权代理人姓名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-id-number:
+      label: "代理人政府证件号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "SPA 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-date:
+      label: "SPA 日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    nbi-clearance-number:
+      label: "无犯罪记录证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "警察或 NBI."
+    clearance-issuing-agency:
+      label: "无犯罪记录证明签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    clearance-issue-date:
+      label: "无犯罪记录证明签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    student-report-date:
+      label: "外籍学生最新统计/报告日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "证明数据有效."
+    application-form-code:
+      label: "代表证申请表编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI FORM 2014-02-008 Rev 0"
+      notes: "用于表格一致性校验."
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请表须完整填写并签字;申请人确认提交材料真实、准确、完整."
+faq:
+  qas:
+    eligibility-of-liaison:
+      question: "谁可以申请成为学校代表(联络员)?"
+      answer: "仅限已获移民局学校认证的学校之正式在职员工,并须由学校出具推荐函;申请人需提供有效的警察或NBI无犯罪记录证明."
+    can-agent-submit:
+      question: "是否可以由他人代办提交?"
+      answer: "可以.须由具移民局认证资格的代理出示其BI认证ID复印件,或提交针对每位申请人的SPA原件,并附代理人的有效政府身份证复印件."
+    same-day-release:
+      question: "受理当天能否拿到代表证?"
+      answer: "不能.外办仅负责受理与转送,代表证由学生签证处制证与核发,发证时间以该处通知为准."
+    paper-and-binding:
+      question: "材料必须使用何种纸张与装订方式?"
+      answer: "必须按官方清单顺序装订在法式纸张(legal size,8.5×14英寸)文件夹内;否则不予受理."
+    photo-and-clearance-time:
+      question: "照片与无犯罪证明有什么时间要求?"
+      answer: "照片须为近三个月内拍摄的2×2白底彩照;警察或NBI无犯罪证明须在有效期内且尽量接近申请日,过期材料会被要求更新."
+    fee-difference:
+      question: "费用为何与学校认证费用不同?"
+      answer: "“代表证申请受理费”针对个人代表证;“学校认证费用”针对学校主体资质.若学校尚未完成学校认证,需先行办理学校认证后再申办代表证."
+    handling-discrepancies:
+      question: "若材料被要求补件或发现信息不一致,如何处理?"
+      answer: "请按受理人员书面清单及时补交,必要时更新照片或证明文件;涉及信息不一致的,需由学校出具更正函或重新签发支持文件."
+    validity-and-renewal:
+      question: "代表证有效期多久、如何续办?"
+      answer: "代表证有效期与续办要求由学生签证处在发证文件中载明;请按证件标注期限在到期前办理续期或变更,避免影响学校对外事务办理."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "最终以现场开单(OPS)与官方收据(OR)为准."
+    fee-standard-2025: "费用标准以2025年公布版本为准;如与旧版不一致,以新口径执行."
+    usd-conversion-bsp: "如涉及美元计费项目,将按BSP(菲律宾央行)当日汇率折算."
+service_related:
+  links: {}

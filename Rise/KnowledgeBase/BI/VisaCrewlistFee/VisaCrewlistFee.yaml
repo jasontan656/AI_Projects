@@ -1,0 +1,383 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "Visa Crew List 缴费(船员名单签证费)"
+slug: "visa-crew-list-fee"
+type: "reference"
+semantic_profile:
+  intent_id: "visa-crew-list-fee-payment"
+  category: "payment"
+  tags: []
+service_overview: "为因正当理由未能事先取得9(c)船员签证的外籍船员提供以乘员名单(Crew List)统一缴纳签证相关费用的现场服务,作为依法登岸或后续身份处理的前置缴费环节.由普林塞萨港移民外勤办公室受理,限辖区内靠泊/停靠船舶办理."
+applicability:
+  items:
+    foreign-vessel-arrival-no-9c-some-crew: "外籍船舶抵达普林塞萨港辖区,部分/全部船员未持9(c)船员签证且有合理说明."
+    batch-payment-on-arrival: "船公司或其代理人需在靠港当日(或前后)以乘员名单统一缴纳签证相关费用."
+    prepayment-for-disembarkation: "需为离船/换班船员办理登岸手续的前置缴费,配合现场检查与后续移民程序."
+    crew-adjustment-additional-crew: "船舶临时调整船员构成,需就新增外籍船员同步补缴签证费."
+preconditions:
+  required:
+    within-puerto-princesa-jurisdiction: "船舶在普林塞萨港移民外勤办公室辖区靠泊/停靠."
+    company-or-agent-submission: "由船公司或经授权的船代统一递交资料并办理."
+    provide-crew-list-and-notice-of-arrival: "提供完整、最新的乘员名单(Crew List)与抵港通知(Notice of Arrival)."
+    explain-reason-no-9c: "能合理说明未能事先取得9(c)签证的原因,接受窗口审核."
+  not_eligible:
+    cannot-explain-or-incomplete-inconsistent: "不能说明未事先办证原因,或资料不完整/信息不一致."
+    non-jurisdiction-or-not-crew-visa-scope: "非本辖区船舶或不符合船员签证业务范围的人员."
+    unclear-authorization-relationship: "申请人与船公司/船代授权关系不明或无法核验."
+pre_required_documents:
+  mandatory:
+    crew-list-latest: "乘员名单(Crew List)—最新版本,与实际在船人员一致."
+    notice-of-arrival: "船舶抵港通知(Notice of Arrival)."
+  conditional:
+    authorization-proof-upon-request:
+      trigger: "窗口要求核验授权时"
+      documents:
+        - "船公司或船代授权证明/委托书"
+    explanation-letter-reason-no-9c:
+      trigger: "需说明未能事先取得9(c)之客观原因时(依窗口指引)"
+      documents:
+        - "说明函(口头或书面)"
+process:
+  steps:
+    receiving-and-assessment:
+      order: "1"
+      title: "递件与初审(Receiving/Assessor)"
+      description: "提交Crew List与Notice of Arrival,窗口核对并评估是否符合条件;符合者签发OPS缴费单据.预计10分钟."
+    cashier-payment-and-or:
+      order: "2"
+      title: "缴费与取票据(Immigration Cashier)"
+      description: "持OPS至现金柜台缴纳费用,领取官方收据(Official Receipt, OR).预计5分钟."
+  variants: {}
+  notes: "常规单批次用时,现场以实际排队/批量人数为准."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "VisaCrewlistFee/VisaCrewlistFee.md"
+  items:
+    per-batch-and-per-crew:
+      label: "按批次+人头计费"
+      details:
+        visa-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "Crew List Visa Fee:每名外籍船员"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee(LRF):每名外籍船员"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express Lane Fee(快通):每笔交易(按批次计)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "费用合计示例:PHP 500 + PHP 110 × N;金额以现场OPS及收银实际出单为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "缴费完成后由收银开具官方收据."
+  items:
+    official-receipt-or:
+      name: "官方收据(Official Receipt, OR)"
+      usage: "缴费凭证,供后续稽核或联办其他手续查验."
+kpis:
+  processing_time: "常规总时长约15分钟(初审约10分钟＋缴费约5分钟),以现场为准."
+risks:
+  items:
+    not-a-9c-issuance: "本项为“乘员名单签证费”缴纳服务,非9(c)签证的核发/替代;是否允许登岸或后续身份安排,仍以移民官现场决定及相关程序为准."
+    crewlist-consistency: "Crew List与实际在船人员必须一致;如与港监或边检数据不符,窗口可要求更正或暂缓受理."
+    authorization-only-company-agent: "仅接受船公司/船代办理;请确保授权链条清晰可核(名片、授权函、身份证明备查)."
+    receipt-keep: "务必妥善保管OR(Official Receipt),以备后续稽核或联办其他手续查验."
+    jurisdiction-limited: "非普林塞萨港辖区船舶请至对应辖区移民办公室办理."
+    related-but-different-measures: "WEG(Waiver of Exclusion Ground)或CE Waiver等为不同收费项目,不包含在本服务费用内,按现场另行办理与计费."
+info_collection:
+  applicant: {}
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-entity:
+      label: "授权单位/主体"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorized-representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-letter-available:
+      label: "是否提供授权证明/委托书"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "当窗口要求核验授权时提供"
+    authorization-proof-reference:
+      label: "授权证明/委托书参考号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MV Example"
+      notes: "用于匹配辖区及在港状态"
+    call-sign:
+      label: "呼号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有"
+    eta-date:
+      label: "预抵港日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    actual-arrival-date:
+      label: "实际抵港日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    berth:
+      label: "泊位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    shipping-company-name:
+      label: "船公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    shipping-company-contact:
+      label: "船公司联系方式"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "电话或邮箱"
+    ship-agent-company-name:
+      label: "船代公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ship-agent-contact-name:
+      label: "船代联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ship-agent-phone:
+      label: "船代联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    ship-agent-email:
+      label: "船代联系邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    reason-no-9c:
+      label: "未事先取得9(c)之原因"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "供窗口评估是否符合受理条件"
+    involved-crew-count:
+      label: "本次申请涉及的船员人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于计算费用"
+    batch-arrangement:
+      label: "批次安排"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于排队与计费"
+    crew-last-name:
+      label: "船员姓(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-first-name:
+      label: "船员名(与护照一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-middle-name:
+      label: "船员中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-passport-number:
+      label: "护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-rank-position:
+      label: "职务(Rank/Position)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-embarkation-date:
+      label: "上船日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+    crew-expected-disembark-date:
+      label: "预计离船日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与Crew List一致"
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    required-documents:
+      question: "申请需要哪些文件?"
+      answer: "最新乘员名单(Crew List)与船舶抵港通知(Notice of Arrival),必要时附授权证明和未办9(c)的原因说明."
+    how-to-calc-fee:
+      question: "费用如何计算?"
+      answer: "每名船员收取签证费PHP 100与LRF PHP 10,另每笔交易加收Express PHP 500.总额约为PHP 500 + PHP 110 × 船员人数."
+    processing-time:
+      question: "办理要多长时间?"
+      answer: "初审与签发OPS约10分钟,缴费约5分钟,常规总时长约15分钟,视现场人流与批次而定."
+    who-can-represent:
+      question: "谁可以代办?"
+      answer: "船公司或经正式授权的船代可统一代办,窗口可要求核验授权."
+    is-fee-equals-9c:
+      question: "缴费后是否等同取得9(c)?"
+      answer: "否.本服务为乘员名单签证费的缴纳.具体登岸许可或后续签证/身份处理仍应按移民官指示和相关程序另行办理."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

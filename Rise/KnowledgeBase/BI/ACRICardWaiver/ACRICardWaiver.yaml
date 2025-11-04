@@ -1,0 +1,1131 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "ACR I-Card Waiver"
+  - "Approved Grace Period"
+  - "宽限期豁免"
+department: "BureauOfImmigration"
+name: "ACR I-Card Waiver(宽限期豁免,Approved Grace Period)"
+slug: "acr-i-card-waiver"
+type: "reference"
+semantic_profile:
+  intent_id: "acr-icard-waiver"
+  category: "immigration-waiver"
+  tags: []
+service_overview: "ACR I-Card Waiver(Approved Grace Period)是移民局在申请人因ACR I-Card遗失、损坏、更新中或尚未领取等情形下,无法当场出示原卡而需继续办理移民或出入境事务时提供的临时豁免证明.获准后,可在卡片不可用期间依法办理相关手续,必要时作为出入境查验辅助凭据.适用于已获“宽限期”核准或能合理说明无法出示原卡原因者.由移民局主办公室受理,核准后申请人须本人持护照与领证凭条亲自领取,豁免仅在原卡不可用期间有效,应尽快补办/换发/领取原卡以保持合规."
+applicability:
+  items:
+    lost-or-stolen: "卡片遗失或被盗,已报案或完成遗失声明,需在补卡前办理出入境或其他移民业务."
+    damaged-card: "卡片损坏无法辨识/读卡,或芯片损坏,需在换卡期间继续办理业务."
+    card-in-production-or-pending-pickup: "已完成ACR I-Card更新或续卡,但正在制卡/等待领卡,期间需办理签证延长、ECC或旅行."
+    grace-period-approved: "已取得“宽限期”核准通知(Grace Period Approved),需在宽限期内出入境或向移民局办理相关事项."
+    urgent-travel-cannot-retrieve-card: "临近出行且无法及时取回或补办原卡,需凭豁免与配套证件(如ECC、RP/SRC)完成离境."
+preconditions:
+  required:
+    valid-passport-and-latest-visa-page: "持有有效护照及最近一次入境签注/签证实施页,信息一致且未过期."
+    written-explanation-or-affidavit: "能说明并书面陈述无法出示原卡的事实事由(遗失/损坏/更新中/未领取等),并由申请人签名;若为宣誓陈述或宣誓书,须为原件并经正规公证."
+    acr-transaction-proof: "具备与ACR I-Card交易相关的凭证,如认领凭条(Claim Stub)或官方收据(Official Receipt),或能提供在制卡/续卡证明."
+    no-derogatory-record-stamp: "无不良记录(No Derogatory Record)窗口加注或盖章(通常由指定窗口审核,例如窗口23)."
+    travel-proof-and-related-permits-if-exit: "如涉及即将离境,须提供机票行程单/电子客票,且按规定配套办理并缴纳与离境相关的许可与证明(如ECC、RP/SRC)费用评估单."
+  not_eligible:
+    missing-passport-or-inconsistent-identity: "无法提供有效护照、最新签证/入境章页,或身份信息不一致."
+    no-reason-or-no-proof-of-card-unavailability: "未能说明卡片不可用原因,或无法提交宽限期核准/在制卡凭证且事由不足."
+    unresolved-overstay: "存在未结清的逾期停留,且未同步提交复议(MR)或未完成应缴罚款/补正."
+    derogatory-record-not-cleared: "有在案不良记录且未完成相应核查或清理程序."
+    improper-document-assembly: "资料未按清单顺序、规格整理,或未按要求提交原件/公证件/认证件,窗口有权拒收."
+pre_required_documents:
+  mandatory:
+    letter-request-to-commissioner: "致移民局局长的正式申请函(Letter Request to the Commissioner),包含申请人住址与联络方式,由申请人或授权代表签字."
+    claim-stub-or-or-copy: "ACR I-Card办理或续卡的认领凭条(Claim Stub)或该交易的官方收据(Official Receipt)复印件."
+    passport-and-entry-visa-copies: "护照资料页复印件,以及最近一次入境章/签证实施页复印件."
+    flight-itinerary-if-exit: "机票或行程单复印件(显示离境日期;如涉及即将离境)."
+    no-derogatory-record-annotation: "“无不良记录”加注/盖章(No Derogatory Record),由指定窗口(如窗口23)出具."
+    duplicate-fees-assessment: "费用评估单复本(Duplicate copy of Fees):Waiver及(如适用)ECC与RP/SRC之评估;OPS评估窗口通常为7–8号,缴费窗口为15/16号."
+    formal-submission-at-window: "完成以上项目后,依指引至指定窗口(如窗口21)正式提交申请."
+    acr-card-or-registry-proof-if-available: "如能提供:ACR I-Card原件/复印件(若仍可取得);或登记处出具的登记证明副本,用于佐证既有ACR记录."
+  conditional:
+    lost-scenario:
+      trigger: "遗失:遗失声明/公证宣誓书;如有警方报案回执/编号,提供复印件."
+      documents:
+        - "遗失声明或公证宣誓书(原件)"
+        - "警方报案回执/编号复印件(如有)"
+    damaged-scenario:
+      trigger: "损坏:损坏卡片原件及复印件,或损坏情况的书面说明/照片."
+      documents:
+        - "损坏卡片原件及复印件"
+        - "损坏情况书面说明/照片"
+    grace-period-scenario:
+      trigger: "宽限期:宽限期核准通知/盖章或在制卡确认函."
+      documents:
+        - "宽限期核准通知/盖章"
+        - "在制卡确认函"
+    exit-scenario:
+      trigger: "涉离境:ECC-A或ECC-B与RP/SRC的缴费凭证复印件、相关评估单;如为未成年人可能以CE(免除证明)替代."
+      documents:
+        - "ECC-A或ECC-B与RP/SRC缴费凭证复印件"
+        - "相关评估单"
+        - "CE(免除证明)(如适用未成年人)"
+    foreign-docs-scenario:
+      trigger: "外文证明:在国外签发的文件须经菲律宾驻外馆(FSP)认证,或由DFA确认,并附英文译本."
+      documents:
+        - "FSP或DFA认证文件"
+        - "英文译本"
+    by-authorized-representative:
+      trigger: "如由授权代表递交(递件阶段)"
+      documents:
+        - "BI认证ID复印件(认证主体/联络人)"
+        - "特别授权书(SPA)原件(每位申请人)及受托人有效政府身份证复印件"
+process:
+  steps:
+    step-1-precheck-and-prep:
+      order: "1"
+      title: "预检与准备(0.5个工作日)"
+      description: "按材料清单备齐资料,完成宣誓书/公证与文件认证;打印机票行程(如离境)."
+    step-2-initial-screening:
+      order: "2"
+      title: "窗口初审与指引(当日)"
+      description: "前往移民局主办公地点(马尼拉Intramuros)指定窗口(如窗口21/副局长办公室受理区)进行初步审查;工作人员告知需补资料或前置动作."
+    step-3-ndr-check:
+      order: "3"
+      title: "不良记录查核(当日)"
+      description: "前往指定窗口(如窗口23)办理“无不良记录”加注/盖章."
+    step-4-ops-assessment:
+      order: "4"
+      title: "费用评估(OPS)(当日)"
+      description: "携带完整资料至评估窗口(通常为窗口7–8)出具费用评估单(OPS),包含Waiver及(如离境)ECC与RP/SRC等项目."
+    step-5-payment-and-or:
+      order: "5"
+      title: "缴费与取收据(当日)"
+      description: "持评估单至现金窗口(通常为窗口15/16)缴费并领取官方收据(OR)."
+    step-6-formal-filing:
+      order: "6"
+      title: "正式递交(当日)"
+      description: "凭OR回到受理窗口(如窗口21)提交完整申请,领取受理凭条."
+    step-7-approval-and-issuance:
+      order: "7"
+      title: "审批与制证(约10个工作日)"
+      description: "案件进入内部审核与签发流程;如需补件,工作人员将通知补正."
+    step-8-release:
+      order: "8"
+      title: "结果领取(通知日当日)"
+      description: "申请人须本人持护照原件与领证凭条至指定窗口领取核发的ACR I-Card Waiver文件;不接受代理领取."
+    step-9-follow-up-compliance:
+      order: "9"
+      title: "后续合规(领取后)"
+      description: "在豁免有效期内尽快完成ACR I-Card的补办/换发/领取;若涉及离境,按要求同步持有ECC与RP/SRC等配套文件."
+  variants: {}
+  notes: "格式与装订要求:1) 所有表格与信息以英文大写字母填写;不留空项,不适用处填“N/A”;系统不接受ñ/è/ü/ç等特殊字符.2) 书面陈述/宣誓书须为原件并经正规公证.3) 菲律宾国内民事登记文件须为NSO/PSA原件.4) 外国文件须经FSP或DFA认证,并附英文译本.5) 资料按清单顺序整理于Legal size文件夹;未达标可能被拒收."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "ACRICardWaiver.md"
+  items:
+    waiver-processing-fee:
+      label: "Waiver 办理费(Processing Fee)"
+      details:
+        waiver-processing-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,010"
+            value: 3010
+          notes: "递件时由OPS评估;以OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,010"
+          value: 3010
+        notes: ""
+    certification-fee:
+      label: "认证费(Certification Fee)"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "用于出具豁免/在案证明等;通用认证费标准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 500"
+          value: 500
+        notes: ""
+    express-lane:
+      label: "快速通道费(Express Lane,认证)"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "选缴;如选择加急或处室统一收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 500"
+          value: 500
+        notes: ""
+    lrf:
+      label: "法律检索费(LRF)"
+      details:
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10–50"
+            value: null
+            range:
+              min: 10
+              max: 50
+          notes: "认证/许可类除头税与罚款外,均按项目加计LRF;以票据为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+    ecc-a:
+      label: "ECC-A(示例)"
+      details:
+        ecc-a-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "适用于临时访客满6个月等情形的出境许可."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "ECC-A对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 710"
+          value: 710
+        notes: ""
+    ecc-b-rp-src-6m:
+      label: "ECC-B + RP/SRC(成人,6个月)"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "再入境许可/特别回美证(6个月)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "出境许可B."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 20"
+            value: 20
+          notes: "对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(如适用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,170"
+          value: 2170
+        notes: ""
+    ecc-b-rp-src-1y:
+      label: "ECC-B + RP/SRC(成人,1年)"
+      details:
+        rp-src:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "再入境许可/特别回美证(1年)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-b:
+          amount:
+            currency: "PHP"
+            display: "PHP 700"
+            value: 700
+          notes: "出境许可B."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "Head Tax."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 30"
+            value: 30
+          notes: "对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快速通道费(如适用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,880"
+          value: 2880
+        notes: ""
+    a-cert:
+      label: "ACR I-Card 认证(A-Cert)"
+      details:
+        a-cert:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "用于卡片状态/宽限期等在案确认."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "对应LRF."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: ""
+    visa-sticker:
+      label: "签证贴纸费(若计)"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "与签注实施相关项目搭配;以票据为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "核准后签发的ACR I-Card Waiver文件,用于在原卡不可用期间办理相关移民手续或作为出入境查验辅助凭据."
+  items:
+    acr-i-card-waiver-document:
+      name: "ACR I-Card Waiver 文件"
+      usage: "在卡片遗失/损坏/在制卡/未领取期间作为临时豁免证明使用;领取需申请人本人持护照与领证凭条."
+kpis:
+  processing_time: "约10个工作日"
+risks:
+  items:
+    waiver-limited-validity: "Waiver仅在ACR I-Card不可用期间有效,且不替代应办理的其他许可/证明;涉及出境仍须按规定办理并持有ECC与RP/SRC."
+    overstay-penalty: "逾期停留将被加收罚款(常见每月PHP 500)并可能需提交复议(MR);未处理的逾期可能导致退件或延误."
+    ndr-or-derogatory-delay: "如无法提供“无不良记录”加注或存在在案警示,案件将延迟或不予受理."
+    falsified-docs-consequence: "提交虚假材料、伪造认证或隐瞒重要事实将导致立即拒绝,可能触发行政/刑事责任及后续入境限制."
+info_collection:
+  applicant:
+    last-name:
+      label: "英文姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "英文名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "英文中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    name-chinese:
+      label: "中文姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致"
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "与护照一致"
+    birth-place:
+      label: "出生地点"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致"
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    second-nationality:
+      label: "第二国籍(如有)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry-date:
+      label: "护照到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "在菲住址(门牌/街道)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "在菲城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "在菲省/地区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "居住国家/地区"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-number:
+      label: "ACR编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-category:
+      label: "ACR类别(移民/非移民/游客等)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-icard-status:
+      label: "ACR I-Card状态(遗失/损坏/在制卡/未领取)"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    reason-summary:
+      label: "无法出示原卡原因摘要(用于申请函)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    incident-date:
+      label: "遗失/损坏发生日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    incident-place:
+      label: "遗失/损坏发生地点(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    police-report-number:
+      label: "报案编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    notarization-info:
+      label: "公证/宣誓信息(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    dependent-last-name:
+      label: "家属英文姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-first-name:
+      label: "家属英文名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-middle-name:
+      label: "家属英文中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-relationship:
+      label: "与主申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-birth-date:
+      label: "家属出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-passport-number:
+      label: "家属护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-nationality:
+      label: "家属国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-acr-number:
+      label: "家属ACR编号/状态"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-depart-separately:
+      label: "是否单独离境"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-ticket-or-permit:
+      label: "对应机票/许可信息(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-contact:
+      label: "家属联系方式"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-emergency-contact:
+      label: "家属紧急联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  employment:
+    employer-name:
+      label: "雇主名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address:
+      label: "雇主地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-contact-person:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-phone:
+      label: "雇主电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    position-title:
+      label: "职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于身份核验"
+    hire-date:
+      label: "入职日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    school-name:
+      label: "学校名称(如持学生签证)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    school-address:
+      label: "学校地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    student-number:
+      label: "学号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    representative-name:
+      label: "授权代表姓名(递件)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如由授权代表递交"
+    representative-government-id:
+      label: "受托人政府身份证号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-id:
+      label: "BI认证ID编号(认证主体/联络人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-present:
+      label: "是否提供特别授权书(SPA)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "每位申请人各自的SPA(如适用)"
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history:
+    current-visa-type:
+      label: "当前签证类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    visa-number:
+      label: "签证号(实施页)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    visa-valid-from:
+      label: "签证有效期起"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    visa-valid-until:
+      label: "签证有效期止"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-extension-date:
+      label: "最近一次延签批示日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-extension-expiry:
+      label: "最近一次延签到期日(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    planned-departure-date:
+      label: "计划离境日期(如涉及离境)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    flight-number:
+      label: "航班号(如涉及离境)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    destination:
+      label: "目的地(如涉及离境)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    need-ecc-a:
+      label: "是否需申请ECC-A"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    need-ecc-b:
+      label: "是否需申请ECC-B"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    need-rp-src:
+      label: "是否需申请RP/SRC"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    claim-stub-number:
+      label: "ACR交易凭证(Claim Stub)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    claim-stub-date:
+      label: "ACR交易凭证(Claim Stub)日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    ndr-window:
+      label: "无不良记录加注窗口(如窗口23)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ndr-date:
+      label: "无不良记录加注日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    ops-assessment-number:
+      label: "OPS评估单编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ops-assessment-amount:
+      label: "OPS评估金额明细/总额"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "以OPS评估与OR为准"
+    or-number:
+      label: "收据(OR)号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    or-date:
+      label: "收据(OR)开票日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    overstay-penalty-paid:
+      label: "是否存在逾期并已缴纳罚款(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "逾期常见每月PHP 500"
+    mr-submitted:
+      label: "是否提交复议(MR)(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    foreign-docs-authenticated:
+      label: "境外文件是否完成FSP/DFA认证及英文译本"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    affidavit-original-notarized:
+      label: "书面陈述/宣誓书为原件且完成公证"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    pickup-contact-name:
+      label: "领证通知联系人姓名(仅用于通知)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "成品领取须本人到场"
+    pickup-contact-phone:
+      label: "领证通知联系人电话(仅用于通知)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    case-notes:
+      label: "补充说明/个案备注"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请人需签署书面陈述/宣誓书并按要求公证,相关申请函需由申请人或授权代表签字确认."
+faq:
+  qas:
+    where-to-apply:
+      question: "在哪里办理ACR I-Card Waiver?"
+      answer: "在移民局主办公地点(马尼拉Intramuros)指定窗口办理,通常由受理窗口(如窗口21)接收申请,相关查核与缴费分别在窗口23(不良记录)、窗口7–8(OPS评估)、窗口15/16(Cash)完成."
+    processing-time:
+      question: "处理需要多久?"
+      answer: "缴费并正式受理后,常规约10个工作日.若需补件或复核,时间将顺延,以短信/邮件/窗口通知为准."
+    can-authorize:
+      question: "能否委托他人代办?"
+      answer: "递件可由授权代表办理(须BI认证ID或SPA+受托人政府ID);但成品领取须由申请人本人持护照与领证凭条亲自办理."
+    can-exit-with-waiver:
+      question: "拿到Waiver后就可以离境吗?"
+      answer: "Waiver并非出境许可本身.若您符合办理ECC的条件或需持有RP/SRC,仍须按规定另行办理并随身携带相关证明,否则可能被口岸拒绝放行."
+    how-much-fee:
+      question: "费用是多少?是否包含加急?"
+      answer: "Waiver办理费以OPS为准,常见为PHP 3,010;如含认证费PHP 500则合计约PHP 3,510.是否收取快速通道费(Express 500)以窗口实际开单为准.若叠加ECC/RP/SRC,合计将上升."
+    found-card:
+      question: "如果后来找回原卡怎么办?"
+      answer: "请携Waiver与原卡向窗口报告现况;Waiver在卡片恢复可用后不再使用.请妥善保存所有收据与文件,避免重复办理."
+    missing-or-error:
+      question: "资料有误或漏交会怎样?"
+      answer: "窗口将发出补件通知;未在限期内补正可能导致驳回或重新排队.建议按清单顺序准备并遵循Legal size装订要求,避免延误."
+    overstay-record:
+      question: "我有逾期停留记录还能申请吗?"
+      answer: "须先依规定处理逾期(缴纳罚款、必要时提交复议MR),并获取“无不良记录”加注;否则可能不予受理."
+disclaimers:
+  items:
+    fees-subject-to-ops-or:
+      "费用以OPS评估与官方收据(OR)为准,可能因政策或现场口径而调整."
+    usd-bsp-rate:
+      "涉及美元计费项目按菲律宾央行(BSP)当日汇率折算."
+    processing-time-may-extend:
+      "处理时长受高峰、补件或复核影响可能延长,以通知为准."
+    submission-and-release-policy:
+      "可授权递件但领取须申请人本人到场;窗口可能要求原件核验."
+service_related:
+  links: {}

@@ -1,0 +1,11 @@
+version: v1
+updated_at: '2025-10-30T04:15:00+08:00'
+services:
+  - id: apostille_guidance
+    name: 外交部文件认证(Apostille)咨询
+    path: KnowledgeBase/DFA/apostille_guidance.yaml
+    overview: 涵盖 DFA 文件认证、 Apostille 申请进度及补件要求。
+    aliases: ['dfa-apostille','document-legalization']
+    scenarios: []
+    required_docs: []
+    summary_text: ''

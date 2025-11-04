@@ -1,0 +1,452 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "Annual Report(年度报告)"
+slug: "annual-report"
+type: "reference"
+semantic_profile:
+  intent_id: "immigration-annual-report"
+  category: "immigration-compliance"
+  tags: ["ACR", "I-Card", "AR", "Philippines"]
+service_overview: "在菲律宾移民局登记并持有 ACR(I-Card 或纸本 ACR)的外籍人士须于每年首60日内完成年度报告(Annual Report, AR),核对在菲居留信息并缴纳年报费用;逾期按月计罚.14岁以下未成年人可由父母或法定监护人代为办理,可选择线下窗口、虚拟年报或官方移动年报渠道."
+applicability:
+  items:
+    holder-of-acr-within-first-60-days: "在菲律宾辖区已登记并持有有效 ACR I-Card 或纸本 ACR,需要在当年1月1日至3月1日(前60日)完成年报."
+    minor-under-14-reported-by-guardian: "家庭中有14岁以下未成年人,需要由父母/法定监护人代为年报."
+    record-check-or-corrections: "往年年报已完成,但需核对系统记录或纠正个人资料差异(建议携带以往OR备查)."
+    ensure-cleared-for-ecc-or-extension: "因计划办理ECC离境许可、签证延展等,需确保年报状态为“已缴清”."
+    virtual-or-mobile-ar-available: "无法线下到场或希望线上办理的,可使用“虚拟年报(Virtual AR)”或参加官方“移动年报(Mobile/Remote AR)”."
+preconditions:
+  required:
+    valid-acr-and-passport: "持有有效的 ACR(I-Card 或纸本 ACR)与护照原件."
+    personal-appearance-or-guardian-for-minor: "申请人须本人到场;14岁以下未成年人可由父母或法定监护人代为到场."
+    within-first-60-days-late-fine-applies: "年报办理时间应在每年首60日内;逾期须同步缴纳按月累计的行政罚款."
+  not_eligible:
+    no-passport-or-acr-original: "未携带护照或 ACR 原件,窗口无法制作缴费单(OPS),不予受理."
+    material-authenticity-dispute: "资料真实性存在重大争议且无法当场核实者(可要求提供往年年报OR等佐证后再行处理)."
+pre_required_documents:
+  mandatory:
+    acr-original: "有效 ACR I-Card 或纸本 ACR 原件"
+    passport-original: "护照原件(含最近入境章、有效停留签注)"
+  conditional:
+    previous-or-for-record-discrepancy:
+      trigger: "系统记录存在差异时用于核对"
+      documents: ["往年 Annual Report 官方收据(OR)"]
+    guardianship-proof-for-minor:
+      trigger: "代未成年人办理时现场人员要求核验"
+      documents: ["监护关系证明"]
+process:
+  steps:
+    registration-verification:
+      order: "1"
+      title: "受理与核验(Registration Section,约5分钟/人)"
+      description: "地点:菲律宾办事处三楼 Registration Section.动作:出示护照与 ACR 供核对;受理人员制作缴费单 OPS."
+    payment-and-receipt:
+      order: "2"
+      title: "缴费与领票(Cash Section,约10分钟/人)"
+      description: "持 OPS 前往现金窗口缴费,领取年报官方收据 OR;核对姓名、A号/ACR号等信息."
+    alternative-online-or-mobile:
+      order: "3"
+      title: "线上替代渠道(可选)"
+      description: "虚拟年报(Virtual AR):按线上指引登记并通过指定支付渠道(如 Link.Biz、Maya)完成缴费;线下或系统中生成OR记录.移动年报(Mobile/Remote AR):按公告至指定移动年报点办理,现场缴费并领取OR."
+  variants:
+    virtual-ar:
+      name: "虚拟年报(Virtual AR)"
+      trigger: "选择线上办理"
+      description: "通过指定线上平台完成登记与支付,系统生成 OR 记录."
+      extra_requirements: ["按线上指引填写信息", "通过 Link.Biz 或 Maya 等渠道完成支付", "保留电子/纸质凭证(OR)"]
+    mobile-remote-ar:
+      name: "移动年报(Mobile/Remote AR)"
+      trigger: "参加官方移动年报点办理"
+      description: "按公告前往指定移动年报点,现场办理并领取 OR."
+      extra_requirements: ["关注官方公告与时间地点", "现场缴费并领取 OR", "携带护照与 ACR 原件"]
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "AnnualReport_AR.md"
+  items:
+    standard-per-person:
+      label: "标准费用 · 按人"
+      details:
+        annual-report-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 300"
+            value: 300
+          notes: "年报费"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费(LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        late-penalty-per-month:
+          amount:
+            currency: "PHP"
+            display: "PHP 200/月,封顶 PHP 2,000"
+            value: null
+          notes: "逾期行政罚款:每月 PHP 200;同一年度封顶 PHP 2,000(罚款不计 LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "实际以当日 OPS/OR 为准;逾期罚款将影响合计."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    mr-if-applicable:
+      label: "逾期复议(MR) · 如适用"
+      details:
+        mr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "复议(MR)费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "MR 对应的法律检索费(LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500(如适用)"
+            value: 500
+          notes: "如现场使用加急通道可能另计"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否产生及金额以当日 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "官方收据(OR)"
+  items:
+    official-receipt-or:
+      name: "官方收据(OR)"
+      usage: "缴费与年度报告完成的凭证;后续办理 ECC/签证等业务的核对依据."
+kpis:
+  processing_time: "受理约5分钟/人;缴费约10分钟/人(不含排队)"
+risks:
+  items:
+    late-penalty-accrues: "未在首60日内完成年报将按月累积罚款,年度封顶 PHP 2,000."
+    no-original-docs-no-ops: "未携带护照或 ACR 原件无法生成 OPS、无法缴费."
+    record-discrepancy-may-require-previous-or: "系统记载与个人信息不一致时,可能要求补交往年 OR 以核对."
+    verify-or-immediately: "缴费后应立即核对 OR 上的姓名、A号/ACR号与金额,避免后续办理出现异常."
+    online-channel-fees: "虚拟/移动年报可能产生平台或银行/电子钱包通道手续费."
+    combined-services-extra-fees: "与认证/签证等服务同日办理,可能涉及 Express/LRF 等额外费用,以当日 OPS 为准."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "本人联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "在菲住址(详细地址)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "在菲住址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "在菲住址(省/地区)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "在菲住址(国家)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "在菲住址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    guardian-full-name:
+      label: "代办人姓名(仅未成年人)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "父母或法定监护人"
+    guardian-relationship:
+      label: "代办人与申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    guardian-phone-mobile:
+      label: "代办人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    guardian-email:
+      label: "代办人电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  travel_history: {}
+  compliance:
+    current-visa-type:
+      label: "当前停留签注/签证种类"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    current-visa-expiry:
+      label: "当前签注/签证到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-type:
+      label: "ACR 类型(I-Card/纸本)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-number:
+      label: "ACR 号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    acr-expiry:
+      label: "ACR 有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    overdue-start-month:
+      label: "逾期起算月份(如适用)"
+      type: "string"
+      required: "false"
+      format: "yyyy-mm"
+      pattern: "^\\d{4}-\\d{2}$"
+      example: ""
+      notes: ""
+  additional_details:
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuing-country:
+      label: "护照签发国"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    previous-ar-or-number:
+      label: "往年年报 OR 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于处理系统差异或争议时备查"
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    must-appear-in-person:
+      question: "一定要本人到场吗?"
+      answer: "原则上需本人亲办;仅14岁以下未成年人可由父母或法定监护人代办."
+    missing-previous-or:
+      question: "忘带往年OR可以办理吗?"
+      answer: "可以.往年OR非强制,但如系统记录存在差异,可能要求补交以核对,建议随身携带."
+    late-penalty-calculation:
+      question: "逾期罚款如何计算,有没有上限?"
+      answer: "每逾期1个月罚 PHP 200,同一年度封顶 PHP 2,000;罚款不计LRF."
+    online-available:
+      question: "可以线上办理吗?"
+      answer: "可通过“虚拟年报(Virtual AR)”完成线上登记与缴费;也可关注“移动年报(Mobile/Remote AR)”通知就近办理."
+    no-passport-or-acr-no-payment:
+      question: "没有护照或ACR当天能否先缴费?"
+      answer: "不能.未携带护照或ACR原件无法制作OPS,也就无法缴费."
+    departing-need-ar:
+      question: "准备离境,需要先年报吗?"
+      answer: "建议先完成当年年报并确保无欠费,再申请ECC等离境许可,以免影响出境流程."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

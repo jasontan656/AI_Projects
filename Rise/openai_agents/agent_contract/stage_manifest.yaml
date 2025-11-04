@@ -1,0 +1,70 @@
+version: v2
+description: "Unified Conversation System (UnifiedCS) multi-branch stage manifest."
+
+stages:
+  - id: base_system
+    path: prompt_base_system.md
+    store: true
+    next: judgement_v1
+
+  - id: judgement_v1
+    description: "Classify if user inquiry is valid."
+    path: prompt_stage1_judgement.md
+    required_fields:
+      - judgements.inquiry
+    transitions:
+      on_true: agency_detect_v1
+      on_false: session_end
+    store: true
+
+  - id: agency_detect_v1
+    description: "Identify which government agency/agencies are related."
+    path: prompt_stage2_agency_catalog.md
+    required_fields:
+      - judgements.agencyDetected
+      - judgements.complexity
+    transitions:
+      on_low: category_select_v1
+      on_high: semantic_analysis_v1
+    store: true
+
+  - id: category_select_v1
+    description: "Select most relevant dictionary categories for low-complexity inquiries."
+    path: prompt_stage3-1_templatefill.md
+    required_fields:
+      - categorySelection.candidates
+    transitions:
+      default: service_select_v1
+    store: true
+
+  - id: semantic_analysis_v1
+    description: "Analyze multi-agency semantic relevance and choose primary agency."
+    path: prompt_stege3-1_semantic_analysis.md
+    required_fields:
+      - semanticAnalysis.primaryAgency
+    transitions:
+      default: service_select_v1
+    store: true
+
+  - id: service_select_v1
+    description: "Identify specific service within agency and generate template skeleton."
+    path: prompt_stage3-2_templatefill.md
+    required_fields:
+      - serviceSelection.serviceKey
+    transitions:
+      default: session_end
+    store: true
+
+  - id: multi_agency_service_answer_v1
+    description: "For multi-agency cases, merge multiple services into a coherent answer."
+    path: prompt_stage3-2_semnatic_analysis.md
+    required_fields:
+      - assistantReply
+    transitions:
+      default: session_end
+    store: false
+
+  - id: session_end
+    description: "End of workflow."
+    path: null
+    store: false

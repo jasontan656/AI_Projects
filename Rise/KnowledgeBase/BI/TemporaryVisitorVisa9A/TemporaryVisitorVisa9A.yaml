@@ -1,0 +1,1019 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "旅游签证(9A)延长停留/签证豁免(Visa Waiver)办理指南"
+slug: "temporaryvisitorvisa9a"
+type: "reference"
+semantic_profile:
+  intent_id: "temporary-visitor-visa-9a-extension"
+  category: "visa-extension"
+  tags: []
+service_overview: "菲律宾旅游签证(9A)延长停留(签证豁免/延期)适用于免签入境或已持9A入境的短期访客,在初始30天基础上申请再延29天(首延),其后可按1/2/6个月续签.需提交CGAF表格与护照等材料,经窗口受理、缴费与审批后在护照上加注新的停留期限.逾期将产生罚款并可能影响出入境,建议按期办理."
+applicability:
+  items:
+    extend-29-days-after-30: "入境获准30天免签的游客,希望再延长29天(Visa Waiver首延)."
+    nearing-59-days-need-1m-2m: "已累计停留接近59天的游客,需办理1个月或2个月的常规延期."
+    short-term-multiple-extensions: "计划在菲短期旅行/探亲/处理私务,需数月内多次续签者(部分办事处可受理6个月延长)."
+    downgraded-to-9a-continue-stay: "曾因学习/工作许可降签为9A,现需以9A身份继续合法停留者(附“降签指令”复印件)."
+    overstayed-need-penalty-and-regularize: "已发生逾期(特别是超过6个月)的游客,需先补罚并提交解释后继续办理延期或安排离境合规手续."
+preconditions:
+  required:
+    eligible-visitor-or-9a-holder: "申请人为非签证国游客或已持9A入境,拟在允许期限内继续停留."
+    passport-validity-and-original: "护照在预期停留期后仍保持足够有效期,且护照原件可提交查验."
+    prepare-docs-and-folder: "按移民局统一清单准备材料,并使用合法尺寸的文件夹按顺序装订."
+    no-adverse-record-or-resolved: "无未结不良记录;如有警示或同名疑义,须先行核验或提交证明."
+    overstayer-pay-fines-and-affidavit: "逾期者须一并缴纳罚款并(如适用)提交经公证的书面说明及支撑材料."
+  not_eligible:
+    unresolved-immigration-or-criminal-issues: "申请人存在未解决的移民违法、刑事案件或被列入不准入境/驱逐名单."
+    false-or-unacceptable-docs: "提交虚假或未按要求认证的文书(含计算机打印/复印替代照片等不合规件)."
+    unaccredited-agent-or-missing-spa: "由无资质代理递交且未提供移民局认证ID或对应的特别授权书(SPA)."
+    noncompliant-submission-specs: "未按规定时限或未按清单顺序/规格提交材料,窗口将不予受理."
+    needs-other-visa-route: "需要办理工作、居留类签证的情形(应转相应签证通道,而非9A延期)."
+pre_required_documents:
+  mandatory:
+    cgaf-form: "填妥并签名的统一通用申请表(CGAF,延长临时访客签证用),注明申请方式(本人或授权代表)、办理通道(普通/快速)、申请月数(1/2/6个月)及延期理由."
+    passport-original: "申请人护照/旅行证件原件."
+  conditional:
+    by-authorized-representative:
+      trigger: "由授权代表递交"
+      documents: ["移民局认证代理证件复印件或每位申请人的原件特别授权书(SPA)", "受托人有效政府ID复印件"]
+    downgraded-to-9a:
+      trigger: "曾由他种签证/许可降为9A者"
+      documents: ["“降签指令”复印件"]
+    overstay-gt6m-or-exceed-max:
+      trigger: "逾期超过6个月或超过允许最长期限者"
+      documents: ["经公证的逾期原因说明信", "支撑材料(原件或经认证)"]
+    overstay-gt6m-near-exit:
+      trigger: "逾期满6个月及以上并需贴近出境者"
+      documents: ["临时访客居留证明(CRTV)", "移民无案证明(如窗口要求)"]
+    acr-icard-threshold:
+      trigger: "达到需办理ACR I-Card的门槛时"
+      documents: ["ACR I-Card信息及相关凭证"]
+    photo-required-overstay-gt6m:
+      trigger: "逾期≥6个月触发照片要求"
+      documents: ["彩色2×2英寸、白底、近期三个月内拍摄、标准证件照"]
+process:
+  steps:
+    get-forms-and-checklist:
+      order: "1"
+      title: "领取或下载表格与清单(约10–20分钟)"
+      description: "前往PIAU或官方网站获取CGAF与材料清单,了解普通/快速通道与可选延长月数."
+    prepare-docs-and-fill:
+      order: "2"
+      title: "整理材料并填表(视个人情况0.5–1个工作日)"
+      description: "按清单顺序装订入法式文件夹;涉外文书需经驻外使领馆或DFA认证,非英文需附英文译文."
+    file-application-initial-review:
+      order: "3"
+      title: "递交申请与初审(窗口受理,约15–30分钟)"
+      description: "在TVS窗口提交CGAF、护照原件及条件性材料,前台进行资料完整性检查."
+    background-check-and-nbi-clearance:
+      order: "4"
+      title: "背景核查与出具无案证明(约30–90分钟)"
+      description: "无不良记录者由记录科出具移民局无案证明;同名或疑义则转核验与证明单位处理."
+    billing-and-payment:
+      order: "5"
+      title: "费用开单与缴费(约15–30分钟)"
+      description: "领取缴费单(OPS)至收银按所选通道缴费(普通/快速),并保留正式收据(OR)."
+    submit-or-and-passport:
+      order: "6"
+      title: "回交收据与护照(约10–15分钟)"
+      description: "将OR连同申请表、附件及护照交回受理/评估官完成签注实施排队."
+    claim-passport-result:
+      order: "7"
+      title: "领取结果与护照(普通当日或次日;快速一般当日数小时内)"
+      description: "凭领取凭条到TVS窗口领取已加注延期的护照;逾30个工作日未领将视为自动取消."
+    consult-and-track:
+      order: "8"
+      title: "线上/电话咨询与跟踪(如需)"
+      description: "通过热线或指定邮箱咨询与查询;部分办事处提供在线延签/预约入口,以当地公告为准."
+  variants:
+    regular-channel:
+      name: "普通通道"
+      trigger: "选择普通通道"
+      description: "按常规排队受理与出证."
+      extra_requirements: []
+    express-channel:
+      name: "快速通道"
+      trigger: "选择快速通道"
+      description: "优先受理与出证,通常当日数小时内完成."
+      extra_requirements: ["支付快速通道费用"]
+  notes: "上述时长为经验值,实际以各办事处受理量与通道为准."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "TemporaryVisitorVisa9A.md"
+  items:
+    visa-waiver-components:
+      label: "签证豁免 · 分项费用"
+      details:
+        visa-waiver:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "首次延长(30+29)核心费目之一."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-waiver-application:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "与签证豁免并列收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "常见并列项."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "签证豁免常见为PHP 30;其他项目依票据为10/20/30/40/50.以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "常见为递件500+出证500合计;以票据为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "分项示例,不同办事处可能以整包总价开单."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    visa-waiver-package-regular-2025:
+      label: "签证豁免整包(普通) · EO 408免签国 · 2025示例"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,130"
+            value: 2130
+          notes: "整包价示例;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 2,130"
+          value: 2130
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    visa-waiver-package-express-2025:
+      label: "签证豁免整包(快速) · EO 408免签国 · 2025示例"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,130"
+            value: 3130
+          notes: "整包价示例;以OPS/OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,130"
+          value: 3130
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    visa-waiver-total-2014-sample:
+      label: "签证豁免整包(2014示例总计)"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,030"
+            value: 3030
+          notes: "由多项费目相加得出,作历史口径示例."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,030"
+          value: 3030
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    post59-1m-16plus:
+      label: "59天后延期 · 1个月 · 年满16岁"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,400"
+            value: 3400
+          notes: "不含ACR I-Card美元费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,400"
+          value: 3400
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    post59-2m-nonvisa-16plus:
+      label: "59天后延期 · 2个月 · 非签证国 · 年满16岁"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,900"
+            value: 3900
+          notes: "不含ACR I-Card美元费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,900"
+          value: 3900
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    post59-2m-visa-16plus:
+      label: "59天后延期 · 2个月 · 签证国 · 年满16岁"
+      details:
+        package:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,200"
+            value: 4200
+          notes: "不含ACR I-Card美元费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 4,200"
+          value: 4200
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    acr-icard-tourist:
+      label: "ACR I-Card(旅游类)"
+      details:
+        icard-card-fee:
+          amount:
+            currency: "USD"
+            display: "USD 50"
+            value: 50
+          notes: "卡费美元计价,按BSP汇率折算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        icard-express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "I-Card快速费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "跨币种合计以办理当日汇率与票据为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    acr-fee:
+      label: "ACR登记费(ACR Fee)"
+      details:
+        acr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "常与ECC/CRTV/延期组合收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    head-tax-gt16:
+      label: "头税(>16岁)"
+      details:
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "视办理组合是否收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    visa-sticker:
+      label: "签证贴纸费"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "签证实施页贴纸."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    crtv:
+      label: "临时访客居留证明(CRTV)"
+      details:
+        crtv-base:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,400"
+            value: 1400
+          notes: "累计停留≥6个月等场景附收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,410"
+          value: 1410
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    overstay-penalty:
+      label: "逾期罚款"
+      details:
+        penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/月"
+            value: null
+          notes: "自逾期起按月计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    motion-for-reconsideration:
+      label: "逾期复议(MR)"
+      details:
+        mr-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "法律检索费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    late-application-surcharge:
+      label: "逾期申请费(附加)"
+      details:
+        surcharge:
+          amount:
+            currency: "PHP"
+            display: "PHP 300"
+            value: 300
+          notes: "个别窗口对逾期案附加的申请费(2014口径)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    acr-reissue-post59-second-entry:
+      label: "二次入境超59天ACR补发"
+      details:
+        acr-reissue:
+          amount:
+            currency: "PHP"
+            display: "成人PHP 250;未成年人PHP 150"
+            value: null
+            tiers:
+              - value: 250
+                condition: "成人"
+              - value: 150
+                condition: "未成年人"
+          notes: "旅游签证入境者适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+deliverables:
+  description: "获批后在护照上加注新的停留期限,并返还护照;申请人应保留正式收据(OR)."
+  items:
+    passport-extended-stay-annotation:
+      name: "护照加注延期页"
+      usage: "出入境查验与在菲合法停留凭证."
+    official-receipt-or:
+      name: "正式收据(OR)"
+      usage: "费用支付凭证,后续查询与对账所需."
+kpis:
+  processing_time: "普通:当日或次日;快速:当日数小时内(以窗口为准)."
+risks:
+  items:
+    overstay-fines-and-delays: "逾期将按每月PHP 500计罚,且可能增加审核时长与材料要求."
+    false-docs-rejection-penalty: "虚假陈述或伪造文件将导致驳回,并可能面临刑事追诉或遣返."
+    verification-delays: "如存在不良记录或同名疑义,将转核验与证明单位,处理时间可能延长."
+    cancellation-if-not-claimed: "自通知之日起30个工作日未领取的申请将视为取消."
+    fee-variance-by-office: "不同办事处可能采用整包或分项收费,快速通道费用亦可能分拆;以OPS/OR为准."
+    ecc-required-before-exit: "累计停留≥6个月拟离境者需另办ECC-A,未及时办理可能影响出境."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WEI"
+      notes: ""
+    middle-name:
+      label: "中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可填“无”."
+    alias:
+      label: "别名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有."
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "dd-mmm-yyyy"
+      pattern: ""
+      example: "15-JAN-1990"
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "男"
+      notes: "可选:男/女."
+    birth-place-city:
+      label: "出生城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SHANGHAI"
+      notes: ""
+    birth-place-country:
+      label: "出生国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: "当前持有国籍."
+    height-cm:
+      label: "身高(cm)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 175
+      notes: ""
+    weight-kg:
+      label: "体重(kg)"
+      type: "number"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 68.5
+      notes: ""
+    marital-status:
+      label: "婚姻状况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "未婚"
+      notes: "可选:未婚/已婚/分居/离婚/丧偶/婚姻撤销."
+    ph-address-line1:
+      label: "菲律宾居住地址(门牌/街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Unit 123, 10th St."
+      notes: ""
+    ph-address-subdivision:
+      label: "小区/村(Subdivision)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ph-address-barangay:
+      label: "Barangay"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Barangay 123"
+      notes: ""
+    ph-address-city:
+      label: "市(City)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    ph-address-province:
+      label: "省(Province)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    ph-address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    phone-mobile-ph:
+      label: "菲律宾手机号"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    has-children:
+      label: "是否有子女随行"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+    children-details:
+      label: "子女信息(姓名/出生日期/关系)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Zhang Ming; 2015-06-01; 子女"
+      notes: "如有多名请逐一列出."
+  dependents:
+    family-address-in-ph:
+      label: "随行家庭成员在菲地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    family-contact-phone:
+      label: "随行家庭成员联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639181234567"
+      notes: ""
+  employment:
+    in-ph-contact-organization:
+      label: "在菲联系人/机构名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Travel Co."
+      notes: ""
+    contact-address:
+      label: "联系人/机构地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-phone:
+      label: "联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    invitation-purpose:
+      label: "邀请事由"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "旅游探亲"
+      notes: ""
+    planned-stay-arrangement:
+      label: "预计停留安排"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    representative-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    bi-agent-id:
+      label: "移民局代理认证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI-AGT-123456"
+      notes: ""
+    representative-gov-id-type:
+      label: "代表有效政府ID种类"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Passport/Driver's License"
+      notes: ""
+    representative-gov-id-number:
+      label: "代表政府ID号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "SPA编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPA-2025-0001"
+      notes: ""
+    spa-sign-date:
+      label: "SPA签署日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-15"
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-10"
+      notes: ""
+    last-entry-flight-number:
+      label: "最近一次入境航班/航次号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PR311"
+      notes: ""
+  travel_history:
+    last-visa-extension-valid-until:
+      label: "最近一次旅游签证延期的有效期(如有)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-04-15"
+      notes: ""
+  compliance:
+    extension-reason:
+      label: "延期理由(含逾期说明,如适用)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "继续旅行行程,因病延后返程"
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card号码(如已签发)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "A123456789"
+      notes: ""
+    acr-icard-issuing-office:
+      label: "ACR I-Card签发地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI Main Office, Intramuros"
+      notes: ""
+    has-ssrn:
+      label: "是否有SSRN(特别安全登记号)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+    ssrn-number:
+      label: "SSRN编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    has-downgrading-order:
+      label: "是否有降签指令"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+    downgrading-order-number:
+      label: "降签指令编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DO-2024-00123"
+      notes: ""
+    downgrading-order-date:
+      label: "降签指令日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-20"
+      notes: ""
+  additional_details:
+    extension-months:
+      label: "申请延长月数"
+      type: "integer"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: 2
+      notes: "可选:1/2/6."
+    processing-channel:
+      label: "申请通道"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "普通"
+      notes: "可选:普通/快速."
+acknowledgement_flags:
+  data_privacy_consent: "签署CGAF即同意在移民局业务范围内收集与处理个人信息,遵守《数据隐私法》(RA 10173)及实施细则."
+  certification_statement: "申请人于CGAF上签名确认所填信息真实、材料齐备并接受相关声明与责任."
+faq:
+  qas:
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "普通通道一般当日或次日可取;快速通道通常当日数小时内完成.高峰期及需核验记录时可能延长,以窗口通知为准."
+    can-overstayer-extend:
+      question: "已经逾期了还能办理延期吗?"
+      answer: "可以,但需缴纳每月PHP 500逾期罚款,并提交经公证的逾期说明和支撑材料;如逾期较长(≥6个月),材料与审核要求更严格,可能需补交相关证明与费用."
+    first-extension-cost:
+      question: "首次入境30天后想再停留29天,费用怎么算?"
+      answer: "可办理签证豁免/首延,2025年常见整包:普通约PHP 2,130,快速约PHP 3,130;2014版分项合计示例为PHP 3,030.具体以办事处开单为准."
+    post59-extension-fees:
+      question: "超过59天后继续延期有哪些费用?"
+      answer: "常见为1个月或2个月档(≥16岁示例:1个月约PHP 3,400,2个月(非签证国)约PHP 3,900/(签证国)约PHP 4,200),不含ACR I-Card美元费用;是否需办卡视个人停留累计与窗口判定."
+    representative-filing:
+      question: "是否必须本人到场?可以由代理代办吗?"
+      answer: "可由授权代表代办,但必须提交移民局认证代理ID或每位申请人的原件SPA,并提供受托人的有效政府ID复印件."
+    acr-icard-when-and-fee:
+      question: "何时需要ACR I-Card?费用是多少?"
+      answer: "达到规定停留门槛或办理相关业务时需办卡;卡费USD 50按BSP汇率折算,另有I-Card快速费PHP 500及可能的ACR登记费PHP 1,000."
+    not-claimed-within-30-days:
+      question: "如果我的申请被批准但我没有及时领取怎么办?"
+      answer: "自通知之日起30个工作日未领取的申请将视为取消.建议按领取凭条注明的日期及时领取."
+    lrf-express-certification-meaning:
+      question: "付款项目中“LRF/Express/认证费”如何理解?"
+      answer: "LRF为法律检索费(多数移民费用均附加,除头税与罚款);Express为快速处理服务费(可能分为递件与出证);认证费用于出具在案证明文件.不同项目与办事处可能合并为整包价."
+disclaimers:
+  items:
+    submission-specs-and-authentication: "所有材料须按清单顺序装订入8.5×14英寸法式文件夹;境外文书须经驻外使领馆或DFA认证,非英文须附英文译文."
+    fees-as-per-ops-or: "实收以缴费单(OPS)与正式收据(OR)为准;不同办事处可能以整包总价开单."
+    usd-rate-note: "美元项目按办理当日BSP汇率折算."
+    policy-updates: "费用与口径会更新调整,请以最新官方公告与窗口解释为准."
+service_related:
+  links: {}

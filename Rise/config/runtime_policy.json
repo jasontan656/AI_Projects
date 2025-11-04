@@ -1,0 +1,124 @@
+{
+  "determinism": {
+    "temperature": 0,
+    "top_p": 1,
+    "seed": 20251027
+  },
+  "output_mode": "markdown-structured",
+  "versioning": {
+    "prompt_version": "idx-v2",
+    "doc_commit": "28a8d3a"
+  },
+  "pii_redaction": [
+    {
+      "field": "email",
+      "mask": "***@***"
+    },
+    {
+      "field": "phone",
+      "mask": "***-****"
+    },
+    {
+      "field": "id_number",
+      "policy": "hash(sha256)"
+    }
+  ],
+  "fingerprints": {
+    "prompt_fingerprint": "8625086d0db1507b379f48d0547fb11053ebce40c984a1bd69177e11dfa2a6bb",
+    "output_schema_id": "rise/contracts/output.schema.json@v1"
+  },
+  "policy": {
+    "refusal_strategy": {
+      "priority": [
+        "safety",
+        "contract",
+        "budget",
+        "rate_limit",
+        "other"
+      ],
+      "rules": {
+        "safety": {
+          "on": [
+            "safety_triggered",
+            "policy_violation",
+            "pii_detected"
+          ],
+          "action": "refuse",
+          "audit_log": true
+        },
+        "contract": {
+          "on": [
+            "output_validation_failed",
+            "schema_mismatch",
+            "drift_exceeded"
+          ],
+          "action": "repair_then_refuse_if_unfixable",
+          "max_repairs": 1
+        },
+        "budget": {
+          "on": [
+            "token_budget_exceeded",
+            "summary_required"
+          ],
+          "action": "summarize_or_error"
+        },
+        "rate_limit": {
+          "on": [
+            "rate_limited"
+          ],
+          "action": "retry_with_backoff",
+          "backoff_ms": [
+            200,
+            400,
+            800
+          ]
+        },
+        "other": {
+          "on": [
+            "other_error"
+          ],
+          "action": "escalate"
+        }
+      }
+    }
+  },
+  "provider_capabilities": {
+    "OpenAI.Responses": {
+      "supports_seed": true,
+      "supports_json_mode": true,
+      "supports_function_call": true,
+      "max_input_tokens": 200000,
+      "notes": "优先使用；strict JSON 建议配合 schema 约束"
+    },
+    "OpenAI.ChatCompletions": {
+      "supports_seed": true,
+      "supports_json_mode": true,
+      "supports_function_call": true,
+      "max_input_tokens": 128000
+    },
+    "Anthropic.Messages": {
+      "supports_seed": false,
+      "supports_json_mode": "partial",
+      "supports_function_call": "tool_use",
+      "max_input_tokens": 200000,
+      "notes": "seed 不稳定时需放宽 drift 容忍或改用结构化提示"
+    },
+    "Custom": {
+      "supports_seed": "unknown",
+      "supports_json_mode": "unknown",
+      "supports_function_call": "unknown",
+      "max_input_tokens": "unknown"
+    }
+  },
+  "nondeterminism": {
+    "allow_without_seed": false,
+    "drift_tolerance_tokens": 1,
+    "assert_output_contract": true
+  },
+  "generated-from": "30@28a8d3a",
+  "tokens_budget": {
+    "per_call_max_tokens": 3000,
+    "per_flow_max_tokens": 6000,
+    "summary_threshold_tokens": 2200
+  }
+}

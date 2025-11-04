@@ -1,0 +1,817 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "在线续期:宣教/非营利组织及联络官认证"
+slug: "missionary-or-non-profit-organization-representatives-or-liaison-officers"
+type: "reference"
+semantic_profile:
+  intent_id: "accreditation-renewal-liaison-officer"
+  category: "accreditation"
+  tags: ["renewal","e-services","liaison-officer","non-profit","missionary","accreditation","BIAU"]
+service_overview: "面向已获菲律宾移民局认证的宣教组织、非营利机构、咨询/服务公司及其授权联络官,提供通过移民局线上平台(E-Services)办理组织资质与联络官资格的续期.由BIAU线上受理与审核,申请人通过OPS缴费,系统更新组织/联络官权限,并签发新的联络官认证身份证件(电子或实体卡).包含宣誓承诺书、财务/登记记录比对与人员背景核验等环节,确保持续满足认证标准."
+applicability:
+  items:
+    accredited-orgs-near-expiry: "已取得移民局认证且证件即将到期的宣教组织/非营利组织/咨询或旅行服务公司,需续期以维持办理权限."
+    maintain-valid-bond-or-surety: "组织保持有效现金保证金或保证保险,需要续缴并更新相关收据信息."
+    liaison-officer-roster-changes: "联络官名单有变更(新增/更换/删除),需在续期时一并调整并申请新证件."
+    update-last-year-client-list: "组织近一年服务对象(客户)名单需更新备案,以支持续期审查与稽核."
+    sync-updated-registrations-and-licenses: "组织基本登记信息(如SEC/GIS、ITR、营业执照/市长许可)已更新,需在续期中同步校验."
+preconditions:
+  required:
+    submit-via-e-services: "申请须通过移民局线上平台(E-Services)提交,纸本仅作备查或面签时出示."
+    latest-sec-gis-and-itr-consistent: "组织已完成最新年度的公司资料申报(如SEC最新年度GIS或市长许可/营业执照)与税务申报(最近一期ITR及缴款凭证),并与SEC/BIR记录一致."
+    valid-bond-or-surety-proof: "保持有效现金保证金或保证保险,续期时提供续缴或有效凭证."
+    liaison-officer-docs-and-return-old-id: "联络官应持有有效的无犯罪记录证明(NBI)、移民局培训合格证明、公司任用/雇佣文件、公司ID与签名样本;续期时旧联络官ID须缴回."
+    sworn-affidavit-of-undertaking: "由负责人签署并经宣誓/公证的承诺宣誓书(Affidavit of Undertaking),承诺不提交虚假材料、不从事“跑单/代办”违规行为、依数据隐私规范处理个人信息等."
+  not_eligible:
+    not-initially-approved-or-bond-lapsed: "尚未完成首次认证(初次申请未核准)或保证金/保函已失效."
+    core-records-not-updated: "核心资料未按最新年度更新(如SEC GIS、ITR缺失或与备案不一致)."
+    missing-nbi-or-training-or-refuse-return-id: "无法提供有效NBI证明、培训证书或拒绝缴回旧联络官ID."
+    lapsed-and-not-remedied: "逾期未续导致系统权限被停用且未能完成补救所需的补件/复议."
+    cannot-swear-affidavit-or-sanctioned: "无法签署承诺宣誓书或存在被移民局暂停/禁办的情形."
+pre_required_documents:
+  mandatory:
+    org-renewal-letter-and-client-list: "组织续期申请函与最近一年客户服务清单(至少包含客户姓名、国籍、申请/业务类型)."
+    latest-sec-gis-or-mayor-permit-and-business-permit: "最新公司登记或营运证明:SEC最新年度GIS或市长许可、营业执照复印件各1份."
+    latest-itr-and-payment-proof: "最近一期ITR(所得税申报)及缴款凭证复印件各1份."
+    bond-or-surety-renewal-receipt: "现金保证金或保证保险续缴收据复印件1份(如替换保单,附新版保单信息页)."
+    affidavit-of-undertaking-original: "承诺宣誓书(Affidavit of Undertaking)原件,由负责人宣誓/公证并包含真实性承诺、禁止跑单/不当协助、ID管理、数据隐私等要点."
+    liaison-renewal-letter-and-form: "联络官续期申请函与联络官认证申请表(BI Form 2014-03-006 Rev 0)."
+    employment-proof-and-id-and-signature-card: "任用/雇佣证明文件(聘书、任命书或HR证明),公司ID复印件,签名样本卡."
+    nbi-clearance-and-training-certificate: "有效期内NBI无犯罪证明;移民局联络官培训合格证书."
+    old-liaison-id-return: "旧联络官认证ID原件(办理时交回)."
+  conditional:
+    system-generated-forms:
+      trigger: "如适用:E-Services生成的认证申请书与线上申请表需随案号留存"
+      documents: ["认证申请书(Certification Application)","线上申请表(Application Form)(E-Services生成)"]
+    roster-change:
+      trigger: "名单变更(新增/更换/删除联络官)"
+      documents: ["董事会/管理层决议或授权文件","最新人员花名册","联络官培训合格证明"]
+    org-info-change:
+      trigger: "组织信息变更(公司名称或地址变更)"
+      documents: ["SEC修订文件/章程变更","营业/注册地址变更证明"]
+    bond-adjustment:
+      trigger: "保证金调整(新增/替换保函)"
+      documents: ["新保单全文或批单","续缴收据"]
+    client-category-expansion:
+      trigger: "客户类别扩展(如就业类客户)"
+      documents: ["内部合规指引/制度","与外部许可(如AEP)一致性的说明","内部合规流程说明"]
+process:
+  steps:
+    online-preparation-and-check:
+      order: "1"
+      title: "线上准备与校核"
+      description: "约1个工作日.登录E-Services下载适用清单与表单,核对组织与联络官信息是否与SEC/BIR/NBI记录一致,准备并扫描上传."
+    submission-and-initial-review:
+      order: "2"
+      title: "提交与线上初审"
+      description: "约2–3个工作日.通过E-Services上传组织与联络官材料;BIAU进行形式审查,不足或疑义将以系统消息/邮件通知补件."
+    payment:
+      order: "3"
+      title: "缴费"
+      description: "约1个工作日.按OPS缴费指引通过LandBank Link.Biz、GCash、Maya等渠道支付,生成电子收据与OR编号,回传/关联至案号."
+    substantive-review-and-approval:
+      order: "4"
+      title: "实质审查与核批"
+      description: "约5个工作日.BIAU开展合规审查(含资料一致性、保证金有效性、人员背景与培训记录、承诺书要件等),审查通过后核发续期批准并更新系统权限."
+    card-issuance-and-activation:
+      order: "5"
+      title: "取证与启用"
+      description: "在E-Services下载电子确认函;联络官认证ID按指示领取实体卡或启用电子卡.旧卡已缴回的,系统同步注销."
+  variants: {}
+  notes: "整体周期以材料完整度与补件次数为准;如触发抽查或复核,时长将顺延.请全程保留缴费凭证与系统通知."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "以OPS收费单与官方收据为准;2025版价格总表通用条目说明"
+  items:
+    organization-renewal:
+      label: "组织认证续期"
+      details:
+        application-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,000"
+            value: 3000
+          notes: "线上续期申请费;以OPS为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    liaison-officer-id:
+      label: "联络官认证ID"
+      details:
+        id-card:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/人"
+            value: 500
+          notes: "每名在册联络官新证/换证;以OPS/OR开单为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    bond-renewal:
+      label: "现金保证金/保函续缴"
+      details:
+        bond-or-surety:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "续期时如需续缴或调整额度;金额随保函类型/额度变化,依OPS列示."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+    certification-addons:
+      label: "证明/认证类附加"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "申请在案证明、记录认证等附加文件时;采Certification Fee通用标准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee(LRF)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express:
+          amount:
+            currency: "PHP"
+            display: "PHP 500(如选加急)"
+            value: 500
+          notes: "如选择加急通道适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    express-lane:
+      label: "快速通道/加急(如适用)"
+      details:
+        express-lane-fee:
+          amount:
+            currency: "PHP"
+            display: "常见 PHP 500"
+            value: 500
+          notes: "以受理处口径为准,仅在提供加急时计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+deliverables:
+  description: "续期核准后签发线上确认函,并为联络官发放/启用认证ID(实体或电子卡)."
+  items:
+    e-confirmation-letter:
+      name: "电子确认函"
+      usage: "证明组织及联络官续期已核准并启用权限."
+    liaison-id-card:
+      name: "联络官认证ID(实体或电子卡)"
+      usage: "作为在移民局办理相关事务的身份与授权凭证."
+kpis:
+  processing_time: "一般在5个工作日内完成终审(无补件/抽查)."
+risks:
+  items:
+    data-inconsistency-delay: "组织资料与SEC/BIR备案不一致将导致补件与审查延误."
+    bond-invalid-rejection: "保证金/保函失效属于不受理情形,可能被退件或不予核准."
+    late-renewal-suspension: "未在到期前完成续期,系统权限可能自动停用,影响窗口办理与客户案件."
+    noncompliance-penalties: "违反承诺(虚假文件、跑单/不当协助)可导致罚款、没收保证金、暂停/禁办或取消认证."
+    record-keeping-risk: "缴费凭证与OR收据未妥善留存,可能影响年度稽核或抽查."
+    scope-overreach-risk: "超越组织章程/经营范围承接业务,或未满足外部许可(如AEP)要求,可能致案件被拒或受罚."
+    relationship-conflict: "与移民局人员存在三等亲以内关系未申报,可能触发回避或影响审查."
+info_collection:
+  applicant:
+    org-legal-name-english:
+      label: "组织法定名称(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Example Missionary Organization Inc."
+      notes: "须与SEC/营业执照一致."
+    org-legal-name-local:
+      label: "组织法定名称(本地语)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    sec-registration-number:
+      label: "SEC注册号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CS2019-123456"
+      notes: "与市长许可/营业执照编号二选一,择一提供即可."
+    mayor-permit-number:
+      label: "市长许可编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与SEC注册号二选一,择一提供即可."
+    business-permit-number:
+      label: "营业执照编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与SEC注册号二选一,择一提供即可."
+    tax-tin:
+      label: "税号(TIN)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: "用于与BIR记录匹配."
+    registered-address-line1:
+      label: "注册地址(地址行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 123, ABC Building"
+      notes: ""
+    registered-address-city:
+      label: "注册地址(城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    registered-address-province:
+      label: "注册地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    registered-address-country:
+      label: "注册地址(国家)"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    registered-address-postal-code:
+      label: "注册地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    operating-address-line1:
+      label: "经营地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如与注册地址不同请填写."
+    operating-address-city:
+      label: "经营地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    operating-address-province:
+      label: "经营地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    operating-address-country:
+      label: "经营地址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    operating-address-postal-code:
+      label: "经营地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    responsible-person-last-name:
+      label: "负责人姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    responsible-person-first-name:
+      label: "负责人名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    responsible-person-middle-name:
+      label: "负责人中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    responsible-person-title:
+      label: "负责人职务/头衔"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "President"
+      notes: ""
+    official-email:
+      label: "官方邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "contact@example.org"
+      notes: "用于接收系统通知与补件要求."
+    official-phone:
+      label: "官方联系电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    bond-or-surety-number:
+      label: "现金保证金/保函编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于佐证持续有效."
+    bond-or-surety-amount:
+      label: "现金保证金/保函金额(PHP)"
+      type: "number"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 100000
+      notes: ""
+    itr-receipt-number:
+      label: "最近一期ITR收据编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "税务合规校验."
+    itr-receipt-date:
+      label: "最近一期ITR收据日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    business-scope-summary:
+      label: "业务范围/章程摘要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于确认不超范围办理."
+    client-service-list-file:
+      label: "客户服务清单(文件/列表)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "包含客户姓名、国籍、办理事项类型."
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(Last Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(First Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-contact-phone:
+      label: "配偶联系方式(电话)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-email:
+      label: "配偶邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    children-list:
+      label: "子女清单(姓名/出生日期/国籍)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如适用,可上传或填写列表."
+  dependents: {}
+  employment:
+    liaison-last-name:
+      label: "联络官姓(Last Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与政府身份证一致."
+    liaison-first-name:
+      label: "联络官名(First Name)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与政府身份证一致."
+    liaison-middle-name:
+      label: "联络官中间名(Middle Name)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如无可留空."
+    liaison-gender:
+      label: "联络官性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可选:Male/Female/Other."
+    liaison-date-of-birth:
+      label: "联络官出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    liaison-nationality:
+      label: "联络官国籍"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    philid-number:
+      label: "PhilID号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "政府身份证件号其一."
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: "政府身份证件号其一."
+    government-id-issue-date:
+      label: "政府身份证件签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-clearance-number:
+      label: "NBI无犯罪证明编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nbi-issue-date:
+      label: "NBI证明签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-training-certificate-number:
+      label: "移民局培训证书编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    training-passed-date:
+      label: "培训通过日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    employment-start-date:
+      label: "入职日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    job-title:
+      label: "岗位/职称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Liaison Officer"
+      notes: ""
+    company-id-number:
+      label: "公司ID编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-id-expiry:
+      label: "公司ID有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    specimen-signature:
+      label: "签名样本(Specimen signature)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    old-liaison-id-number:
+      label: "旧联络官认证ID号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "续期/换发用,办理时交回旧卡."
+    liaison-email:
+      label: "个人邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "liaison@example.com"
+      notes: "接收预约/取证通知."
+    liaison-mobile:
+      label: "个人手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639181234567"
+      notes: "接收预约/取证通知."
+    related-to-bi-within-third-degree:
+      label: "与移民局人员三等亲以内亲属关系声明"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: false
+      notes: "如无,请选择“否”.如有,应依法申报并遵循回避规定."
+  authorization: {}
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    aep-compliance-applicable:
+      label: "涉及就业类客户的AEP一致性确认"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: "如办理就业类客户,需与AEP及移民法规一致."
+    data-privacy-compliance:
+      label: "数据隐私合规承诺(第10173号)"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: true
+      notes: "仅用于申请受理与执行目的."
+    relationship-conflict-declaration:
+      label: "与移民局人员三等亲以内关系回避声明"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: false
+      notes: "存在关系须申报并回避."
+  additional_details:
+    billing-contact-name:
+      label: "缴费联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    billing-contact-email:
+      label: "缴费联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "billing@example.org"
+      notes: ""
+    billing-contact-mobile:
+      label: "缴费联系人手机号"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639191234567"
+      notes: ""
+    payment-channel:
+      label: "付款渠道选择"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "GCash"
+      notes: "可选:LandBank Link.Biz / GCash / Maya."
+    or-billing-name:
+      label: "收据(OR)抬头"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    or-mailing-address-line1:
+      label: "OR邮寄地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    or-mailing-address-city:
+      label: "OR邮寄地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    or-mailing-address-province:
+      label: "OR邮寄地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    or-mailing-address-country:
+      label: "OR邮寄地址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    or-mailing-address-postal-code:
+      label: "OR邮寄地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意依菲律宾数据隐私法(第10173号)收集、使用与共享个人信息用于本申请之受理与执行."
+  certification_statement: "负责人签署并经宣誓/公证之承诺宣誓书(Affidavit of Undertaking),确认资料真实、遵守合规与ID管理等要求."
+faq:
+  qas:
+    processing-time:
+      question: "完整材料提交后,多久能收到结果?"
+      answer: "一般流程在5个工作日内完成终审;如有补件、抽查或信息不一致,周期将顺延.可在E-Services实时查看状态."
+    refund-policy:
+      question: "缴费后如被驳回可否退款?"
+      answer: "续期申请费通常不予退还.建议在缴费前完成资料自检与预审确认,避免因缺件或不一致导致拒批."
+    liaison-change-fee:
+      question: "联络官更换是否需要另付费用?"
+      answer: "需要.更换视同新证件办理,需缴联络官认证ID费(PHP 500/人),并提交任用文件、培训证书、NBI证明及缴回旧证."
+    bond-expiry-submission:
+      question: "保证金/保函到期但暂未续缴,能先提交续期吗?"
+      answer: "不建议.保证金或保函失效属不受理情形之一,通常需先补齐续缴凭证或有效保单后再提交,否则将被退件或不予核准."
+    records-inconsistency:
+      question: "组织资料与SEC/BIR记录不一致怎么办?"
+      answer: "应先完成对外机关的更正/变更备案(如SEC修订、BIR地址变更)并取得最新证明,再行提交续期,避免因不一致而进入反复补件."
+    affidavit-required:
+      question: "是否必须递交承诺宣誓书?"
+      answer: "是.承诺宣誓书为续期必要文件之一,内容涵盖真实性承诺、资料合法来源、禁止跑单/不当协助、ID管理、数据隐私与健康规范等,不提交将无法通过审查."
+    id-card-issuance:
+      question: "实体卡如何领取?能否仅使用电子卡?"
+      answer: "核准后可在线下载确认函,联络官ID依指示至BIAU领取实体卡或启用电子卡.是否提供电子卡以系统公告为准,建议按指引操作."
+    late-renewal-consequence:
+      question: "如未在到期前完成续期,会有什么后果?"
+      answer: "系统权限可能被停用,影响客户案件受理与窗口通行;个案仍可能触发罚款或复议流程,且需补交有效文件后方可恢复."
+disclaimers:
+  items:
+    fees-subject-to-ops: "所有费用以OPS收费单与官方收据为准;如遇差异以官方说明更新为准."
+    pricing-may-change-2025: "若官方价目表后续发布专门条目,则以新版本为准(已更新至2025官方版本)."
+service_related:
+  links: {}

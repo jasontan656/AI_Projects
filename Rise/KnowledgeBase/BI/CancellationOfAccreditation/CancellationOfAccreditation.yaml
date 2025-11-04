@@ -1,0 +1,505 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "BIAU 认证取消(Cancellation of Accreditation)"
+slug: "cancellation-of-accreditation"
+type: "reference"
+semantic_profile:
+  intent_id: "cancellation-of-accreditation"
+  category: "accreditation"
+  tags: ["BIAU","accreditation","cancellation"]
+service_overview: "面向已取得移民局认证的机构,办理正式终止其在移民局的业务认证资格.BIAU进行合规审查,符合要求则签发“取消命令”(Cancellation Order),自生效日起机构不再以认证身份从事相关代办业务."
+applicability:
+  items:
+    terminate-due-to-business-cessation: "机构停止涉及移民局对外服务的代办/代理业务,需终止现有认证."
+    merger-split-rename-restructuring: "因合并、分立、名称变更或组织重整,原认证主体拟注销认证."
+    liaison-officer-departure: "关键联络官离职或团队解散,不再具备履职条件."
+    internal-compliance-risk-control: "出于内部合规或风险控制原因,主动暂停或退出认证体系."
+    reapply-with-new-entity: "准备以新主体重新申请认证,需先关闭旧认证编号."
+preconditions:
+  required:
+    notarized-cancellation-request-letter: "以加盖机构公章且经公证(或经授权)之“认证取消申请函”提出申请."
+    return-all-accreditation-ids-and-certificates: "原认证载明的全部证件均可回收提交(如:认证证书原件、联络官/代表人ID卡等)."
+    settle-cases-fees-penalties: "与认证相关的在办案件、客户委托、保证金、行政罚款、费用结算等已妥善了结或完成移交."
+    provide-valid-contact-details: "提交时提供有效联络方式,便于补件与结果通知."
+  not_eligible:
+    unpaid-fees-or-pending-cases: "存在未结清的官方应缴费用、罚金或仍有未办结/未移交的在案业务."
+    falsified-documents-or-failed-remediation: "经核验材料不实或未能按照补件通知限期整改."
+pre_required_documents:
+  mandatory:
+    cancellation-request-letter-notarized: "认证取消申请函(经公证;载明申请理由、生效请求、联系人、联系电话/邮箱)."
+    original-accreditation-certificate: "原认证证书正本."
+    original-ids-of-liaison-or-representative: "联络官/代表人ID卡原件(如已发放)."
+  conditional:
+    third-party-submission-or-collection:
+      trigger: "非法定代表人递交/领取或授权第三方办理."
+      documents: ["授权书","被授权人身份证明"]
+    proof-of-case-closure-and-fee-settlement:
+      trigger: "存在在办案件或应缴费用,需证明已结案/已缴清."
+      documents: ["结案/移交说明","应缴费用已缴清的收据复印件"]
+    stamped-receipt-copy:
+      trigger: "提交时由BIAU加注收讫备查."
+      documents: ["收件联保存副本"]
+process:
+  steps:
+    step-1-submission-and-recall:
+      order: "1"
+      title: "递交申请与回收证件"
+      description: "向BIAU窗口提交材料,交回认证证书及ID卡,领取加盖收讫章的收件副本.预计1个工作日."
+    step-2-formal-check-and-initial-review:
+      order: "2"
+      title: "形式审查与初审"
+      description: "核对文件完整性、签署与公证要件、证件回收情况.如需补件,将书面/邮件通知.初审约4个工作日;补件确认约1个工作日(视反馈及时性)."
+    step-3-substantive-review-and-final:
+      order: "3"
+      title: "实质审查与终审"
+      description: "核查是否存在未结责任、未缴费用或在案业务,出具终审意见.约5个工作日."
+    step-4-draft-cancellation-order:
+      order: "4"
+      title: "拟制取消命令"
+      description: "依据审查结论起草“取消命令”(Cancellation Order).约6个工作日."
+    step-5-signature-and-approval:
+      order: "5"
+      title: "签批与核准"
+      description: "由主管官(OIC)签署后报技术助理/委员核准.约2个工作日."
+    step-6-release-and-notification:
+      order: "6"
+      title: "结果发放与通知"
+      description: "BIAU出具并登记“取消命令”,以邮件/电话通知领取方式与时间;申请人或授权代表按通知领件.全程参考时长约20个工作日(以补件与审查复杂度为准)."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: "CancellationOfAccreditation.md"
+  items:
+    cancellation-process:
+      label: "取消流程 · 办理费用"
+      details:
+        processing-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "本取消流程本身不收取办理费用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    outstanding-charges-if-any:
+      label: "未结清官方费用/罚金(如适用)"
+      details:
+        official-charges:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "如经审查发现仍有应缴费用或罚金,须先行结清后方可继续或出具取消命令(以BIAU通知为准,凭OR)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "具体金额以BIAU通知与正式收据(OR)为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    optional-proof-certification:
+      label: "可选支出 · 记录/在案证明类"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Certification Fee(如需对外出具证明)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee(LRF)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express(加急服务,如选择)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "选择加急服务时的合计最高金额(Certification Fee + LRF + Express)."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "审毕后签发并登记“取消命令”(Cancellation Order)."
+  items:
+    cancellation-order:
+      name: "取消命令(Cancellation Order)"
+      usage: "作为认证终止的正式依据及备案凭证;可用于内部合规存档或向相关方出示."
+kpis:
+  processing_time: "参考总时长约20个工作日(视补件与审查复杂度而定)."
+risks:
+  items:
+    return-of-all-ids-and-certificates: "务必归还所有联络官/代表人ID及认证证书原件;遗失应书面说明并按要求补办或声明."
+    pending-cases-or-unpaid-fees-delay: "存在未结案件或未缴费用将导致审理中止或延后;补件通知须在限定期限内完成,否则顺延整体时限."
+    bond-refund-separate-process: "如涉及现金保证金,需同步或另行发起退款申请;退款由相应单元依规定审核与发放."
+    effectivity-and-subsequent-application: "取消命令签发后,机构不再具备认证主体资格;如需恢复业务,须以新案重新申请认证."
+    document-consistency: "申请函信息应与存档认证信息一致(名称、地址、负责人等);如已发生工商变更,应先完成信息更新或在申请函中载明变更依据."
+info_collection:
+  applicant:
+    organization-name:
+      label: "机构全称(与认证一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Travel Agency Inc."
+      notes: "用于比对认证主体身份."
+    accreditation-number:
+      label: "认证编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BIAU-ACC-2021-0123"
+      notes: "用于检索存档与签发取消命令."
+    file-number:
+      label: "档案编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "File-000123"
+      notes: ""
+    registered-address-line1:
+      label: "注册地址-街道/门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Pioneer St., Brgy. ABC"
+      notes: ""
+    registered-address-city:
+      label: "注册地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    registered-address-province:
+      label: "注册地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    registered-address-country:
+      label: "注册地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    registered-address-postal-code:
+      label: "注册地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    mailing-address-line1:
+      label: "通讯地址-街道/门牌"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Unit 501, XYZ Bldg., Ayala Ave."
+      notes: ""
+    mailing-address-city:
+      label: "通讯地址-城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    mailing-address-province:
+      label: "通讯地址-省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    mailing-address-country:
+      label: "通讯地址-国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    mailing-address-postal-code:
+      label: "通讯地址-邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    legal-representative-last-name:
+      label: "法定代表人/负责人-姓"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Santos"
+      notes: ""
+    legal-representative-first-name:
+      label: "法定代表人/负责人-名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan"
+      notes: ""
+    legal-representative-middle-name:
+      label: "法定代表人/负责人-中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "D."
+      notes: ""
+    legal-representative-position-title:
+      label: "法定代表人/负责人-职务"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Managing Partner"
+      notes: ""
+    liaison-officer-last-name:
+      label: "联络官/代表-姓"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Cruz"
+      notes: ""
+    liaison-officer-first-name:
+      label: "联络官/代表-名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Maria"
+      notes: ""
+    liaison-officer-middle-name:
+      label: "联络官/代表-中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "R."
+      notes: ""
+    liaison-officer-id-number:
+      label: "联络官/代表-证件号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ID-BOI-001234"
+      notes: "用于核对需回收之ID及履职状态."
+    liaison-appointment-document-number:
+      label: "联络官/代表-任命文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "APP-2022-0456"
+      notes: ""
+    liaison-phone-mobile:
+      label: "联络官/代表-联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 123 4567"
+      notes: ""
+    liaison-email:
+      label: "联络官/代表-邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "liaison@example.com"
+      notes: ""
+    pending-cases-count:
+      label: "在办案件/待结事务数量"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 2
+      notes: ""
+    pending-cases-list-reference:
+      label: "在办案件清单/说明(引用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "见附件《在办案件清单_2025-01》"
+      notes: ""
+    outstanding-fees-exist:
+      label: "是否存在未结清费用/罚金"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    official-receipt-numbers:
+      label: "应缴费/罚金收据编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "OR-123456, OR-123457"
+      notes: "如有多个请以逗号分隔,或附收据复印件."
+    cash-bond-refund-request:
+      label: "是否同步启动现金保证金退款流程(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: false
+      notes: ""
+    pickup-mode:
+      label: "领件方式"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "本人领取"
+      notes: "可选:本人领取/授权代表."
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-representative-last-name:
+      label: "被授权人-姓"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Reyes"
+      notes: ""
+    authorized-representative-first-name:
+      label: "被授权人-名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Ana"
+      notes: ""
+    authorized-representative-middle-name:
+      label: "被授权人-中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "M."
+      notes: ""
+    authorized-representative-id-number:
+      label: "被授权人身份证明号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-987654321"
+      notes: ""
+    authorized-representative-phone-mobile:
+      label: "被授权人联系方式(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 918 765 4321"
+      notes: ""
+    authorized-representative-email:
+      label: "被授权人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "proxy@example.com"
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance: {}
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "本流程涉及签署/公证的申请函与授权书,须由申请主体确认并签署相关文件."
+faq:
+  qas:
+    bond-refund:
+      question: "取消后如何处理保证金?"
+      answer: "应同步或随后提交“现金保证金退款”申请,按相应流程由主管单位审核发放;本取消流程不自动触发退款."
+    pending-cases:
+      question: "机构仍有未结案件时能否取消?"
+      answer: "通常不予立即取消.BIAU可暂缓并要求先行结案或完成正式移交流程."
+    pick-up-by-proxy:
+      question: "是否必须由法定代表人亲自领取取消命令?"
+      answer: "可授权代表领取,但需提交经签署的授权书及被授权人有效身份证件."
+    processing-time:
+      question: "办理时长需要多久?"
+      answer: "在材料齐备且无补件的情形下,参考总时长约20个工作日;存在补件或未结事项时会相应顺延."
+    online-processing:
+      question: "是否可线上办理?"
+      answer: "当前为线下递交与签发;以BIAU窗口受理及纸本文件为准."
+disclaimers:
+  items:
+    fees-subject-to-or: "所有应缴项目与金额以移民局收银窗口出具之正式收据(OR)与BIAU通知为准."
+    time-estimate-only: "办理时长为参考值,实际以补件与审查复杂度为准,可能顺延."
+service_related:
+  links: {}

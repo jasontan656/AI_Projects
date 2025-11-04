@@ -1,0 +1,720 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "外籍超编船员(登船)许可"
+slug: "foreign-supernumerary-embarking"
+type: "reference"
+semantic_profile:
+  intent_id: "foreign-supernumerary-embarking-permit"
+  category: "crew-permit"
+  tags: []
+service_overview: "本服务协助航运公司或船员派遣代理为不在原始船员名单、需临时登船并随船离境的外籍人员申请“外籍超编船员(Foreign Supernumerary, Embarking)”许可.海湾服务科(BSS)受理与审批,核准后持核准函至指定地方办事处完成系统编码与生效,以确保口岸顺利登船与放行.流程为现场快速审查与跨处室协同,标准办理用时约63分钟(含等候与通知环节)."
+applicability:
+  items:
+    temporary-tech-crew-not-in-original-list: "船舶临时需要在菲律宾港口增补一名未列入原始船员名单的外籍技术人员,随船离境."
+    emergency-crew-change-candidate-embark: "船公司发生紧急换班,需让外籍候补船员在本港登船,原名单未及更新."
+    supervisor-or-trainer-onboard-to-next-port: "船东/管理公司安排船舶主管、监督或培训人员登船,随船至下一港口执行任务."
+    equipment-inspection-expert-temporary-embark: "因设备检修、合规检查或船级审查需要,临时指派外籍专家登船并出境."
+    trainees-as-supernumerary-departure: "学员/见习人员经公司批准临时登船,作为超编随船离港(以监管要求为准)."
+preconditions:
+  required:
+    company-letters-request-and-guarantee: "由航运/派员代理公司出具致移民局局长的请示函与担保函各一份(担保函须为原件)."
+    no-derogatory-stamp-and-ccs-clearance-if-hit: "完成不良纪录查验并取得“无不良纪录戳记”(No Derogatory Stamp);如命中警示,须先在认证与清算科(CCS)完成澄清/证明."
+    vessel-arrival-notice: "提供船舶抵港通知/到港通告,能明确登船港口与时间安排."
+    valid-entry-visa-and-passport-copy: "备妥外籍人员有效入境凭证(如船员签证或入境签证)及护照资料页复印件."
+    departure-card-submission: "填写并提交出境卡(Immigration Departure Card),用于随船出境查验."
+    company-liaison-id-copy: "由公司指派的联络专员递件的,须附公司工作证复印件."
+    filing-bundle-legal-long-folder: "所有材料按清单顺序装订成册,使用法定长幅纸夹(8½×14英寸)提交."
+  not_eligible:
+    blacklist-without-ccs-clearance: "申请人处于黑名单/警示名单且未取得CCS出具的相关澄清或豁免证明."
+    incomplete-or-late-submission: "资料缺漏、未按清单顺序编排或未在规定受理时限内提交."
+    identity-mismatch-unable-to-correct: "身份信息、护照号码、签证信息与航次/船员名单不一致且无法即时更正."
+    falsified-documents-or-unauthorized: "提交虚假文件、篡改资料或由无授权主体代为申请."
+    purpose-not-temporary-embark: "申请目的与“临时登船并随船离境”不符,或试图借此规避其他签证/许可要求."
+pre_required_documents:
+  mandatory:
+    request-letter-2-copies: "航运/派员代理公司致移民局局长的外籍超编船员申请函(2份)."
+    guarantee-letter-original: "本地航运/派员代理公司出具的担保函原件(1份)."
+    no-derogatory-stamp: "不良纪录查核结果:无不良纪录戳记(No Derogatory Stamp)."
+    vessel-arrival-notice: "船舶抵港通知/到港通告(Shipping notice / advice of vessel’s arrival)."
+    immigration-departure-card: "已填写的移民局出境卡(Immigration Departure Card)."
+    copies-bundle: "复印件(按序分装)."
+    passport-biodata-copy: "外籍超编人员护照资料页复印件."
+    crew-or-entry-visa-copy: "船员签证或入境签证复印件."
+    onboard-crew-employment-contract-if-required: "(如监管或现场要求)在船船员的雇佣合同."
+    onboard-crew-passport-and-seaman-book-if-required: "(如监管或现场要求)在船船员的护照资料页与海员证(Seaman’s Book)."
+  conditional:
+    ccs-certification-if-derogatory:
+      trigger: "命中警示或需澄清身份时"
+      documents:
+        - "认证与清算科(CCS)出具的同名非同人证明/无案证明等认证文件"
+    company-liaison-id-when-filing:
+      trigger: "公司联络专员递件时"
+      documents:
+        - "公司联络专员的公司工作证复印件"
+    authorization-letter-when-not-legal-signer:
+      trigger: "非公司法定签署人递件或需说明授权时"
+      documents:
+        - "授权委托书"
+    crew-list-visa-or-waiver-at-port:
+      trigger: "口岸同步办理船员名单签证或相关豁免时"
+      documents:
+        - "按口岸要求补充对应表格/名单"
+process:
+  steps:
+    bss-intake-and-initial-review:
+      order: "1"
+      title: "前台受理与初审(BSS窗口,约5分钟)"
+      description: "提交完整材料包,核对公司资质、授权与清单顺序;不完整者退补."
+    derogatory-check-and-assessment:
+      order: "2"
+      title: "不良纪录核查与需求评估(BSS/核查单位/主管,约25分钟)"
+      description: "查询是否命中警示;评估登船必要性与航次安排;必要时联系CCS补充认证."
+    section-chief-approval-and-announcement:
+      order: "3"
+      title: "科长审批与结果发布(BSS,约3分钟)"
+      description: "科长签批后以现场广播/窗口方式通知结果,并备核准函副本领取."
+    pick-up-approval-letter-and-proceed-to-field-office:
+      order: "4"
+      title: "领取核准函并前往指定办事处编码(申请人/公司专员,约10分钟)"
+      description: "持核准函至指定地方办事处(如莱加斯皮移民区办)办理系统编码."
+    system-implementation-and-record-update:
+      order: "5"
+      title: "系统实施与记录更新(地方办事处,约5分钟)"
+      description: "完成许可实施与系统生效,确保口岸查验可识别."
+    confirmation-and-predeparture:
+      order: "6"
+      title: "结果确认与出行准备(申请人/公司专员,约15分钟,含等待)"
+      description: "复核信息一致性,准备口岸查验所需文件(核准函副本、出境卡、证件等)."
+  variants: {}
+  notes: "从初审至实施的标准办理用时约63分钟(含等候与通知);实际以现场排队与补件情况为准."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    main-process:
+      label: "主流程 · 外籍超编船员许可"
+      details:
+        permit-processing:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "本服务主流程不收政府规费,按批示执行后由地方办事处编码生效"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    crew-list-visa:
+      label: "口岸联动 · 船员名单签证(如适用)"
+      details:
+        crew-list-visa:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "每人;仅在口岸同步更新船员名单时由口岸窗口收取"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "每人;LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "批量时;Express"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    ccs-certification:
+      label: "身份认证 · CCS/NTSP/BICC(如适用)"
+      details:
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "CCS Certification"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "标准合计"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    weg-exemption:
+      label: "WEG 排除理由豁免(口岸情形,如适用)"
+      details:
+        weg-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,000"
+            value: 2000
+          notes: "每人"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        admin-fine:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "行政罚"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "Express"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 3,010"
+          value: 3010
+        notes: ""
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    visa-sticker:
+      label: "签证贴纸(如适用)"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: ""
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    other-general-surcharges:
+      label: "其他通用附加费"
+      details:
+        as-per-mainflow:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "依主流程;以开单为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "核准函与系统编码生效记录,用于在地方办事处办理编码及口岸查验放行."
+  items:
+    approval-letter-copy:
+      name: "核准函副本"
+      usage: "前往指定地方办事处办理系统编码及口岸查验时出示."
+    system-encoding-activation:
+      name: "系统编码与生效记录"
+      usage: "供口岸查验系统识别并放行."
+kpis:
+  processing_time: "约63分钟(含等候与通知环节)"
+risks:
+  items:
+    purpose-scope-limited-to-embark-and-depart: "本许可仅用于不在原始船员名单内的外籍人员“临时登船并随船离境”,不得用于规避其他签证/许可要求."
+    derogatory-hit-requires-ccs-clearance: "申请人若命中不良纪录或涉及案件,须先在CCS完成身份澄清或证明;未清算前可暂停或驳回申请."
+    filing-spec-noncompliance-may-delay: "材料须按清单顺序、使用法定长幅文件夹提交;信息不一致或材料缺漏会导致退补或延误."
+    must-collect-approval-letter-promptly: "核准结果采用现场广播/窗口告知;未及时领取核准函副本可能影响船期."
+    approval-needs-system-encoding-to-take-effect: "核准函须提交至指定地方办事处完成系统编码与实施方可生效;未编码将无法在口岸系统识别,可能被拒绝登船."
+    coordinate-port-linked-services: "需与口岸业务联动(如船员名单签证更新、WEG等)时,应提前协调,避免临近离港集中办理带来延误."
+    false-documents-liability: "提交虚假材料或隐匿关键事实将导致申请驳回,并可能承担行政/刑事责任."
+    onsite-arrangements-may-vary: "受理时间、窗口安排与补件要求以现场公告为准;局方可根据审查需要要求提交额外支持文件."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SMITH"
+      notes: "与护照一致"
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "与护照一致"
+    middle-name:
+      label: "中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    gender:
+      label: "性别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: ""
+    birthdate:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-07-15"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2027-12-31"
+      notes: "至少在预定离境后仍有效"
+    visa-type:
+      label: "入境凭证/签证种类"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Crew Visa 9(c)"
+      notes: ""
+    visa-number:
+      label: "签证号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "C123456"
+      notes: ""
+    seaman-book-number:
+      label: "海员证号码(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    seaman-book-authority:
+      label: "海员证签发机构(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    embark-date:
+      label: "预计登船日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-05-20"
+      notes: ""
+    embark-port:
+      label: "预计登船港口"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila"
+      notes: ""
+    next-port:
+      label: "预计下一停靠港口"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Hong Kong"
+      notes: ""
+    next-country:
+      label: "预计下一停靠国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "HK"
+      notes: ""
+    assignment-description:
+      label: "任务/职务说明"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Technical support"
+      notes: ""
+    phone-mobile:
+      label: "联系方式-手机"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "联系方式-电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment:
+    company-name:
+      label: "公司名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Shipping Co., Ltd."
+      notes: "与营业登记一致"
+    company-address:
+      label: "公司地址"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Port Ave., Manila"
+      notes: ""
+    liaison-name:
+      label: "指定联络专员姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: "负责递件与联络"
+    liaison-title:
+      label: "指定联络专员职务"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Company Liaison Officer"
+      notes: ""
+    liaison-id-number:
+      label: "联络专员公司证件号码"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ID-2025-00123"
+      notes: ""
+    company-phone:
+      label: "公司电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63281234567"
+      notes: ""
+    company-email:
+      label: "公司邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "ops@shippingco.com"
+      notes: ""
+    guarantor-signer-name:
+      label: "担保函签署人姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: ""
+    guarantor-signer-title:
+      label: "担保函签署人职务"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Authorized Signatory"
+      notes: ""
+    request-letter-ref-no:
+      label: "请示函编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "RS-2025-0001"
+      notes: ""
+    request-letter-date:
+      label: "请示函日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-04-30"
+      notes: ""
+  authorization: {}
+  arrival_info:
+    vessel-name:
+      label: "船名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MV OCEAN STAR"
+      notes: "船舶唯一识别"
+    vessel-imo-number:
+      label: "IMO编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: "^[0-9]{7}$"
+      example: "9234567"
+      notes: ""
+    flag-state:
+      label: "船旗国"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PA"
+      notes: ""
+    arrival-notice-number:
+      label: "抵港通知编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ARR-2025-0456"
+      notes: ""
+    arrival-notice-date:
+      label: "抵港通知日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-05-18"
+      notes: ""
+    eta:
+      label: "ETA(预计到港时间)"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-05-19T08:00:00+08:00"
+      notes: ""
+    etd:
+      label: "ETD(预计离港时间)"
+      type: "datetime"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "2025-05-20T18:00:00+08:00"
+      notes: ""
+    boarding-port:
+      label: "登船港"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Port of Manila"
+      notes: ""
+    exit-port:
+      label: "离境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila"
+      notes: ""
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    onboard-crew-last-name:
+      label: "在船船员姓(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-crew-first-name:
+      label: "在船船员名(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-crew-middle-name:
+      label: "在船船员中间名(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-crew-position:
+      label: "在船船员职务(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-crew-passport-number:
+      label: "在船船员护照号码(如涉及)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-crew-seaman-book-number:
+      label: "在船船员海员证号码(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-contract-number:
+      label: "在船合同编号(如涉及)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    onboard-contract-sign-date:
+      label: "在船合同签署日期(如涉及)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "请示函与担保函涉及签署信息,担保函须为原件后提交."
+faq:
+  qas:
+    core-documents-needed:
+      question: "本许可办理需要哪些核心材料?"
+      answer: "公司请示函(2份)、担保函原件、不良纪录查核戳记、船舶抵港通知、已填出境卡、以及申请人护照与签证复印件;按法定长幅文件夹逐项编排提交."
+    processing-time:
+      question: "审批一般多长时间?"
+      answer: "标准流程约63分钟(含等候与通知),其中窗口初审约5分钟、核查与评估约25分钟、审批与通知约3分钟、地方办编码约10分钟、系统实施约5分钟,剩余为等待与交接时间."
+    any-fees-required:
+      question: "是否需要缴费?"
+      answer: "本许可主流程不收政府规费.若涉及身份认证(如CCS认证、同名非同人)、口岸船员名单签证或WEG等,相关费用将由对应窗口按通用标准另行收取."
+    how-to-handle-derogatory-hit:
+      question: "命中不良纪录怎么办?"
+      answer: "须先到CCS办理所需证明(如无案证明、同名非同一人证明等),完成澄清后再回到BSS继续办理;未完成清算将暂停处理."
+    who-can-file-need-authorization:
+      question: "由谁可以递件?需要授权吗?"
+      answer: "可由公司指定的联络专员递件;需附该专员的公司工作证复印件.非法定签署人代办时,建议一并提供授权委托书."
+    is-departure-card-required:
+      question: "出境卡是否必须?"
+      answer: "是.作为随船离境查验凭证,需完整填写并纳入材料."
+    effect-if-not-encoded-at-field-office:
+      question: "核准后未到地方办事处编码,会有什么影响?"
+      answer: "未完成系统编码,核准不会在口岸系统生效,可能被拒绝登船或影响放行,请务必尽快完成编码手续."
+disclaimers:
+  items: {}
+service_related:
+  links: {}

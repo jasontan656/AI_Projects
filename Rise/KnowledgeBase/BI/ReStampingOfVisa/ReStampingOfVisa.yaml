@@ -1,0 +1,667 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "签证重加注(Re-stamping of Visa)"
+slug: "re-stamping-of-visa"
+type: "reference"
+semantic_profile:
+  intent_id: "restamping-of-visa"
+  category: "visa-restamping"
+  tags: []
+service_overview: "在既有签证已获核准但未完整实施、或护照遗失/损毁/更换导致原贴签无效的情况下,于 PEZA 移民延伸办公室为外籍人士在新旅行证件上重新贴注已核准签证,并同步校正系统与纸本记录,确保签证资格与护照信息一致,便于合法出入境及后续移民手续;必要时由 CCS 出具相关证明."
+applicability:
+  items:
+    approved-visa-not-stamped-or-missing-sticker: "已取得商务或 PEZA 类签证核准,但护照上未完成实施章或贴纸缺失,需补贴签证重加注."
+    lost-or-damaged-passport-reissue: "护照遗失、被盗或严重损毁,已换发新护照,需要将既有签证重加注至新护照."
+    passport-renewal-transfer-visa: "护照到期提前换发新证件,原护照上签证仍有效,需移转并重加注到新护照."
+    incomplete-entry-record-needs-proof: "入境章或系统记录不完整,需以旅行记录或航班名单佐证,完成重加注与系统更新."
+    corporate-batch-correction-restamping: "由企业或代理统一办理员工/家属签证信息纠错与重加注(如姓名校正、护照号变更等)."
+preconditions:
+  required:
+    in-philippines-with-valid-docs: "申请人须在菲律宾境内亲办或委托代理办理,并能出示新旧护照或有效旅行证件."
+    hold-approval-orders-validity: "持有签证核准/实施依据(核准令及移民局实施令),且签证资格仍在有效期内."
+    fee-proof-or-records: "具备缴费凭证或能由档案科复核到原缴费记录;如需认证副本,先行向记录科申请."
+    loss-case-police-report-affidavit: "护照遗失情形,须先取得警方报案证明与遗失宣誓书."
+    watchlist-or-namesake-ccs-clearance: "如有移民警示或同名嫌疑,须按指引至 CCS 办理无不良纪录证明或“非同一人证明”."
+  not_eligible:
+    applicant-outside-ph-without-docs: "申请人不在菲律宾境内或无法提供任何有效旅行证件以供核对."
+    approval-invalid-or-data-mismatch: "签证核准资格已失效、被撤销或与现持护照身份信息明显不符且未完成更正."
+    missing-loss-proof-or-suspected-forgery: "未按要求提供遗失类证明、授权文书或存在文件伪造、篡改嫌疑."
+    outstanding-fines-uncooperative: "存在未结清的逾期停留罚款、年报/登记逾期等事项且拒不配合清理."
+    pending-review-not-complied: "涉及需主管机关复核但未按指示完成补正/复核程序者."
+pre_required_documents:
+  mandatory:
+    application-letter: "签证重加注申请函原件 1 份(载明理由:未实施/遗失/损毁/换发等)."
+    new-passport-and-copies: "新护照原件及资料页、最新入境章复印件各 1 份."
+    visa-approval-and-implementation: "签证核准/实施依据复印件(如 PEZA 核准令与移民局实施令)."
+    old-passport-and-relevant-pages: "原护照(如尚在)及相关页面复印件:资料页、最近入境章、最近签证章、签证展延/批注文页及任何待决申请缴费收据."
+    non-mrp-passport-supplement: "非机读护照补件:显示护照号码与有效期或延展页的复印件(如适用)."
+    travel-document-copy: "旅行文件或临时旅行证件复印件(无护照时适用)."
+  conditional:
+    no-entry-record:
+      trigger: "系统无入境记录"
+      documents:
+        - "CQSS 入境记录列印"
+        - "航空公司航班名单复印件"
+    passport-lost:
+      trigger: "护照遗失"
+      documents:
+        - "警方报案证明复印件"
+        - "遗失宣誓书复印件"
+    watchlist-or-namesake:
+      trigger: "有移民警示/同名疑虑"
+      documents:
+        - "CCS 出具的无阻证明/非同一人证明"
+        - "缴费凭证复印件"
+    authorized-representative:
+      trigger: "代理/单位代办"
+      documents:
+        - "授权书或经公证的特别授权书(SPA)"
+        - "代理人有效身份证件复印件"
+        - "移民局认证旅行社证明(如适用)"
+    peza-company-related:
+      trigger: "PEZA 企业相关"
+      documents:
+        - "PEZA 注册证书复印件"
+        - "公司出具的办理授权函"
+        - "办理人工作证或身份证复印件"
+    personal-info-change:
+      trigger: "个人信息变更相关"
+      documents:
+        - "与更名/婚姻状态变化相关文件"
+        - "认证副本(如适用)"
+process:
+  steps:
+    intake-and-initial-review:
+      order: "1"
+      title: "受理与初审(约20分钟)"
+      description: "在 PEZA 移民延伸办公室提交材料;窗口核对新旧护照、核准令、入境记录,并进行警示纪录查询.若有警示或同名疑虑,发指引至 CCS 办理无阻/非同一人证明."
+    order-of-payment:
+      order: "2"
+      title: "费用开单(同步完成)"
+      description: "材料符合受理标准后,评估与审核人员签发缴费单(OPS)."
+    payment-and-return:
+      order: "3"
+      title: "缴费与回递(当场完成)"
+      description: "持 OPS 前往收银缴费,领取正式收据(OR)与领取凭条;携 OR 返回受理窗口交回并登记."
+    order-issuance-and-restamping:
+      order: "4"
+      title: "制令与贴签(约1–2个工作日)"
+      description: "内部制作重加注指令,由指定签证官(ACO)根据核准文件完成护照贴签/加注,并同步更新系统记录."
+    release-and-verification:
+      order: "5"
+      title: "领证与确认(约5分钟)"
+      description: "凭领取凭条于发放窗口领取已重加注护照及重加注指令副本;当场核对签证种类、有效期、批注事项与个人信息是否与核准令一致,并在日志签收."
+  variants: {}
+  notes: "以上时长为工作日窗口平均用时;复杂个案(如需CCS证明/补件)将顺延.\n所有款项与指令以 OPS 与 OR 记载为准."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "ReStampingOfVisa.md"
+  items:
+    general-main:
+      label: "通用 · 主申请人"
+      details:
+        certification-package:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "常见以“认证费 PHP 500 + LRF PHP 10 + 快速通道费 PHP 500”整包计收;用于出具重加注所需文件/指令与窗口加急;以 OPS 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "如需重新贴附签证贴纸时收取;以 OPS 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        other-additional-fines:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "逾期停留、年报/登记逾期、信息变更迟报等按通用标准另计,最终以 OPS/OR 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        certified-copies:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 起"
+            value: null
+          notes: "记录科出具认证/副本等,如需;以 OPS 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        ntsp-clearance:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "CCS 出具无阻/旅行记录等证明类整包常见总额;如被要求,另计收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "因是否贴签、是否需证明/副本及是否存在罚款等情形差异较大,最终以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "办理完成后取得的结果文件/证件."
+  items:
+    restamped-passport:
+      name: "已重加注护照(贴签/加注完成)"
+      usage: "作为出入境与后续移民手续的签证凭证."
+    restamping-order-copy:
+      name: "重加注指令副本"
+      usage: "用于存档与查验,便于后续核对."
+kpis:
+  processing_time: "资料齐全且无警示:约 1–2 个工作日;需 CCS 证明或补件将顺延."
+risks:
+  items:
+    missing-core-docs: "缺少核准令、实施令、缴费凭证或新旧护照页面将被退件,需先补齐或向记录科申请认证副本."
+    loss-case-prereq: "护照遗失未先取得警方报案与遗失宣誓书不予受理."
+    entry-record-mismatch: "系统无入境记录且未提供 CQSS 列印或航班名单,无法完成重加注与系统同步."
+    payment-delay: "未按时缴费导致作业单过期需重开,影响办理进度."
+    implementation-verification: "领取后未当场核对信息,错误未及时更正可能影响出入境."
+    watchlist-handling: "有警示/同名疑虑未按指引至 CCS 办理无阻/非同一人证明将导致退件或延时."
+    compliance-violation: "提交虚假材料、伪造报案或宣誓文件属重大违规,可能承担刑责并影响未来签证资格."
+    related-matter-consistency: "工作类签证等需确保关联许可与雇主资料一致,否则可能被要求补正."
+    overstay-risk: "发现逾期停留、年报/登记逾期等将先处理罚款与复议,周期顺延、费用增加."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: "与护照一致."
+    first-name:
+      label: "名(英文)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MING"
+      notes: "与护照一致."
+    middle-name:
+      label: "中间名(英文,如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "与护照一致."
+    last-name-local:
+      label: "姓(母语)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于同名排查与记录一致性."
+    first-name-local:
+      label: "名(母语)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于身份核验与同名排查."
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-01-31"
+      notes: ""
+    place-of-birth:
+      label: "出生地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Beijing, China"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "China"
+      notes: "用于核对签证类别一致性."
+    passport-number-new:
+      label: "新护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P12345678"
+      notes: ""
+    passport-number-old:
+      label: "旧护照号码(如有)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "用于信息移转与比对."
+    passport-issue-date:
+      label: "护照签发日(新护照)"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-05-20"
+      notes: ""
+    passport-expiry-date:
+      label: "护照到期日(新护照)"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2034-05-19"
+      notes: ""
+    address-line1:
+      label: "在菲住址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Ayala Ave"
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省/大区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1229"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63XXXXXXXXXX"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: "用于领取通知/补件通知."
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有同案重加注."
+    child-first-name:
+      label: "子名(英文)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-passport-number:
+      label: "子女护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    company-name:
+      label: "公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "PEZA 企业或委托单位."
+    peza-registration-number:
+      label: "PEZA 注册号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-name:
+      label: "授权联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-phone:
+      label: "授权联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+    contact-person-email:
+      label: "授权联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-letter-number:
+      label: "授权文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "公司授权文件编号."
+    authorization-letter-date:
+      label: "授权文件日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如由代理办理."
+    agent-id-number:
+      label: "代理人身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-number:
+      label: "特别授权书(SPA)编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-issue-date:
+      label: "特别授权书(SPA)出具日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-10"
+      notes: ""
+    port-of-entry:
+      label: "入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "NAIA T3"
+      notes: ""
+    admission-class:
+      label: "入境许可类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9A"
+      notes: ""
+    authorized-stay-until:
+      label: "当前停留期限至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "用于判断是否涉逾期."
+  travel_history:
+    visa-approval-number:
+      label: "签证核准令编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PEZA-2025-XXXXX"
+      notes: ""
+    visa-approval-date:
+      label: "签证核准令签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-01"
+      notes: ""
+    previous-visa-extensions:
+      label: "既往签证/展延记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "辅助比对贴签信息."
+    flight-info:
+      label: "航班信息(航班号/日期)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PR123 on 2025-02-10"
+      notes: "系统缺失入境记录时提供."
+    flight-manifest-available:
+      label: "是否可提供航班名单复印件"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    has-overstay-penalties:
+      label: "是否存在逾期停留罚款"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    annual-report-overdue:
+      label: "是否存在年报/登记逾期"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    correction-needed:
+      label: "是否涉及信息更正(姓名/护照号等)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ccs-clearance-required:
+      label: "是否需 CCS 无阻/非同一人证明"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "涉及遗失等情形须提交并签署宣誓书等声明文件,虚假陈述将承担法律责任."
+faq:
+  qas:
+    passport-lost-apply:
+      question: "护照遗失可以申请重加注吗?"
+      answer: "可以.须先取得警方报案证明与遗失宣誓书,并持新护照与核准令/实施令办理."
+    no-entry-record:
+      question: "系统未显示我的入境记录怎么办?"
+      answer: "请提供 CQSS 入境记录列印或航空公司航班名单作为佐证;必要时可向 CCS 申请旅行记录证明后再行办理."
+    authorize-agent:
+      question: "可以委托代理人或旅行社办理吗?"
+      answer: "可以.需提交授权书或经公证的特别授权书(SPA)与代理人有效身份证件;如为移民局认证旅行社,需附认证证明."
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "资料齐全且无警示的案件,一般 1–2 个工作日可完成;如需 CCS 证明或补件,时长将顺延."
+    how-much:
+      question: "费用是多少?是否固定?"
+      answer: "常见为 PHP 1,010 的认证类整包费用,若需贴签纸可另收 PHP 100.存在逾期罚款、证明或认证副本等情形,将按 OPS 另行计收,最终以 OPS/OR 为准."
+    ops-not-paid:
+      question: "如果 OPS 当日未缴费会怎样?"
+      answer: "未按时缴费可能导致作业单过期需重开,影响办理进度;请按窗口指引在当日完成缴费并妥善保管 OR."
+    carry-old-passport:
+      question: "更换新护照后,是否还需要携带旧护照?"
+      answer: "如旧护照尚在,应携带旧护照原件与相关页面复印件,便于核对既有签证与入境记录,减少补证时间."
+    info-error-after-restamp:
+      question: "重加注完成后发现签证信息有误怎么办?"
+      answer: "请立即在发放窗口现场反馈,由工作人员核查后尽快更正;切勿携证离开后再行更改,以免耽误出入境行程."
+disclaimers:
+  items:
+    fees-subject-to-ops-or: "费用构成与金额以 OPS/OR 记载为准."
+    processing-time-average: "处理时长为窗口平均用时,复杂个案(如需 CCS 证明/补件)将顺延."
+    currency-php: "窗口以 PHP 收取;如遇他币计价项目,按 BSP 汇率折算."
+service_related:
+  links: {}

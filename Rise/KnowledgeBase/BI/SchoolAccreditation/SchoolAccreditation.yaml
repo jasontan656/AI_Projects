@@ -1,0 +1,766 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases:
+  - "学校认证"
+  - "ESL 学校认证"
+department: "BureauOfImmigration"
+name: "学校认证(私立 ESL 招收外籍学生资格)"
+slug: "school-accreditation"
+type: "reference"
+semantic_profile:
+  intent_id: "school-accreditation"
+  category: "accreditation"
+  tags:
+    - "ESL"
+    - "foreign-students"
+    - "school"
+    - "immigration"
+service_overview: "本服务面向在菲律宾设立并拟招收外籍学生的私立学校(尤其开设英语作为第二语言 ESL 的机构),用于首次申请或续期外籍学生招生资格,取得学校认证命令与学校认证识别证.通过获得学校认证,学校可依法向移民局办理外籍学生签证或许可相关事宜,纳入监管与复查机制,提升资质公信力与国际招生合规性."
+applicability:
+  items:
+    private-esl-school-starting-recruitment: "在菲律宾注册的私立 ESL 学校计划正式对外招收外籍学生,需取得招生资格认证."
+    esl-course-regularization-for-permits: "已运营 ESL 课程,欲完善合规体系并为学生申请学习许可(如特殊学习许可)提供前置资质."
+    new-branch-or-site-inclusion: "新设分校或新增教学场地,需纳入认证范围并接受实地勘查."
+    renewal-and-periodic-review: "认证即将到期,需要续证并通过年度或定期复查."
+    after-education-agency-approval: "学校完成课程质量认证(FAAP/TESDA/CHED/DepEd)后,申请在移民局备案为可招收外籍学生的机构."
+preconditions:
+  required:
+    legal-establishment-and-registration: "具备合法成立与登记:持有公司注册证明与组织章程(SEC/DTI),或公立院校之设立文件."
+    program-quality-accreditation: "课程质量认证到位:持有菲律宾认证联盟(FAAP)或高教委/教育部/技能发展署(CHED/DepEd/TESDA)认可的课程与项目证明."
+    campus-safety-and-compliance: "校舍安全与卫生合规:符合消防、卫生、安全等法规,配备必要安防设施(含 CCTV),并持有效本地营业与卫生许可、消防检验证."
+    standardized-submission: "资料规范提交:所有文件按清单顺序装订于合法尺寸(8½×14 英寸)文件夹,按要求提供原件与复印件."
+    designated-contact-person: "指定联系人:由校方负责人出具签署的申请函,明确课程范围、联系人、联系电话与电子邮箱."
+  not_eligible:
+    lacking-education-approval: "未取得教育主管部门许可或课程未获上述权威认证."
+    major-safety-hazards: "校舍存在重大消防/卫生隐患或设施与规范严重不符."
+    incomplete-or-unauthenticated-docs: "资料不齐、不按清单顺序装订,或提交非原件/未按要求认证文件."
+    tax-or-compliance-issues: "存在欠税、重大合规问题、或在移民局留有未了结不良纪录的学校."
+    unable-to-cooperate-on-inspection: "无法配合现场勘查或关键人员不到场,影响核实与评估."
+pre_required_documents:
+  mandatory:
+    establishment-and-corporate-docs: "学校设立与组织文件:私立机构之 SEC 注册证明、公司章程、细则与最新 GIS;或 DTI 商号登记(独资);公立院校提供特许设立文件."
+    program-and-project-accreditations: "课程与项目认证:FAAP 认证证书,及/或 CHED/DepEd/TESDA 批准之课程与项目清单、对应核准文件."
+    info-bulletin-and-handbook: "学校信息发布材料:信息手册/招生简章(Information Bulletin)、学校手册与宣传资料."
+    faculty-credentials: "师资资料:教师与培训师资历矩阵、主要教师履历;ESL 类课程如涉及 TESOL/TESDA Trainers Methodology 的讲师,提供相应资质证明."
+    facility-evidence: "设施证明材料:校舍外观与教学设施照片(教学楼、教室、实验室、图书馆、卫生设施、消防设备、CCTV 等);必要时附平面图/房产或租赁证明."
+    local-permits: "地方合规证照:最新营业执照、卫生许可、消防安全检验证(有效期内)."
+    nbi-pnp-clearances: "无犯罪与任用证明:专任关键人员的 NBI/PNP 无犯罪证明、在职证明、学校 ID、2×2 白底照片."
+    application-letter-and-forms: "申请函与表格:致移民局长的申请函(载明课程、联系人与邮箱);学校认证申请表(BI 表格 2014-02-006 或 2014-02-008,以受理处发放版本为准,通常需提交两份正本)."
+    authorization-if-applicable: "代理授权(如适用):授权代表的移民局认证 ID 复印件,或针对每位申请主体出具的专项委托书 SPA(附代理人有效政府身份证件复印件)."
+    civil-registry-and-foreign-docs: "其他:如涉及民事登记文件(出生、婚姻、死亡等),需提交菲律宾国家统计局(NSO/PSA)出具的原件;外文文件须附英文译本并经具辖区的菲律宾外事机构或 DFA 认证."
+  conditional:
+    include-branch-or-new-site:
+      trigger: "新增分校/新场地纳入认证范围"
+      documents:
+        - "分校/场地的使用权证明(产权/租赁)"
+        - "地方许可与设施材料(含照片/平面图)"
+    rectification-history:
+      trigger: "存在历史整改或补检要求"
+      documents:
+        - "整改报告"
+        - "复检合格证据"
+    tax-compliance-requested:
+      trigger: "受理处要求提供财务与税务合规材料"
+      documents:
+        - "最新纳税合规证明"
+        - "财务概览/报表(如被要求)"
+    additional-supporting-as-ops:
+      trigger: "受理处评估后要求提交其他支持性材料(以 OPS 备注为准)"
+      documents:
+        - "受理处指定的补充文件"
+process:
+  steps:
+    consultation-and-pickup-checklist:
+      order: "1"
+      title: "咨询与取件清单(约10分钟)"
+      description: "前往受理办事处领取学校认证清单与申请表,核对资料要求与装订规范."
+    submission-and-prescreen:
+      order: "2"
+      title: "递件与预审(约25分钟)"
+      description: "向受理窗口提交完整申请夹;移民官进行形式与要件预审、登记,开具缴费单 OPS."
+    payment-and-receipts:
+      order: "3"
+      title: "缴费与取回凭据(约5分钟)"
+      description: "持 OPS 至收银窗口缴费,领取官方收据 OR 与领取凭条."
+    on-site-inspection:
+      order: "4"
+      title: "实地勘查(约2个工作日)"
+      description: "配合移民局勘查团队进行现场核查,安排校园导览、资料展示与关键人员访谈,出示安全与课程实施记录."
+    internal-review-and-endorsement:
+      order: "5"
+      title: "内部审核与呈报(约30分钟内完成流转)"
+      description: "审核单位编写评估与推荐意见,并行文送学生签证科复核与批准."
+    production-and-issuance:
+      order: "6"
+      title: "制作与签发(约10–14个工作日)"
+      description: "学生签证科制作学校认证命令与学校认证识别证,完成签批与制卡."
+    release-and-recording:
+      order: "7"
+      title: "领证与备案(约5分钟)"
+      description: "凭 OR 与领取凭条在指定窗口领取学校认证命令与学校认证 ID,并完成备案;后续接受复查与续证管理."
+  variants: {}
+  notes: "补件或追加勘查将暂停流程;逾期补件可能触发重新评估并按新 OPS 重新计费与排程."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "移民局2025年版公开价目及地方办事处示例;以当日 OPS/OR 为准."
+  items:
+    regular-main:
+      label: "Regular · 学校认证"
+      details:
+        application:
+          amount:
+            currency: "PHP"
+            display: "PHP 510"
+            value: 510
+          notes: "官方价目口径,常由“认证费 PHP 500 + LRF PHP 10”构成."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        accreditation:
+          amount:
+            currency: "PHP"
+            display: "PHP 510"
+            value: 510
+          notes: "官方价目口径,常与申请费分票开单."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "适用于在案证明/补充认证;LRF 常为 PHP 10."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "仅在需贴附签注时收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        additional-inspection:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "以 OPS 为准,受案情影响按受理处实际核算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "不同办事处可能采用费目拆分或整包口径,实际以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    express-main:
+      label: "Express · 学校认证"
+      details:
+        application:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "加急通道."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        accreditation:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "加急通道;常与申请费分票开单."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "加急附加费;LRF 常为 PHP 10."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "与常规相同."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        additional-inspection:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "以 OPS 为准,受案情影响按受理处实际核算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "若采用整包口径则以整包金额为准;实际以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    local-bundled-example:
+      label: "地方整包价示例 · 学校认证"
+      details:
+        bundled-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 50,510"
+            value: 50510
+          notes: "部分办事处采用整包收费,含受理、审核、勘查与制卡等环节;具体以 OPS/OR 为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 50,510"
+          value: 50510
+        notes: "历史执行口径示例;Express/Regular 同价.以 OPS/OR 为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "核准后签发学校认证命令与学校认证识别证,用于学校对外招生与办理外籍学生签证/许可及备案."
+  items:
+    school-accreditation-order:
+      name: "学校认证命令(Order)"
+      usage: "作为学校可招收外籍学生的法律依据与对外出示文件."
+    school-accreditation-id:
+      name: "学校认证识别证(ID)"
+      usage: "校方日常出示与后续签证/许可办理时作为资质凭证."
+kpis:
+  processing_time: "常见约16个工作日(制作与签批约10–14个工作日;实际视补件与排程调整)."
+risks:
+  items:
+    binding-noncompliance-rejection: "资料未按清单顺序与规定尺寸装订,可能不予受理或被退件."
+    originals-and-legalization-required: "宣誓陈述/声明未提供原件或未公证、境外文件未完成认证与译本,可能不予认可."
+    authorization-proof-missing: "由授权代表办理而未提供移民局认证 ID 或 SPA 与有效证件,可能导致不予受理."
+    on-site-inspection-issues: "现场勘查无法完成或关键人员不到场,将延长时程或导致退件."
+    inconsistency-between-curricula-and-qualifications: "申报课程与实际教学安排、师资资质不一致,可能被驳回并列为高风险."
+    post-approval-obligations: "未按规定接受复查或逾期续证,可能造成资格中断并影响招生."
+    supplement-and-suspension: "材料缺漏将发补件通知;补件期间案件暂停处理,逾期未补可能退件或需重新计费."
+    violations-consequences: "逾期续证、伪造/变造文件、未报批扩招、安防不达标等,可能导致驳回、资格暂停/取消、罚款或记录入案."
+info_collection:
+  applicant:
+    school-legal-name:
+      label: "学校法定名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ABC Language Academy Inc."
+      notes: "与 SEC/DTI 登记一致."
+    registration-number:
+      label: "注册编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SEC CN2023-123456"
+      notes: "SEC 公司注册号或 DTI 登记号."
+    tin:
+      label: "纳税识别号(TIN)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123-456-789-000"
+      notes: "用于合规核验."
+    school-type:
+      label: "学校类型"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "私立·ESL 课程机构"
+      notes: ""
+    address-line1:
+      label: "主要校舍地址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Taft Ave., Barangay 123"
+      notes: ""
+    address-city:
+      label: "主要校舍地址(市/城市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Manila"
+      notes: ""
+    address-province:
+      label: "主要校舍地址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "主要校舍地址(邮编)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1000"
+      notes: ""
+    address-country:
+      label: "主要校舍地址(国家)"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    branch-name:
+      label: "分校/分部名称(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Language Academy - Cebu Branch"
+      notes: ""
+    branch-address-line1:
+      label: "分校地址(街道/门牌)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "56 Mango Ave."
+      notes: ""
+    branch-address-city:
+      label: "分校地址(市/城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Cebu City"
+      notes: ""
+    branch-contact-name:
+      label: "分校联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    branch-contact-phone:
+      label: "分校联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 123 4567"
+      notes: ""
+    branch-contact-email:
+      label: "分校联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "branch.contact@example.com"
+      notes: ""
+    representative-name:
+      label: "法定代表人/负责人姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Maria Santos"
+      notes: ""
+    representative-id-number:
+      label: "负责人身份证件号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PH-ID-1234567890"
+      notes: "政府签发证件号码."
+    official-email:
+      label: "学校官方邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "info@abclangacademy.ph"
+      notes: "用于接收移民局通知."
+    official-phone:
+      label: "学校官方电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 2 8123 4567"
+      notes: "用于接收移民局通知."
+    liaison-name:
+      label: "指定联络人姓名"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Ana Lopez"
+      notes: ""
+    liaison-title:
+      label: "指定联络人职位"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Registrar"
+      notes: ""
+    liaison-phone:
+      label: "指定联络人电话"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 765 4321"
+      notes: ""
+    liaison-email:
+      label: "指定联络人邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "liaison@abclangacademy.ph"
+      notes: ""
+  spouse: {}
+  father: {}
+  mother: {}
+  children: {}
+  dependents: {}
+  employment: {}
+  authorization:
+    authorized-representative-name:
+      label: "授权代表姓名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Pedro Reyes"
+      notes: ""
+    authorized-representative-id-number:
+      label: "授权代表证件号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PH-ID-99887766"
+      notes: ""
+    bi-accredited-id-number:
+      label: "BI 认证 ID 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI-ACC-2024-00123"
+      notes: ""
+    spa-number:
+      label: "专项委托书(SPA)编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SPA-2025-0001"
+      notes: ""
+    filing-office:
+      label: "受理办事处"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI Legazpi Field Office"
+      notes: "计划递件地点."
+    planned-submission-date:
+      label: "预计递件日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-15"
+      notes: ""
+    form-version:
+      label: "表格版本号(如 BI 2014-02-006/008)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI 2014-02-006"
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    property-rights-doc-number:
+      label: "校舍产权/租赁证明文件编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "TCT 123456 / Lease #2024-001"
+      notes: ""
+    property-rights-doc-expiry:
+      label: "校舍使用权文件有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-12-31"
+      notes: ""
+    sanitary-permit-number:
+      label: "卫生许可证号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN-2025-01010"
+      notes: ""
+    sanitary-permit-issuing-agency:
+      label: "卫生许可证签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "City Health Office"
+      notes: ""
+    sanitary-permit-expiry:
+      label: "卫生许可证有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-01-31"
+      notes: ""
+    fire-safety-certificate-number:
+      label: "消防安全检验证编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "FSIC-2025-00555"
+      notes: ""
+    fire-safety-issuing-agency:
+      label: "消防检验证签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Bureau of Fire Protection"
+      notes: ""
+    fire-safety-expiry:
+      label: "消防检验证有效期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-03-31"
+      notes: ""
+    cctv-count:
+      label: "CCTV 数量"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 24
+      notes: ""
+    cctv-coverage:
+      label: "CCTV 覆盖范围说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "教学楼、出入口与主要通道全覆盖"
+      notes: ""
+    alarm-evacuation-facilities:
+      label: "报警/疏散设施配置"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "火警报警系统、紧急照明与疏散指示完备"
+      notes: ""
+    key-personnel-list:
+      label: "关键岗位人员清单(姓名/职位)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "John Lee-Registrar; Maria Cruz-Academic Head"
+      notes: ""
+    key-personnel-clearance-refs:
+      label: "关键人员无犯罪证明编号(NBI/PNP)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NBI-2025-123456; PNP-2025-987654"
+      notes: ""
+    last-compliance-inspection-result:
+      label: "最近一次合规检查结论"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "符合;2024-12-20 轻微整改已完成"
+      notes: ""
+    rectification-completed-date:
+      label: "整改完成日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-20"
+      notes: ""
+  additional_details:
+    course-names:
+      label: "ESL 课程名称(可多项)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Intensive ESL; Business English"
+      notes: "可用分号分隔多项."
+    course-duration:
+      label: "课程学制/周期"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "8–12 周"
+      notes: ""
+    certification-faap-level:
+      label: "FAAP 认证等级"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Level I"
+      notes: ""
+    certification-ched-deped-tesda-status:
+      label: "CHED/DepEd/TESDA 批准情况"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "TESDA 课程批准(2025)"
+      notes: ""
+    faculty-fulltime-count:
+      label: "全职教师人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 12
+      notes: ""
+    faculty-parttime-count:
+      label: "兼职教师人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 8
+      notes: ""
+    faculty-qualification-summary:
+      label: "师资资格与执教资历概要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "TESOL 证书 10 人;TESDA TM 资格 6 人"
+      notes: ""
+    student-capacity-planned:
+      label: "学生规模规划(招生计划/容量)"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 200
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "涉及申请函、声明/证明等文件需由负责人签署并提供经公证的原件."
+faq:
+  qas:
+    processing-time:
+      question: "从递件到拿到学校认证,一般需要多久?"
+      answer: "在缴费与完成现场勘查后,制作与签批通常需约10–14个工作日;加上前序受理与勘查安排,整体常见时长约16个工作日,视补件与排程可能调整."
+    fee-differences:
+      question: "费用为何在不同办事处有差异?"
+      answer: "部分办事处按“费目拆分”(如申请费/认证费各 PHP 510/1,010),也有办事处采用“整包价”(历史示例 PHP 50,510,含多环节成本).最终以当日 OPS 与 OR 为准,币种统一为 PHP,涉及美元费用按 BSP 汇率折算."
+    incomplete-docs:
+      question: "资料不齐会被当场拒收吗?"
+      answer: "未按清单顺序装订、缺少原件或认证件、或表格未按最新版填写,受理窗口可不予接收;已受理案件在审核中发现缺漏将发补件通知,补件期内流程暂停."
+    esl-extra-requirements:
+      question: "ESL 学校相较非 ESL 有何额外要求?"
+      answer: "除通用项目外,ESL 学校通常需提交与英语教学相关的讲师资格(如 TESOL/TESDA Trainers Methodology)与课程认证材料,并在现场勘查中展示实际教学安排与配套设施."
+    foreign-documents:
+      question: "境外签发的文件如何处理?"
+      answer: "须提交原件并经具辖区的菲律宾外事机构或 DFA 认证,若为非英文需要附英文译本.未按认证要求的外文文件不予认可."
+    supplement-and-reschedule:
+      question: "补件是否需要再次缴费或重新排程?"
+      answer: "在补件期限内补齐,一般延续原流程;逾期补件或资料重大变更,受理处可能重新评估并按新 OPS 重新计费与排程."
+    after-approval:
+      question: "获得认证后还需要做什么?"
+      answer: "按期参加移民局或相关主管部门的复查;到期前申请续证;如新增分校或迁址,应及时办理变更并接受必要的现场勘查."
+    third-party-agency:
+      question: "可以由第三方代理办理吗?"
+      answer: "可以.须提交移民局认证 ID 复印件或针对本案的 SPA 及代理人的有效政府身份证件复印件;建议选择移民局认证的专业机构,以降低退补风险."
+disclaimers:
+  items:
+    fees-subject-to-ops: "所有费用项目与总额以当日 OPS/OR 为准,可能因受理办事处口径不同而调整."
+    processing-time-may-vary: "办理时长受补件与勘查排程等因素影响,存在变动."
+    foreign-docs-legalization: "境外文件须经具辖区外事机构或 DFA 认证并附英文译本,未按要求的外文文件不予认可."
+    payment-methods: "支付方式以现场指引为准(现金/刷卡),由收银窗口开具 OR."
+service_related:
+  links: {}

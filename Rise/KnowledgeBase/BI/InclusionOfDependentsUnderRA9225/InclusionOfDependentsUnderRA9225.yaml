@@ -1,0 +1,688 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "受抚养人纳入申请(R.A. 9225 复籍案)"
+slug: "inclusion-of-dependents-under-ra9225"
+type: "reference"
+semantic_profile:
+  intent_id: "ra9225-dependent-inclusion"
+  category: "citizenship-services"
+  tags: []
+service_overview: "本服务面向已依据共和国法第9225号(R.A. 9225)完成“菲律宾国籍保留/重新取得”的主申请人,协助其将符合条件的未成年子女纳入原复籍批准案,获得与主申请人一致的双重国籍权利与文件.通过纳入办理,受抚养人(限未满18岁之子女)可被列入主案的批准命令,配套核发所需证明,便于后续持菲律宾护照、接受教育、处置财产与在菲长期居留等权利的行使."
+applicability:
+  items:
+    principal-has-ic-or-crpc-child-not-included: "主申请人已取得“菲律宾国籍保留/重新取得证明”(IC/CRPC),但其未满18岁的子女尚未被列入原批准案,需补行纳入."
+    overseas-born-minor-with-foreign-passport: "主申请人拟为在海外出生、持外国护照的未成年子女办理双重国籍身份,便于回菲就学或长期居留."
+    incomplete-family-data-now-completing: "家庭资料在原案提交时不完整,现补齐子女出生证明、护照后提出纳入."
+    record-discrepancies-need-unification: "子女姓名或出生日期在不同证件间存在差异,需要通过纳入并附解释声明统一身份信息."
+    has-acr-icard-or-crtv-to-cancel: "子女持有在菲外侨登记证卡(ACR I-Card)或临时访客居留证明(CRTV)等,拟随纳入一并注销相关编号."
+preconditions:
+  required:
+    principal-completed-ra9225-and-has-ic-or-crpc: "主申请人已完成 R.A. 9225 复籍并持有以下任一/多项文件:IC(Identification Certificate)、CRPC(Certificate of Retention/Re-acquisition of Philippine Citizenship)、原案批准命令与效忠誓词."
+    dependent-is-child-under-18: "受抚养人系主申请人的亲生或依法收养之子女,且在申请时未满18周岁."
+    dependent-valid-foreign-passport-and-birth-cert: "受抚养人持有效外国护照(或可出示足以证明身份之有效证件)及出生证明."
+    sworn-documents-original-and-notarized: "申请表等宣誓性文件须为原件并经依法公证."
+    foreign-docs-authenticated-and-translated: "所有外文文件须为原件并经具辖菲国外馆(FSP)或菲律宾外交部(DFA)认证;非英文的,须附英文译本."
+  not_eligible:
+    child-already-18-or-above: "子女已年满18周岁(应改走“出生认定/肯认”或其他适当路径办理)."
+    form-incomplete-or-format-noncompliant: "申请表填写不完整、未用英文大写字母、存在空项且未标注“N/A”,或未按规定时限/顺序提交."
+    foreign-docs-not-authenticated-or-copies-only: "外国文件未完成领事认证/认证链条,或提交扫描件、无效复印件替代原件核验."
+    photo-spec-noncompliant: "照片规格不符(非2×2、非白底、超过三个月拍摄、佩戴墨镜/有色隐形眼镜/头饰等)."
+    originals-not-presented-for-scan: "无法按要求出示原件供CRU扫描或拒不配合比对核验."
+pre_required_documents:
+  mandatory:
+    bi-form-2014-01-008: "填妥的纳入申请/请愿表:BI Form 2014-01-008 Rev 0(英文填写,全部使用英文大写字母;不适用项填“N/A”)."
+    ic-or-crpc-copy: "主申请人 IC 或 CRPC 复印件."
+    original-approval-order-copy: "原复籍请愿案的批准命令复印件."
+    oath-of-allegiance-copy: "主申请人效忠誓词复印件."
+    dependent-photos-2x2: "受抚养人2×2白底近照2张(自申请日起三个月内拍摄)."
+    principal-photo-2x2: "主申请人2×2白底近照1张(自申请日起三个月内拍摄)."
+    dependent-birth-certificate-copy: "受抚养人出生证明复印件(与护照一致,如有差异见下述条件性资料)."
+    dependent-passport-biodata-copy: "受抚养人有效外国护照资料页复印件."
+    principal-passport-original-for-scan: "主申请人有效护照原件(递交时由CRU扫描后当场归还)."
+    self-addressed-legal-size-envelopes: "已贴足邮资且写明收件地址的法定大小回邮信封2个."
+  conditional:
+    authorized-representative-submission:
+      trigger: "授权代理递交"
+      documents:
+        - "每名申请人须附移民局认证代理ID复印件"
+        - "或原件特别授权书(SPA)"
+        - "并附代理人政府签发有效证件复印件"
+    identity-discrepancy-docs:
+      trigger: "证件信息不一致(如姓名、出生日期)"
+      documents:
+        - "“同一人宣誓书”(Affidavit of One and the Same Person)"
+        - "或“情况说明宣誓书”(Affidavit of Explanation)"
+        - "并附佐证材料"
+    foreign-docs-authentication:
+      trigger: "外文文件"
+      documents:
+        - "须经具辖菲国外馆(FSP)或菲律宾外交部(DFA)认证"
+        - "非英文文件须附英文译本"
+    acr-icard-icr-crtv-holding:
+      trigger: "受抚养人持有 ACR I-Card(Alien Certificate of Registration I-Card)/ICR/CRTV"
+      documents:
+        - "随案声明交回注销相关证件编号"
+    additional-docs-upon-notice:
+      trigger: "其他经审查单位书面要求的补充材料(以通知为准)"
+      documents:
+        - "依通知补充提交指定材料"
+process:
+  steps:
+    prepare-forms-and-documents:
+      order: "1"
+      title: "线上获取表格与准备资料(约5分钟)"
+      description: "下载并填写 BI Form 2014-01-008 Rev 0;按材料清单顺序整理入法定大小文件夹.申请人或授权代表前往双重国籍/BSI窗口领取并核对正式清单."
+    pre-screening-and-record-creation:
+      order: "2"
+      title: "预审与建档(约36分钟)"
+      description: "将申请夹提交至 PIAU 进行资料预审.于窗口18核对ACR/在案记录;至窗口12/17建立OPS订单并确认费用项目."
+    payment-and-submission:
+      order: "3"
+      title: "收费与递交(约27分钟)"
+      description: "前往现金窗口缴费并取得正式收据(OR).向中央收件单位(CRU)递交申请;当场出示受抚养人与主申请人护照原件供扫描.至双重国籍办公室完成必要宣誓与登记(如适用)."
+    adjudication-and-release:
+      order: "4"
+      title: "审理与核发(审理期约60个工作日)"
+      description: "BSI开展实体审查与核定;必要时书面通知补件或比对.审结后凭OR与有效证件至指定窗口领取核准文件;如由他人代领,须出示SPA及双方有效身份证件."
+  variants: {}
+  notes: "提示:上述柜台办理总前台用时约68分钟,不含后端审理时间;各地窗口编号可能略有差异,以现场导引为准."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "本服务未在价格总表中单列专属条目,主费用以2025年公民宪章口径为准;如需额外认证或证明,依移民局通用 Certification/LRF/Express 收费口径计收."
+  items:
+    general:
+      label: "通用费用"
+      details:
+        dependent-inclusion-processing-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,760"
+            value: 1760
+          notes: "含申请评估与文件签发(R.A. 9225 受抚养人纳入)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "认证/证明类通用收费(按需)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "Legal Research Fee(按需)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "快通(可选)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        other-charges:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "如需追加复印、公证、快递等第三方费用或其他以OPS开单为准的项目,以实际发生为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否产生认证/快通/其他费用以现场需求与OPS开单为准."
+deliverables:
+  description: "受抚养人被列入主申请人原复籍批准案并配套核发所需证明,用于后续身份证明与权利行使."
+  items: {}
+kpis:
+  processing_time: "柜台端办理约68分钟;后端审理约60个工作日(补件顺延)."
+risks:
+  items:
+    non-compliance-delays: "审理中可能书面要求补件;未按时补齐将延长审理周期,直至退件."
+    forged-or-false-documents-consequences: "提供伪造/变造文件、虚假陈述,或拒不配合核验,可能导致即时驳回、入案标记并承担相应法律责任."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与IC/CRPC一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "WU"
+      notes: ""
+    first-name:
+      label: "名(与IC/CRPC一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MING"
+      notes: ""
+    middle-name:
+      label: "中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "用于身份核验."
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "联系地址(地址行)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于通知与回邮."
+    address-city:
+      label: "联系地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "联系地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "联系地址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "联系地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: "用于通知与回邮."
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: ""
+      notes: "用于通知与回邮."
+    ic-number:
+      label: "IC 编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "对应原案核对."
+    crpc-number:
+      label: "CRPC 编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "对应原案核对."
+    original-approval-date:
+      label: "原案批准日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "核对纳入依据."
+    original-approval-order-number:
+      label: "原案批准命令编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "核对纳入依据."
+    oath-date:
+      label: "效忠誓词日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: "复籍事实佐证."
+    oath-place:
+      label: "效忠誓词地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "复籍事实佐证."
+  spouse: {}
+  father:
+    last-name:
+      label: "父亲姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "父亲名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "父亲中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  mother:
+    last-name:
+      label: "母亲姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "母亲名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "母亲中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  children:
+    last-name:
+      label: "受抚养人姓(以出生证明为准)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    first-name:
+      label: "受抚养人名(以出生证明为准)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    middle-name:
+      label: "受抚养人中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    aka-or-alias:
+      label: "又名/别名(以外国护照为准,如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    sex:
+      label: "性别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-date:
+      label: "出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-place:
+      label: "出生地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    marital-status:
+      label: "婚姻状况(未婚/未成年)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "未婚"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "现居住地址(地址行)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "现居住地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-province:
+      label: "现居住地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-country:
+      label: "现居住地址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    address-postal-code:
+      label: "现居住地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment: {}
+  authorization:
+    agent-full-name:
+      label: "授权代表姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    agent-id-type:
+      label: "授权代表身份证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI认证ID"
+      notes: ""
+    agent-id-number:
+      label: "授权代表身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accredited-id-number:
+      label: "移民局认证代理ID编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-reference-number:
+      label: "特别授权书(SPA)参考编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "每名申请人需单独SPA."
+    return-envelope-recipient-name:
+      label: "回邮信封收件人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-address-line1:
+      label: "回邮信封地址(地址行)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-address-city:
+      label: "回邮信封地址(城市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-address-province:
+      label: "回邮信封地址(省/州)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-address-country:
+      label: "回邮信封地址(国家)"
+      type: "string"
+      required: "false"
+      format: "country-iso2"
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-address-postal-code:
+      label: "回邮信封地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    return-envelope-phone:
+      label: "回邮信封联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance:
+    acr-icard-number:
+      label: "ACR I-Card 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于注销/更正."
+    icr-number:
+      label: "ICR 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于注销/更正."
+    crtv-number:
+      label: "CRTV 编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于注销/更正."
+    ops-reference-number:
+      label: "OPS 参考号(与主案关联)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "缴费与取件凭证关联."
+    or-number:
+      label: "OR 收据号(缴费凭证)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "申请人须就所填信息与提交材料之真实性进行宣誓/声明,并依要求签署宣誓性文件(如效忠誓词、宣誓书/声明书)."
+faq:
+  qas:
+    how-long:
+      question: "整个办理要多久?"
+      answer: "柜台端受理、缴费与递交约68分钟完成;正式审理与核定一般为约60个工作日,补件将顺延."
+    presence-required:
+      question: "受抚养人需要亲自到场吗?"
+      answer: "可由父母或授权代表办理,但必须按规定出示每名申请人的SPA或移民局认证代理ID,并在CRU环节提供受抚养人护照原件供扫描."
+    spouse-included:
+      question: "配偶可以一并纳入吗?"
+      answer: "不可以.受抚养人纳入仅限未满18岁的子女.配偶如需在菲长期居留或取得身份,请依适用签证/居留路径办理(如婚姻移民、临时居留等)."
+    inconsistent-records:
+      question: "证件信息不一致会被退件吗?"
+      answer: "如姓名、出生日期等不一致,须提交“同一人宣誓书”和/或“情况说明宣誓书”及佐证材料;未解释清楚将导致延迟或不予受理."
+    photo-and-form-requirements:
+      question: "照片与表格有哪些硬性要求?"
+      answer: "照片须2×2白底、近三个月、不得佩戴墨镜/有色隐形眼镜/头饰;表格以英文大写字母填写,任何不适用项须填“N/A”,不得留空."
+    extra-fees:
+      question: "是否会被要求额外缴费?"
+      answer: "主流程仅收受抚养人纳入处理费.如审理中需出具在案证明/认证,才会按通用认证收费标准(Certification/ LRf/ Express)另行开单."
+    child-turned-18:
+      question: "孩子已满18岁怎么办?"
+      answer: "不适用“纳入”路径,通常应改走“出生认定/肯认”或其他合规途径,所需材料与费用将与本服务不同."
+    acr-icard-handling:
+      question: "受抚养人持有ACR I-Card/ICR/CRTV需要处理吗?"
+      answer: "需在请愿表中声明交回注销相关证件编号,避免身份重复或记录冲突."
+disclaimers:
+  items:
+    fees-subject-to-change: "如未来官方费率调整,以新发布为准."
+service_related:
+  links: {}

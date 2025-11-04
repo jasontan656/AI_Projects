@@ -1,0 +1,718 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["NTSP", "Certificate of Not The Same Person"]
+department: "BureauOfImmigration"
+name: "非同一人证明(Certificate of Not The Same Person, NTSP)"
+slug: "certificate-of-not-the-same-person-ntsp"
+type: "reference"
+semantic_profile:
+  intent_id: "ntsp-certification"
+  category: "certification-and-clearance"
+  tags: ["CCS", "NTSP", "identity-clarification"]
+service_overview: "非同一人证明(NTSP)用于澄清申请人与移民局系统中同名的不良记录人员并非同一人,消除因同名命中导致的边检拦截、签证受理受阻或登机受限等影响.由认证与核查科(CCS)受理、签发并加盖干印,供边检、签证官、航空公司或其他机关核对身份."
+applicability:
+  items:
+    airport-interception-same-name: "在机场出入境被提示与“警示/黑名单”等同名而被拦截,需要即刻澄清身份."
+    visa-application-suspended-same-name: "递交签证、居留或许可申请时因同名命中不良记录导致案件暂停受理,需要证明“并非同一人”."
+    ecc-or-related-certifications: "申请出境许可(ECC)或相关认证时,因同名被要求先行出具澄清文件."
+    airline-denied-boarding: "航空公司因系统预警拒绝值机或登机,需要提交官方澄清以恢复行程."
+    judicial-or-law-enforcement-request: "司法或执法机关要求提供移民端的身份澄清文件以配合审理或调查."
+preconditions:
+  required:
+    same-name-hit-verification-by-ccs: "申请人确因同名命中移民不良记录(如警示、观察、黑名单)而受影响,需由CCS核验并出具澄清."
+    complete-and-verifiable-documents: "提交完整、真实且可核验的身份证明与支持性文件(见材料清单)."
+    spa-for-representative: "如由代理人代办,需提供有效的特别授权书(SPA)及代理人政府身份证件;如持有移民局认证ID,亦应一并提供."
+    sworn-docs-original-notarized: "所有宣誓类文件必须为原件并经正式公证."
+    forms-uppercase-english: "申请表及相关信息须按要求以英文大写填报,不得留空项."
+  not_eligible:
+    incomplete-or-altered-docs: "资料不完整、内容不清晰或存在涂改,无法据以核证身份."
+    court-cannot-issue-definitive-proof: "主管法院/机关无法“明确、确定”地出具“并非同一人”的盖章证明."
+    valid-old-ntsp-no-reapply: "旧版NTSP仍符合使用条件(签发日期晚于对应的拦截/管制命令,且内容清晰可辨),无需重复申请."
+    suspected-fraud-or-falsification: "存在伪造文书、虚假陈述或其他违法嫌疑."
+    noncooperation-on-supplement: "申请人拒不配合补充材料或核查程序."
+pre_required_documents:
+  mandatory:
+    application-form-ccs-a-ntsp-2016: "非同一人证明申请表(BI 表格编号:CCS-A-NTSP-2016),完整用英文大写填写,所有不适用项填“N/A”,不得留空."
+    court-or-authority-definitive-proof-sealed: "由签发相关命令/公函/逮捕令的法院或主管机关出具并封缄的盖章证明,须明确且“确定”认定申请人与案件中的被告/相对人“并非同一人”."
+    passport-bio-and-stamps-copies: "护照资料页复印件及近期出入境章复印件(建议携原件以供校验)."
+    affidavit-of-denial-original-notarized: "否认宣誓书(Affidavit of Denial)原件并经公证."
+    nbi-clearance-latest: "如因黑名单/观察名单事项被列管:最新全国调查局无犯罪证明(NBI Clearance)."
+    clarification-letter-from-originating-agency: "原列管/通报机关出具的澄清函或查询回覆(如有)."
+    photo-2x2-white-recent: "近三个月内拍摄的2×2白底彩照1张(不得佩戴眼镜或彩色美瞳;不接受扫描件)."
+  conditional:
+    old-ntsp-copy:
+      trigger: "旧NTSP签发时间晚于相关拦截/列管命令且内容清晰可辨,可作为佐证并可能免于重新申请."
+      documents: ["old-ntsp-copy"]
+    agent-filing:
+      trigger: "由代理人代办."
+      documents: ["spa-original", "agent-government-id", "bi-accredited-id-if-any"]
+    court-required-others:
+      trigger: "法院/机关要求的其他支持材料(如案件编号、指纹卡比对意见、姓名差异说明等)."
+      documents: ["case-number-proof", "fingerprint-comparison-opinion", "name-discrepancy-explanation"]
+    ccs-supplementary:
+      trigger: "CCS根据核查需要要求的补充资料(以受理窗口书面/加注为准)."
+      documents: ["additional-documents-as-required-by-ccs"]
+process:
+  steps:
+    step-1-ticket-and-submission: { order: "1", title: "取号与递件(约5分钟)", description: "到CCS窗口提交完整材料与申请表,领取受理回执." }
+    step-2-initial-review-and-system-check: { order: "2", title: "初审与系统核查(约1小时10分钟)", description: "CCS调阅移民信息系统不良记录,比对法院/机关证明与佐证材料,视情形出具补件清单." }
+    step-3-supplement-and-ops: { order: "3", title: "补件与受理开单(补件时间不计,开单约3分钟)", description: "按要求补交材料后,CCS出具缴费单/处理单(OPS),同步发放取证凭条." }
+    step-4-payment-and-or: { order: "4", title: "缴费与取回官方收据(约10分钟)", description: "前往收银窗口缴费,领取官方收据(OR)和取证凭条(Claim Stub)." }
+    step-5-preparation-and-seal: { order: "5", title: "制作与核印(3个工作日内)", description: "CCS制作证书并加盖干印及钢印." }
+    step-6-claim-certificate: { order: "6", title: "领取证书(约5分钟)", description: "凭取证凭条于指定窗口领取NTSP正本.未在签发日起30日内领取的证书将自动作废." }
+  variants: {}
+  notes: "全流程平均办理时间约为3个工作日加现场处理约1小时46分钟(不含补件与候队时间,以现场为准)."
+pricing:
+  metadata:
+    last_verified: ""
+    source: "已更新至2025官方版本"
+  items:
+    main-regular:
+      label: "常规办理 · 主申请人"
+      details:
+        certification-fee:
+          amount: { currency: "PHP", display: "PHP 500", value: 500 }
+          notes: "出具NTSP证书的基础费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount: { currency: "PHP", display: "PHP 10", value: 10 }
+          notes: "法律检索费(按规则除头税/罚款外各项均计LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        third-party-fees:
+          amount: { currency: "PHP", display: "", value: null }
+          notes: "其他第三方费用(如公证、复印等)由申请人自理,不计入官方合计.以实际发生为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount: { currency: "PHP", display: "PHP 510", value: 510 }
+        notes: "常规办理合计(不含第三方费用)"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    main-express:
+      label: "含加急 · 主申请人"
+      details:
+        certification-fee:
+          amount: { currency: "PHP", display: "PHP 500", value: 500 }
+          notes: "出具NTSP证书的基础费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount: { currency: "PHP", display: "PHP 10", value: 10 }
+          notes: "法律检索费(按规则除头税/罚款外各项均计LRF)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount: { currency: "PHP", display: "PHP 500", value: 500 }
+          notes: "选择加急(Express)时加收"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        third-party-fees:
+          amount: { currency: "PHP", display: "", value: null }
+          notes: "其他第三方费用(如公证、复印等)由申请人自理,不计入官方合计.以实际发生为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount: { currency: "PHP", display: "PHP 1,010", value: 1010 }
+        notes: "含加急合计(不含第三方费用)"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "CCS签发并加盖干印的非同一人证明原件(NTSP)及缴费凭证等."
+  items:
+    ntsp-certificate-original: { name: "非同一人证明(NTSP)正本", usage: "用于边检、签证、航空公司或其他机关进行身份澄清" }
+    official-receipt-or: { name: "官方收据(OR)", usage: "缴费凭证;用于核实或补办流程" }
+    claim-stub: { name: "取证凭条(Claim Stub)", usage: "领取证书凭据;遗失需先办理核实流程" }
+kpis:
+  processing_time: "平均3个工作日制证,现场处理约1小时46分钟(不含补件与排队)"
+risks:
+  items:
+    false-docs-liability: "提供虚假材料或伪造文件将被依法追究,并可能导致列管升级、拒绝出入境或签证申请受限."
+    certificate-not-collected-void: "证书签发后30日未领取将自动作废."
+    ntsp-not-guarantee-pass: "NTSP用于澄清身份但不保证一定登机或通关,最终由边检/承运人依规则裁量."
+    supplement-deadline-impact: "未在限期内补齐补件将影响办理时效或导致案件关闭."
+    peak-or-interagency-delay: "遇办理高峰或跨机关核验,出证时长可能延长."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: "与护照一致,避免重音符号(如 ñ/é/ü/ç)"
+    first-name:
+      label: "名字(英文大写)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "JOHN"
+      notes: "与护照一致,避免重音符号"
+    middle-name:
+      label: "中间名(英文大写)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ALPHA"
+      notes: "如无中间名可填 N/A"
+    previous-names:
+      label: "曾用名/别名(全部列明)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JUAN DELA CRUZ; JON DOE"
+      notes: "如适用,全部列明"
+    date-of-birth:
+      label: "出生日期(DD-MMM-YYYY)"
+      type: "date"
+      required: "true"
+      format: "dd-mmm-yyyy"
+      pattern: ""
+      example: "01 JAN 1990"
+      notes: ""
+    place-of-birth-city:
+      label: "出生地城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MANILA"
+      notes: ""
+    place-of-birth-country:
+      label: "出生地国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PHILIPPINES"
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: ""
+    address-line1:
+      label: "居住地址(门牌/楼栋)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "UNIT 1A, 123 SAMPLE ST."
+      notes: ""
+    address-street:
+      label: "居住地址(街道)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAMPLE STREET"
+      notes: ""
+    address-village-town:
+      label: "居住地址(村镇/Barangay)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BARANGAY 123"
+      notes: ""
+    address-city:
+      label: "居住地址(市)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "QUEZON CITY"
+      notes: ""
+    address-province:
+      label: "居住地址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    address-postal-code:
+      label: "居住地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1100"
+      notes: ""
+    phone-mobile:
+      label: "联系方式(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    phone-landline:
+      label: "联系方式(座机)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "02-8123-4567"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567A"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2030-12-31"
+      notes: ""
+    purpose-of-application:
+      label: "办理目的(NTSP用途)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "边检澄清/签证申请/航空公司核验"
+      notes: "简述申请NTSP的具体用途"
+    photo-2x2-recent-provided:
+      label: "是否提供近三个月内2×2白底彩照"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "不得佩戴眼镜或彩色隐形;不接受扫描件"
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "HUA"
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "M"
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1992-05-20"
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PHILIPPINES"
+      notes: ""
+    spouse-phone:
+      label: "配偶联系方式(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639181234567"
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    children-count:
+      label: "子女人数"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2"
+      notes: ""
+    child-1-last-name:
+      label: "子女1姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "DOE"
+      notes: ""
+    child-1-first-name:
+      label: "子女1名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JANE"
+      notes: ""
+    child-1-middle-name:
+      label: "子女1中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "B"
+      notes: ""
+    child-1-date-of-birth:
+      label: "子女1出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2015-07-01"
+      notes: ""
+    child-1-nationality:
+      label: "子女1国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC CORPORATION"
+      notes: ""
+    employer-address-line1:
+      label: "雇主注册地址(门牌/街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "10F, 456 BUSINESS RD."
+      notes: ""
+    employer-address-city:
+      label: "雇主注册地址(市)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MAKATI"
+      notes: ""
+    employer-address-province:
+      label: "雇主注册地址(省)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "METRO MANILA"
+      notes: ""
+    employer-address-postal-code:
+      label: "雇主注册地址(邮编)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    contact-person-name:
+      label: "联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "JUAN DELA CRUZ"
+      notes: ""
+    contact-person-phone:
+      label: "联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63288881234"
+      notes: ""
+    applicant-position:
+      label: "申请人职务"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MANAGER"
+      notes: ""
+    employment-relationship:
+      label: "聘用关系说明"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "FULL-TIME"
+      notes: ""
+  authorization:
+    agent-name:
+      label: "代理人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "MARIA SANTOS"
+      notes: ""
+    agent-government-id-number:
+      label: "代理人政府签发ID号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ID-123456789"
+      notes: ""
+    spa-issue-date:
+      label: "特别授权书(SPA)签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-15"
+      notes: ""
+    spa-notarization-info:
+      label: "SPA公证信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NOTARIZED BY XXX NOTARY, DOC NO. 123"
+      notes: ""
+    agent-phone:
+      label: "代理人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639191234567"
+      notes: ""
+    agent-email:
+      label: "代理人电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "agent@example.com"
+      notes: ""
+  arrival_info: {}
+  travel_history:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-12-20"
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NAIA T3"
+      notes: ""
+    stamps-copies-provided:
+      label: "是否附相关出入境戳记复印件"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    current-visa-class:
+      label: "现持签证或停留类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9G WORK VISA"
+      notes: ""
+    current-visa-expiry:
+      label: "现持签证/停留到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2026-06-30"
+      notes: ""
+  compliance:
+    nbi-clearance-provided:
+      label: "是否提供最新NBI无犯罪证明(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    affidavit-of-denial-notarized:
+      label: "否认宣誓书是否为原件且经公证"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    sealed-court-proof-provided:
+      label: "是否提供法院/主管机关出具并封缄的盖章证明"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+  additional_details:
+    record-type-involved:
+      label: "涉及的不良记录类型"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "OBSERVATION LIST"
+      notes: "如观察名单/警示/黑名单"
+    issuing-authority-name:
+      label: "对应机关/法院名称"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "REGIONAL TRIAL COURT BRANCH 00"
+      notes: ""
+    case-number:
+      label: "案件编号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CR-12345-2024"
+      notes: ""
+    past-interception-date:
+      label: "既往拦截/拒绝登机日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-08-01"
+      notes: ""
+    past-interception-location:
+      label: "既往拦截/拒绝登机地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NAIA TERMINAL 1"
+      notes: ""
+    old-ntsp-issue-date:
+      label: "旧NTSP签发日期(如适用)"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2023-11-15"
+      notes: ""
+    old-ntsp-number:
+      label: "旧NTSP证号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "NTSP-2023-000123"
+      notes: ""
+    old-ntsp-clarity:
+      label: "旧NTSP清晰度说明(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "内容清晰可辨"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: "申请人同意为办理NTSP之目的提交并处理个人信息,遵守相关数据隐私要求."
+  certification_statement: "申请人确认并宣誓所提交信息与材料真实准确,按要求签署/拇指印;宣誓类文件须为原件并经公证."
+faq:
+  qas:
+    processing-time:
+      question: "办理需要多久?"
+      answer: "一般在受理后3个工作日内制证完成;现场递交、核查与缴费等合计约1小时46分钟(不含补件与排队)."
+    old-ntsp-reapply:
+      question: "我有旧的NTSP,还需要重新申请吗?"
+      answer: "若旧证签发日期晚于拦截/列管命令(如HDO/WLO/ALO/BLO),且内容清晰可读,通常无需重办;否则需重新申请."
+    overseas-representative:
+      question: "人在海外,可以由他人代办吗?"
+      answer: "可以.需提交原件SPA及代理人的有效政府ID;取证时须出示取证凭条."
+    court-not-issue-proof:
+      question: "法院或机关不愿出具“非同一人”的明确证明怎么办?"
+      answer: "可先行咨询律师或移民局认可的服务机构;同时准备NBI证明、案件材料等辅助文件,直至能满足“明确认定”的要求."
+    guarantee-pass:
+      question: "NTSP能保证我一定能登机或通关吗?"
+      answer: "NTSP是权威澄清文件,可大幅降低阻碍,但最终是否放行由边检/承运人依现场规则裁量;请同时携带相关支持材料."
+    fee-difference:
+      question: "费用为何有人缴PHP 510,有人缴到PHP 1,010?"
+      answer: "PHP 510为常规认证+LRF,若选择加急或与其他认证组合办理,通常会加收Express PHP 500,总计PHP 1,010,以现场开单为准."
+    claim-stub-lost:
+      question: "取证凭条丢了怎么办?"
+      answer: "尽快携带OR与有效身份证件前往CCS说明情况,按窗口指引补办核实流程后再行领取."
+    ntsp-validity:
+      question: "NTSP是否有有效期?"
+      answer: "NTSP用于特定时点的身份澄清;若后续列管记录发生变化或新增命中,可能需要重新申请最新证明."
+disclaimers:
+  items:
+    fees-subject-to-or: "费用如遇政策调整,以现场开单(OPS)与官方收据(OR)为准."
+    ntsp-not-license: "NTSP用于身份澄清并不替代其他法定许可(如签证、出境许可等);相关手续仍需按规定分别办理."
+    timeframes-indicative: "平均3个工作日出证为参考时长,遇高峰或跨机关核验可能延长."
+    auto-void-30-days: "证书签发后30日未领取将自动作废."
+    bring-or-and-claim-stub: "请妥善保管OR及取证凭条,遗失可能导致延误或需补充证明."
+service_related:
+  links: {}

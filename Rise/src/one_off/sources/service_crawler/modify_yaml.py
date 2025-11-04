@@ -1,0 +1,16 @@
+from pathlib import Path
+import os
+import re
+path = Path(os.environ.get("SERVICE_CRAWLER_YAML_TEMPLATE", str(Path(__file__).resolve().parent / "service_yaml_template.yaml")))
+text = path.read_text(encoding="utf-8")
+old_semantic = "semantic_profile:\n  intent_id: \"示例占位{visa.downgrade.combined}\"\n  category: \"示例占位{PROCESSING_REQUIREMENT}\"\n  tags:\n    - \"示例占位{9G降签}\"\n    - \"示例占位{旅游身份转换}\"\n    - \"示例占位{I-Card注销}\"\n"
+if old_semantic not in text:
+    raise SystemExit('semantic block mismatch')
+pricing_block = old_semantic + "\npricing:\n  metadata:\n    last_verified: \"示例占位{2025-10-23}\"\n    source: \"示例占位{BUREAU-OF-IMMIGRATION-CITIZENS-CHARTER-2025-1ST-EDITION}\"\n  items:\n    - name: \"示例占位{I-Card Fee}\"\n      amount: \"示例占位{USD 50.00}\"\n      notes: \"示例占位{按 BSP 汇率折算 PHP；ACR I-Card|Express Lane 单独计费}\"\n    - name: \"示例占位{Express Lane Fee}\"\n      amount: \"示例占位{PHP 500.00}\"\n      notes: \"示例占位{提交/出证各一次}\"\n    - name: \"示例占位{Legal Research Fee (LRF)}\"\n      amount: \"示例占位{PHP 10.00 / 30.00}\"\n      notes: \"示例占位{除 Head Tax、罚款外每项费用需附加 LRF}\"\n"
+text = text.replace(old_semantic, pricing_block, 1)
+pattern = r"info_collection:\n(?:.*\n)*?acknowledgement_flags:"
+new_info = "info_collection:\n  applicant:\n    - field: \"{applicant_full_name}\"\n      desc: \"{主申请人英文姓名（与护照一致）}\"\n      optional: false\n    - field: \"{date_of_birth}\"\n      desc: \"{出生日期（DD-MMM-YYYY）}\"\n      optional: false\n    - field: \"{citizenship}\"\n      desc: \"{现行国籍/公民身份}\"\n      optional: false\n    - field: \"{passport_number}\"\n      desc: \"{护照号码（旧/新护照均需列示）}\"\n      optional: false\n    - field: \"{latest_arrival_details}\"\n      desc: \"{最近一次抵菲日期、航班号、入境港口}\"\n      optional: false\n    - field: \"{current_visa_status}\"\n      desc: \"{当前签证/入境状态（如 9G/13A/Temporary Visitor）}\"\n      optional: false\n  spouse:\n    - field: \"{spouse_full_name}\"\n      desc: \"{配偶姓名（如需提供婚姻证明则必填）}\"\n      optional: true\n    - field: \"{marriage_certificate_details}\"\n      desc: \"{结婚证号、签发地、签发日期}\"\n      optional: true\n  dependents:\n    - field: \"{child_list}\"\n      desc: \"{子女/受扶养人姓名、出生日期、护照/签证信息}\"\n      optional: true\n    - field: \"{dependent_relationship}\"\n      desc: \"{与主申请人关系及是否随行}\"\n      optional: true\n  employment:\n    - field: \"{employer_name}\"\n      desc: \"{雇主/公司名称与地址}\"\n      optional: true\n    - field: \"{position_and_contract}\"\n      desc: \"{职位、聘雇合同生效/终止日期}\"\n      optional: true\n    - field: \"{aep_number_and_expiry}\"\n      desc: \"{AEP 编号及到期日}\"\n      optional: true\n  authorization:\n    - field: \"{authorized_representative}\"\n      desc: \"{授权代表姓名、联系方式、SPA 详情}\"\n      optional: true\n    - field: \"{signature_date}\"\n      desc: \"{签名日期（DD-MMM-YYYY）}\"\n      optional: false\n  additional_details:\n    - field: \"{icard_status}\"\n      desc: \"{I-Card 是否在手／遗失说明}\"\n      optional: true\n    - field: \"{planned_departure}\"\n      desc: \"{预计离境时间或下一步签证规划}\"\n      optional: true\n    - field: \"{risk_disclosure}\"\n      desc: \"{是否存在黑名单、罚款、驱逐令等记录}\"\n      optional: true\nacknowledgement_flags:"
+text, count = re.subn(pattern, new_info, text, flags=re.MULTILINE)
+if count != 1:
+    raise SystemExit('info_collection block not replaced')
+path.write_text(text, encoding='utf-8')

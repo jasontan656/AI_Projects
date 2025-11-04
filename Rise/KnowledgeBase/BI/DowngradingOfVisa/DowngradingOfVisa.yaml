@@ -1,0 +1,1040 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: []
+department: "BureauOfImmigration"
+name: "签证降级与身份变更办理指引"
+slug: "downgrading-status-change"
+type: "reference"
+semantic_profile:
+  intent_id: "visa-downgrading-status-change"
+  category: "immigration-visa-services"
+  tags: ["downgrading","status-change","9G","9A","47a2","ACR-I-Card","ECC-A","BI"]
+service_overview: "本指引汇总菲律宾移民局渠道下的签证降级、身份变更与相关注销流程,涵盖9G转旅游、I-Card注销(含遗失无卡注销)、两类旅游降签、47(a)(2)雇主主导降签及相关批文/记录调取.面向签证到期或雇佣关系终止等情境,提供材料清单、办理路径、时效与风险提示,确保合规完成旅游身份获取、I-Card注销与离境许可等结果."
+applicability:
+  items:
+    9g-expiry-resignation-or-company-dissolution: "9G工作签证到期、离职或公司解散,需转入旅游身份(9A)或准备离境."
+    need-icard-cancellation-and-orders: "需注销9G外侨证(ACR I-Card),补齐或调取降签批文(Order),并配合提供就业许可取消证明(AEP)."
+    plan-tourist-downgrade-or-47a2: "计划办理两类旅游降签或47(a)(2)降签,获取新的旅游入境记录以便续签或转换其他签证."
+    lost-or-damaged-icard: "I-Card遗失、损坏或无法上交,需走无卡注销的特别流程."
+    must-via-bi-official-channel: "必须通过菲律宾移民局(BI)正式渠道进行的身份变更、记录认证与证明调取."
+preconditions:
+  required:
+    in-country-filing-or-authorized-representative: "申请人或授权代表须在菲律宾境内配合递交与取件;若由代理办理,需提供每位申请人的移民局认证ID或专项授权书(SPA)及受托人政府签发身份证复印件."
+    provide-passport-icard-and-orders: "提供可核验的护照、I-Card及既有批文/收据信息;如缺失,须先行通过记录科或承办处调取."
+    psa-fsp-dfa-authentication: "所有民事登记类菲律宾文件须为PSA签发原件;外国文件须经FSP或DFA认证,并附英文译文(如原文为他语)."
+    employer-or-authority-letters-when-applicable: "如涉及47(a)(2)、出口区/经济区签证或政府机构背书,需雇主/主管机关出具正式函件(如DOJ、PEZA)."
+    submit-in-legal-size-folder: "必须通过移民局正规窗口按清单顺序提交,使用法定尺寸(8.5x14英寸)文件夹装订并在规定期限内呈交."
+  not_eligible:
+    unresolved-sanctions-or-orders: "申请人存在未结清罚金、黑名单标注、驱逐令或离境令(OTL)等限制且未完成法律救济."
+    forged-or-unverifiable-docs: "提供的证据与历史记录不一致、文件伪造或无法核验真实性."
+    overstay-without-mr: "逾期停留且未并案提出复议动议(MR)或相关补救申请."
+    employer-non-cooperation: "雇主拒绝配合提供必要的雇佣证明或主管机关取消令(涉及47(a)(2)/经济区签证)."
+    non-official-submission: "通过非官方渠道递交或试图规避法定程序."
+pre_required_documents:
+  mandatory:
+    downgrading-application-letter: "降签申请函(致移民局局长),说明降签原因:离职/解雇、签证延期迟交、公司解散等;个人提交须写明居住地址与联系方式;由公司/宗教团体/认证旅行社/律师事务所/顾问公司提交须使用抬头纸并标注地址与联系方式."
+    passport-icard-visa-entry-copies: "护照资料页复印件、ACR I-Card正反面复印件(如适用)、现行签证实施页与最近一次入境章,且在授权停留期内."
+    bi-form-ird01-qf-001-rev02: "填写并签署的“签证降级申请表”(BI FORM IRD01.QF.001 Rev 02)."
+    submission-and-claim-slips: "递交凭证与索取单:用于受理与领取(由窗口填写并回执)."
+  conditional:
+    9g-and-missionary: 
+      trigger: "9G预先安排就业签证与非商业(传教)签证案件"
+      documents: ["在职证明或从事宗教工作的证明(由请愿公司/宗教团体出具)"]
+    13a-trv:
+      trigger: "非配额移民婚姻签证/临时居留签证(TRV)案件"
+      documents: ["申请人及/或配偶提出申请,注明住址与联系方式","结婚证(PSA)复印件"]
+    47a2:
+      trigger: "47(a)(2)签证案件"
+      documents: ["司法部(DOJ)准许签证的背书函","已向DOJ发出的降签通知凭证"]
+    economic-zone-special-visa:
+      trigger: "经济区/特别签证(如CWV、SCWV、SCIV、FWV等)案件"
+      documents: ["经济区主管机关签发的取消令"]
+    9e-government-official:
+      trigger: "9(e)(政府官员)签证案件"
+      documents: ["使馆/领馆/国际组织出具的在职证明","外交部(DFA)背书与照会复印件(如适用)"]
+    downgrading-supporting-docs:
+      trigger: "需提供降签支持文件的情形"
+      documents: ["原9G签证批文(Order)","AEP/ACR取消证明","PEZA/DOJ函件","雇主函","Downgrading Letter"]
+    no-card-cancellation:
+      trigger: "I-Card遗失/无法上交的无卡注销情形"
+      documents: ["I-Card卡号/序列记录","移民局历史收据","最近一次入境记录","旅行记录证明","报失声明或替代证据"]
+    personal-and-authorization:
+      trigger: "由代理提交或需补充个人与授权信息"
+      documents: ["授权书(SPA)","Character Reference","最近一次旅游入境日期","联系方式"]
+    full-immigration-history:
+      trigger: "需完整移民历史披露的情形"
+      documents: ["既往签证、入境、延期、年报与罚款记录"]
+    other-certifications:
+      trigger: "其他证明或记录认证需求"
+      documents: ["BI无案证明(BICC)","同名排除证明(NTSP)","待处理申请证明(如有)"]
+process:
+  steps:
+    1-acceptance-and-compliance-review:
+      order: "1"
+      title: "受理与合规评估(0.5–1个工作日)"
+      description: "核对护照、I-Card、批文与入境记录,评估是否存在黑名单、罚款或驱逐限制,确认可行路线与时效."
+    2-document-prep-and-forms:
+      order: "2"
+      title: "文件准备与表单填报(2–3个工作日)"
+      description: "起草降签申请函与雇主函,补齐9G批文/取消证明,准备I-Card交接或无卡注销替代证据,整理CDR顺序装订."
+    3-submit-to-bi:
+      order: "3"
+      title: "正式递交至移民局受理单位(IRD/Cashier/Records)(当日)"
+      description: "在IRD窗口提交“签证降级申请表(IRD01.QF.001 Rev 02)”与全套材料,完成支付并取得收据与领取凭条."
+    4-adjudication-and-rfe:
+      order: "4"
+      title: "审理与补件响应(5–7个工作日,复杂案延长)"
+      description: "跟进审理进度,按要求提交附加材料(如DOJ/PEZA文件、AEP取消证、认证件、记录证明等)."
+    5-issuance-and-follow-ups:
+      order: "5"
+      title: "批示与后续安排(1–2个工作日)"
+      description: "领取批示结果与证明文件,完成I-Card注销登记;若转旅游身份,配合签注与贴纸;视停留时长安排ECC-A或续签."
+    6-no-card-cancellation-subflow:
+      order: "6"
+      title: "无卡注销子流程(I-Card遗失/无法上交)(3–4周)"
+      description: "以替代证据向移民局申请无卡注销,期间可能需加证或认证记录,整体时长显著长于常规注销."
+    7-delivery-and-filing:
+      order: "7"
+      title: "结果交付与归档(当日)"
+      description: "交付官方收据、降签批示/旅游入境章、I-Card注销确认(或记录),并归档降签信、批准文件、批文与取消证明."
+  variants:
+    no-card-cancellation:
+      name: "无卡注销子流程"
+      trigger: "I-Card遗失或无法上交"
+      description: "改以替代证据办理注销,处理时长通常3–4周,并可能要求补做记录认证与加证."
+      extra_requirements: ["提供卡号/序列记录、历史收据、入境记录与报失声明等替代证据"]
+  notes: "办材料须按CDR顺序装订,使用8.5x14英寸文件夹;菲律宾民事文件用PSA原件,境外文件须FSP/DFA认证并附英文译文;代理提交须附移民局认证ID或每位申请人的SPA原件与受托人政府签发证件复印件."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "2025价目(本文整合)"
+  items:
+    general-common:
+      label: "通用费用(降签与相关办理)"
+      details:
+        srrv-downgrading:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,020"
+            value: 4020
+          notes: "含申请费、证书费、LRF、两段Express.标注为SRRV Downgrading专案."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        certification:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "证书费500 + LRF 10 + Express 500(如选加急)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        travel-record-certificate:
+          amount:
+            currency: "PHP"
+            display: "PHP 500–1,010"
+            value: null
+            range:
+              min: 500
+              max: 1010
+          notes: "查询免费;出证按认证费口径,Express可选."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+        acr-icard:
+          amount:
+            currency: "USD"
+            display: "USD 50 + PHP 500"
+            value: null
+          notes: "ACR I-Card费美元计 + I-Card快速通道PHP 500(如适用);以缴费当日BSP汇率折算."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        acr-registration:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,000"
+            value: 1000
+          notes: "常与ECC/注销/记录组合收取."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        ecc-a:
+          amount:
+            currency: "PHP"
+            display: "约PHP 2,610–3,310"
+            value: null
+            range:
+              min: 2610
+              max: 3310
+          notes: "ECC 700 + ACR费1,000 + CRTV 1,400(达阈值时)+ LRF 30 + Express 500(如并收)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              range:
+                min: "int"
+                max: "int"
+            notes: "str"
+        crtv:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,410"
+            value: 1410
+          notes: "停留累计≥6个月触发."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        visa-waiver-eo408:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,130/3,130/4,140"
+            value: null
+            tiers:
+              - value: 2130
+                condition: "常规整包总价"
+              - value: 3130
+                condition: "加急整包总价"
+              - value: 4140
+                condition: "逾期Express组合可达"
+          notes: "EO 408国家适用;是否加急与是否逾期影响金额."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "贴签时缴纳."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        overstay-penalty:
+          amount:
+            currency: "PHP"
+            display: "PHP 500/月"
+            value: 500
+          notes: "逾期每月累加;MR另计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        motion-for-reconsideration:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "MR 500 + LRF 10 + Express 500(如适用)."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        acr-icard-replacement:
+          amount:
+            currency: "USD"
+            display: "USD 20 + PHP 1,000"
+            value: null
+          notes: "I-Card遗失补办示例;如并案补交ACR/ICR/CTC等,按组合增列."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        a-cert:
+          amount:
+            currency: "PHP"
+            display: "PHP 510/1,010"
+            value: null
+            tiers:
+              - value: 510
+                condition: "常规(A-Cert 500 + LRF 10)"
+              - value: 1010
+                condition: "加急(另加Express 500)"
+          notes: "ACR记录/注销等认证."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        head-tax:
+          amount:
+            currency: "PHP"
+            display: "PHP 250"
+            value: 250
+          notes: "年满>16岁,视组合并收."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        9g-conversion-extension-reference:
+          amount:
+            currency: "PHP"
+            display: "见分档"
+            value: null
+            tiers:
+              - value: 10630
+                condition: "Top 1000主体·1年(起)"
+              - value: 7560
+                condition: "非Top 1000主体·1年(起)"
+          notes: "用于对照,并非降签费;I-Card USD 50/年另计."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+        downgrading-application-fee-generic:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "“9G降签申请费”(通用)暂无官方费用信息;以OPS开单与OR为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        fee-schedule-2014-reference:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "2014版费用对照暂缺;无可检索到的官方降签费目."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "完成降签/注销后可获得的官方结果文件."
+  items:
+    official-receipts:
+      name: "官方收据与领取凭条"
+      usage: "作为缴费与受理凭证,后续查档与领件使用."
+    downgrading-order-or-tourist-entry-stamp:
+      name: "降签批示/旅游入境章"
+      usage: "证明身份变更为旅游身份或降签批准结果."
+    acr-icard-cancellation-proof:
+      name: "I-Card注销确认(或记录)"
+      usage: "证明I-Card已注销或完成登记,供后续出入境查验."
+    compiled-submissions:
+      name: "降签信、批准文件、批文与取消证明归档件"
+      usage: "作为案件闭环资料留存与后续签证/离境办理参考."
+kpis:
+  processing_time: "常规9G降签约1–2周;I-Card注销约7个工作日;I-Card无卡注销约3–4周;47(a)(2)与两类旅游降签视案情与补件情况."
+risks:
+  items:
+    nondisclosure-may-lead-otl: "未完整披露移民历史(如逾期、罚款、黑名单)可能导致降签被拒或签发离境令(OTL)."
+    icard-not-submitted: "I-Card未按要求上交或未完成注销登记,可能引发后续罚金、调查或影响再入境."
+    missing-orders-or-aep-cancel: "缺失9G批文(Order)或AEP取消证明将显著拖延,需提前向记录/主管机关调取."
+    no-card-cancellation-longer-time: "无卡注销依赖替代证据的充分性与真伪核查,处理时长可延至3–4周."
+    false-docs-liability: "提供虚假材料或伪造认证将导致行政/刑事责任,并可能被列入黑名单、拒绝入境/签证."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: "英文大写"
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: "英文大写"
+    middle-name:
+      label: "中间名/双名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "可选值:Male/Female"
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: "与护照一致"
+    passport-number:
+      label: "护照号"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "E12345678"
+      notes: ""
+    passport-issue-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "BEIJING"
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2021-08-15"
+      notes: ""
+    passport-expiry:
+      label: "护照有效期至"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2031-08-14"
+      notes: ""
+    address-line1:
+      label: "菲律宾现住址(门牌与街区)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "1234 Mabini St., Brgy. 123"
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "邮编"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: "^[0-9]{4}$"
+      example: "1200"
+      notes: ""
+    phone-mobile:
+      label: "菲律宾本地手机号"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+    current-visa-type:
+      label: "现行签证类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9G"
+      notes: "例如9G、47(a)(2)、9(e)、13A、TRV等"
+    current-visa-expiry:
+      label: "现行签证到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-31"
+      notes: ""
+    acr-icard-number:
+      label: "ACR I-Card卡号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ICR-1234-5678"
+      notes: ""
+    acr-icard-issue-date:
+      label: "ACR I-Card签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-04-10"
+      notes: ""
+    acr-icard-expiry:
+      label: "ACR I-Card到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-04-09"
+      notes: ""
+    acr-icard-in-hand:
+      label: "ACR I-Card是否在手"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    immigration-history-summary:
+      label: "移民历史摘要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "含过往签证、延期、年报与罚款、MR记录"
+      notes: ""
+    restrictions-blacklist:
+      label: "是否有黑名单标注"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+    restrictions-otl:
+      label: "是否有驱逐/离境令(OTL)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+    restrictions-unpaid-fines:
+      label: "是否存在未结罚金"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "false"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: ""
+    spouse-first-name:
+      label: "配偶名(与证件一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "HUA"
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "1992-07-01"
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "CHINA"
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "E98765432"
+      notes: ""
+    spouse-acr-icard-number:
+      label: "配偶ACR I-Card卡号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    psa-marriage-certificate-number:
+      label: "PSA结婚证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-current-visa-type:
+      label: "配偶当前签证类别"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9A"
+      notes: ""
+    spouse-current-visa-expiry:
+      label: "配偶签证到期日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-contact-phone:
+      label: "配偶联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639181234567"
+      notes: ""
+    spouse-email:
+      label: "配偶邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "spouse@example.com"
+      notes: ""
+  father: {}
+  mother: {}
+  children: {}
+  dependents:
+    dependent-name:
+      label: "依赖人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-relationship:
+      label: "与主申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Child"
+      notes: ""
+    dependent-date-of-birth:
+      label: "依赖人出生日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-nationality:
+      label: "依赖人国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-passport-number:
+      label: "依赖人护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    dependent-acr-icard-number:
+      label: "依赖人ACR I-Card卡号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    psa-birth-certificate-number:
+      label: "PSA出生证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    cohabitation:
+      label: "是否共同居住"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    dependent-contact-phone:
+      label: "依赖人联系电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639191234567"
+      notes: ""
+    dependent-email:
+      label: "依赖人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "dependent@example.com"
+      notes: ""
+  employment:
+    employer-name:
+      label: "公司全称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "ABC Manufacturing Corp."
+      notes: ""
+    employer-address:
+      label: "公司地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Unit 123, BGC, Taguig"
+      notes: ""
+    tax-entity-tier:
+      label: "纳税主体属性"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Top 1000"
+      notes: "可选值:Top 1000/非Top 1000"
+    sec-or-peza-number:
+      label: "SEC/PEZA编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "SEC-1234567 / PEZA-7654321"
+      notes: ""
+    position-title:
+      label: "职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Engineer"
+      notes: ""
+    employment-start-date:
+      label: "雇佣起始日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2022-01-10"
+      notes: ""
+    employment-end-date:
+      label: "雇佣结束日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-02-28"
+      notes: ""
+    employer-contact-name:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Juan Dela Cruz"
+      notes: ""
+    employer-contact-phone:
+      label: "雇主联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63288881234"
+      notes: ""
+    employer-contact-email:
+      label: "雇主联系人邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "hr@example.com"
+      notes: ""
+  authorization:
+    agent-accreditation-id:
+      label: "代理主体移民局认证ID编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "BI-ACC-2025-00123"
+      notes: ""
+    spa-scope:
+      label: "SPA授权范围"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Submission, payment, and claiming of documents"
+      notes: "一人一份,原件"
+    spa-issued-date:
+      label: "SPA签发日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-15"
+      notes: ""
+    spa-valid-until:
+      label: "SPA有效期至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-07-15"
+      notes: ""
+    attorney-gov-id-number:
+      label: "受托人政府签发ID编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "PH-ID-1234567890"
+      notes: "需提供正反面复印件"
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-01-05"
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MNL - NAIA"
+      notes: ""
+    last-entry-visa-class:
+      label: "最近一次入境批注类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9G"
+      notes: ""
+    last-entry-authorized-stay-until:
+      label: "最近一次入境授权停留期限至"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: "2025-03-05"
+      notes: ""
+  travel_history:
+    previous-visa-types:
+      label: "既往签证类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9A, 9G"
+      notes: ""
+    previous-entries:
+      label: "历史入境记录摘要"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2019-2025期间多次入境"
+      notes: ""
+    extension-history:
+      label: "签证延期记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "9A延长2次"
+      notes: ""
+    annual-report-history:
+      label: "年报记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "2023、2024已完成年报"
+      notes: ""
+    fines-and-penalties:
+      label: "罚款记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "无"
+      notes: ""
+    mr-history:
+      label: "复议动议(MR)记录"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "无"
+      notes: ""
+  compliance:
+    doj-endorsement-present:
+      label: "是否具备DOJ背书(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    peza-cancellation-order-present:
+      label: "是否具备PEZA取消令(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+    aep-cancellation-proof-present:
+      label: "是否具备AEP取消证明(如适用)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: ""
+  additional_details:
+    downgrading-reason:
+      label: "降签原因"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "离职/解雇/公司解散/签证延期迟交"
+      notes: "用于申请函说明"
+    character-reference:
+      label: "Character Reference联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Mr. Reyes, 0917xxxxxxx"
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "常规案件需要多久能办好?"
+      answer: "常见9G降签约1–2周;I-Card注销约7个工作日;47(a)(2)与两类旅游降签依案情复杂度与补件情况而定;I-Card无卡注销通常需3–4周."
+    missing-9g-order:
+      question: "找不到9G批文(Order)怎么办?"
+      answer: "可通过移民局记录与认证窗口提出批文调取或记录证明申请,必要时出具认证文件(如A-Cert/记录证明);期间请准备雇主函与相关缴费收据以加速检索."
+    icard-submission-or-lost:
+      question: "I-Card必须上交吗?遗失如何处理?"
+      answer: "降签通常需注销或登记I-Card状态.若遗失,可走无卡注销流程,提交卡号记录、历史收据、入境记录与报失声明等替代证据;时长较长且可能需补做记录认证与加证."
+    need-ecc-a-after-downgrade:
+      question: "降签后是否一定要办理ECC-A才能离境?"
+      answer: "如累计停留达到规定阈值(通常≥6个月)或符合ECC-A适用范围,离境前须办理ECC-A;届时可能一并收取ACR费、CRTV与LRF/Express等组合费用."
+    overstay-and-fees:
+      question: "逾期了还能降签吗?会有什么费用?"
+      answer: "可在提交降签的同时提出复议动议(MR),并缴纳逾期罚款(PHP 500/月)与MR费用(通常PHP 500 + LRF 10,若加急另加Express 500).是否受理取决于实际案情与材料完整性."
+    47a2-and-economic-zone-coordination:
+      question: "47(a)(2)/经济区签证降签需要哪些单位配合?"
+      answer: "需提供司法部(DOJ)背书与已通知降签的证明,经济区类签证需提交主管机关(如PEZA)出具的取消令;雇主函与联系信息也应一并提供."
+    can-agent-handle:
+      question: "是否可以全程由代理办理?"
+      answer: "可以.但需提供每位申请人的单独SPA原件与代理人移民局认证ID或执照信息,并附代理人政府签发ID复印件;部分环节(如指纹、领证)可能仍需本人或原件核验."
+    pricing-differences:
+      question: "费用为什么不同窗口会略有差异?"
+      answer: "各处室在组合收费时可能将LRF、Express、贴纸费、认证费等以不同票据分列,或按是否并案合并计费;以实际开单(OPS)与官方收据(OR)为准.本文费用已按2025版价目整合,个别降签专属费目如未见官方公布,标注为“待补充”."
+disclaimers:
+  items:
+    fees-subject-to-ops-or:
+      text: "费用以现场开单(OPS)与官方收据(OR)为准,未明确列出的降签费目以实际开单为准."
+    fx-rate-bsp:
+      text: "货币换算以缴费当日BSP公布汇率为准."
+    pricing-2025-reference:
+      text: "本文费用按2025版官方价目整合,个别专属费目未见官方公布时标注为待补充."
+service_related:
+  links: {}

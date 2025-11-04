@@ -1,0 +1,558 @@
+version: "2025"
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["Failed to Stamp (Encoded)"]
+department: "BureauOfImmigration"
+name: "未盖章(已编码)入出境纪录补章服务"
+slug: "failed-to-stamp-encoded"
+type: "reference"
+semantic_profile:
+  intent_id: "failed-to-stamp-encoded-correction"
+  category: "record-correction"
+  tags: ["IRD","CGAF","stamp-correction"]
+service_overview: "用于修复“护照未盖章但移民系统已有入/出境编码”的不一致记录.由移民局审核并函送移民管制处(IRD)批准后,在护照相应页面补盖出入境章,并同步更正系统记录,确保纸本与系统一致.完成补章有助于后续办理签证延期、出境许可、无案证明等,减少因记录不一致导致的窗口疑义、边检延误或潜在罚款风险."
+applicability:
+  items:
+    encoded-entry-no-stamp: "入境时系统已录入行程(已“编码”),但护照上未出现入境章."
+    encoded-exit-no-stamp: "出境时系统显示已离境,但护照无相应出境章."
+    old-passport-missing-stamp-with-encoding: "更换新护照后发现既往某次入/出境在旧护照上未盖章,且系统有对应编码."
+    self-reported-encoding-missing-stamp: "自述曾经入/出境且记得日期与航班号,柜台查询亦能在系统定位到编码,但纸本章缺失."
+    name-variance-or-rebook-no-stamp: "因姓名差异、航班改签等客观原因导致现场未盖章、后续需补章以避免今后办理移民业务受阻."
+preconditions:
+  required:
+    encoding-record-found: "系统可查询到与申请人相符的入境或出境编码记录(含日期、航班号等基础要素)."
+    applicant-in-person: "申请人须亲自到场递交申请与护照原件,并现场签署声明与隐私同意."
+    submit-cgaf-failed-to-stamp: "提交“综合通用申请表(CGAF)/表号 IRD01.QF.006 Rev.03”并如实填写“未盖章(Failed to Stamp)/未编码/未验放勾选项”和“原因说明”."
+    endorsement-to-ird-before-stamping: "申请受理后,由外站拟文转呈IRD主办公室审批;未获批准前不得在护照上补盖章."
+    reachable-contact-info: "联系方式(手机/邮箱)可用、保持畅通,以接收外站与IRD的审批与取件通知."
+  not_eligible:
+    no-encoding-record: "无法在系统定位到任何与当次行程相符的编码记录."
+    contradictory-or-fraudulent-info: "提交的身份或旅行信息前后矛盾,或疑似伪造、篡改."
+    passport-invalid-or-identity-mismatch: "护照损毁、失效或身份信息与系统严重不一致,无法建立同一性."
+    outstanding-derogatory-records: "申请人存在未结清的不良记录(derogatory records)且未按要求先行处置."
+    unauthorized-representative-or-refuse-consent: "代办人无法出示合法授权或必要身份证件,或申请人拒绝签署数据隐私同意与真实性声明."
+pre_required_documents:
+  mandatory:
+    cgaf-completed-signed: "填妥并签名的综合通用申请表 CGAF(表号 IRD01.QF.006 Rev.03;勾选“Failed to Stamp”,填写“原因说明”)."
+    passports-original-current-and-old: "护照原件(如曾更换护照,须同时携带新旧护照原件以供比对)."
+    personal-profile-and-contacts: "个人基本资料与联络方式(手机、座机、电子邮箱)与菲律宾现居住地址."
+    latest-related-travel-elements: "最近一次相关入境/出境信息(日期、航班号),与系统检索用的BIBS编号(如已知)."
+    signed-privacy-and-cert-statement: "申请人现场签署的数据隐私同意与真实性声明."
+  conditional:
+    travel-proof:
+      trigger: "窗口要求补充旅行凭证以佐证“原因说明”."
+      documents: ["登机牌","行程单/电子客票"]
+    identity-support-docs:
+      trigger: "用于未成年人监护关系或同一性确认时提供身份辅助文件."
+      documents: ["政府签发的带照片身份证件"]
+    lost-or-damaged-passport-evidence:
+      trigger: "如护照曾丢失或损毁,需出具相应证明."
+      documents: ["警方报案回执","领事更换证明"]
+    authorized-representative-pickup:
+      trigger: "如由授权代表代为领取."
+      documents: ["授权书原件","代理人与申请人身份证件复印件各一份"]
+    civil-status-corrections:
+      trigger: "涉及姓名差异、出生日期更正等民事状态事项时按窗口提示提交."
+      documents: ["与姓名差异或出生日期更正相关的民事状态证明"]
+process:
+  steps:
+    acceptance-and-initial-screening:
+      order: "1"
+      title: "受理与初审(Window 1,约3分钟)"
+      description: "递交CGAF与护照原件,窗口核对身份、旅行要素与表格完整性."
+    record-verification-and-endorsement:
+      order: "2"
+      title: "记录核查与转呈(Window 2,约25分钟)"
+      description: "检索是否存在不良记录,核实“系统已编码”事实,制作并签署转呈函报送IRD主办公室."
+    ird-main-office-approval:
+      order: "3"
+      title: "IRD主办公室审批(约3–5个工作日)"
+      description: "IRD复核系统记录与转呈材料,作出批准或退补/不予批准决定."
+    notification-and-passport-stamping:
+      order: "4"
+      title: "通知与回柜补章(约5分钟)"
+      description: "外站通知申请人携带有效身份证明回柜;经批准后在护照相应页面补盖出/入境章,并在护照上或系统中加注“无不良记录”戳记/批注(No Derogatory Record)."
+    filing-and-system-sync:
+      order: "5"
+      title: "案件归档与系统同步(约3分钟)"
+      description: "窗口完成系统更新、出具取件登记与文件发还记录."
+  variants: {}
+  notes: "上述时长为窗口作业参考时间;审批时长以IRD实际工作量为准,遇节假日或查核加严会顺延."
+pricing:
+  metadata:
+    last_verified: "2025"
+    source: "BASE_DOC"
+  items:
+    general-main:
+      label: "通用 · 主申请人"
+      details:
+        service-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 0"
+            value: 0
+          notes: "记录修复类,无额外收费."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        legal-penalties:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "法定罚金/附加费仅在IRD认定存在相关情形时收取,依通知为准."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+        receipt-invoice:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "统一至收银开票;妥善保存官方收据OR."
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "办理费为0;如有法定罚金或附加费以IRD书面通知为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+    ancillary-ird-required:
+      label: "通用证明/动议(仅在IRD要求时)"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "LRF 10;如选加急另收 Express 500;合计最高 1,010."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        travel-records-certificate:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "规则同上;仅在要求出具纸质旅行记录证明时适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        motion-for-reconsideration:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "LRF 10;Express 500(如适用);仅在被要求时适用."
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: ""
+          value: null
+        notes: "是否产生及合计费用以IRD实际要求与收银开票为准."
+        attr:
+          amount:
+            currency: "str"
+            value: "int|null"
+          notes: "str"
+deliverables:
+  description: "经批准后完成护照补盖出/入境章并同步更正系统记录,必要时加注“无不良记录”戳记;提供取件登记与文件发还记录."
+  items:
+    stamped-passport:
+      name: "护照补盖入/出境章"
+      usage: "用于确保护照纸本与移民系统记录一致."
+    system-record-updated:
+      name: "系统记录更正/同步"
+      usage: "消除入出境记录不一致,便于后续办理移民相关业务."
+    no-derogatory-stamp:
+      name: "“无不良记录”戳记/批注(如适用)"
+      usage: "表明已检索无不良记录,供窗口核验."
+kpis:
+  processing_time: "窗口受理与转呈约28分钟;IRD审批约3–5个工作日;取章约5分钟;总时长以IRD实际批复为准."
+risks:
+  items:
+    cannot-proceed-if-no-encoding: "若系统未能检索到对应编码,本服务无法办理."
+    possible-rejection-or-liability: "虚假陈述或伪造文件可能导致驳回,并可能引发行政或刑事责任."
+    passport-damage-may-require-replacement: "护照信息页破损、辨识度差,可能被要求先行更换或补充证明."
+    need-to-clear-derogatory-records-first: "存在不良记录或未结事项须先按指引完成处置方可补章."
+    approval-delay-due-to-holidays-or-tight-checks: "遇法定假日、系统维护或加严核查,审批周期将顺延."
+    potential-additional-fees-if-required: "如IRD认定涉及其他法定费用或证明,将按通知缴纳."
+    missed-notifications-may-delay-pickup: "未保持联系方式畅通,可能影响通知接收与取件进度."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: "同一性核验基础字段."
+    first-name:
+      label: "名字(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "MING"
+      notes: ""
+    middle-name:
+      label: "中间名(与护照一致,如无留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "01 JAN 1990"
+      notes: "建议格式:DD-MMM-YYYY."
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Chinese"
+      notes: "用于与系统记录比对."
+    passport-number-current:
+      label: "护照号码(新)"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: "当前有效证件号."
+    passport-number-previous:
+      label: "护照号码(旧)"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: "P7654321"
+      notes: "如曾更换护照."
+    address-line1:
+      label: "现居住地址(地址行1)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "123 Makati Ave"
+      notes: "用于联系与文书送达."
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-country:
+      label: "国家/地区"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    phone-landline:
+      label: "座机号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "+63 2 81234567"
+      notes: ""
+    phone-mobile:
+      label: "手机号码"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 9123456789"
+      notes: "保持畅通以接收审批与取件通知."
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "true"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: ""
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "仅在窗口提示为核对同一性时收集."
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-date-of-birth:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女性氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "仅在窗口提示为核对同一性时收集."
+    child-first-name:
+      label: "子女名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-middle-name:
+      label: "子女中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-date-of-birth:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents: {}
+  employment:
+    employer-name:
+      label: "雇主/单位名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "在职外籍人士可选提供,便于必要时联络核实."
+    employer-address-line1:
+      label: "雇主地址(地址行1)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-contact-person:
+      label: "雇主联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    application-type:
+      label: "申请类型勾选"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "未盖章(Failed to Stamp)"
+      notes: "可选:未盖章(Failed to Stamp)/ 未编码 / 未验放."
+    reason-explanation:
+      label: "原因/说明"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "对未盖章原因的简要陈述."
+    authorized-representative-name:
+      label: "授权代表姓名(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "仅限领取阶段可由授权代表代领."
+    authorization-letter-number:
+      label: "授权书编号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    authorization-letter-date:
+      label: "授权书日期(如适用)"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    representative-id-number:
+      label: "代理人身份证件号码(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  arrival_info:
+    admission-status:
+      label: "入境时准入类别/准入状态(Status of Admission)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于记录匹配."
+  travel_history:
+    last-related-travel-date:
+      label: "最近一次相关入/出境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2024-06-15"
+      notes: "用于与系统编码比对."
+    flight-number:
+      label: "航班号"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "PR123"
+      notes: "与航空数据核对."
+    bibs-number:
+      label: "BIBS编号(如已知)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "系统检索字段."
+  compliance:
+    data-privacy-consent:
+      label: "数据隐私同意"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "依菲律宾数据隐私法完成授权."
+    certification-declaration-signed:
+      label: "真实性声明与签名"
+      type: "boolean"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "true"
+      notes: "由申请人或获授权代表签署."
+  additional_details: {}
+acknowledgement_flags:
+  data_privacy_consent: "申请人需依据菲律宾数据隐私法在CGAF等表单上签署数据隐私同意."
+  certification_statement: "申请人须签署真实性声明/宣誓,必要时提供拇指印或签名以确认所填资料真实完整."
+faq:
+  qas:
+    processing-time:
+      question: "整个流程需要多长时间?"
+      answer: "窗口受理与转呈约28分钟,IRD审批约3–5个工作日,取章约5分钟;总时长以IRD实际批复为准,请预留时间."
+    can-always-stamp:
+      question: "未盖章一定能补章吗?"
+      answer: "前提是系统存在与您相符的编码记录,并且经IRD批准.若无编码或资料矛盾,将无法办理."
+    affect-travel-or-other-services:
+      question: "提交后还能否出境或办理其他业务?"
+      answer: "原则上不影响其他合法行程;但如相关业务对记录一致性有硬性要求,建议待补章完成后再行办理,以免窗口疑义."
+    expedited-available:
+      question: "可以加急吗?"
+      answer: "窗口作业可当场完成,审批由IRD统一处理,无单独加急通道;请依通知时间回柜."
+    authorize-representative:
+      question: "能否委托他人代办?"
+      answer: "受理与签署须本人;仅限领取阶段可由授权代表代领,需提交授权书及双方身份证件."
+    lost-or-new-passport:
+      question: "如果护照遗失或已更新怎么办?"
+      answer: "请携带新护照及可提供的旧护照信息或更换证明,并按窗口提示补充旅行凭证以协助核对."
+    fees-or-penalties:
+      question: "是否会收取费用或罚款?"
+      answer: "补章本身不收费;如IRD认定涉及其他法定费用(如要求出具证明或处理相关事项),将按通知在收银处缴纳."
+disclaimers:
+  items:
+    must-appear-in-person: "申请人须亲自到场提交与签署;未经批准不得先行在护照上盖章或做任何标注."
+    truthful-complete-information: "表格信息须真实、完整、一致;任何虚假陈述或伪造文件均可能导致驳回,并可能引发行政或刑事责任."
+    keep-passport-intact: "护照应保持完好有效;如信息页破损、辨识度差,可能被要求先行更换或补充证明."
+    service-unavailable-if-no-encoding: "若系统未能检索到对应编码,本服务无法办理;请准备可支持检索的旅行要素(日期、航班号等)."
+    clear-derogatory-records-first: "如存在不良记录或未结事项,须先依指引完成处置;外站与IRD可在护照上或系统中加注“无不良记录”戳记后方可补章."
+    keep-contact-open: "保持手机/邮箱畅通,及时查收审批与取件通知;逾期不取可能导致案件归档延后."
+    pickup-by-representative-only: "代领仅限取件阶段且须提交有效授权文件与双方身份证件复印件;受理与签署阶段仍需申请人本人."
+    timeline-reference-only: "窗口标注的时长为参考值;遇法定假日、系统维护或加严核查,审批周期将顺延."
+    keep-official-receipts: "妥善保管官方收据与通知,以备后续签证延期、出境许可等业务查验引用."
+service_related:
+  links: {}

@@ -1,0 +1,683 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["BI Clearance Certificate", "无案证明", "移民局无案证明"]
+department: "BureauOfImmigration"
+name: "BI Clearance Certificate(移民局无案证明)"
+slug: "bi-clearance-certificate"
+type: "reference"
+semantic_profile:
+  intent_id: "bi-clearance-certificate"
+  category: "immigration-certification"
+  tags: ["BI", "CCS", "clearance", "certificate", "Philippines"]
+service_overview: "由移民局认证与核查科(Certification and Clearance Section, CCS)签发,用于确认申请人在移民局系统中是否存在未结的不良或限制性记录(如拘留、出境限制等).可本人或授权代表申请,缴费后一般三个工作日内出具纸质正本,常用于签证办理、就业合规、投资尽调、司法或旅行等背景核验."
+applicability:
+  items:
+    visa-and-immigration-procedures: "外籍人士在办理签证转换、展延、出境许可或其他移民手续前,需提交无不良记录证明."
+    background-checks-for-citizens-and-residents: "菲律宾公民或在菲长期居住的外籍人士办理投资、就业、法院或政府背景审查时需要."
+    corporate-compliance-for-foreign-hires: "企业为拟聘外籍人员进行合规审查,要求候选人提供BI无案证明."
+    same-name-hit-or-warning-clarification: "因姓名相同命中,需先取得“非同一人证明”或解除相关警示后,再附BI Clearance说明状态."
+    overseas-applicant-through-authorized-representative: "申请人身在海外无法亲办,委托家属/代理人持合规授权文件在菲办理."
+preconditions:
+  required:
+    complete-application-form: "正确填写《BI Clearance Certificate 申请表》(BI FORM 2014-13-002 Rev 0),使用黑色墨水,不得留空,不适用填“N/A”."
+    passport-or-gov-id-copy: "提交护照资料页复印件;如为菲律宾公民或确无护照,可提交有效政府签发身份证复印件."
+    authorization-when-represented: "授权代办须每位申请人提供单独原件SPA或提交BI代理认证ID复印件,并附代理人有效政府身份证件复印件."
+    address-and-contact-consistency: "提供在菲住址与可联络电话,确保与表单信息一致."
+    personal-data-consistency: "姓名、出生日期、出生地、国籍等个人信息应与护照/身份证一致."
+  not_eligible:
+    incomplete-or-improper-form: "申请表填写不完整、未使用黑色墨水、未按要求填写“N/A”的."
+    noncompliant-authorization: "授权文件不合规(未按人逐一授权、非原件、境外出具未经使领馆认证或未加注Apostille)的."
+    invalid-or-unreadable-id: "身份证件过期或影印不清、无法辨识的."
+    conflicting-identity-info: "基本身份信息存在明显矛盾且未能提供有效支持性文件的."
+    with-outstanding-hold-or-alert: "系统显示有出境禁令、警示或限制(如HDO、WLO、BLO、LBO、ALO等)且未先行办理NTSP或解除/澄清程序的."
+pre_required_documents:
+  mandatory:
+    application-form: "BI Clearance Certificate 申请表(BI FORM 2014-13-002 Rev 0)."
+    passport-or-gov-id: "护照资料页复印件;如无护照,提交有效政府签发身份证件复印件."
+    address-and-contact: "在菲律宾的住址与联系电话(座机与手机,须与表单一致)."
+    purpose-statement: "申请用途说明(在表单“Purpose”栏如实填写)."
+  conditional:
+    authorized-representation:
+      trigger: "授权代办"
+      documents: ["每名申请人的原件SPA(境外出具须经菲律宾驻外使领馆认证或加注Apostille)", "代理人有效政府身份证件复印件", "BI Accreditation ID Certificate复印件(如适用)"]
+    name-or-birthdata-discrepancy:
+      trigger: "姓名/出生资料存在差异"
+      documents: ["出生证明", "更名证明", "法院命令等支持性文件"]
+    system-hit-or-adverse-record:
+      trigger: "系统命中同名或不良记录"
+      documents: ["非同一人证明(NTSP)相关材料", "解除/澄清程序的证明材料"]
+process:
+  steps:
+    submission-and-intake:
+      order: "1"
+      title: "递件与受理(CCS窗口)"
+      description: "在CCS受理窗口(例如Window 23,以现场标识为准)提交申请表与附件,初检无误后发放受理凭证.预计5分钟."
+    system-check-and-disposition:
+      order: "2"
+      title: "系统核查与处置"
+      description: "CCS在BIIS核查是否存在不良/限制性记录;如命中,通知先行办理NTSP或相关解除程序,并可能要求补充材料.核查约1小时;命中说明与补件通知约10分钟."
+    payment-and-claim-stub:
+      order: "3"
+      title: "缴费与领条"
+      description: "核查通过后出具缴费单(OPS),前往现金窗口缴费并领取官方收据(OR);柜台同步发放领证凭条.缴费约10分钟,领条约3分钟."
+    certificate-production-and-release:
+      order: "4"
+      title: "制证与发放"
+      description: "CCS在三个工作日内完成证书制作、签章与封缮;申请人或授权人凭领证凭条按预约日期到窗口领取正本.制证约3个工作日,领取约5分钟."
+    overdue-unclaimed-handling:
+      order: "5"
+      title: "逾期未领处理"
+      description: "证书自签发日起超过30日未领取将自动取消,需重新申请并缴费."
+  variants: {}
+  notes: ""
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    all-regular:
+      label: "常规办理"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具BI Clearance Certificate的基本费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证类标准LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 510"
+          value: 510
+        notes: "不含加急"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+    all-express:
+      label: "加急办理"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "出具BI Clearance Certificate的基本费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10"
+            value: 10
+          notes: "认证类标准LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500"
+            value: 500
+          notes: "选择加急或认证加急时收取"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+      total:
+        amount:
+          currency: "PHP"
+          display: "PHP 1,010"
+          value: 1010
+        notes: "含证书费、LRF与Express"
+        attr:
+          amount:
+            currency: "str"
+            value: "int"
+          notes: "str"
+deliverables:
+  description: "出具纸质正本;受理阶段提供领证凭条用于领取."
+  items:
+    bi-clearance-certificate:
+      name: "BI Clearance Certificate 正本"
+      usage: "用于证明申请人在移民局无不良或限制性记录,可用于签证申请、就业审查、投资尽调、司法或旅行等."
+    claim-stub:
+      name: "领证凭条(Claim Stub)"
+      usage: "领取证书时必须出示,用于核对并发放正本."
+kpis:
+  processing_time: "常规制证约3个工作日;系统命中或需办理NTSP/解除程序将延长."
+risks:
+  items:
+    hit-or-watchlist-delay: "系统命中同名或不良记录需先办理NTSP或解除/澄清程序,整体时长延长."
+    invalid-authorization-rejection: "授权文件不合规(未逐一授权、非原件、未认证/Apostille)将导致拒收."
+    expired-or-unreadable-id: "身份证件过期或影印不清可能被拒绝受理."
+    identity-mismatch: "姓名、出生信息与证件不一致,可能导致系统命中或延误."
+    late-pickup-cancellation: "证书自签发30日未领取将自动取消,需重新申请与缴费."
+    false-information-liability: "提供虚假材料或隐瞒重大信息可能导致拒办并承担行政或刑事责任."
+    operational-or-holiday-delay: "节假日、系统维护或窗口作业量可能导致办理时效顺延."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓氏"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: "与护照或身份证一致"
+    first-name:
+      label: "名字"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: "与护照或身份证一致"
+    middle-name:
+      label: "中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "LI"
+      notes: "如无可留空或填N/A"
+    alias-names:
+      label: "别名/曾用名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如有请提供"
+    birthdate:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "01 JAN 1990"
+      notes: "建议按DD-MMM-YYYY填写"
+    gender:
+      label: "性别"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Male"
+      notes: "与证件一致"
+    birth-place-city:
+      label: "出生城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-place-country:
+      label: "出生国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍/公民身份"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Chinese"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: "P1234567"
+      notes: "如无护照,可提供政府签发身份证号"
+    government-id-number:
+      label: "政府签发身份证号(如适用)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-line1:
+      label: "居住地址(门牌/街道/村)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "在菲律宾住所"
+    address-barangay:
+      label: "Barangay"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "城市/市(City/Municipality)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省(Province)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "1200"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    phone-landline:
+      label: "联系电话(座机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 2 8123 4567"
+      notes: ""
+    phone-mobile:
+      label: "联系电话(手机)"
+      type: "string"
+      required: "true"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 123 4567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "applicant@example.com"
+      notes: "用于联系与通知"
+    purpose:
+      label: "申请用途(Purpose)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Visa application / Employment background check / Judicial use"
+      notes: "与表单填写一致"
+  spouse:
+    spouse-last-name:
+      label: "配偶姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-first-name:
+      label: "配偶名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-middle-name:
+      label: "配偶中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-birthdate:
+      label: "配偶出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-passport-number:
+      label: "配偶护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-last-name:
+      label: "子女姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如同批办理"
+    child-first-name:
+      label: "子女名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如同批办理"
+    child-middle-name:
+      label: "子女中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如同批办理"
+    child-birthdate:
+      label: "子女出生日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如同批办理"
+    child-passport-number:
+      label: "子女护照号"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: "如同批办理"
+  dependents: {}
+  employment:
+    employer-name:
+      label: "公司名称"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如申请用途与就业合规相关"
+    employer-address-line1:
+      label: "公司地址(门牌/街道)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-city:
+      label: "公司所在城市"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-province:
+      label: "公司省/州"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-postal-code:
+      label: "公司邮编"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    employer-address-country:
+      label: "公司国家"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Philippines"
+      notes: ""
+    hr-contact-name:
+      label: "人事/合规联系人姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    hr-contact-phone:
+      label: "联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 2 8123 4567"
+      notes: ""
+    tax-id-number:
+      label: "税号或注册信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "可选"
+    purpose-description:
+      label: "用途说明(就业/入职背景审查等)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization:
+    representative-last-name:
+      label: "代表姓氏"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如代办"
+    representative-first-name:
+      label: "代表名字"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如代办"
+    representative-middle-name:
+      label: "代表中间名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如代办"
+    relationship-to-applicant:
+      label: "与申请人关系"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Spouse / Agent"
+      notes: ""
+    representative-id-type:
+      label: "代表身份证件类型"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Driver's License"
+      notes: ""
+    representative-id-number:
+      label: "代表身份证件号码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    bi-accreditation-id-number:
+      label: "BI代理人认证ID编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如为BI认可代理"
+    spa-issue-date:
+      label: "SPA出具日期"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spa-legalization:
+      label: "SPA认证/Apostille情况"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Apostille"
+      notes: "境外出具须经菲驻外使领馆认证或加注Apostille"
+    applicants-covered-by-spa:
+      label: "SPA适用申请人名单"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Applicant A; Applicant B"
+      notes: "列出被授权的申请人"
+    representative-phone-mobile:
+      label: "代表联系电话(手机)"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+63 917 123 4567"
+      notes: ""
+    representative-email:
+      label: "代表电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "agent@example.com"
+      notes: ""
+  arrival_info: {}
+  travel_history: {}
+  compliance: {}
+  additional_details:
+    expedite-request:
+      label: "是否需要加急(Express)"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: true
+      notes: ""
+    intended-use-date:
+      label: "预计使用日期/截止期限"
+      type: "date"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    pickup-by:
+      label: "领证方式(本人/授权代表)"
+      type: "enum"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "authorized-representative"
+      notes: ""
+    number-of-copies:
+      label: "份数需求"
+      type: "integer"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: 1
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: ""
+faq:
+  qas:
+    processing-time:
+      question: "办理需要多长时间?"
+      answer: "常规情况下,缴费后约3个工作日可出证;如系统命中或需先办理NTSP/解除程序,整体时长将延长."
+    overseas-application:
+      question: "人在海外能否办理?"
+      answer: "可以.须委托授权代表在菲律宾办理,并提交每位申请人的原件SPA(境外出具须认证或Apostille)及代表有效身份证件."
+    without-passport:
+      question: "没有护照能否申请?"
+      answer: "优先提交护照资料页复印件;如确无护照,可提交有效政府签发身份证件复印件,由窗口现场判定是否可受理."
+    same-name-hit:
+      question: "出现同名命中怎么办?"
+      answer: "CCS会要求先办理“非同一人证明”(NTSP)或提供支持性文件予以澄清,经核验无误后方能签发BI Clearance."
+    certificate-validity:
+      question: "证书有效期是多久?"
+      answer: "移民局未设统一法定有效期,实际使用机构通常要求近期开具的证明.建议按提交截止时间就近申请.注意证书签发后30日未领取将自动取消."
+    pickup-by-representative:
+      question: "可由他人代为领取吗?"
+      answer: "可以.领取时须出示领证凭条(Claim Stub);若为授权代表领取,还须出示原件SPA与有效身份证件."
+    online-application-or-payment:
+      question: "可以线上缴费或线上申请吗?"
+      answer: "目前以线下窗口受理与缴费为主,具体以CCS与现场公告为准."
+disclaimers:
+  items:
+    on-site-governs: "窗口编号、办理时长及具体要求以CCS现场标识与公告为准."
+    currency-conversion: "如涉及USD计价项目,按菲律宾央行(BSP)当日汇率折算."
+    pricing-version-note: "费用口径与金额以2025版为准;若有调整以官方收据(OR)或现场为准."
+service_related:
+  links: {}

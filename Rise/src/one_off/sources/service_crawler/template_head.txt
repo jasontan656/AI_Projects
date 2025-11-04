@@ -1,0 +1,200 @@
+version: "示例占位{1.0.0}"
+updated_at: "示例占位{2025-10-23}"
+default_language: "示例占位{zh-CN}"
+
+aliases:
+  - "示例占位{Visa Downgrade Combined Guide}"
+  - "示例占位{降签流程}"
+department: "示例占位{BureauOfImmigration}"
+name: "示例占位{Downgrade & Status Change Guide}"
+slug: "Downgrade"
+type: "示例占位{reference}"
+
+semantic_profile:
+  intent_id: "示例占位{visa.downgrade.combined}"
+  category: "示例占位{PROCESSING_REQUIREMENT}"
+  tags:
+    - "示例占位{9G降签}"
+    - "示例占位{旅游身份转换}"
+    - "示例占位{I-Card注销}"
+
+pre_required_documents:  # 描述办理前客户必须准备的材料；区分必备与条件性材料
+  mandatory:
+    - "示例占位{护照原件及复印件（数量依 BI/DOJ 要求）}"
+    - "示例占位{有效的 9G Order 批文、AEP/ACR 取消证明或雇主函（如适用）}"
+    - "示例占位{I-Card 实体或正反面复印件，含最近入境记录}"
+    - "示例占位{授权书或 SPA（委托代表递交时）}"
+    - "示例占位{历史签证、入境、延期记录证明}"
+    - "示例占位{所有提交资料须为官方正本或经认证副本，并如实披露全部移民历史}"
+  conditional:
+    - trigger: "示例占位{I-Card 遗失}"
+      documents:
+        - "示例占位{I-Card 序列号、遗失声明或警局报告}"
+        - "示例占位{历史收据与最近入境记录}"
+    - trigger: "示例占位{雇主驱动降签（47a2 等）}"
+      documents:
+        - "示例占位{雇主正式函件}"
+        - "示例占位{DOJ/PEZA 批准文件}"
+
+deliverables:  # 描述流程完成后交付给客户的产出，用于与其它业务建立关联
+  description: >
+    示例占位{梳理办理完成后客户可获得的官方文件或确认，如收据、批示、证件注销证明等；
+    这些产出可作为其它业务的前置材料或核验凭证。}
+  items:
+    - id: "示例占位{bi_receipt}"
+      name: "示例占位{BI/DOJ/PEZA 提交收据与批示}"
+      usage: "示例占位{证明降签申请已正式递交并受理，可用于后续业务核验}"
+    - id: "示例占位{tourist_stamp}"
+      name: "示例占位{旅游入境章或最新身份批示}"
+      usage: "示例占位{确认身份已转换，可作为延签或离境准备的依据}"
+    - id: "示例占位{icard_cancellation_notice}"
+      name: "示例占位{I-Card 注销证明或交接记录}"
+      usage: "示例占位{证明旧工作签证证件已注销，便于后续签证办理或离境}"
+    - id: "示例占位{downgrade_archive}"
+      name: "示例占位{降签相关官方函件与归档资料}"
+      usage: "示例占位{保留备查，用于客户或其它部门确认办理记录}"
+
+service_overview: "示例占位{本指引整合 9G 转旅游、I-Card 注销、2 类旅游降签、47a2 雇主驱动降签及无卡注销等流程，提供统一的操作步骤、材料准备、时效预估与风险提示，保障身份转换期间维持合法停留。}"
+
+applicability:
+  - "示例占位{9G 工签到期或雇佣结束准备转入旅游身份或离境}"
+  - "示例占位{需注销 9G I-Card、补交降签Order 批文或获取 AEP/ACR 取消证明}"
+  - "示例占位{计划执行 2 类旅游降签或 47a2 降签并获取新的旅游入境记录}"
+  - "示例占位{I-Card 遗失或无法提供时需办理无卡注销}"
+  - "示例占位{需通过菲律宾移民局正式渠道办理身份变更的申请人}"
+
+preconditions:
+  required:
+    - "示例占位{申请人或授权代表需在菲律宾配合提交与取件；代理递交须提供原件 SPA}"
+    - "示例占位{护照、I-Card、Order 批文/收据信息需可验证且完整}"
+    - "示例占位{若存在黑名单、驱逐令或未结罚金，须先完成法律补救}"
+    - "示例占位{47a2 及部分 9G 降签需雇主配合提供正式函件或 DOJ/PEZA 文件}"
+    - "示例占位{仅可通过移民局正式渠道办理，禁止任何非官方途径}"
+  not_eligible:
+    - "示例占位{持有效移除令或在制裁名单内}"
+    - "示例占位{存在未解决的黑名单记录或罚金}"
+
+process:
+  steps:
+    - order: "示例占位{1}"
+      title: "示例占位{受理与评估}"
+      description: "示例占位{核查护照、Order 批文、风险点，评估是否满足官方条件并确认可行路线；如材料不足，引导补齐。}"
+    - order: "示例占位{2}"
+      title: "示例占位{文件准备}"
+      description: "示例占位{制作降签信，补齐 9G Order 批文/取消证明，准备 I-Card 交接或无卡注销材料；标记特殊触发条件。}"
+    - order: "示例占位{3}"
+      title: "示例占位{官方提交}"
+      description: "示例占位{向 BI/DOJ/PEZA 正式递交材料，确认受理窗口、支付费用并获取受理凭证。}"
+    - order: "示例占位{4}"
+      title: "示例占位{跟进处理}"
+      description: "示例占位{跟踪官方处理进度，按要求补件或回应查询；同步客户等待周期。}"
+    - order: "示例占位{5}"
+      title: "示例占位{结果交付与归档}"
+      description: "示例占位{回收护照与批示，发放旅游入境章/I-Card 注销证明，并完成档案归档。}"
+  variants:
+    - id: "示例占位{no_card_route}"
+      name: "示例占位{无卡注销子流程}"
+      trigger: "示例占位{I-Card 遗失或无法提供}"
+      description: "示例占位{准备替代证据包向 BI 申请无卡注销，处理期 3–4 周。}"
+      extra_requirements:
+        - "示例占位{历史收据与出入境记录}"
+        - "示例占位{遗失声明或警局报告（如有）}"
+    - id: "示例占位{47a2_route}"
+      name: "示例占位{47a2 降签}"
+      trigger: "示例占位{持有 47a2 签证需注销并转换身份}"
+      description: "示例占位{需雇主及 DOJ/PEZA 正式函件配合，整体周期较长。}"
+
+kpis:
+  processing_time:
+    standard_9g_downgrade: "示例占位{约 1–2 周}"
+    icard_cancellation: "示例占位{约 7 个工作日}"
+    no_card_route: "示例占位{约 3–4 周，视证据审查而定}"
+    other_variants: "示例占位{2 类旅游/47a2 降签视案件复杂度}"
+
+risks:
+  - "示例占位{未完整披露历史记录可能导致降签失败或强制离境（OTL）}"
+  - "示例占位{I-Card 未按要求上交可能引发罚金或调查}"
+  - "示例占位{缺失 9G Order 批文或 AEP 取消证明会拖延处理，应提前调取}"
+  - "示例占位{无卡注销需 BI 接受替代证据，审批时间不确定}"
+  - "示例占位{任何非官方渠道或不实材料均存在法律风险}"
+
+info_collection:
+  applicant_identity:
+    - last_name: "{last_name}"
+      desc: "{英文姓氏（与护照一致）}"
+      optional: false
+    - first_given_name: "{first_given_name}"
+      desc: "{英文名字（Given Name）}"
+      optional: false
+    - middle_name: "{middle_name}"
+      desc: "{中间名/如无请注明 N/A}"
+      optional: true
+    - date_of_birth: "{date_of_birth}"
+      desc: "{出生日期（DD-MMM-YYYY）}"
+      optional: false
+    - citizenship: "{citizenship}"
+      desc: "{国籍/公民身份}"
+      optional: false
+  contact_details:
+    - passport_number_old: "{passport_number_old}"
+      desc: "{护照号码（旧护照，如适用）}"
+      optional: true
+    - passport_number_new: "{passport_number_new}"
+      desc: "{护照号码（现用新护照）}"
+      optional: false
+    - landline: "{landline}"
+      desc: "{菲律宾联络电话（座机，如有）}"
+      optional: true
+    - mobile: "{mobile}"
+      desc: "{菲律宾联络电话（手机）}"
+      optional: false
+    - email_address: "{email_address}"
+      desc: "{常用电子邮箱}"
+      optional: false
+    - residential_address_ph: "{residential_address_ph}"
+      desc: "{在菲住址（完整地址）}"
+      optional: false
+  travel_history:
+    - latest_date_of_arrival: "{latest_date_of_arrival}"
+      desc: "{最近一次抵达菲律宾日期（DD-MMM-YYYY）}"
+      optional: false
+    - flight_number: "{flight_number}"
+      desc: "{入境航班号}"
+      optional: true
+    - bibs_number: "{bibs_number}"
+      desc: "{BIBS No.（如有）}"
+      optional: true
+    - status_of_admission: "{status_of_admission}"
+      desc: "{当前入境状态（例如 9G、旅游签等）}"
+      optional: false
+  application_details:
+    - application_type: "{application_type}"
+      desc: "{申请勾选类型（Transfer / Amendment / Failed to Check / Failed to Encode / Failed to Stamp）}"
+      optional: false
+    - reason_explanation: "{reason_explanation}"
+      desc: "{申请原因说明}"
+      optional: true
+    - authorized_representative: "{authorized_representative}"
+      desc: "{授权代表姓名/职务（如适用）}"
+      optional: true
+    - signature_date: "{signature_date}"
+      desc: "{签名日期（DD-MMM-YYYY）}"
+      optional: false
+  supplementary_info:
+    - icard_status: "{icard_status}"
+      desc: "{I-Card 是否在手？若遗失请说明。}"
+      optional: true
+    - employment_status: "{employment_status}"
+      desc: "{当前与原雇主的关系（仍在职/已离职+日期）}"
+      optional: true
+    - planned_departure: "{planned_departure}"
+      desc: "{预计离境时间或新的行程安排（如有）}"
+      optional: true
+acknowledgement_flags:
+  data_privacy_consent: "{确认已阅读并同意 Data Privacy Consent（Yes/No）}"
+  certification_statement: "{确认信息真实完整并了解虚假申报后果（Yes/No）}"
+
+faq:
+  - question: "示例占位{常规降签需要多久？}"
+    answer: "示例占位{常规 9G 降签约 1–2 周，I-Card 注销约 7 个工作日，无卡注销需 3–4 周。}"
+  - question: "示例占位{没有 9G Order 可以办理吗？}"

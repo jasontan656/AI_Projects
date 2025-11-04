@@ -1,0 +1,749 @@
+version: ""
+updated_at: ""
+default_language: "zh-CN"
+aliases: ["Revalidation", "复核"]
+department: "BureauOfImmigration"
+name: "Revalidation(复核)"
+slug: "revalidation"
+type: "reference"
+semantic_profile:
+  intent_id: "visa-revalidation"
+  category: "immigration-processing"
+  tags: ["revalidation", "makati-extension-office", "bi-clearance"]
+service_overview: "Revalidation(复核)适用于签证已获核准但申请人当时不在菲律宾境内的外籍人士.申请人在重新入境菲律宾后,需前往马卡蒂移民局延签办公室办理复核,以落实既有签证的实际效力,并在护照上完成签注与最新入出境记录的更新.该服务确保签证核准与申请人当前入境身份、护照记录相一致,避免因记录不一致导致后续延伸服务受阻,是签证生效与合规留停的关键环节."
+applicability:
+  items:
+    approved-abroad-now-in-ph: "在境外期间获批的移民/非移民签证,申请人现已重新入境菲律宾,需要在菲律宾境内生效该签证."
+    entered-as-tourist-need-endorsement: "申请人入境时仍持旅游或临时停留资格,需将此前已核准的长签/转换核准落实到护照."
+    9g-13a-trv-approved-not-stickered: "9G 就业签证、13(a) 婚姻类移民签证、TRV 临时居留签证等已核准但尚未实际贴签的案件."
+    approved-due-to-medical-business-official: "因医疗、商务、公务等原因在境外获批签证且未能即时在护照贴签,需要返菲后补办复核."
+    name-hit-or-clearance-needed: "记录存在同名提示或需无不良纪录证明时,通过复核流程统一完成比对与签注."
+preconditions:
+  required:
+    apply-within-15-days: "申请人在重新入境后15日内提出复核申请;超过时限需提交经宣誓的说明书(Affidavit of Explanation)."
+    entry-status-valid-on-approval-date: "入境时所持旅游或临时停留资格在签证核准当日应处于有效状态;如已失效,须先行办理延签."
+    passport-original-and-copies: "需提供护照原件供扫描与签注,且提交资料页与最近一次入出境章的清晰复印件."
+    departure-reason-proof: "离境原因与时点须有相应佐证(如医疗证明、机票、商务邀请等)."
+    resolve-alerts-before-proceed: "如系统存在移民警示或不良纪录提示,须先完成异议澄清或证明“非同一人”后方可继续."
+  not_eligible:
+    mismatch-or-no-legal-status: "申请人与核准签证主文不一致或缺乏合法入境/停留身份."
+    no-passport-original-or-unreadable-copies: "无法提供护照原件,或复印件无法辨识关键要素(人像、资料页、最新出入境章)."
+    unreasonable-late-application: "无法合理解释逾期超过15日且无支持性证据."
+    forgery-or-unsettled-fines: "涉嫌伪造、篡改文件或存在未结清的移民罚款/案件."
+    non-designated-office-filing: "试图在非指定窗口/非授权办事处递件(复核仅限马卡蒂延签办公室受理)."
+pre_required_documents:
+  mandatory:
+    cover-letter-to-commissioner: "致移民局署长的说明函1份(阐述在境外核准、返菲时间、复核请求与必要事实)."
+    revalidation-application-form: "复核申请表1份(现场领取填写,由窗口提供并在清单上签注)."
+    passport-original-and-copies: "护照原件(现场核验与扫描)及复印件各1份(资料页、最新出入境章页)."
+    evidence-of-departure-and-return: "支持离境/返菲时间与事由的证据复印件(如医疗证明、机票/登机牌、商务邀请或公司函件等)."
+    name-hit-or-clearance-docs: "无不良纪录/同名比对所需文件(视窗口要求,可能在说明函上加盖相应戳记)."
+  conditional:
+    late-application-over-15-days:
+      trigger: "逾期申办(超过入境后15日)"
+      documents: ["经宣誓的说明书(Affidavit of Explanation)1份", "逾期原因佐证材料"]
+    company-or-work-visa-9g:
+      trigger: "公司/工作类签证(如9G)"
+      documents: ["雇主支持文件", "公司函件", "职位说明", "与AEP一致性说明(如被要求)"]
+    dependents-or-family:
+      trigger: "家属/眷属随案"
+      documents: ["婚姻证明复印件", "出生证明复印件", "依亲关系证明及认证件"]
+    system-alert-or-name-hit:
+      trigger: "系统警示/同名提示"
+      documents: ["非同一人证明(NTSP)", "相关认证资料(按窗口指引)"]
+    passport-changed-or-number-updated:
+      trigger: "护照更新或号码变更"
+      documents: ["旧护照信息页复印件", "新护照信息页复印件", "关联说明"]
+process:
+  steps:
+    step-1-initial-checklist-notation:
+      order: "1"
+      title: "初审与清单签注(柜台1,约5分钟/件)"
+      description: "提交护照原件与完整资料包;窗口核对并在清单上签注受理."
+    step-2-record-check-and-alert-verification:
+      order: "2"
+      title: "纪录比对与警示核查(柜台4,约10分钟)"
+      description: "与系统不良纪录/同名线索比对;必要时在说明函上加注“无不良纪录”戳记或开具指引."
+    step-3-billing-and-scanning:
+      order: "3"
+      title: "开单与文件扫描(柜台2,约5分钟)"
+      description: "领取缴费单(OPS)及无案证明/清关文件(BICC)相关单据;护照信息扫描备案."
+    step-4-payment-and-or-receipt:
+      order: "4"
+      title: "缴费与取收据(柜台6,约5分钟)"
+      description: "持OPS至收银缴费,获取官方收据(OR)."
+    step-5-internal-review-and-approval:
+      order: "5"
+      title: "内部复核与批示(内部流转,约2–3个工作日)"
+      description: "由业务人员编制作业与核准指令,提交主管官员复核,经联络人员转呈总署秘书处裁示."
+    step-6-passport-endorsement-and-release:
+      order: "6"
+      title: "护照加注与取件(现场6–10分钟)"
+      description: "按通知提交护照正本,完成签证复核签注与记录更新;领取加签完成的护照、核准指令副本及BICC等随附文件."
+  variants: {}
+  notes: "全程以现场排队为准,实际时长受当日受理量与个案复杂度影响.建议预留充足时间并保持通讯畅通以接收取件通知."
+pricing:
+  metadata:
+    last_verified: ""
+    source: ""
+  items:
+    13a-probationary:
+      label: "13(a) 婚姻类(试用期) · 主申请人"
+      details:
+        revalidation-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,020"
+            value: 2020
+          notes: "2025版口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    13ag-trv:
+      label: "13(a)(g) 或 TRV 临时居留 · 主申请人"
+      details:
+        revalidation-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 3,020"
+            value: 3020
+          notes: "2025版口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    9g-main:
+      label: "9G 就业签证 · 主申请人"
+      details:
+        revalidation-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 4,020"
+            value: 4020
+          notes: "2025版口径"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    9g-dependent:
+      label: "9G 就业签证 · 眷属"
+      details:
+        revalidation-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 2,020"
+            value: 2020
+          notes: "2025版口径(<16/<14 分档以OPS为准)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    certification-bicc:
+      label: "认证/无案证明(BICC/通用认证)"
+      details:
+        certification-fee:
+          amount:
+            currency: "PHP"
+            display: "PHP 1,010"
+            value: 1010
+          notes: "由认证费 PHP 500 + LRF PHP 10 + 快通 PHP 500 组成,按需收取"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    visa-sticker:
+      label: "签证贴纸费"
+      details:
+        visa-sticker:
+          amount:
+            currency: "PHP"
+            display: "PHP 100"
+            value: 100
+          notes: "统一签证贴纸费用"
+          attr:
+            amount:
+              currency: "str"
+              value: "int"
+            notes: "str"
+    fast-lane:
+      label: "快速通道费(认证/递件)"
+      details:
+        express-lane:
+          amount:
+            currency: "PHP"
+            display: "PHP 500 或 PHP 1,500"
+            value: null
+            tiers:
+              - value: 500
+                condition: "常规加急/递件"
+              - value: 1500
+                condition: "个别整包场景(以OPS为准)"
+          notes: "以OPS为准"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+    lrf:
+      label: "法律检索费(LRF)"
+      details:
+        lrf:
+          amount:
+            currency: "PHP"
+            display: "PHP 10/20/30/50"
+            value: null
+            tiers:
+              - value: 10
+                condition: "每项费用计LRF;以OPS/OR为准"
+              - value: 20
+                condition: "每项费用计LRF;以OPS/OR为准"
+              - value: 30
+                condition: "每项费用计LRF;以OPS/OR为准"
+              - value: 50
+                condition: "每项费用计LRF;以OPS/OR为准"
+          notes: "原则上除头税与罚款外,每项费用计LRF"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+              tiers:
+                value: "int"
+                condition: "str"
+            notes: "str"
+    conversion-inclusion-extension:
+      label: "签证转换/纳入/展延(如涉及)"
+      details:
+        service-fee:
+          amount:
+            currency: "PHP"
+            display: ""
+            value: null
+          notes: "以现场OPS/OR为准;暂无官方费用信息(待补充)"
+          attr:
+            amount:
+              currency: "str"
+              value: "int|null"
+            notes: "str"
+deliverables:
+  description: "完成复核后提供的签注与相关证明文件."
+  items:
+    passport-with-endorsement:
+      name: "护照完成复核签注"
+      usage: "作为签证复核完成与记录更新的凭证"
+    approval-order-copy:
+      name: "核准指令副本"
+      usage: "用于存档及后续办理参考"
+    bi-clearance-certificate:
+      name: "无案证明/清关文件(BICC)"
+      usage: "按需出具,用于记录校验或后续延伸服务"
+kpis:
+  processing_time: "内部复核与批示约2–3个工作日;现场各环节约5–10分钟/步(以排队为准)"
+risks:
+  items:
+    overdue-without-affidavit: "逾期未在15日内申办且无经宣誓的说明书与证据,可能被驳回."
+    invalid-entry-status: "核准当日入境资格已失效且未延签,复核可能被驳回."
+    unclear-copies: "护照复印件不清晰或要素不可辨识将导致退补与延误."
+    pending-alerts-or-name-hit: "存在不良纪录/同名提示未先行澄清,复核无法继续."
+    location-restriction: "非马卡蒂移民局延签办公室不受理复核,错地递件将被退回."
+    processing-delay: "旺季或复杂个案(同名/案件比对)可能导致处理时长顺延."
+    aep-inconsistency: "9G等就业类签证AEP信息不一致可能引发补件或延迟."
+    compliance-violation: "逾期停留、伪造/篡改文件、隐瞒不良纪录可能导致罚款、驳回、遣返及列入黑名单."
+    update-obligation: "护照、住址、婚姻状况变更未及时申报可能产生迟延行政罚."
+info_collection:
+  applicant:
+    last-name:
+      label: "姓(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "ZHANG"
+      notes: ""
+    first-name:
+      label: "名(与护照一致)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "SAN"
+      notes: ""
+    middle-name:
+      label: "中间名(如无可留空)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    alias-other-names:
+      label: "曾用名/别名(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    nationality:
+      label: "国籍"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "CHN"
+      notes: ""
+    date-of-birth:
+      label: "出生日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "1990-05-20"
+      notes: ""
+    passport-number:
+      label: "护照号码"
+      type: "string"
+      required: "true"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issuance-place:
+      label: "护照签发地"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-issue-date:
+      label: "护照签发日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2021-06-01"
+      notes: ""
+    passport-expiry:
+      label: "护照到期日"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: "2031-05-31"
+      notes: ""
+    phone-mobile:
+      label: "在菲手机号码"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: "+639171234567"
+      notes: ""
+    email:
+      label: "电子邮箱"
+      type: "string"
+      required: "false"
+      format: "email"
+      pattern: ""
+      example: "name@example.com"
+      notes: ""
+    address-line1:
+      label: "在菲住址(街道/门牌)"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    address-city:
+      label: "城市"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Makati"
+      notes: ""
+    address-province:
+      label: "省/都会区"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "Metro Manila"
+      notes: ""
+    address-country:
+      label: "国家"
+      type: "string"
+      required: "true"
+      format: "country-iso2"
+      pattern: ""
+      example: "PH"
+      notes: ""
+    address-postal-code:
+      label: "邮政编码"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: "^\\d{4,6}$"
+      example: "1229"
+      notes: ""
+  spouse:
+    spouse-full-name:
+      label: "配偶姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-birthdate:
+      label: "配偶生日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    spouse-nationality:
+      label: "配偶国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    marriage-certificate-number:
+      label: "结婚证编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    marriage-certificate-issuer:
+      label: "结婚证签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  father: {}
+  mother: {}
+  children:
+    child-full-name:
+      label: "子女姓名"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    child-birthdate:
+      label: "子女生日"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    child-nationality:
+      label: "子女国籍"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-certificate-number:
+      label: "出生证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    birth-certificate-issuer:
+      label: "出生证明签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  dependents:
+    relationship-proof-number:
+      label: "依亲关系证明编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    relationship-proof-issuer:
+      label: "依亲关系证明签发机关"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    included-in-revalidation:
+      label: "是否同办复核"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  employment:
+    company-name:
+      label: "公司名称(与批文一致)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-address:
+      label: "公司地址"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    job-title:
+      label: "职位"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    work-location:
+      label: "工作地点"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-tax-id:
+      label: "统一社会税号/登记信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "仅用于比对(如被要求)"
+    company-contact-person:
+      label: "公司联系人"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    company-contact-phone:
+      label: "公司联系人电话"
+      type: "string"
+      required: "false"
+      format: "e164-phone"
+      pattern: ""
+      example: ""
+      notes: ""
+  authorization: {}
+  arrival_info:
+    last-entry-date:
+      label: "最近一次入境日期"
+      type: "date"
+      required: "true"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    last-entry-port:
+      label: "最近一次入境口岸"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "NAIA T3"
+      notes: ""
+    current-stay-status:
+      label: "当前入境/停留资格"
+      type: "enum"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "如旅游/临时停留等"
+  travel_history:
+    entry-visa-class:
+      label: "入境所持签证/免签类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "Visa Waiver / 9A"
+      notes: ""
+    approved-visa-category:
+      label: "已获核准的签证类别"
+      type: "string"
+      required: "true"
+      format: ""
+      pattern: ""
+      example: "9G / 13(a) / TRV"
+      notes: ""
+    approval-number:
+      label: "批文编号"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    ticket-or-boarding-pass:
+      label: "机票/登机牌信息"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: "用于支持返菲时间点"
+    has-annual-report:
+      label: "是否有年报记录"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    has-ecc:
+      label: "是否办理过ECC"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    has-warning-or-alert:
+      label: "是否有警示/不良纪录提示"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+  compliance:
+    has-name-hit-alert:
+      label: "是否存在同名提示"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    case-number:
+      label: "案件编号(如有)"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    passport-number-changed:
+      label: "是否更换过护照号码"
+      type: "boolean"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: ""
+      notes: ""
+    old-passport-number:
+      label: "旧护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+    new-passport-number:
+      label: "新护照号码"
+      type: "string"
+      required: "false"
+      format: "passport-no"
+      pattern: ""
+      example: ""
+      notes: ""
+  additional_details:
+    departure-reason:
+      label: "离境事由"
+      type: "string"
+      required: "false"
+      format: ""
+      pattern: ""
+      example: "医疗/商务/公务"
+      notes: ""
+    departure-date:
+      label: "离境日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+    return-date:
+      label: "返菲日期"
+      type: "date"
+      required: "false"
+      format: "iso-date"
+      pattern: ""
+      example: ""
+      notes: ""
+acknowledgement_flags:
+  data_privacy_consent: ""
+  certification_statement: "如逾期需提交经宣誓的说明书等宣誓文件;办理过程中需申请人本人签署并按窗口指引完成相关声明/加注."
+faq:
+  qas:
+    overdue-what-to-do:
+      question: "未在入境后15日内申请复核怎么办?"
+      answer: "需提交经宣誓的说明书,详述逾期原因并附证据;是否核准由窗口审核决定,个案可能加收相关费用或要求补件."
+    other-branch-or-airport:
+      question: "可以在其他分署或机场办理吗?"
+      answer: "不可以.复核仅由马卡蒂移民局延签办公室受理,请按该办事处流程与窗口顺序办理."
+    keep-passport:
+      question: "办理期间会收走护照吗?"
+      answer: "递件与缴费时仅核验与扫描护照,最终核准签注阶段需交护照办理贴签,加注完成后即刻返还."
+    entry-visa-expired-on-approval:
+      question: "我的入境签证在核准日已过期,还能复核吗?"
+      answer: "需先办理入境资格的延签或恢复,再进入复核程序;请先至窗口咨询并依OPS开单缴费."
+    incomplete-docs:
+      question: "材料不全或复印件不清会怎样?"
+      answer: "窗口将退补并要求重新提交;为避免延误,请确保复印件清晰、文件齐全且与说明函内容一致."
+    name-hit-or-adverse-record:
+      question: "如系统出现同名或不良纪录提示怎么办?"
+      answer: "需先至相关科室办理核验或“非同一人证明”,必要时补充司法/行政证明,再回到复核流程继续办理."
+    fee-difference:
+      question: "费用为何与他人不同?"
+      answer: "复核费按签证类别分档(如9G、13(a)、TRV),且认证、贴纸、快通、LRF等组合项目依个案开单不同;以现场OPS/OR为准."
+    need-personal-presence:
+      question: "全程需要本人到场吗?"
+      answer: "需本人携带护照原件到场完成核验与签注环节;如涉及宣誓文件,需本人签署并按窗口指引办理."
+disclaimers:
+  items:
+    ops-or-prevails: "费用与组合项目以现场OPS/OR载明为准."
+    queuing-and-throughput: "全程以现场排队为准,办理时长受受理量与个案复杂度影响."
+    version-2025-note: "本指引采信2025年版官方价格,历史版本待补充."
+service_related:
+  links: {}
