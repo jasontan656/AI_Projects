@@ -10,8 +10,21 @@ from typing import Any, Dict
 from project_utility.config.paths import get_repo_root
 
 
+def _normalize_manifest(value: Dict[str, Any]) -> Dict[str, Any]:
+    def _normalize(item: Any) -> Any:
+        if isinstance(item, str):
+            return item.replace("\\", "/")
+        if isinstance(item, list):
+            return [_normalize(element) for element in item]
+        if isinstance(item, dict):
+            return {key: _normalize(val) for key, val in item.items()}
+        return item
+
+    return {key: _normalize(val) for key, val in value.items()}
+
+
 def _default_manifest(repo_root: Path) -> Dict[str, Any]:
-    return {
+    manifest = {
         "version": "v1.2.0",
         "app_py": str(repo_root / "app.py"),
         "infra": [str(repo_root / "src/interface_entry/bootstrap/app.py")],
@@ -27,6 +40,7 @@ def _default_manifest(repo_root: Path) -> Dict[str, Any]:
             str(repo_root / "src/interface_entry/telegram/adapters.py"),
         ],
     }
+    return _normalize_manifest(manifest)
 
 
 def load_top_entry_manifest() -> Dict[str, Any]:
@@ -35,7 +49,8 @@ def load_top_entry_manifest() -> Dict[str, Any]:
     if manifest_path.exists():
         raw = manifest_path.read_text(encoding="utf-8")
         normalized = raw.replace("{REPO_ROOT}", str(repo_root))
-        return json.loads(normalized)
+        manifest = json.loads(normalized)
+        return _normalize_manifest(manifest)
     return _default_manifest(repo_root)
 
 

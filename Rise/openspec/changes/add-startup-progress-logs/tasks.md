@@ -1,0 +1,4 @@
+- [x] Identify heavy synchronous startup segments in `src/interface_entry/bootstrap/app.py` and `_perform_clean_startup()` that currently emit no prelude logs.
+- [x] Inject `_log_startup_step` or structured `log.info` calls before/after aiogram bootstrap, knowledge snapshot orchestration, and webhook registration, keeping metadata consistent.
+- [x] Adjust `--clean` workflow to log each cleanup segment directly instead of deferring output until the end.
+- [x] Run a local bootstrap dry-run (e.g., `python3 app.py --help` or policy loader stub) to verify logs appear progressively, then execute `openspec validate add-startup-progress-logs --strict` (attempted; blocked by missing optional deps such as `openai`/Pydantic v2—see status notes).

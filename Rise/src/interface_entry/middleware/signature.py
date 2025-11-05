@@ -9,7 +9,6 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from foundational_service.contracts import toolcalls
-from foundational_service.contracts.prompt_registry import PROMPT_REGISTRY
 from project_utility.context import ContextBridge
 
 log = logging.getLogger("interface_entry.middleware.signature")
@@ -43,18 +42,11 @@ class SignatureVerifyMiddleware(BaseHTTPMiddleware):
             request.state.signature_status = "rejected"
             if metrics_state is not None:
                 metrics_state["webhook_signature_failures"] = metrics_state.get("webhook_signature_failures", 0) + 1
-            prompt_text = ""
-            try:  # pragma: no cover - optional prompt rendering
-                prompt_text = PROMPT_REGISTRY.render("webhook_signature_fail", request_id=request_id)
-            except Exception:
-                prompt_text = ""
             log.warning(
                 "webhook.signature_mismatch",
                 extra={
                     "request_id": request_id,
                     "signature_status": "rejected",
-                    "prompt_id": "webhook_signature_fail",
-                    "prompt_text": prompt_text,
                 },
             )
             raise exc

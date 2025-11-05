@@ -162,14 +162,8 @@ class _RichConsoleHandler(logging.Handler):
             text.append(" ")
             text.append(segments.message)
 
-            for key, value in segments.extras:
-                text.append(" | ", style="dim")
-                text.append(f"{key}=", style="dim")
-                text.append(value, style="dim")
-
+            _append_tree_metadata(text, segments.extras, segments.error)
             self._console.print(text)
-            if segments.error is not None:
-                self._console.print(segments.error, style="italic red")
         except Exception:
             self.handleError(record)
 
@@ -213,6 +207,33 @@ class _ConsolePlainFormatter(logging.Formatter):
         extra_str = " ".join(f"{key}={value}" for key, value in extras)
         error_suffix = f" :: {error}" if error else ""
         return f"{message} {extra_str}{error_suffix}".strip()
+
+
+def _append_tree_metadata(
+    target: Text,
+    extras: Sequence[Tuple[str, str]],
+    error: Optional[str],
+) -> None:
+    if not extras and error is None:
+        return
+
+    indent = "    "
+    entries: List[Tuple[str, str, Optional[str]]] = [(key, value, "white") for key, value in extras]
+    if error is not None:
+        entries.append(("error", error, "italic red"))
+
+    total = len(entries)
+    for index, (key, value, value_style) in enumerate(entries):
+        connector = "└──" if index == total - 1 else "├──"
+        continuation_prefix = indent + ("│   " if connector != "└──" else "    ") + "    "
+        formatted_value = value.replace("\n", f"\n{continuation_prefix}")
+
+        target.append("\n")
+        target.append(indent, style="dim")
+        target.append(connector, style="dim")
+        target.append(" ", style="dim")
+        target.append(f"{key}: ", style="dim")
+        target.append(formatted_value, style=value_style or "white")
 
 
 def _build_rich_console_handlers() -> List[logging.Handler]:

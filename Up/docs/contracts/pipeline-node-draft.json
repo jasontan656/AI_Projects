@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://up.local/contracts/pipeline-node-draft.json",
+  "title": "Pipeline Node Draft Contract",
+  "description": "Frontend-authored contract snapshot for pipeline node drafts. Rise backend must persist a compatible structure.",
+  "type": "object",
+  "required": ["id", "name", "allowLLM", "actions", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier emitted by the frontend when creating a draft node."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display label for the node shown in the visual workspace."
+    },
+    "allowLLM": {
+      "type": "boolean",
+      "description": "Whether the node can access large language models during runtime orchestration."
+    },
+    "actions": {
+      "type": "array",
+      "description": "Ordered list of scripted actions that define the node's behaviour.",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "order", "config"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Front-end generated UUID used to track the draft action."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["prompt_append", "tool_invoke", "emit_output"],
+            "description": "Action type. Initial implementation covers prompt append; other types are reserved for expansion."
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Zero-based order of execution."
+          },
+          "config": {
+            "type": "object",
+            "description": "Action-specific configuration payload.",
+            "properties": {
+              "templateId": {
+                "type": ["string", "null"],
+                "description": "Identifier of the selected prompt template when type is prompt_append."
+              },
+              "legacyText": {
+                "type": ["string", "null"],
+                "description": "Fallback text migrated from legacy systemPrompt entries."
+              },
+              "inputMapping": {
+                "type": ["object", "null"],
+                "additionalProperties": true,
+                "description": "Reserved for future tool invocation inputs."
+              }
+            },
+            "additionalProperties": true
+          },
+          "disabled": {
+            "type": "boolean",
+            "description": "Optional flag used by the frontend when an action is temporarily disabled (e.g., LLM gating)."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "systemPrompt": {
+      "type": ["string", "null"],
+      "description": "System prompt snippet automatically composed from actions for backward compatibility."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp captured when the draft was authored on the frontend."
+    }
+  },
+  "example": {
+    "id": "node_sample",
+    "name": "入境风险筛查",
+    "allowLLM": true,
+    "actions": [
+      {
+        "id": "0ba4d8fc-0e8f-4a31-b934-4e3c4f0f8ef2",
+        "type": "prompt_append",
+        "order": 0,
+        "config": {
+          "templateId": "tmpl_risk_screening",
+          "legacyText": null
+        }
+      },
+      {
+        "id": "5f39f8a6-6d66-47f2-bc31-5d210f3d5c23",
+        "type": "prompt_append",
+        "order": 1,
+        "config": {
+          "templateId": null,
+          "legacyText": "如申请人来自高风险地区，需追加二次核查流程。"
+        }
+      }
+    ],
+    "systemPrompt": "{{template:tmpl_risk_screening}}\n\n如申请人来自高风险地区，需追加二次核查流程。",
+    "createdAt": "2025-11-04T15:45:00.000Z"
+  }
+}

@@ -2,20 +2,11 @@ from __future__ import annotations
 
 """Typed数据模型：业务服务层的会话编排结果与上下文。"""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Mapping, MutableMapping
 
 ConversationStatus = str  # "handled" 或 "ignored"
 ConversationMode = str  # "direct" / "ignored"
-
-
-@dataclass(slots=True)
-class LLMResult:
-    """直接 LLM 调用的返回结构。"""
-
-    text: str
-    response_id: str
-    usage: Mapping[str, Any] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -39,8 +30,3 @@ class ConversationServiceResult:
     update_type: str
     core_envelope: Mapping[str, Any]
     legacy_envelope: Mapping[str, Any]
-    # 兼容旧逻辑字段，保留默认值
-    triage_prompt: str = ""
-    agent_bridge: Mapping[str, Any] = field(default_factory=dict)
-    agent_bridge_telemetry: Mapping[str, Any] = field(default_factory=dict)
-    output_payload: Mapping[str, Any] = field(default_factory=dict)

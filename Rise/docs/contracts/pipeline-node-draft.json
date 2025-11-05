@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rise.dev/contracts/pipeline-node-draft.json",
+  "title": "PipelineNodeDraft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "allowLLM",
+    "systemPrompt",
+    "createdAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Server generated unique identifier for the node (UUID string)."
+    },
+    "clientCreatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Original creation timestamp supplied by the client interface."
+    },
+    "pipelineId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identifier of the pipeline this node belongs to. Null for unassigned drafts.",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Human readable node name displayed in the frontend."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ],
+      "default": "draft",
+      "description": "Lifecycle status of the node."
+    },
+    "allowLLM": {
+      "type": "boolean",
+      "description": "Whether runtime execution may invoke large-language-model stages."
+    },
+    "strategy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Reserved field for future orchestration strategies.",
+      "default": {},
+      "additionalProperties": true
+    },
+    "systemPrompt": {
+      "type": "string",
+      "description": "Verbatim system prompt text persisted for later pipeline execution."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Client provided ISO 8601 creation timestamp maintained for history."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Server generated ISO 8601 timestamp of the most recent edit."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic revision number incremented by the backend."
+    },
+    "updatedBy": {
+      "type": "string",
+      "description": "Identifier of the actor that applied the most recent mutation."
+    },
+    "latestSnapshot": {
+      "$ref": "#/$defs/PipelineNodeSnapshot",
+      "description": "Latest stored snapshot of the node including persisted metadata."
+    }
+  },
+  "$defs": {
+    "PipelineNodeSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "clientCreatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pipelineId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "published"
+          ]
+        },
+        "allowLLM": {
+          "type": "boolean"
+        },
+        "strategy": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        },
+        "systemPrompt": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updatedBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "allowLLM",
+        "systemPrompt",
+        "createdAt",
+        "updatedAt",
+        "version"
+      ]
+    }
+  }
+}

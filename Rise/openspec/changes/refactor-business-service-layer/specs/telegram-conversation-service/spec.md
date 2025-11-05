@@ -1,13 +1,13 @@
 ## ADDED Requirements
 
 ### Requirement: Telegram Conversation Service API
-Business Service MUST expose `TelegramConversationService.process_update(update, policy)` that returns a `ConversationServiceResult` dataclass with:
-- `status`: `"handled"` 或 `"ignored"`;
-- `mode`: `"stream"`, `"direct"`, `"prompt"`, `"refusal"` 或 `"ignored"`;
-- `intent`, `triage_prompt`, `agent_request`, `agent_response`;
-- `telemetry`, `agent_bridge`, `agent_bridge_telemetry`;
-- `adapter_contract`, `outbound_contract`, `outbound_payload`, `output_payload`, `outbound_metrics`;
-- `audit_reason`, `error_hint`, `user_text`, `logging_payload`, `update_type`, `core_envelope`, `legacy_envelope`.
+Business Service MUST expose `TelegramConversationService.process_update(update, policy)` that returns a `ConversationServiceResult` dataclass with：
+- `status`: `"handled"` 或 `"ignored"`；
+- `mode`: `"stream"`、`"direct"` 或 `"ignored"`（如未来扩展可另行更新规范）；
+- `intent`、`agent_request`、`agent_response`；
+- `telemetry`；
+- `adapter_contract`、`outbound_contract`、`outbound_payload`、`outbound_metrics`；
+- `audit_reason`、`error_hint`、`user_text`、`logging_payload`、`update_type`、`core_envelope`、`legacy_envelope`。
 
 #### Scenario: Returns structured result for standard message
 - **GIVEN** Telegram 更新包含文本、聊天元数据且无提示覆盖
@@ -17,15 +17,13 @@ Business Service MUST expose `TelegramConversationService.process_update(update,
 - **AND** `outbound_contract` 包含 `chat_id`、`parse_mode="MarkdownV2"`、`disable_web_page_preview=True` 及流式缓冲条目
 - **AND** `agent_response` 等于经过 Markdown 转义的待发送内容，`telemetry` 暴露请求标识和 chunk 指标，同时 `audit_reason` 为空。
 
-### Requirement: Prompt Short-Circuit Behaviour
-When the inbound payload specifies a direct prompt (either via `prompt_id`/variables, or classified as `help`/`refusal`), the service MUST bypass the agents bridge and return a Markdown-escaped response generated from the prompt registry.
+### Requirement: Reject Legacy Prompt Shortcuts
+If inbound payloads still carry `prompt_id`/`prompt_variables` from legacy flows, the service MUST refuse to execute and surface a hard failure so that stale webhook backlog或旧策略被及时清理。
 
-#### Scenario: Direct prompt without agent dispatch
+#### Scenario: Legacy prompt raises error
 - **GIVEN** 归一化后的 core envelope 含 `prompt_id="agent_refusal_policy"`
-- **AND** PROMPT_REGISTRY 能够渲染该提示
 - **WHEN** 调用 `process_update`
-- **THEN** 服务返回 `mode="prompt"`，`agent_response["text"]` 等于渲染结果（已 Markdown 转义）
-- **AND** `agent_bridge["mode"]` 标记为 `"prompt_shortcut"` 或 `"prompt_override"`
+- **THEN** 服务抛出异常（类型可自定义，但必须终止请求）并在日志中明确提示 legacy prompt 已被移除
 - **AND** 不会调用 `behavior_agents_bridge`。
 
 ### Requirement: Agent Orchestration Path

@@ -31,7 +31,7 @@ src/foundational_service/
     __init__.py
     envelope.py           # CoreEnvelope models + adapter builders
     telegram.py           # Telegram inbound/outbound transformations
-    registry.py           # Prompt registry + layout guard utilities
+    registry.py           # Layout guard utilities (no prompt registry)
     toolcalls.py          # Markdown escaping, audit hooks, agent output validators
   integrations/
     __init__.py
@@ -83,15 +83,15 @@ Key characteristics:
 - Accepts channel enumerations for future expansion.
 
 ### `contracts.registry`
-- Hosts prompt registry validation (`validate_prompt_registry`) and layout guard logic, using `policy.paths` to resolve assets.
+- Hosts layout guard utilities，确保项目结构符合预期（Prompt registry 已移除，仅保留目录校验）。
 
 ### `contracts.toolcalls`
 - Keeps Markdown escaping, logging payload builder, audit hooks, and agent output validators with minimal changes.
 - Introduces a dataclass for `AgentOutput`.
 
 ### `integrations.openai_bridge`
-- Encapsulates `behavior_agents_bridge` with dependency injection for OpenAI client, telemetry bus, and runtime policy.
-- Splits helper functions (prompt assembly, caching) into private modules for clarity.
+- Encapsulates `behavior_agents_bridge` with dependency injection for OpenAI client, telemetry bus, and runtime policy。
+- Optional helper modules处理请求拼接、token 预算与响应转换，不再承担 Prompt 拼装职责。
 
 ### `integrations.memory_loader`
 - Moves Redis/GridFS bootstrap and KB pipeline helpers from `behavior_contract`.
@@ -128,4 +128,3 @@ Key characteristics:
 - Confirm whether runtime policy should remain JSON-only to minimise churn; design assumes we introduce a thin Pydantic wrapper but can degrade to raw dict if time constrained.
 - Determine eventual removal timeline for `shared_utility` shims; default to emit warnings on import to encourage migration.
 - Clarify whether telemetry bus needs asynchronous flushing hooks; current implementation uses synchronous writes.
-

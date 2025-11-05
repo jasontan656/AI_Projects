@@ -137,7 +137,6 @@ class KnowledgeSnapshotService:
             "KnowledgeBase",
         ]
         required_files = [
-            ("config/runtime_policy.json", "runtime_policy"),
             ("KnowledgeBase/KnowledgeBase_index.yaml", "kb_index"),
         ]
 

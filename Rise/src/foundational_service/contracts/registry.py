@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, TypedDict
 
-from foundational_service.contracts.prompt_registry import PROMPT_REGISTRY as PROMPT_LOADER
 from foundational_service.contracts.toolcalls import LayoutMismatch, call_compare_tree, call_scan_tree
 
 __all__ = [
@@ -45,12 +44,8 @@ class BehaviorContract:
     registry: PromptCategoryManifest = field(default_factory=lambda: PROMPT_CATEGORY_MANIFEST)
 
     def apply_contract(self, app: Any) -> None:
-        if not validate_prompt_registry(self.registry):
-            raise ValueError("prompt_registry_incomplete")
         if not hasattr(app, "state"):
             raise AttributeError("FastAPI app 缺少 state 属性")
-        app.state.prompt_registry = PROMPT_LOADER  # type: ignore[attr-defined]
-        app.state.prompt_category_manifest = self.registry  # type: ignore[attr-defined]
 
 
 class ProjectLayout(TypedDict):

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://up.local/contracts/prompt-draft.json",
+  "title": "Prompt Draft Contract",
+  "description": "Frontend-authored contract snapshot for prompt drafts. Backend must store the markdown/yaml payload per this shape.",
+  "type": "object",
+  "required": ["id", "name", "markdown", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier generated for each prompt draft."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Friendly name shown in the UI when selecting a prompt."
+    },
+    "markdown": {
+      "type": "string",
+      "description": "MarkdownV2 content body used at runtime."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp when the draft was authored on the frontend."
+    }
+  },
+  "example": {
+    "id": "prompt_sample",
+    "name": "默认提示词",
+    "markdown": "## 欢迎使用\n- 支持 **MarkdownV2** 样式\n- 使用 `代码` 或列表",
+    "createdAt": "2025-11-04T08:30:00.000Z"
+  }
+}

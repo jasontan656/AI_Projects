@@ -2,13 +2,13 @@
 
 - Business Service layer is currently absent; interface handlers directly coordinate prompts, classifications, and agents.
 - Knowledge snapshot lifecycle (`behavior_memory_loader`, Redis sync, asset guard) lives in `foundational_service/integrations/memory_loader.py`, mixing business semantics with infrastructure.
-- Telegram handler mixes channel plumbing with business rules (triage prompts, refusal logic, audit logging), making reuse by future channels/business flows difficult.
+- Telegram handler mixes channel plumbing with business rules（intent分支、审计记录），并依赖已弃用的 Prompt shortcut，导致未来渠道/动作式流程难以复用。
 - We attempted to enumerate additional guidance via the `context 7` MCP server but it is unavailable in this environment; proceed using repo instructions only.
 
 ## Decisions
 
 - **Service packages**: Introduce `business_service.conversation` and `business_service.knowledge` namespaces that expose explicit service classes and typed models. These modules import foundational services (`foundational_service.integrations.openai_bridge`, toolcalls) but are the highest layer owning domain orchestration.
-- **Conversation API**: Implement `TelegramConversationService.process_update(update, policy)` that returns a `ConversationResult` dataclass/TyepdDict with envelopes, outbound contract, prompt info, agent metadata, and audit hints. The interface handler calls this and focuses on Telegram-specific IO (sending placeholders, retries).
+- **Conversation API**: Implement `TelegramConversationService.process_update(update, policy)` returning一个精简 `ConversationServiceResult`（status/mode、envelopes、LLM 请求/响应、适配器合约、审计/telemetry 字段），不再携带 prompt shortcut 数据；接口层只负责 Telegram 发送与重试。
 - **Knowledge API**: Implement `KnowledgeSnapshotService.load()` and `.refresh(reason)` wrapping existing YAML/Redis flows, returning a `SnapshotResult` containing status, telemetry, and Redis metadata. Asset guard checks become methods in the same service.
 - **Helpers relocation**: Move `_classify_intent`, direct prompt table, token budget defaults, and audit logging invocations to the conversation module. Only channel-specific adjustments remain in the interface layer.
 - **File structure**: Adopt the layout described in the proposal’s target file tree, ensuring `__all__` exports from `business_service/__init__.py` present stable entry points for other layers.

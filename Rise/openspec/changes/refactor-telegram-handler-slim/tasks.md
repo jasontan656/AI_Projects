@@ -1,0 +1,5 @@
+- [x] 精简 `ConversationServiceResult` 及相关引用，移除不再使用的 triage/agent_bridge 字段。
+- [x] 重写 `interface_entry/telegram/handlers.py` 的发送分支，去掉 streaming 占位与旧日志字段。
+- [x] 移除 Prompt registry 注入与相关空配置，保持 BehaviorContract 最小职责。
+- [x] 更新 `behavior_agents_bridge` 接口及调用方，验证 `PYTHONPATH=src python3 app.py` 正常启动。
+- [x] 运行 `openspec validate refactor-telegram-handler-slim --strict`。

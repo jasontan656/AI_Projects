@@ -1,6 +1,6 @@
 - [x] Create `src/business_service/` package with `conversation` and `knowledge` modules plus typed result models.
 - [x] Port knowledge snapshot loaders (`behavior_memory_loader`, `behavior_asset_guard`, `behavior_kb_pipeline`) into `KnowledgeSnapshotService` and update bootstrap wiring.
-- [x] Extract Telegram conversation orchestration (`process_update`, intent helpers, prompt short-circuits) into `TelegramConversationService`.
+- [x] Extract Telegram conversation orchestration (`process_update`, intent helpers) into `TelegramConversationService` and delete legacy prompt short-circuits。
 - [x] Refactor interface entrypoints (handlers/bootstrap) to consume the business services and remove direct calls to foundational helpers.
 - [x] Update or add tests covering conversation outcomes and snapshot refresh paths; adjust imports in existing smoke/CLI tooling.
 - [x] Run lint/static checks (`python -m compileall src`, `pytest tests -k business_service` when available) and `openspec validate refactor-business-service-layer --strict`.

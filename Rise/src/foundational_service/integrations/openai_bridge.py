@@ -53,14 +53,9 @@ def _compose_prompt(request: Mapping[str, Any]) -> str:
     return prompt
 
 
-async def behavior_agents_bridge(
-    agent_request: Mapping[str, Any],
-    *,
-    repo_root: Optional[str] = None,  # kept for signature compatibility
-) -> Dict[str, Any]:
+async def behavior_agents_bridge(agent_request: Mapping[str, Any]) -> Dict[str, Any]:
     """Call OpenAI Responses API with a minimal prompt."""
 
-    del repo_root  # unused in the simplified flow
     client = _get_client()
     request_id = str(agent_request.get("request_id") or ContextBridge.request_id())
     prompt = _compose_prompt(agent_request)

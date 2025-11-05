@@ -7,15 +7,40 @@ from typing import Any, Mapping
 
 from business_logic.conversation.models import ConversationResult
 from business_service import ConversationServiceResult, TelegramConversationService
+from business_service.conversation import service as conversation_service_module
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, init=False)
 class TelegramConversationFlow:
     """委派到业务服务层进行会话编排。"""
 
     service: TelegramConversationService = field(default_factory=TelegramConversationService)
 
+    def __init__(
+        self,
+        *,
+        service: TelegramConversationService | None = None,
+        agent_delegator: Any | None = None,
+        adapter_builder: Any | None = None,
+        pipeline_service_factory: Any | None = None,
+    ) -> None:
+        if service is not None:
+            if pipeline_service_factory is not None:
+                service.pipeline_service_factory = pipeline_service_factory
+            self.service = service
+            return
+
+        service_kwargs: dict[str, Any] = {}
+        if agent_delegator is not None:
+            service_kwargs["agent_delegator"] = agent_delegator
+        if adapter_builder is not None:
+            service_kwargs["adapter_builder"] = adapter_builder
+        if pipeline_service_factory is not None:
+            service_kwargs["pipeline_service_factory"] = pipeline_service_factory
+        self.service = TelegramConversationService(**service_kwargs)
+
     async def process(self, update: Mapping[str, Any], *, policy: Mapping[str, Any]) -> ConversationResult:
+        conversation_service_module.set_behavior_hooks(behavior_telegram_inbound, behavior_telegram_outbound)
         service_result = await self.service.process_update(update, policy=policy)
         return self._to_result(service_result)
 
@@ -33,16 +58,16 @@ class TelegramConversationFlow:
             user_text=result.user_text,
             logging=result.logging_payload,
             intent=result.intent,
-            triage_prompt=result.triage_prompt,
-            agent_bridge=result.agent_bridge,
-            agent_bridge_telemetry=result.agent_bridge_telemetry,
             outbound_payload=result.outbound_payload,
-            outbound_metrics=result.outbound_metrics,
+            outbound_metrics=result.outbound_payload.get("metrics", {}),
             update_type=result.update_type,
             core_envelope=result.core_envelope,
             envelope=result.legacy_envelope,
-            output_payload=result.output_payload,
         )
 
 
-__all__ = ["TelegramConversationFlow"]
+behavior_telegram_inbound = conversation_service_module.behavior_telegram_inbound
+behavior_telegram_outbound = conversation_service_module.behavior_telegram_outbound
+
+
+__all__ = ["TelegramConversationFlow", "behavior_telegram_inbound", "behavior_telegram_outbound"]

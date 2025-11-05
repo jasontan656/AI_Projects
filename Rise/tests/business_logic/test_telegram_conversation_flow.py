@@ -36,11 +36,6 @@ class StubAdapterBuilder:
         return contract["outbound"]
 
 
-class StubPromptRenderer:
-    def render(self, prompt_id: str, **variables: Any) -> str:
-        return f"{prompt_id}:{variables}"
-
-
 class StubAgentDelegator:
     def __init__(self, payload: Dict[str, Any]) -> None:
         self.payload = payload
@@ -52,8 +47,8 @@ class StubAgentDelegator:
 
 
 @pytest.mark.asyncio
-async def test_flow_prompt_short_circuit(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Flow should bypass agent delegation when prompt override is present."""
+async def test_flow_raises_on_legacy_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Legacy prompt injection should hard fail to surface misconfiguration."""
 
     def fake_behavior_telegram_inbound(update: Dict[str, Any], policy: Dict[str, Any]) -> Dict[str, Any]:
         core_envelope = {
@@ -82,17 +77,10 @@ async def test_flow_prompt_short_circuit(monkeypatch: pytest.MonkeyPatch) -> Non
     monkeypatch.setattr(flow_module, "behavior_telegram_inbound", fake_behavior_telegram_inbound)
     monkeypatch.setattr(flow_module, "behavior_telegram_outbound", fake_behavior_telegram_outbound)
 
-    flow = TelegramConversationFlow(
-        prompt_renderer=StubPromptRenderer(),
-        adapter_builder=StubAdapterBuilder(),
-    )
+    flow = TelegramConversationFlow(adapter_builder=StubAdapterBuilder())
     policy = {"tokens_budget": {"per_call_max_tokens": 1000, "summary_threshold_tokens": 400}}
-    result = await flow.process({"message": {"text": "ignored"}}, policy=policy)
-
-    assert result.status == "handled"
-    assert result.mode == "prompt"
-    assert result.agent_output.get("text") == "rendered-policy"
-    assert result.outbound_metrics.get("total_chars") == 15
+    with pytest.raises(RuntimeError, match="legacy prompt flow detected"):
+        await flow.process({"message": {"text": "ignored"}}, policy=policy)
 
 
 @pytest.mark.asyncio
@@ -138,7 +126,6 @@ async def test_flow_invokes_agent_delegator(monkeypatch: pytest.MonkeyPatch) -> 
     delegator = StubAgentDelegator(delegator_payload)
 
     flow = TelegramConversationFlow(
-        prompt_renderer=StubPromptRenderer(),
         agent_delegator=delegator,
         adapter_builder=StubAdapterBuilder(),
     )

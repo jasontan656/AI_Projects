@@ -1,22 +1,21 @@
 ## ADDED Requirements
 
 ### Requirement: Conversation Service Facade
-Business Service MUST expose a `TelegramConversationService` facade with a `process_update(update, policy)` coroutine that wraps intent分类、提示准备、代理调度与适配器合约生成，返回一个 `ConversationServiceResult` dataclass 供业务逻辑层直接消费。
+Business Service MUST expose `TelegramConversationService.process_update(update, policy)` 并返回 `ConversationServiceResult` dataclass，字段至少包含 `status`、`mode`、`intent`、`agent_request`、`agent_response`、`telemetry`、`adapter_contract`、`outbound_contract`、`outbound_payload`、`outbound_metrics`、`audit_reason`、`error_hint`、`user_text`、`logging_payload`、`update_type`、`core_envelope`、`legacy_envelope`。
 
 #### Scenario: Facade returns typed orchestration bundle
 - **GIVEN** 一个 `TelegramConversationService` 实例，以及包含用户文本、上下文摘要和策略预算的 Telegram 更新
 - **WHEN** 调用 `await service.process_update(update, policy=policy)`
-- **THEN** 它返回的 `ConversationServiceResult` 字段包含 `intent`、`triage_prompt`、`agent_request`、`agent_response`、`telemetry`、`adapter_contract`、`outbound_contract`、`outbound_payload`、`output_payload` 与 `outbound_metrics`
-- **AND** 该结果无需业务逻辑层再操作底层字典即可执行 Markdown 转义或流式指标读取。
+- **THEN** 结果对象的 `status` 为 `"handled"` 或 `"ignored"`，其余字段都已经是可直接消费的结构（含 Markdown 文本、流式指标与适配器合约），业务逻辑层无需再拼装底层字典。
 
-### Requirement: Prompt Preparation Delegates to Business Assets
-Conversation Service MUST centralize prompt rendering through a dedicated component that validates prompt IDs and variables against Business Asset definitions before returning Markdown-safe strings.
+### Requirement: Legacy Prompt Inputs Must Be Rejected
+Conversation Service MUST 拒绝任何携带 `prompt_id` 或 `prompt_variables` 的旧式请求，避免后端重新依赖静态 Prompt Registry。
 
-#### Scenario: Prompt bundle validated against asset registry
-- **GIVEN** the prompt service receives a request referencing `agent_triage_system` and `agent_consult_compose`
-- **WHEN** prompts are rendered
-- **THEN** the service looks up definitions via the Business Asset registry, validates required variables, and returns a `PromptBundle` dataclass containing the rendered text and original variables
-- **AND** missing prompts raise a typed error that includes the prompt id for telemetry.
+#### Scenario: Legacy prompt raises error
+- **GIVEN** 归一化后的 inbound 载荷含 `prompt_id="agent_refusal_policy"`
+- **WHEN** 调用 `process_update`
+- **THEN** 服务抛出带有 “legacy prompt” 关键字的异常，并中断会话编排
+- **AND** 不会向 LLM 发起请求或构造适配器合约，让调用方及时清理遗留数据。
 
 ### Requirement: Adapter Composition Isolated in Business Service
 Business Service MUST own the transformation from agent bridge output to transport adapter contracts, ensuring interface layers only receive finalized payloads with streaming metadata.

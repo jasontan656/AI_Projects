@@ -8,11 +8,12 @@ import os
 import shutil
 from contextlib import asynccontextmanager, suppress
 from time import perf_counter
-from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
 
+from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
 from business_logic import KnowledgeSnapshotOrchestrator
 from business_service import KnowledgeSnapshotService
 from foundational_service.bootstrap.webhook import behavior_webhook_startup
@@ -23,7 +24,11 @@ from project_utility.logging import configure_logging
 from aiogram.exceptions import TelegramRetryAfter
 
 from interface_entry.config.manifest_loader import load_doc_context, load_top_entry_manifest
+from interface_entry.http.dependencies import application_lifespan
+from interface_entry.http.errors import http_exception_handler, unhandled_exception_handler
 from interface_entry.http.middleware import FastAPIRequestIDMiddleware, LoggingMiddleware
+from interface_entry.http.pipeline_nodes import get_router as get_pipeline_node_router
+from interface_entry.http.prompts import get_router as get_prompt_router
 from interface_entry.middleware.signature import SignatureVerifyMiddleware
 from interface_entry.telegram.runtime import bootstrap_aiogram_service, get_bootstrap_metadata
 from interface_entry.telegram.routes import register_routes
@@ -48,6 +53,10 @@ DOC_ID = DOC_CONTEXT["doc_id"]
 DOC_COMMIT = DOC_CONTEXT["doc_commit"]
 
 
+class TelegramWebhookUnavailableError(RuntimeError):
+    """Raised when Telegram webhook cannot be reached during startup."""
+
+
 def _sanitize_endpoint(raw: str) -> str:
     if "@" in raw:
         return raw.split("@", 1)[1]
@@ -69,15 +78,9 @@ def _release_logging_handlers() -> None:
 
 def _perform_clean_startup() -> None:
     _release_logging_handlers()
+    configure_logging()
+    log.info("startup.clean.begin")
     issues: List[str] = []
-    telemetry: List[Tuple[str, Dict[str, Any]]] = []
-
-    def _record(level: str, event: str, payload: Dict[str, Any]) -> None:
-        telemetry.append((level, event, payload))
-
-    def _register_failure(label: str, exc: Exception) -> None:
-        issues.append(f"{label}: {exc}")
-        _record("error", "startup.clean.segment_failed", {"segment": label, "error": repr(exc)})
 
     directories = {
         "logs": get_log_root(),
@@ -85,18 +88,31 @@ def _perform_clean_startup() -> None:
     }
     for label, target in directories.items():
         try:
-            _record("info", "startup.clean.segment.begin", {"segment": label, "path": str(target)})
+            log.info(
+                "startup.clean.segment.begin",
+                extra={"segment": label, "path": str(target)},
+            )
             if target.exists():
+                log.info(
+                    "startup.clean.segment.removing",
+                    extra={"segment": label, "path": str(target)},
+                )
                 shutil.rmtree(target)
-                _record("info", "startup.clean.segment.removed", {"segment": label, "path": str(target)})
+                log.info(
+                    "startup.clean.segment.removed",
+                    extra={"segment": label, "path": str(target)},
+                )
             target.mkdir(parents=True, exist_ok=True)
-            _record("info", "startup.clean.segment.ready", {"segment": label, "path": str(target)})
+            log.info(
+                "startup.clean.segment.ready",
+                extra={"segment": label, "path": str(target)},
+            )
         except Exception as exc:  # pragma: no cover - surface filesystem failures immediately
-            _register_failure(label, exc)
-
-    configure_logging()
-    for level, event, payload in telemetry:
-        getattr(log, level)(event, extra=payload)
+            issues.append(f"{label}: {exc}")
+            log.error(
+                "startup.clean.segment_failed",
+                extra={"segment": label, "error": repr(exc)},
+            )
 
     def _execute(label: str, func: Callable[[], None]) -> None:
         try:
@@ -174,6 +190,8 @@ def _env(name: str, required: bool = True, default: Optional[str] = None) -> str
 def create_app() -> FastAPI:
     configure_logging()
     app = FastAPI(title="Rise Telegram Bridge", version="1.0.0")
+    app.add_exception_handler(HTTPException, http_exception_handler)
+    app.add_exception_handler(Exception, unhandled_exception_handler)
     app.add_middleware(FastAPIRequestIDMiddleware)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(SignatureVerifyMiddleware, webhook_path=WEBHOOK_PATH)
@@ -192,11 +210,24 @@ def create_app() -> FastAPI:
         log.error("startup.insecure_webhook", extra={"public_url": public_url})
         raise RuntimeError("bootstrap_refused_insecure_webhook")
 
+    def _log_startup_step(step: str, description: str, **metadata: Any) -> None:
+        log.info("startup.step", extra={"step": step, "description": description, **metadata})
+
+    _log_startup_step(
+        "bootstrap_aiogram.start",
+        "Initialising aiogram bootstrap sequence",
+    )
+
     bootstrap_state = bootstrap_aiogram_service(
         api_token=token,
         webhook_url=WEBHOOK_PATH,
         redis_url=redis_url,
         fastapi_app=None,
+    )
+    _log_startup_step(
+        "bootstrap_aiogram.complete",
+        "Aiogram bootstrap finished",
+        router=bootstrap_state.router.name,
     )
     metadata = get_bootstrap_metadata()
     policy: Dict[str, Any] = metadata["policy"]
@@ -205,9 +236,6 @@ def create_app() -> FastAPI:
     bootstrap_redis_runtime: Dict[str, Any] = metadata.get("redis", {}) or {}
     redis_runtime: Dict[str, Any] = dict(bootstrap_redis_runtime)
     redis_active = bool(redis_runtime.get("available"))
-
-    def _log_startup_step(step: str, description: str, **metadata: Any) -> None:
-        log.info("startup.step", extra={"step": step, "description": description, **metadata})
 
     contract = BehaviorContract()
     top_entry_validation = behavior_top_entry(TOP_ENTRY_MANIFEST, app=app)
@@ -287,6 +315,8 @@ def create_app() -> FastAPI:
 
     _log_startup_step("register_routes", "Registering Telegram routes")
     register_routes(app, bootstrap_state.dispatcher, WEBHOOK_PATH, policy, webhook_secret)
+    app.include_router(get_pipeline_node_router())
+    app.include_router(get_prompt_router())
 
     _log_startup_step(
         "bootstrap.complete",
@@ -424,9 +454,15 @@ def create_app() -> FastAPI:
                     "attempts": max_attempts,
                     "error": repr(last_exc) if last_exc else "unknown",
                     "public_url": public_url,
+                    "hint": "Confirm outbound network access to api.telegram.org or start ngrok with WEB_HOOK.",
                 },
             )
-            raise RuntimeError("telegram_webhook_unreachable")
+            message = (
+                "Unable to reach Telegram webhook after "
+                f"{max_attempts} attempts. Ensure the server can access api.telegram.org "
+                "and that WEB_HOOK/ngrok URL is reachable."
+            )
+            raise TelegramWebhookUnavailableError(message) from last_exc
         if last_exc is not None and attempt_used > 1:
             log.info(
                 "startup.telegram_backlog.recovered",
@@ -488,44 +524,45 @@ def create_app() -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
-        await _verify_telegram_connectivity()
-        _log_startup_step("telegram_backlog.check", "Begin backlog inspection")
-        backlog_meta = await _handle_pending_updates()
-        _log_startup_step(
-            "behavior_webhook_startup.invoke",
-            "Registering webhook with Telegram",
-        )
-        startup_meta = await behavior_webhook_startup(
-            bootstrap_state.bot,
-            f"{public_url.rstrip('/')}{WEBHOOK_PATH}",
-            webhook_secret,
-            drop_pending_updates=bool(backlog_meta.get("drop_pending")),
-        )
-        for prompt in startup_meta.get("prompt_events", []):
-            log.warning(
-                "webhook.prompt.retry",
-                extra={
-                    "prompt_id": prompt.get("prompt_id"),
-                    "prompt_text": prompt.get("prompt_text", ""),
-                    "request_id": ContextBridge.request_id(),
-                    "retry": prompt.get("prompt_variables", {}).get("retry"),
-                },
+        async with application_lifespan():
+            await _verify_telegram_connectivity()
+            _log_startup_step("telegram_backlog.check", "Begin backlog inspection")
+            backlog_meta = await _handle_pending_updates()
+            _log_startup_step(
+                "behavior_webhook_startup.invoke",
+                "Registering webhook with Telegram",
             )
-        _log_startup_step(
-            "startup.complete",
-            "Application ready",
-            router=bootstrap_state.router.name,
-            stages=startup_meta.get("telemetry", {}).get("stages", []),
-            bootstrapped_request_id=telemetry.get("request_id"),
-        )
+            startup_meta = await behavior_webhook_startup(
+                bootstrap_state.bot,
+                f"{public_url.rstrip('/')}{WEBHOOK_PATH}",
+                webhook_secret,
+                drop_pending_updates=bool(backlog_meta.get("drop_pending")),
+            )
+            for prompt in startup_meta.get("prompt_events", []):
+                log.warning(
+                    "webhook.prompt.retry",
+                    extra={
+                        "prompt_id": prompt.get("prompt_id"),
+                        "prompt_text": prompt.get("prompt_text", ""),
+                        "request_id": ContextBridge.request_id(),
+                        "retry": prompt.get("prompt_variables", {}).get("retry"),
+                    },
+                )
+            _log_startup_step(
+                "startup.complete",
+                "Application ready",
+                router=bootstrap_state.router.name,
+                stages=startup_meta.get("telemetry", {}).get("stages", []),
+                bootstrapped_request_id=telemetry.get("request_id"),
+            )
 
-        try:
-            yield
-        finally:
-            state = getattr(app.state, "telegram", None)
-            if state:
-                await state.bot.session.close()
-            log.info("shutdown.complete")
+            try:
+                yield
+            finally:
+                state = getattr(app.state, "telegram", None)
+                if state:
+                    await state.bot.session.close()
+                log.info("shutdown.complete")
 
     app.router.lifespan_context = lifespan
 
@@ -591,11 +628,15 @@ def configure_arg_parser(parser: argparse.ArgumentParser) -> None:
 
 def handle_cli(args: argparse.Namespace) -> None:
     global app  # type: ignore[assignment]
-    if getattr(args, "clean", False):
-        _perform_clean_startup()
-        app = create_app()
-    else:
-        app = create_app()
+    try:
+        if getattr(args, "clean", False):
+            _perform_clean_startup()
+            app = create_app()
+        else:
+            app = create_app()
+    except TelegramWebhookUnavailableError as exc:
+        log.critical("Startup aborted: %s", exc)
+        raise
 
     import uvicorn
 
@@ -607,4 +648,8 @@ def handle_cli(args: argparse.Namespace) -> None:
     )
 
 
-app = create_app()
+try:
+    app = create_app()
+except TelegramWebhookUnavailableError as exc:
+    log.critical("Startup aborted: %s", exc)
+    raise

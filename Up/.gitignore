@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+python_multipart/
+
+# Build outputs
+dist/
+build/
+
+# Testing & coverage artifacts
+coverage/
+.nyc_output/
+
+# Logs & temp files
+*.log
+*.tmp
+tmp/
+.tmp/
+
+# Environment & config overrides
+.env
+.env.*
+
+# Tooling metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -9,8 +9,8 @@
 
 - Introduce a dedicated `src/business_logic/` package that owns conversation workflows and runtime coordination while delegating heavy lifting to Business Service modules.
 - Split the current `TelegramConversationService` so that:
-  - `business_logic.conversation.TelegramConversationFlow` orchestrates prompt selection, agent hand-offs, streaming cadence, and audit logging.
-  - `business_service.conversation` is slimmed to reusable primitives (intent classification, agent dispatch, adapter shaping) with clear Typeddict outputs.
+  - `business_logic.conversation.TelegramConversationFlow` orchestrates intent routing、pipeline 节点策略、agent hand-offs、streaming cadence 与 audit logging。
+  - `business_service.conversation` is slimmed to reusable primitives (intent classification, agent dispatch, adapter shaping) with clear TypedDict outputs, rejecting legacy prompt shortcuts.
 - Establish a Business Logic module for knowledge maintenance (`business_logic.knowledge.SnapshotOrchestrator`) that coordinates refresh scheduling, Redis promotion, and alerting while relying on the existing `KnowledgeSnapshotService` for IO.
 - Update interface entrypoints (`interface_entry/telegram/handlers.py`, `interface_entry/bootstrap/app.py`) to invoke the new logic layer, leaving them responsible only for transport concerns (HTTP/Telegram bindings).
 - Provide typed contracts and factories so downstream flows (e.g., future CLI jobs) can share the same logic orchestrators.

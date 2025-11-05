@@ -9,12 +9,12 @@ Business Service MUST expose `TelegramConversationService.process_update` that, 
 - **THEN** it calls `behavior_agents_bridge` with the user text and metadata and returns a `ConversationServiceResult` containing the generated reply text, token usage, and Telegram adapter contract.
 
 ### Requirement: Minimal Conversation Result Mapping
-Business Logic `TelegramConversationFlow.process` MUST act as a pass-through that maps the service result into `ConversationResult` with default values for now-unused fields (triage prompt, agent bridge metadata, etc.), ensuring interface layers continue to operate.
+Business Logic `TelegramConversationFlow.process` MUST act as a pass-through that maps the service result into `ConversationResult` without重新引入已删除的 triage/prompt 字段，确保接口层获得与服务层一致的结构。
 
 #### Scenario: Logic wrapper returns basic result
 - **GIVEN** Business Service returns an LLM result with `text="Hello"`
 - **WHEN** Business Logic processes the update
-- **THEN** `ConversationResult` contains the same text in `agent_output`, `mode="direct"`, and empty telemetry/triage fields.
+- **THEN** `ConversationResult` contains the same text in `agent_output`、`mode="direct"`，并仅填充服务层提供的字段（telemetry、适配器信息等）。
 
 ### Requirement: OpenAI Bridge Direct Responses
 `behavior_agents_bridge` MUST use `AsyncOpenAI.responses.create` to generate replies, returning a dictionary with keys `text`, `usage`, and `response_id`. On API errors it MUST propagate exceptions for the caller to handle.

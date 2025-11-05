@@ -1,0 +1,6 @@
+- [x] 设计 FastAPI 依赖图：定义 `get_settings`、`get_mongo_client`、`get_prompt_service` 等缓存依赖，并在 `app.create_app()` 中接入新的 lifespan 管理（含资源释放）。
+- [x] 替换 Prompt/Pipeline Repository 的同步实现，引入 Motor 或异步封装，移除 `run_in_threadpool` 并补充最小的异步单元测试。
+- [x] 抽象 `ActorContext`/鉴权依赖，统一从 Header/JWT 解析身份、角色、租户，并在所有路由上通过 `Depends` 注入。
+- [x] 实施统一响应/错误模型：创建标准的 `ApiResponse[T]`、`ApiError`，注册全局异常处理器，改写 Prompt/Pipeline API 返回结构。
+- [x] 将审计与长耗时操作迁移到 FastAPI `BackgroundTasks` 或自建 async worker，验证审计日志、版本记录仍按预期落库。
+- [x] 更新文档与测试：覆盖新的依赖注入、鉴权、响应契约；运行 `pytest tests/interface_entry/http` 与 `openspec validate enhance-fastapi-integration --strict` 确认通过。

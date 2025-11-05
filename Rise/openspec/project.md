@@ -5,7 +5,8 @@ Rise is the canonical repository for the multi-channel “Rise” assistant. The
 
 ## Tech Stack
 - Python 3.11 for the default runtime; keep type-checking strict and exploit the Python guides.
-- FastAPI 0.118.x with Starlette middlewares powering the HTTP/webhook surface; the 0.118 line’s dependency simplifications and `Annotated` helpers reduce endpoint boilerplate.
+- **FastAPI-law:**0.118.x with Starlette middlewares powering the HTTP/webhook surface; the 0.118 line’s dependency simplifications and `Annotated` helpers reduce endpoint boilerplate. use typed defs + Pydantic as contracts; framework auto-validates/injects/docs/errors.
+
 - aiogram 3.22.0 for the Telegram bot runtime (dispatcher, router, aiohttp-based webhooks) to align with the v3 FSM fixes and webhook improvements.
 - OpenAI Python SDK 1.105.0 to access Responses, Assistants, and Streams APIs with structured callbacks and multi-turn storage.
 - Redis 7.x with `redis-py` 6.4.0 backing optional memory snapshots, rate counters, and distributed locks.
@@ -26,7 +27,7 @@ Rise is the canonical repository for the multi-channel “Rise” assistant. The
 ### Architecture Patterns
 - `app.py` is the entrypoint: it loads `.env`, configures logging, enforces HTTPS webhook URLs, and delegates to `interface_entry.bootstrap.app.create_app` which boots aiogram via `interface_entry.telegram.runtime.bootstrap_aiogram_service` and applies the `BehaviorContract` that wires validation, memory loader, and middleware.
 - HTTP layer: `interface_entry.http.middleware` provides request-id and logging middleware, while `interface_entry.middleware.signature.SignatureVerifyMiddleware` guards webhooks; routes in `interface_entry.telegram.routes` expose `/telegram`, `/telegram/setup_webhook`, `/metrics`, `/healthz`, and `/internal/memory_health`.
-- Telegram pipeline (`interface_entry.telegram.handlers`) converts updates to CoreEnvelope via `foundational_service.contracts.telegram`, classifies intent, runs prompt templates via `PROMPT_REGISTRY`, and delegates complex responses to `foundational_service.integrations.openai_bridge.behavior_agents_bridge`.
+- Telegram pipeline (`interface_entry.telegram.handlers`) converts updates to CoreEnvelope via `foundational_service.contracts.telegram`, classifies intent, and delegates to `business_service.conversation.TelegramConversationService` which now relies on pipeline node metadata and stored prompt records (persisted via `/api/prompts`) rather than any in-repo prompt registry before calling `foundational_service.integrations.openai_bridge.behavior_agents_bridge`.
 - Orchestrator: `openai_agents/agent_contract/stage_manifest.yaml` defines a staged workflow (`judgement_v1`, `agency_detect_v1`, `service_select_v1`, etc.). `foundational_service.integrations.openai_bridge` enforces contracts, seeds deterministic execution, and mediates Redis-backed memory snapshots.
 - Knowledge base: YAML dictionaries under `KnowledgeBase/` (indexed by `KnowledgeBase/KnowledgeBase_index.yaml`) feed the agents. On startup `behavior_memory_loader` hydrates an in-memory/Redis snapshot and exposes refresh hooks.
 - Cross-cutting utilities now live in `src/foundational_service/` and `src/project_utility/`; the former `shared_utility/` package has been removed. Reuse helpers before introducing new ones; add adapters/contracts under `foundational_service.contracts`.
@@ -56,7 +57,7 @@ User flows:
 - Environment variables (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_BOT_SECRETS`, `WEB_HOOK`, `OPENAI_API_KEY`, optional `REDIS_URL`, `MONGODB_URI`/`MONGODB_DATABASE`) are mandatory for production bootstrap; `WEB_HOOK` must be HTTPS or startup fails.
 - `app.py --clean` wipes Redis (`flushall`) and Mongo collections; use only in isolated/dev contexts.
 - All agent stages must emit strict JSON (no Markdown) as defined in `openai_agents/agent_contract/stage_runtime_contract.md`; schema drift raises `SchemaValidationError`.
-- Token budgets and deterministic seeds are enforced via `foundational_service.policy.runtime.load_runtime_policy`; update the policy JSON and related specs together.
+- Token budgets and deterministic seeds are enforced via `foundational_service.policy.runtime.load_runtime_policy`; update the embedded defaults (or provide an override policy file) alongside related specs when behaviour changes.
 - Telegram outbound text must be MarkdownV2 safe; sanitize dynamic strings and keep responses under per-call token budgets (~3k tokens).
 - Knowledge base edits require matching index entries, checksum validity, and may replicate to Redis snapshots—run KB checks after every content change.
 - Logging is structured; include `request_id`, `chat_id`, and relevant telemetry fields in log extras to keep observability dashboards consistent.

@@ -49,7 +49,7 @@ Skip proposal for:
 
 ### Stage 2: Implementing Changes
 Track these steps as TODOs and complete them one by one.
-0. **Use MCP service `context 7`** - load all newest tech stack needed (wsl - shell available)
+0. **Use MCP service `context 7`** - load all newest tech stack needed (Use MCP tools `context 7` through the AI's tool interface ) check community fixes and common bugs through Context7 before implementing new libraries.
 1. **Read proposal.md** - Understand what's being built
 2. **Read design.md** (if exists) - Review technical decisions
 3. **Read tasks.md** - Get implementation checklist
@@ -68,7 +68,7 @@ After deployment, create separate PR to:
 ## Before Any Task
 
 **Context Checklist:**
-- [ ] load newest stack and tech from `context 7`
+- [ ] load newest stack and tech from `context 7` check community fixes and common bugs through Context7 before implementing new libraries.
 - [ ] Read relevant specs in `specs/[capability]/spec.md`
 - [ ] Check pending changes in `changes/` for conflicts
 - [ ] Read `openspec/project.md` for conventions

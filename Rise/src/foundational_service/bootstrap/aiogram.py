@@ -50,20 +50,28 @@ def bootstrap_aiogram(
     secret = (os.getenv("TELEGRAM_BOT_SECRETS") or "").strip()
     timeline.append({"stage": "env_load", "status": "ok", "has_secret": bool(secret)})
 
+    default_policy_path = root_path / "config" / "runtime_policy.json"
+    if runtime_policy_path is not None:
+        policy_path = Path(runtime_policy_path)
+    else:
+        policy_path = default_policy_path
+    policy_path_exists = policy_path.exists()
+
     try:
         policy_raw = load_runtime_policy(root_path, runtime_policy_path)
     except RuntimePolicyError as exc:
         timeline.append({"stage": "policy_load", "status": "error", "error": str(exc)})
         raise
     else:
-        policy_file = Path(runtime_policy_path) if runtime_policy_path else None
-        timeline.append(
-            {
-                "stage": "policy_load",
-                "status": "ok",
-                "path": str(policy_file or (root_path / "config" / "runtime_policy.json")),
-            }
-        )
+        source_payload: Dict[str, Any]
+        if runtime_policy_path is not None:
+            source_payload = {"source": "override", "path": str(policy_path)}
+        elif policy_path_exists:
+            source_payload = {"source": "filesystem", "path": str(policy_path)}
+        else:
+            source_payload = {"source": "embedded_defaults"}
+
+        timeline.append({"stage": "policy_load", "status": "ok", **source_payload})
 
     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN_V2))
     dispatcher = Dispatcher()
