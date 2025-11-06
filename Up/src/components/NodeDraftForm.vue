@@ -1,5 +1,5 @@
 <template>
-  <section class="node-draft">
+  <section :class="['node-draft', { 'node-draft--full': isFullLayout }]">
     <header class="node-draft__header">
       <h2>{{ isEditing ? "编辑节点" : "新增节点" }}</h2>
       <p>填写节点元数据与脚本动作，保存后用于驱动后端契约实现。</p>
@@ -72,6 +72,15 @@ import {
 import { listPromptDrafts } from "../services/promptService";
 import { ACTION_TYPES, cloneActions, hasPromptActions } from "../utils/nodeActions";
 
+const props = defineProps({
+  layout: {
+    type: String,
+    default: "split",
+  },
+});
+
+const emit = defineEmits(["saved"]);
+
 const pipelineStore = usePipelineDraftStore();
 const promptStore = usePromptDraftStore();
 
@@ -87,6 +96,7 @@ const nameField = ref(null);
 
 const selectedNode = computed(() => pipelineStore.selectedNode);
 const isEditing = computed(() => Boolean(selectedNode.value));
+const isFullLayout = computed(() => props.layout === "full");
 
 const formatTimestamp = (value) => {
   if (!value) return "未知时间";
@@ -215,6 +225,7 @@ const handleSubmit = async () => {
 
   try {
     isSaving.value = true;
+    let targetNodeId = selectedNode.value?.id ?? null;
     const payload = {
       name: form.name,
       allowLLM: form.allowLLM,
@@ -227,16 +238,22 @@ const handleSubmit = async () => {
     if (selectedNode.value) {
       await updatePipelineNode(selectedNode.value.id, payload);
     } else {
-      await createPipelineNode(payload);
+      const createdNode = await createPipelineNode(payload);
+      targetNodeId = createdNode?.id ?? null;
       pipelineStore.resetSelection();
       populateForm(null);
     }
 
     await fetchNodes();
-    populateForm(selectedNode.value || null);
-    if (!selectedNode.value) {
+    if (targetNodeId) {
+      pipelineStore.setSelectedNode(targetNodeId);
+    }
+    const refreshedSelection = pipelineStore.selectedNode;
+    populateForm(refreshedSelection || null);
+    if (!refreshedSelection) {
       focusName();
     }
+    emit("saved", { nodeId: targetNodeId });
   } catch (error) {
     errors.name = error.message || "保存失败";
   } finally {
@@ -301,7 +318,12 @@ defineExpose({ refresh: fetchNodes, newEntry });
   flex-direction: column;
   gap: var(--space-3);
   width: 100%;
+  max-width: 720px;
+}
+
+.node-draft--full {
   max-width: 960px;
+  margin: 0 auto;
 }
 
 .node-draft__header h2 {

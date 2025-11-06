@@ -1,20 +1,38 @@
 <template>
   <el-container class="workspace-shell">
-    <el-aside width="248px" class="workspace-aside">
+    <el-aside ref="workspaceAside" width="248px" class="workspace-aside">
       <div class="workspace-brand">
         <h1>Up Ops Workspace</h1>
         <p>Workflow configuration for LLM pipelines</p>
       </div>
-      <el-menu
-        class="workspace-menu"
-        :default-active="activeNav"
-        @select="handleNavSelect"
-      >
-        <el-menu-item v-for="item in navItems" :key="item.id" :index="item.id">
+      <el-menu class="workspace-menu" :default-active="activeNav">
+        <el-menu-item
+          index="nodes"
+          ref="nodesMenuRef"
+          @click="handleMenuClick('nodes')"
+        >
+          <span>Nodes</span>
+        </el-menu-item>
+        <el-menu-item
+          v-for="item in otherNavItems"
+          :key="item.id"
+          :index="item.id"
+          @click="handleMenuClick(item.id)"
+        >
           <span>{{ item.label }}</span>
           <span v-if="item.soon" class="workspace-menu__soon">Soon</span>
         </el-menu-item>
       </el-menu>
+      <transition name="fade">
+        <div
+          v-if="nodesMenuVisible"
+          ref="nodesMenuPopover"
+          class="nodes-submenu-pop"
+          :style="{ top: `${nodesMenuPosition}px` }"
+        >
+          <NodeSubMenu @create="openCreateFromMenu" @manage="openManageFromMenu" />
+        </div>
+      </transition>
     </el-aside>
 
     <el-container>
@@ -28,14 +46,7 @@
         </div>
         <div class="workspace-actions">
           <el-button
-            v-if="activeNav === 'nodes'"
-            type="primary"
-            @click="handlePrimaryAction"
-          >
-            新建节点
-          </el-button>
-          <el-button
-            v-else-if="activeNav === 'prompts'"
+            v-if="activeNav === 'prompts'"
             type="primary"
             @click="handlePrimaryAction"
           >
@@ -45,25 +56,49 @@
       </el-header>
 
       <el-main class="workspace-main">
-        <section v-if="activeNav === 'nodes'" class="workspace-pane workspace-pane--two-column">
-          <NodeList
-            class="workspace-pane__sidebar"
-            @refresh="refreshNodes"
-            @delete="handleDeleteNode"
-          />
-          <div class="workspace-pane__content">
-            <el-tabs v-model="nodesTab" class="workspace-tabs">
-              <el-tab-pane label="节点表单" name="form">
-                <NodeDraftForm ref="nodeFormRef" />
-              </el-tab-pane>
-              <el-tab-pane label="脚本预览（即将上线）" name="preview">
-                <el-empty
-                  class="workspace-placeholder"
-                  description="后续将在此提供节点动作 JSON 预览与导出。"
-                />
-              </el-tab-pane>
-            </el-tabs>
-          </div>
+        <section v-if="activeNav === 'nodes'" class="workspace-pane nodes-pane">
+          <template v-if="nodesViewMode === 'create'">
+            <div class="nodes-toolbar">
+              <el-button type="text" @click="enterNodesMenu">返回节点菜单</el-button>
+            </div>
+            <div class="nodes-create">
+              <NodeDraftForm
+                ref="nodeFormRef"
+                layout="full"
+                @saved="handleNodeSaved"
+              />
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="nodes-toolbar">
+              <el-button type="text" @click="enterNodesMenu">返回节点菜单</el-button>
+            </div>
+            <div class="workspace-pane--two-column nodes-manage">
+              <NodeList
+                class="workspace-pane__sidebar"
+                @refresh="refreshNodes"
+                @delete="handleDeleteNode"
+              />
+              <div class="workspace-pane__content">
+                <el-tabs v-model="nodesTab" class="workspace-tabs">
+                  <el-tab-pane label="节点表单" name="form">
+                    <NodeDraftForm
+                      ref="nodeFormRef"
+                      layout="split"
+                      @saved="handleNodeSaved"
+                    />
+                  </el-tab-pane>
+                  <el-tab-pane label="脚本预览（即将上线）" name="preview">
+                    <el-empty
+                      class="workspace-placeholder"
+                      description="后续将在此提供节点动作 JSON 预览与导出。"
+                    />
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </div>
+          </template>
         </section>
 
         <section v-else-if="activeNav === 'prompts'" class="workspace-pane workspace-pane--two-column">
@@ -101,7 +136,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, nextTick, onMounted, onBeforeUnmount, watch } from "vue";
 
 import NodeDraftForm from "../components/NodeDraftForm.vue";
 import NodeList from "../components/NodeList.vue";
@@ -110,6 +145,7 @@ import PromptList from "../components/PromptList.vue";
 import WorkflowCanvas from "../components/WorkflowCanvas.vue";
 import VariablesPanel from "../components/VariablesPanel.vue";
 import LogsPanel from "../components/LogsPanel.vue";
+import NodeSubMenu from "../components/NodeSubMenu.vue";
 import { usePipelineDraftStore } from "../stores/pipelineDraft";
 import { usePromptDraftStore } from "../stores/promptDraft";
 import { deletePipelineNode } from "../services/pipelineService";
@@ -120,6 +156,9 @@ const promptStore = usePromptDraftStore();
 
 const nodeFormRef = ref(null);
 const promptEditorRef = ref(null);
+const workspaceAside = ref(null);
+const nodesMenuRef = ref(null);
+const nodesMenuPopover = ref(null);
 
 const navItems = [
   {
@@ -163,39 +202,131 @@ const navItems = [
 
 const activeNav = ref("nodes");
 const nodesTab = ref("form");
+const nodesViewMode = ref("manage");
+const nodesMenuVisible = ref(false);
+const nodesMenuPosition = ref(0);
 
 const currentNav = computed(
   () => navItems.find((item) => item.id === activeNav.value) ?? navItems[0]
 );
 
-const refreshNodes = () => {
-  nodeFormRef.value?.refresh?.();
-};
+const otherNavItems = computed(() =>
+  navItems.filter((item) => item.id !== "nodes")
+);
+
+const refreshNodes = () => nodeFormRef.value?.refresh?.();
 
 const refreshPrompts = () => {
   promptEditorRef.value?.refresh?.();
 };
 
 const handlePrimaryAction = () => {
-  if (activeNav.value === "nodes") {
-    pipelineStore.resetSelection();
-    nodeFormRef.value?.newEntry?.();
-  } else if (activeNav.value === "prompts") {
+  if (activeNav.value === "prompts") {
     promptStore.resetSelection();
     promptEditorRef.value?.newEntry?.();
   }
 };
 
-const handleNavSelect = (id) => {
-  if (activeNav.value === id) {
-    handlePrimaryAction();
-    return;
-  }
-  activeNav.value = id;
+const updateNodesMenuPosition = () => {
+  const asideEl = workspaceAside.value?.$el ?? workspaceAside.value;
+  const menuEl = nodesMenuRef.value?.$el ?? nodesMenuRef.value;
+  if (!asideEl || !menuEl) return;
+  const asideRect = asideEl.getBoundingClientRect();
+  const menuRect = menuEl.getBoundingClientRect();
+  nodesMenuPosition.value = menuRect.top - asideRect.top + menuRect.height / 2;
+};
+
+const showNodesMenu = () => {
+  nodesMenuVisible.value = true;
+  nextTick(updateNodesMenuPosition);
+};
+
+const handleMenuClick = (id) => {
   if (id === "nodes") {
-    nodesTab.value = "form";
+    if (activeNav.value !== "nodes") {
+      activeNav.value = "nodes";
+    }
+    if (nodesMenuVisible.value) {
+      nodesMenuVisible.value = false;
+    } else {
+      showNodesMenu();
+    }
+  } else {
+    activeNav.value = id;
+    nodesMenuVisible.value = false;
   }
 };
+
+const enterNodesMenu = () => {
+  if (activeNav.value !== "nodes") {
+    activeNav.value = "nodes";
+  }
+  showNodesMenu();
+};
+
+const startCreateNode = async () => {
+  nodesViewMode.value = "create";
+  nodesTab.value = "form";
+  pipelineStore.resetSelection();
+  await nextTick();
+  nodeFormRef.value?.newEntry?.();
+};
+
+const startManageNodes = async ({ nodeId } = {}) => {
+  nodesViewMode.value = "manage";
+  nodesTab.value = "form";
+  await nextTick();
+  await refreshNodes();
+  if (nodeId) {
+    pipelineStore.setSelectedNode(nodeId);
+  }
+};
+
+const openCreateFromMenu = () => {
+  nodesMenuVisible.value = false;
+  startCreateNode();
+};
+
+const openManageFromMenu = () => {
+  nodesMenuVisible.value = false;
+  startManageNodes();
+};
+
+const handleNodeSaved = async ({ nodeId } = {}) => {
+  await startManageNodes({ nodeId });
+};
+
+const handleDocumentClick = (event) => {
+  if (!nodesMenuVisible.value) return;
+  const menuEl = nodesMenuPopover.value;
+  const nodeEl = nodesMenuRef.value?.$el ?? nodesMenuRef.value;
+  if (menuEl?.contains(event.target) || nodeEl?.contains(event.target)) {
+    return;
+  }
+  nodesMenuVisible.value = false;
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleDocumentClick);
+  window.addEventListener("resize", updateNodesMenuPosition);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleDocumentClick);
+  window.removeEventListener("resize", updateNodesMenuPosition);
+});
+
+watch(activeNav, (val) => {
+  if (val !== "nodes") {
+    nodesMenuVisible.value = false;
+  }
+});
+
+watch(nodesMenuVisible, (visible) => {
+  if (visible) {
+    nextTick(updateNodesMenuPosition);
+  }
+});
 
 const handleDeleteNode = async (node) => {
   if (!node?.id) return;
@@ -241,6 +372,7 @@ const handleDeletePrompt = async (prompt) => {
 }
 
 .workspace-aside {
+  position: relative;
   padding: var(--space-5) var(--space-4);
   border-right: 1px solid var(--color-border-subtle);
   background: #fff;
@@ -365,6 +497,36 @@ const handleDeletePrompt = async (prompt) => {
   padding: var(--space-5) 0;
 }
 
+.nodes-submenu-pop {
+  position: absolute;
+  left: calc(100% + var(--space-3));
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.nodes-pane {
+  gap: var(--space-4);
+}
+
+.nodes-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-2);
+}
+
+.nodes-toolbar .el-button {
+  padding: 0;
+}
+
+.nodes-create {
+  display: flex;
+  justify-content: center;
+}
+
+.nodes-manage {
+  align-items: stretch;
+}
+
 .workspace-pane--settings {
   align-items: center;
   text-align: center;
@@ -402,5 +564,15 @@ const handleDeletePrompt = async (prompt) => {
     align-items: flex-start;
     gap: var(--space-3);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
