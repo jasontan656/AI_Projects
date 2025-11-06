@@ -14,6 +14,14 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from business_service.pipeline.repository import AsyncMongoPipelineNodeRepository
 from business_service.pipeline.service import AsyncPipelineNodeService
+from business_service.workflow import (
+    AsyncStageRepository,
+    AsyncStageService,
+    AsyncToolRepository,
+    AsyncToolService,
+    AsyncWorkflowRepository,
+    AsyncWorkflowService,
+)
 from business_service.prompt.repository import AsyncMongoPromptRepository
 from business_service.prompt.service import PromptService
 
@@ -68,6 +76,24 @@ async def get_pipeline_collection(
     return database["pipeline_nodes"]
 
 
+async def get_tool_collection(
+    database: AsyncIOMotorDatabase = Depends(get_mongo_database),
+) -> AsyncIOMotorCollection:
+    return database["workflow_tools"]
+
+
+async def get_stage_collection(
+    database: AsyncIOMotorDatabase = Depends(get_mongo_database),
+) -> AsyncIOMotorCollection:
+    return database["workflow_stages"]
+
+
+async def get_workflow_collection(
+    database: AsyncIOMotorDatabase = Depends(get_mongo_database),
+) -> AsyncIOMotorCollection:
+    return database["workflows"]
+
+
 async def get_prompt_repository(
     collection: AsyncIOMotorCollection = Depends(get_prompt_collection),
 ) -> AsyncMongoPromptRepository:
@@ -80,6 +106,24 @@ async def get_pipeline_repository(
     return AsyncMongoPipelineNodeRepository(collection)
 
 
+async def get_tool_repository(
+    collection: AsyncIOMotorCollection = Depends(get_tool_collection),
+) -> AsyncToolRepository:
+    return AsyncToolRepository(collection)
+
+
+async def get_stage_repository(
+    collection: AsyncIOMotorCollection = Depends(get_stage_collection),
+) -> AsyncStageRepository:
+    return AsyncStageRepository(collection)
+
+
+async def get_workflow_repository(
+    collection: AsyncIOMotorCollection = Depends(get_workflow_collection),
+) -> AsyncWorkflowRepository:
+    return AsyncWorkflowRepository(collection)
+
+
 async def get_prompt_service(
     repository: AsyncMongoPromptRepository = Depends(get_prompt_repository),
 ) -> PromptService:
@@ -90,6 +134,24 @@ async def get_pipeline_service(
     repository: AsyncMongoPipelineNodeRepository = Depends(get_pipeline_repository),
 ) -> AsyncPipelineNodeService:
     return AsyncPipelineNodeService(repository=repository)
+
+
+async def get_tool_service(
+    repository: AsyncToolRepository = Depends(get_tool_repository),
+) -> AsyncToolService:
+    return AsyncToolService(repository=repository)
+
+
+async def get_stage_service(
+    repository: AsyncStageRepository = Depends(get_stage_repository),
+) -> AsyncStageService:
+    return AsyncStageService(repository=repository)
+
+
+async def get_workflow_service(
+    repository: AsyncWorkflowRepository = Depends(get_workflow_repository),
+) -> AsyncWorkflowService:
+    return AsyncWorkflowService(repository=repository)
 
 
 def clear_cached_dependencies() -> None:

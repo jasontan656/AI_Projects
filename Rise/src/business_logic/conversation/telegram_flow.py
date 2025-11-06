@@ -20,23 +20,20 @@ class TelegramConversationFlow:
         self,
         *,
         service: TelegramConversationService | None = None,
-        agent_delegator: Any | None = None,
         adapter_builder: Any | None = None,
-        pipeline_service_factory: Any | None = None,
+        workflow_orchestrator_factory: Any | None = None,
     ) -> None:
         if service is not None:
-            if pipeline_service_factory is not None:
-                service.pipeline_service_factory = pipeline_service_factory
+            if workflow_orchestrator_factory is not None:
+                service.workflow_orchestrator_factory = workflow_orchestrator_factory
             self.service = service
             return
 
         service_kwargs: dict[str, Any] = {}
-        if agent_delegator is not None:
-            service_kwargs["agent_delegator"] = agent_delegator
         if adapter_builder is not None:
             service_kwargs["adapter_builder"] = adapter_builder
-        if pipeline_service_factory is not None:
-            service_kwargs["pipeline_service_factory"] = pipeline_service_factory
+        if workflow_orchestrator_factory is not None:
+            service_kwargs["workflow_orchestrator_factory"] = workflow_orchestrator_factory
         self.service = TelegramConversationService(**service_kwargs)
 
     async def process(self, update: Mapping[str, Any], *, policy: Mapping[str, Any]) -> ConversationResult:

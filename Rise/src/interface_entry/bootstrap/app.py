@@ -29,6 +29,9 @@ from interface_entry.http.errors import http_exception_handler, unhandled_except
 from interface_entry.http.middleware import FastAPIRequestIDMiddleware, LoggingMiddleware
 from interface_entry.http.pipeline_nodes import get_router as get_pipeline_node_router
 from interface_entry.http.prompts import get_router as get_prompt_router
+from interface_entry.http.stages import get_router as get_stage_router
+from interface_entry.http.tools import get_router as get_tool_router
+from interface_entry.http.workflows import get_router as get_workflow_router
 from interface_entry.middleware.signature import SignatureVerifyMiddleware
 from interface_entry.telegram.runtime import bootstrap_aiogram_service, get_bootstrap_metadata
 from interface_entry.telegram.routes import register_routes
@@ -317,6 +320,9 @@ def create_app() -> FastAPI:
     register_routes(app, bootstrap_state.dispatcher, WEBHOOK_PATH, policy, webhook_secret)
     app.include_router(get_pipeline_node_router())
     app.include_router(get_prompt_router())
+    app.include_router(get_tool_router())
+    app.include_router(get_stage_router())
+    app.include_router(get_workflow_router())
 
     _log_startup_step(
         "bootstrap.complete",

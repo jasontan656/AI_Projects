@@ -1,6 +1,6 @@
 <template>
   <el-container class="workspace-shell">
-    <el-aside ref="workspaceAside" width="248px" class="workspace-aside">
+    <el-aside width="248px" class="workspace-aside">
       <div class="workspace-brand">
         <h1>Up Ops Workspace</h1>
         <p>Workflow configuration for LLM pipelines</p>
@@ -8,7 +8,6 @@
       <el-menu class="workspace-menu" :default-active="activeNav">
         <el-menu-item
           index="nodes"
-          ref="nodesMenuRef"
           @click="handleMenuClick('nodes')"
         >
           <span>Nodes</span>
@@ -23,16 +22,6 @@
           <span v-if="item.soon" class="workspace-menu__soon">Soon</span>
         </el-menu-item>
       </el-menu>
-      <transition name="fade">
-        <div
-          v-if="nodesMenuVisible"
-          ref="nodesMenuPopover"
-          class="nodes-submenu-pop"
-          :style="{ top: `${nodesMenuPosition}px` }"
-        >
-          <NodeSubMenu @create="openCreateFromMenu" @manage="openManageFromMenu" />
-        </div>
-      </transition>
     </el-aside>
 
     <el-container>
@@ -57,9 +46,13 @@
 
       <el-main class="workspace-main">
         <section v-if="activeNav === 'nodes'" class="workspace-pane nodes-pane">
-          <template v-if="nodesViewMode === 'create'">
+          <template v-if="nodesStage === 'menu'">
+            <NodeSubMenu :actions="nodeActions" @select="handleNodeActionSelect" />
+          </template>
+
+          <template v-else-if="nodesStage === 'create'">
             <div class="nodes-toolbar">
-              <el-button type="text" @click="enterNodesMenu">返回节点菜单</el-button>
+              <el-button text @click="enterNodesMenu">返回节点菜单</el-button>
             </div>
             <div class="nodes-create">
               <NodeDraftForm
@@ -70,9 +63,9 @@
             </div>
           </template>
 
-          <template v-else>
-            <div class="nodes-toolbar">
-              <el-button type="text" @click="enterNodesMenu">返回节点菜单</el-button>
+          <template v-else-if="nodesStage === 'manage'">
+            <div class="nodes-toolbar nodes-toolbar--manage">
+              <el-button text @click="enterNodesMenu">返回节点菜单</el-button>
             </div>
             <div class="workspace-pane--two-column nodes-manage">
               <NodeList
@@ -98,6 +91,10 @@
                 </el-tabs>
               </div>
             </div>
+          </template>
+
+          <template v-else>
+            <el-empty description="当前阶段未定义" />
           </template>
         </section>
 
@@ -136,7 +133,8 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, onMounted, onBeforeUnmount, watch } from "vue";
+import { computed, ref, nextTick, watch } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 import NodeDraftForm from "../components/NodeDraftForm.vue";
 import NodeList from "../components/NodeList.vue";
@@ -156,9 +154,6 @@ const promptStore = usePromptDraftStore();
 
 const nodeFormRef = ref(null);
 const promptEditorRef = ref(null);
-const workspaceAside = ref(null);
-const nodesMenuRef = ref(null);
-const nodesMenuPopover = ref(null);
 
 const navItems = [
   {
@@ -202,9 +197,7 @@ const navItems = [
 
 const activeNav = ref("nodes");
 const nodesTab = ref("form");
-const nodesViewMode = ref("manage");
-const nodesMenuVisible = ref(false);
-const nodesMenuPosition = ref(0);
+const nodesStage = ref("menu");
 
 const currentNav = computed(
   () => navItems.find((item) => item.id === activeNav.value) ?? navItems[0]
@@ -214,7 +207,32 @@ const otherNavItems = computed(() =>
   navItems.filter((item) => item.id !== "nodes")
 );
 
-const refreshNodes = () => nodeFormRef.value?.refresh?.();
+const nodeActions = computed(() => [
+  {
+    id: "create",
+    label: "新建节点",
+    description: "从空白草稿开始构建节点配置与动作脚本。",
+    stage: "create",
+    ctaLabel: "开始创建",
+    ctaType: "primary",
+  },
+  {
+    id: "manage",
+    label: "管理节点",
+    description: "查看已创建的节点，执行编辑、删除等维护操作。",
+    stage: "manage",
+    ctaLabel: "进入管理",
+    disabled: pipelineStore.nodeCount === 0,
+    reason:
+      pipelineStore.nodeCount === 0
+        ? "暂无节点，请先创建一个节点后再进入管理。"
+        : "",
+  },
+]);
+
+const refreshNodes = async () => {
+  return await nodeFormRef.value?.refresh?.();
+};
 
 const refreshPrompts = () => {
   promptEditorRef.value?.refresh?.();
@@ -227,110 +245,149 @@ const handlePrimaryAction = () => {
   }
 };
 
-const updateNodesMenuPosition = () => {
-  const asideEl = workspaceAside.value?.$el ?? workspaceAside.value;
-  const menuEl = nodesMenuRef.value?.$el ?? nodesMenuRef.value;
-  if (!asideEl || !menuEl) return;
-  const asideRect = asideEl.getBoundingClientRect();
-  const menuRect = menuEl.getBoundingClientRect();
-  nodesMenuPosition.value = menuRect.top - asideRect.top + menuRect.height / 2;
-};
-
-const showNodesMenu = () => {
-  nodesMenuVisible.value = true;
-  nextTick(updateNodesMenuPosition);
-};
-
-const handleMenuClick = (id) => {
-  if (id === "nodes") {
-    if (activeNav.value !== "nodes") {
-      activeNav.value = "nodes";
-    }
-    if (nodesMenuVisible.value) {
-      nodesMenuVisible.value = false;
-    } else {
-      showNodesMenu();
-    }
-  } else {
-    activeNav.value = id;
-    nodesMenuVisible.value = false;
+const ensureCanLeaveStage = async (targetStage) => {
+  if (nodesStage.value !== "create" || targetStage === "create") {
+    return true;
+  }
+  const dirty = nodeFormRef.value?.isDirty?.();
+  if (!dirty) {
+    return true;
+  }
+  try {
+    await ElMessageBox.confirm(
+      "当前节点草稿尚未保存，确定要离开该阶段？",
+      "未保存的更改",
+      {
+        confirmButtonText: "仍然离开",
+        cancelButtonText: "继续编辑",
+        type: "warning",
+      }
+    );
+    return true;
+  } catch {
+    return false;
   }
 };
 
-const enterNodesMenu = () => {
-  if (activeNav.value !== "nodes") {
-    activeNav.value = "nodes";
+const applyStageEntry = async (stage, meta = {}) => {
+  if (stage === "menu") {
+    pipelineStore.resetSelection();
+    nodesTab.value = "form";
+    return;
   }
-  showNodesMenu();
+  if (stage === "create") {
+    pipelineStore.resetSelection();
+    nodesTab.value = "form";
+    await nextTick();
+    await nodeFormRef.value?.newEntry?.();
+    nodeFormRef.value?.syncBaseline?.();
+    return;
+  }
+  if (stage === "manage") {
+    nodesTab.value = "form";
+    await nextTick();
+    await refreshNodes();
+    if (!pipelineStore.nodeCount) {
+      nodesStage.value = "menu";
+      await applyStageEntry("menu");
+      ElMessage.info("暂无节点，请先创建一个节点。");
+      return;
+    }
+    if (meta?.nodeId) {
+      pipelineStore.setSelectedNode(meta.nodeId);
+    } else if (!pipelineStore.selectedNodeId && pipelineStore.nodes[0]?.id) {
+      pipelineStore.setSelectedNode(pipelineStore.nodes[0].id);
+    }
+  }
+};
+
+const setNodesStage = async (stage, options = {}) => {
+  const { force = false, skipLeaveGuard = false, meta = {} } = options;
+  if (!force && nodesStage.value === stage) {
+    await applyStageEntry(stage, meta);
+    return;
+  }
+  if (!skipLeaveGuard) {
+    const canLeave = await ensureCanLeaveStage(stage);
+    if (!canLeave) {
+      return;
+    }
+  }
+  nodesStage.value = stage;
+  await applyStageEntry(stage, meta);
+};
+
+const enterNodesMenu = async () => {
+  await setNodesStage("menu");
 };
 
 const startCreateNode = async () => {
-  nodesViewMode.value = "create";
-  nodesTab.value = "form";
-  pipelineStore.resetSelection();
-  await nextTick();
-  nodeFormRef.value?.newEntry?.();
+  await setNodesStage("create");
 };
 
 const startManageNodes = async ({ nodeId } = {}) => {
-  nodesViewMode.value = "manage";
-  nodesTab.value = "form";
-  await nextTick();
-  await refreshNodes();
-  if (nodeId) {
-    pipelineStore.setSelectedNode(nodeId);
+  await setNodesStage("manage", { meta: { nodeId } });
+};
+
+const handleNodeActionSelect = async (action) => {
+  if (!action?.stage) return;
+  if (action.stage === "create") {
+    await startCreateNode();
+    return;
   }
+  if (action.stage === "manage") {
+    await startManageNodes();
+    return;
+  }
+  await setNodesStage(action.stage);
 };
 
-const openCreateFromMenu = () => {
-  nodesMenuVisible.value = false;
-  startCreateNode();
-};
-
-const openManageFromMenu = () => {
-  nodesMenuVisible.value = false;
-  startManageNodes();
+const handleMenuClick = async (id) => {
+  if (id === "nodes") {
+    if (activeNav.value !== "nodes") {
+      const canEnter = await ensureCanLeaveStage("menu");
+      if (!canEnter) return;
+      activeNav.value = "nodes";
+    }
+    await setNodesStage("menu", { force: true });
+    return;
+  }
+  if (activeNav.value === "nodes") {
+    const canLeave = await ensureCanLeaveStage(id);
+    if (!canLeave) {
+      return;
+    }
+  }
+  activeNav.value = id;
 };
 
 const handleNodeSaved = async ({ nodeId } = {}) => {
   await startManageNodes({ nodeId });
 };
 
-const handleDocumentClick = (event) => {
-  if (!nodesMenuVisible.value) return;
-  const menuEl = nodesMenuPopover.value;
-  const nodeEl = nodesMenuRef.value?.$el ?? nodesMenuRef.value;
-  if (menuEl?.contains(event.target) || nodeEl?.contains(event.target)) {
-    return;
-  }
-  nodesMenuVisible.value = false;
-};
-
-onMounted(() => {
-  document.addEventListener("click", handleDocumentClick);
-  window.addEventListener("resize", updateNodesMenuPosition);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener("click", handleDocumentClick);
-  window.removeEventListener("resize", updateNodesMenuPosition);
-});
-
-watch(activeNav, (val) => {
-  if (val !== "nodes") {
-    nodesMenuVisible.value = false;
-  }
-});
-
-watch(nodesMenuVisible, (visible) => {
-  if (visible) {
-    nextTick(updateNodesMenuPosition);
-  }
-});
+watch(
+  activeNav,
+  async (val) => {
+    if (val === "nodes") {
+      await setNodesStage("menu", { force: true, skipLeaveGuard: true });
+    }
+  },
+  { immediate: true }
+);
 
 const handleDeleteNode = async (node) => {
   if (!node?.id) return;
-  if (typeof window !== "undefined" && !window.confirm("确认删除该节点？")) {
+  try {
+    await ElMessageBox.confirm(
+      "确认删除该节点？此操作无法撤销。",
+      "删除节点",
+      {
+        confirmButtonText: "确认删除",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    );
+  } catch {
     return;
   }
   try {
@@ -338,11 +395,21 @@ const handleDeleteNode = async (node) => {
     pipelineStore.removeNodeDraft(node.id);
     if (pipelineStore.selectedNodeId === node.id) {
       pipelineStore.resetSelection();
-      nodeFormRef.value?.newEntry?.();
     }
-    refreshNodes();
+    await refreshNodes();
+    ElMessage.success("节点已删除");
+    if (!pipelineStore.nodeCount) {
+      await setNodesStage("menu", { force: true, skipLeaveGuard: true });
+      ElMessage.info("暂无节点，请先创建一个节点。");
+    } else if (nodesStage.value === "manage" && !pipelineStore.selectedNodeId) {
+      const fallbackNode = pipelineStore.nodes[0];
+      if (fallbackNode?.id) {
+        pipelineStore.setSelectedNode(fallbackNode.id);
+      }
+    }
   } catch (error) {
     console.error("删除节点失败", error);
+    ElMessage.error("删除节点失败，请稍后重试");
   }
 };
 
@@ -495,13 +562,6 @@ const handleDeletePrompt = async (prompt) => {
   border: 1px dashed var(--color-border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-5) 0;
-}
-
-.nodes-submenu-pop {
-  position: absolute;
-  left: calc(100% + var(--space-3));
-  transform: translateY(-50%);
-  z-index: 10;
 }
 
 .nodes-pane {

@@ -93,6 +93,7 @@ const form = reactive({
 const isSaving = ref(false);
 const errors = reactive({ name: "", actions: "" });
 const nameField = ref(null);
+const baselineSignature = ref("");
 
 const selectedNode = computed(() => pipelineStore.selectedNode);
 const isEditing = computed(() => Boolean(selectedNode.value));
@@ -153,20 +154,32 @@ const focusName = () => {
   nameField.value?.focus();
 };
 
+const serializeForm = () =>
+  JSON.stringify({
+    name: form.name || "",
+    allowLLM: Boolean(form.allowLLM),
+    actions: cloneActions(form.actions || []),
+  });
+
+const syncBaseline = () => {
+  baselineSignature.value = serializeForm();
+};
+
+const isDirty = () => serializeForm() !== baselineSignature.value;
+
 const populateForm = (node) => {
   if (!node) {
     form.name = "";
     form.allowLLM = true;
     form.actions = [];
-    errors.name = "";
-    errors.actions = "";
-    return;
+  } else {
+    form.name = node.name || "";
+    form.allowLLM = Boolean(node.allowLLM);
+    form.actions = cloneActions(node.actions || []);
   }
-  form.name = node.name || "";
-  form.allowLLM = Boolean(node.allowLLM);
-  form.actions = cloneActions(node.actions || []);
   errors.name = "";
   errors.actions = "";
+  syncBaseline();
 };
 
 const fetchNodes = async () => {
@@ -309,7 +322,7 @@ onMounted(async () => {
   focusName();
 });
 
-defineExpose({ refresh: fetchNodes, newEntry });
+defineExpose({ refresh: fetchNodes, newEntry, isDirty, syncBaseline });
 </script>
 
 <style scoped>
