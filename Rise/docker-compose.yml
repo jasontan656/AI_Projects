@@ -1,0 +1,89 @@
+services:
+  mongo:
+    image: mongodb/mongodb-community-server:7.0-ubuntu2204
+    hostname: mongo
+    restart: unless-stopped
+    user: "0"
+    entrypoint:
+      - /bin/bash
+      - /docker-entrypoint-custom.sh
+    command:
+      - "--replSet"
+      - "rs0"
+      - "--bind_ip_all"
+      - "--keyFile"
+      - "/tmp/mongo-repl.key"
+      - "--port"
+      - "${MONGODB_PORT:-27017}"
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: changeme
+      MONGODB_REPLICA_SET_KEY: rise-replica-key
+      MONGODB_REPLICA_SET_HOST: ${MONGODB_REPLICA_SET_HOST:-mongo:27017}
+      MONGODB_PORT: ${MONGODB_PORT:-27017}
+    volumes:
+      - ./var/docker/mongo:/data/db
+      - ./docker/mongo/init:/docker-entrypoint-initdb.d:ro
+      - ./docker/mongo/keyfile:/docker-key-secrets:ro
+      - ./docker/mongo/entrypoint.sh:/docker-entrypoint-custom.sh:ro
+    ports:
+      - "${MONGODB_PORT:-27017}:${MONGODB_PORT:-27017}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --quiet -u root -p changeme --authenticationDatabase admin --eval \"db.adminCommand({ ping: 1 })\" || exit 1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 20s
+    networks:
+      - rise-stack
+
+  redis:
+    image: redis:7.2.4-alpine3.20
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./var/docker/redis:/data
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli PING || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - rise-stack
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - ./var/docker/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "56730:5672"
+      - "15680:15672"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "rabbitmq-diagnostics check_port_listener 5672 || exit 1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 20s
+    networks:
+      - rise-stack
+
+volumes: {}
+
+networks:
+  rise-stack:
+    driver: bridge

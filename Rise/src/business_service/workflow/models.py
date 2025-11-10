@@ -11,6 +11,8 @@ __all__ = [
     "ToolDefinition",
     "StageDefinition",
     "WorkflowDefinition",
+    "PromptBinding",
+    "WorkflowPublishRecord",
 ]
 
 
@@ -154,7 +156,14 @@ class WorkflowDefinition:
     description: str = ""
     stage_ids: Sequence[str] = field(default_factory=tuple)
     metadata: Mapping[str, Any] = field(default_factory=dict)
+    node_sequence: Sequence[str] = field(default_factory=tuple)
+    prompt_bindings: Sequence[PromptBinding] = field(default_factory=tuple)
+    strategy: Mapping[str, Any] = field(default_factory=dict)
+    status: str = "draft"
     version: int = 1
+    published_version: int = 0
+    pending_changes: bool = True
+    publish_history: Sequence[WorkflowPublishRecord] = field(default_factory=tuple)
     created_at: datetime = field(default_factory=_now_utc)
     updated_at: datetime = field(default_factory=_now_utc)
     updated_by: Optional[str] = None
@@ -166,7 +175,14 @@ class WorkflowDefinition:
             "description": self.description,
             "stage_ids": list(self.stage_ids),
             "metadata": dict(self.metadata),
+            "node_sequence": list(self.node_sequence),
+            "prompt_bindings": [binding.to_document() for binding in self.prompt_bindings],
+            "strategy": dict(self.strategy),
+            "status": self.status,
             "version": self.version,
+            "published_version": self.published_version,
+            "pending_changes": self.pending_changes,
+            "publish_history": [record.to_document() for record in self.publish_history],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "updated_by": self.updated_by,
@@ -180,7 +196,19 @@ class WorkflowDefinition:
             description=str(doc.get("description", "")),
             stage_ids=tuple(str(s) for s in (doc.get("stage_ids") or [])),
             metadata=dict(doc.get("metadata") or {}),
+            node_sequence=tuple(str(node) for node in (doc.get("node_sequence") or [])),
+            prompt_bindings=tuple(
+                PromptBinding.from_document(item) for item in (doc.get("prompt_bindings") or [])
+            ),
+            strategy=dict(doc.get("strategy") or {}),
+            status=str(doc.get("status", "draft")),
             version=int(doc.get("version", 1)),
+            published_version=int(doc.get("published_version", doc.get("publishedVersion", 0) or 0)),
+            pending_changes=bool(doc.get("pending_changes", doc.get("pendingChanges", True))),
+            publish_history=tuple(
+                WorkflowPublishRecord.from_document(item)
+                for item in (doc.get("publish_history") or doc.get("publishHistory") or [])
+            ),
             created_at=doc.get("created_at") or _now_utc(),
             updated_at=doc.get("updated_at") or _now_utc(),
             updated_by=doc.get("updated_by"),
@@ -194,7 +222,12 @@ class WorkflowDefinition:
         description: str = "",
         stage_ids: Optional[Sequence[str]] = None,
         metadata: Optional[Mapping[str, Any]] = None,
+        node_sequence: Optional[Sequence[str]] = None,
+        prompt_bindings: Optional[Sequence[PromptBinding]] = None,
+        strategy: Optional[Mapping[str, Any]] = None,
+        status: str = "draft",
         actor: Optional[str] = None,
+        pending_changes: bool = True,
     ) -> "WorkflowDefinition":
         now = _now_utc()
         return cls(
@@ -203,7 +236,60 @@ class WorkflowDefinition:
             description=description,
             stage_ids=tuple(stage_ids or []),
             metadata=dict(metadata or {}),
+            node_sequence=tuple(node_sequence or []),
+            prompt_bindings=tuple(prompt_bindings or ()),
+            strategy=dict(strategy or {}),
+            status=status,
+            published_version=0,
+            pending_changes=pending_changes,
             updated_by=actor,
             created_at=now,
             updated_at=now,
+        )
+
+
+@dataclass(slots=True)
+class PromptBinding:
+    node_id: str
+    prompt_id: str
+
+    def to_document(self) -> Mapping[str, Any]:
+        return {"node_id": self.node_id, "prompt_id": self.prompt_id}
+
+    @classmethod
+    def from_document(cls, doc: Mapping[str, Any]) -> "PromptBinding":
+        return cls(node_id=str(doc.get("node_id", "")), prompt_id=str(doc.get("prompt_id", "")))
+
+
+@dataclass(slots=True)
+class WorkflowPublishRecord:
+    version: int
+    action: str
+    actor: Optional[str]
+    comment: Optional[str]
+    timestamp: datetime
+    snapshot: Mapping[str, Any]
+    diff: Mapping[str, Any] = field(default_factory=dict)
+
+    def to_document(self) -> Mapping[str, Any]:
+        return {
+            "version": self.version,
+            "action": self.action,
+            "actor": self.actor,
+            "comment": self.comment,
+            "timestamp": self.timestamp,
+            "snapshot": dict(self.snapshot),
+            "diff": dict(self.diff),
+        }
+
+    @classmethod
+    def from_document(cls, doc: Mapping[str, Any]) -> "WorkflowPublishRecord":
+        return cls(
+            version=int(doc.get("version", 0)),
+            action=str(doc.get("action", "")),
+            actor=doc.get("actor"),
+            comment=doc.get("comment"),
+            timestamp=doc.get("timestamp") or _now_utc(),
+            snapshot=dict(doc.get("snapshot") or {}),
+            diff=dict(doc.get("diff") or {}),
         )

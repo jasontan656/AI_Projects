@@ -1,22 +1,21 @@
 <template>
   <section class="workflow-canvas">
     <header class="workflow-canvas__header">
-      <h2>Workflow Preview</h2>
-      <p>使用 VueFlow 预览节点与连线，后端对接完成后可替换为真实数据。</p>
+      <h2>Workflow 画布</h2>
+      <p>根据节点顺序展示执行关系，提示词绑定将显示在节点标签中。</p>
     </header>
     <div class="workflow-canvas__body">
       <VueFlow
         fit-view
-        :nodes="nodes"
-        :edges="edges"
+        :nodes="computedNodes"
+        :edges="computedEdges"
         class="workflow-canvas__flow"
         :default-viewport="{ zoom: 0.9, x: 0, y: 0 }"
       />
     </div>
     <footer class="workflow-canvas__footer">
-      <p>
-        当前展示为静态示例。后续实现中将从 pipeline store 生成节点、边并支持拖拽与节点设置。
-      </p>
+      <p v-if="!nodeSequence.length">暂无节点，请先在编辑器中配置节点顺序。</p>
+      <p v-else>后续可在此支持拖拽与高级编辑，目前仅提供只读预览。</p>
     </footer>
   </section>
 </template>
@@ -24,42 +23,73 @@
 <script setup>
 import { computed } from "vue";
 import { VueFlow } from "@vue-flow/core";
+import "@vue-flow/core/dist/style.css";
 
-const nodes = computed(() => [
-  {
-    id: "start",
-    type: "input",
-    label: "入口节点",
-    position: { x: 0, y: 80 },
-    data: { description: "初始化上下文" },
+const props = defineProps({
+  nodeSequence: {
+    type: Array,
+    default: () => [],
   },
-  {
-    id: "llm",
-    type: "default",
-    label: "LLM 动作",
-    position: { x: 220, y: 40 },
-    data: { description: "prompt_append" },
+  nodes: {
+    type: Array,
+    default: () => [],
   },
-  {
-    id: "tool",
-    type: "default",
-    label: "工具调用",
-    position: { x: 220, y: 180 },
+  promptBindings: {
+    type: Array,
+    default: () => [],
   },
-  {
-    id: "end",
-    type: "output",
-    label: "输出节点",
-    position: { x: 440, y: 110 },
-  },
-]);
+});
 
-const edges = computed(() => [
-  { id: "start-llm", source: "start", target: "llm" },
-  { id: "start-tool", source: "start", target: "tool" },
-  { id: "llm-end", source: "llm", target: "end", animated: true },
-  { id: "tool-end", source: "tool", target: "end" },
-]);
+const nodeMap = computed(() => {
+  const map = new Map();
+  (props.nodes || []).forEach((node) => {
+    if (node?.id) {
+      map.set(node.id, node);
+    }
+  });
+  return map;
+});
+
+const promptMap = computed(() => {
+  const map = new Map();
+  (props.promptBindings || []).forEach((binding) => {
+    if (binding?.nodeId) {
+      map.set(binding.nodeId, binding.promptId || null);
+    }
+  });
+  return map;
+});
+
+const computedNodes = computed(() => {
+  const spacingX = 220;
+  const spacingY = 120;
+  return props.nodeSequence.map((nodeId, index) => {
+    const node = nodeMap.value.get(nodeId) || {};
+    const promptId = promptMap.value.get(nodeId);
+    return {
+      id: nodeId,
+      type: index === 0 ? "input" : index === props.nodeSequence.length - 1 ? "output" : "default",
+      label: node.name || nodeId,
+      position: { x: spacingX * index, y: spacingY * (index % 2) },
+      data: {
+        description: promptId ? `绑定提示词：${promptId}` : "使用节点默认提示词",
+      },
+    };
+  });
+});
+
+const computedEdges = computed(() => {
+  const edges = [];
+  for (let i = 0; i < props.nodeSequence.length - 1; i += 1) {
+    edges.push({
+      id: `${props.nodeSequence[i]}-${props.nodeSequence[i + 1]}`,
+      source: props.nodeSequence[i],
+      target: props.nodeSequence[i + 1],
+      animated: true,
+    });
+  }
+  return edges;
+});
 </script>
 
 <style scoped>

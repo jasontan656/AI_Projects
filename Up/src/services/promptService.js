@@ -1,62 +1,54 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+import { requestJson } from "./httpClient";
 
 const sanitize = (value) => (value || "").trim();
 
-async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    let message = `请求失败: ${response.status}`;
-    try {
-      const detail = await response.json();
-      message =
-        detail?.detail?.message ||
-        detail?.detail ||
-        detail?.error ||
-        message;
-    } catch {
-      // ignore parse errors
-    }
-    throw new Error(message);
+const ensureValidPageParam = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  if (Number.isFinite(parsed) && parsed >= 1 && parsed <= 100) {
+    return parsed;
   }
-
-  const contentType = response.headers.get("Content-Type") || "";
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-  return null;
-}
+  return fallback;
+};
 
 export async function listPrompts(params = {}) {
+  const page = ensureValidPageParam(params.page, 1);
+  const pageSize = ensureValidPageParam(params.pageSize, 50);
+
   const query = new URLSearchParams();
-  query.set("page", params.page?.toString() || "1");
-  query.set("pageSize", params.pageSize?.toString() || "50");
+  query.set("page", page.toString());
+  query.set("pageSize", pageSize.toString());
+
   const search = query.toString();
-  return request(`/api/prompts${search ? `?${search}` : ""}`, { method: "GET" });
+  const response = await requestJson(
+    `/api/prompts${search ? `?${search}` : ""}`,
+    { method: "GET" }
+  );
+  return {
+    data: response?.data ?? null,
+    meta: response?.meta ?? null,
+  };
 }
 
 export async function createPrompt(payload) {
   const name = sanitize(payload?.name);
   const markdown = sanitize(payload?.markdown);
 
+  if (!name) {
+    throw new Error("提示词名称不能为空");
+  }
   if (!markdown) {
     throw new Error("Markdown 内容不能为空");
   }
 
-  return request("/api/prompts", {
+  const response = await requestJson("/api/prompts", {
     method: "POST",
     body: JSON.stringify({
-      name: name || "未命名提示词",
+      name,
       markdown,
     }),
   });
+
+  return response?.data ?? null;
 }
 
 export async function updatePrompt(promptId, payload = {}) {
@@ -64,22 +56,47 @@ export async function updatePrompt(promptId, payload = {}) {
     throw new Error("缺少提示词 ID");
   }
   const body = {};
-  if (payload.name !== undefined) body.name = sanitize(payload.name);
-  if (payload.markdown !== undefined) body.markdown = sanitize(payload.markdown);
+  if (payload.name !== undefined) {
+    const trimmed = sanitize(payload.name);
+    if (!trimmed) {
+      throw new Error("提示词名称不能为空");
+    }
+    body.name = trimmed;
+  }
+  if (payload.markdown !== undefined) {
+    const trimmedMarkdown = sanitize(payload.markdown);
+    if (!trimmedMarkdown) {
+      throw new Error("Markdown 内容不能为空");
+    }
+    body.markdown = trimmedMarkdown;
+  }
 
-  return request(`/api/prompts/${encodeURIComponent(promptId)}`, {
-    method: "PUT",
-    body: JSON.stringify(body),
-  });
+  if (Object.keys(body).length === 0) {
+    throw new Error("缺少可更新的字段");
+  }
+
+  const response = await requestJson(
+    `/api/prompts/${encodeURIComponent(promptId)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }
+  );
+
+  return response?.data ?? null;
 }
 
 export async function deletePrompt(promptId) {
   if (!promptId) {
     throw new Error("缺少提示词 ID");
   }
-  return request(`/api/prompts/${encodeURIComponent(promptId)}`, {
-    method: "DELETE",
-  });
+  const response = await requestJson(
+    `/api/prompts/${encodeURIComponent(promptId)}`,
+    {
+      method: "DELETE",
+    }
+  );
+  return response?.meta ?? null;
 }
 
 export const listPromptDrafts = listPrompts;

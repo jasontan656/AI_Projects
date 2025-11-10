@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 
+import { listPromptDrafts } from "../services/promptService";
+
 const createInitialState = () => ({
   prompts: [],
   selectedPromptId: null,
@@ -51,6 +53,14 @@ export const usePromptDraftStore = defineStore("promptDraft", {
     },
     reset() {
       this.$reset();
+    },
+    async refreshPrompts(options = {}) {
+      const page = options.page ?? 1;
+      const pageSize = options.pageSize ?? 50;
+      const { data } = await listPromptDrafts({ page, pageSize });
+      const items = Array.isArray(data?.items) ? data.items : [];
+      this.replacePrompts(items);
+      return items;
     },
   },
 });

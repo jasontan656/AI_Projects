@@ -1,14 +1,40 @@
-import {
-  composeSystemPromptFromActions,
-  serializeActionsForApi,
-} from "../utils/nodeActions";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+import { requestJson } from "./httpClient";
+import { composeSystemPromptFromActions } from "../utils/nodeActions";
 
 const sanitizeName = (name) => (name || "").trim();
 const sanitizePrompt = (prompt) => (prompt || "").trim();
 const asBoolean = (value) => Boolean(value);
+const ALLOWED_STATUS = new Set(["draft", "published"]);
+
+const ensureIsoDateTime = (input) => {
+  if (input instanceof Date && !Number.isNaN(input.valueOf())) {
+    return input.toISOString();
+  }
+  if (typeof input === "string" && input.trim()) {
+    const parsed = Date.parse(input);
+    if (!Number.isNaN(parsed)) {
+      return new Date(parsed).toISOString();
+    }
+  }
+  return new Date().toISOString();
+};
+
+const normalizeStatus = (status) => {
+  const value = (status || "").trim().toLowerCase();
+  return ALLOWED_STATUS.has(value) ? value : "draft";
+};
+
+const sanitizePipelineId = (value) => {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  const stringified = String(value ?? "").trim();
+  return stringified.length ? stringified : null;
+};
+
+const isPlainObject = (candidate) =>
+  candidate !== null &&
+  typeof candidate === "object" &&
+  Object.prototype.toString.call(candidate) === "[object Object]";
 
 const buildSystemPrompt = (actions, fallback) => {
   const serialized = composeSystemPromptFromActions(actions);
@@ -18,59 +44,40 @@ const buildSystemPrompt = (actions, fallback) => {
   return sanitizePrompt(fallback);
 };
 
-async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
-
-  if (!response.ok) {
-    let message = `请求失败: ${response.status}`;
-    try {
-      const detail = await response.json();
-      message =
-        detail?.detail?.message ||
-        detail?.detail ||
-        detail?.error ||
-        message;
-    } catch {
-      // ignore parse errors
-    }
-    throw new Error(message);
+const resolveSystemPrompt = (payload) => {
+  const actions = Array.isArray(payload?.actions) ? payload.actions : undefined;
+  const fallbackPrompt = payload?.systemPrompt;
+  if (actions !== undefined) {
+    return buildSystemPrompt(actions, fallbackPrompt);
   }
-
-  const contentType = response.headers.get("Content-Type") || "";
-  if (contentType.includes("application/json")) {
-    return response.json();
+  if (fallbackPrompt !== undefined) {
+    return sanitizePrompt(fallbackPrompt);
   }
-  return null;
-}
+  return undefined;
+};
 
 export async function createPipelineNode(payload) {
   const name = sanitizeName(payload?.name);
   if (!name) {
     throw new Error("节点名称不能为空");
   }
-  const actions = serializeActionsForApi(payload?.actions || []);
 
   const body = {
     name,
     allowLLM: asBoolean(payload?.allowLLM),
-    actions,
-    systemPrompt: buildSystemPrompt(actions, payload?.systemPrompt),
-    createdAt: payload?.createdAt || new Date().toISOString(),
-    pipelineId: payload?.pipelineId ?? null,
-    status: payload?.status || "draft",
-    strategy: payload?.strategy ?? {},
+    systemPrompt: resolveSystemPrompt(payload) ?? "",
+    createdAt: ensureIsoDateTime(payload?.createdAt),
+    pipelineId: sanitizePipelineId(payload?.pipelineId) ?? null,
+    status: normalizeStatus(payload?.status),
+    strategy: isPlainObject(payload?.strategy) ? payload.strategy : {},
   };
 
-  return request("/api/pipeline-nodes", {
+  const response = await requestJson("/api/pipeline-nodes", {
     method: "POST",
     body: JSON.stringify(body),
   });
+
+  return response?.data ?? null;
 }
 
 export async function updatePipelineNode(nodeId, payload = {}) {
@@ -78,29 +85,41 @@ export async function updatePipelineNode(nodeId, payload = {}) {
     throw new Error("缺少节点 ID");
   }
 
-  const actions =
-    payload.actions !== undefined
-      ? serializeActionsForApi(payload.actions || [])
-      : undefined;
-
   const body = {};
-  if (payload.name !== undefined) body.name = sanitizeName(payload.name);
-  if (payload.allowLLM !== undefined) body.allowLLM = asBoolean(payload.allowLLM);
-  if (payload.status !== undefined) body.status = payload.status;
-  if (payload.pipelineId !== undefined)
-    body.pipelineId = payload.pipelineId ?? null;
-  if (payload.strategy !== undefined) body.strategy = payload.strategy ?? {};
-  if (actions !== undefined) {
-    body.actions = actions;
-    body.systemPrompt = buildSystemPrompt(actions, payload.systemPrompt);
-  } else if (payload.systemPrompt !== undefined) {
-    body.systemPrompt = sanitizePrompt(payload.systemPrompt);
+  if (payload.name !== undefined) {
+    const trimmedName = sanitizeName(payload.name);
+    if (!trimmedName) {
+      throw new Error("节点名称不能为空");
+    }
+    body.name = trimmedName;
+  }
+  if (payload.allowLLM !== undefined) {
+    body.allowLLM = asBoolean(payload.allowLLM);
+  }
+  if (payload.status !== undefined) {
+    body.status = normalizeStatus(payload.status);
+  }
+  if (payload.pipelineId !== undefined) {
+    const sanitized = sanitizePipelineId(payload.pipelineId);
+    body.pipelineId = sanitized === undefined ? null : sanitized;
+  }
+  if (payload.strategy !== undefined) {
+    body.strategy = isPlainObject(payload.strategy) ? payload.strategy : {};
+  }
+  const systemPrompt = resolveSystemPrompt(payload);
+  if (systemPrompt !== undefined) {
+    body.systemPrompt = systemPrompt;
   }
 
-  return request(`/api/pipeline-nodes/${encodeURIComponent(nodeId)}`, {
-    method: "PUT",
-    body: JSON.stringify(body),
-  });
+  const response = await requestJson(
+    `/api/pipeline-nodes/${encodeURIComponent(nodeId)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }
+  );
+
+  return response?.data ?? null;
 }
 
 export async function listPipelineNodes(params = {}) {
@@ -112,14 +131,22 @@ export async function listPipelineNodes(params = {}) {
 
   const search = query.toString();
   const path = `/api/pipeline-nodes${search ? `?${search}` : ""}`;
-  return request(path, { method: "GET" });
+  const response = await requestJson(path, { method: "GET" });
+  return {
+    data: response?.data ?? null,
+    meta: response?.meta ?? null,
+  };
 }
 
 export async function deletePipelineNode(nodeId) {
   if (!nodeId) {
     throw new Error("缺少节点 ID");
   }
-  return request(`/api/pipeline-nodes/${encodeURIComponent(nodeId)}`, {
-    method: "DELETE",
-  });
+  const response = await requestJson(
+    `/api/pipeline-nodes/${encodeURIComponent(nodeId)}`,
+    {
+      method: "DELETE",
+    }
+  );
+  return response?.meta ?? null;
 }

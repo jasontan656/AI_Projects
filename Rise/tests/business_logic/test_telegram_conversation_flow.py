@@ -5,6 +5,7 @@ from typing import Any, Dict, Iterable, Mapping, MutableMapping
 import pytest
 
 import business_logic.conversation.telegram_flow as flow_module
+import business_service.conversation.service as service_module
 from business_logic.conversation import TelegramConversationFlow
 
 
@@ -74,8 +75,16 @@ async def test_flow_raises_on_legacy_prompt(monkeypatch: pytest.MonkeyPatch) -> 
             "edits": [],
         }
 
-    monkeypatch.setattr(flow_module, "behavior_telegram_inbound", fake_behavior_telegram_inbound)
-    monkeypatch.setattr(flow_module, "behavior_telegram_outbound", fake_behavior_telegram_outbound)
+    monkeypatch.setattr(
+        service_module,
+        "contracts_telegram_inbound",
+        fake_behavior_telegram_inbound,
+    )
+    monkeypatch.setattr(
+        service_module,
+        "contracts_telegram_outbound",
+        fake_behavior_telegram_outbound,
+    )
 
     flow = TelegramConversationFlow(adapter_builder=StubAdapterBuilder())
     policy = {"tokens_budget": {"per_call_max_tokens": 1000, "summary_threshold_tokens": 400}}
@@ -112,8 +121,16 @@ async def test_flow_invokes_agent_delegator(monkeypatch: pytest.MonkeyPatch) -> 
             "edits": [],
         }
 
-    monkeypatch.setattr(flow_module, "behavior_telegram_inbound", fake_behavior_telegram_inbound)
-    monkeypatch.setattr(flow_module, "behavior_telegram_outbound", fake_behavior_telegram_outbound)
+    monkeypatch.setattr(
+        service_module,
+        "contracts_telegram_inbound",
+        fake_behavior_telegram_inbound,
+    )
+    monkeypatch.setattr(
+        service_module,
+        "contracts_telegram_outbound",
+        fake_behavior_telegram_outbound,
+    )
 
     delegator_payload = {
         "agent_bridge_result": {

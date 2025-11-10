@@ -16,13 +16,15 @@ from .clock import (
     philippine_time_zone,
 )
 from .context import ContextBridge
-from .logging import configure_logging
+from .logging import configure_logging, finalize_log_workspace, initialize_log_workspace
 from .tracing import TraceSpan, trace_span
 
 __all__ = [
     "ContextBridge",
     "TraceSpan",
     "configure_logging",
+    "finalize_log_workspace",
+    "initialize_log_workspace",
     "ensure_philippine",
     "philippine_from_timestamp",
     "philippine_iso",

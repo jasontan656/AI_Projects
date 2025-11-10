@@ -1,7 +1,7 @@
 <template>
-  <section class="prompt-editor">
+  <section :class="['prompt-editor', { 'prompt-editor--full': isFullLayout }]">
     <header class="prompt-editor__header">
-      <div>
+      <div class="prompt-editor__title">
         <h2>{{ isEditing ? "编辑提示词" : "新增提示词" }}</h2>
         <p>编辑 MarkdownV2 内容，支持语法高亮。</p>
       </div>
@@ -14,55 +14,54 @@
         >
           {{ isSaving ? "保存中…" : isEditing ? "更新提示词" : "保存提示词" }}
         </button>
-        <button type="button" class="prompt-editor__ghost" @click="newEntry" :disabled="isSaving">
-          新建
-        </button>
         <span class="prompt-editor__status" :class="{ 'prompt-editor__status--visible': toastVisible }">
           {{ toastMessage }}
         </span>
       </div>
     </header>
 
-    <section class="prompt-editor__form">
-      <label class="prompt-editor__label" for="prompt-name">提示词名称</label>
-      <input
-        id="prompt-name"
-        v-model="name"
-        class="prompt-editor__input"
-        type="text"
-        placeholder="为提示词命名"
-      />
-      <p v-if="errors.name" class="prompt-editor__error">{{ errors.name }}</p>
-    </section>
-
-    <section class="prompt-editor__grid">
-      <div class="prompt-editor__panel">
-        <header class="prompt-editor__panel-header">
-          <h3>内容编辑</h3>
-          <div class="prompt-editor__panel-controls">
-            <label class="prompt-editor__language" for="prompt-language">
-              <span>语法高亮</span>
-              <select
-                id="prompt-language"
-                name="promptLanguage"
-                v-model="editorLanguage"
-                class="prompt-editor__language-select"
-              >
-                <option v-for="option in editorLanguages" :key="option.value" :value="option.value">
-                  {{ option.label }}
-                </option>
-              </select>
-            </label>
-          </div>
-        </header>
-        <PromptCodeEditor
-          v-model="markdownContent"
-          :language="editorLanguage"
-          placeholder="请输入 Markdown 正文"
+    <div class="prompt-editor__body">
+      <section class="prompt-editor__form">
+        <label class="prompt-editor__label" for="prompt-name">提示词名称</label>
+        <input
+          id="prompt-name"
+          v-model="name"
+          class="prompt-editor__input"
+          type="text"
+          placeholder="为提示词命名"
         />
-        <p v-if="errors.markdown" class="prompt-editor__error">{{ errors.markdown }}</p>
-      </div>
-    </section>
+        <p v-if="errors.name" class="prompt-editor__error">{{ errors.name }}</p>
+      </section>
+
+      <section class="prompt-editor__grid">
+        <div class="prompt-editor__panel">
+          <header class="prompt-editor__panel-header">
+            <h3>内容编辑</h3>
+            <div class="prompt-editor__panel-controls">
+              <label class="prompt-editor__language" for="prompt-language">
+                <span>语法高亮</span>
+                <select
+                  id="prompt-language"
+                  name="promptLanguage"
+                  v-model="editorLanguage"
+                  class="prompt-editor__language-select"
+                >
+                  <option v-for="option in editorLanguages" :key="option.value" :value="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </label>
+            </div>
+          </header>
+          <PromptCodeEditor
+            v-model="markdownContent"
+            :language="editorLanguage"
+            placeholder="请输入 Markdown 正文"
+          />
+          <p v-if="errors.markdown" class="prompt-editor__error">{{ errors.markdown }}</p>
+        </div>
+      </section>
+    </div>
   </section>
 </template>
 
@@ -73,9 +72,17 @@ import PromptCodeEditor from "../components/PromptCodeEditor.vue";
 import { usePromptDraftStore } from "../stores/promptDraft";
 import {
   createPromptDraft,
-  listPromptDrafts,
   updatePromptDraft,
 } from "../services/promptService";
+
+const props = defineProps({
+  layout: {
+    type: String,
+    default: "split",
+  },
+});
+
+const emit = defineEmits(["saved"]);
 
 const editorLanguages = [
   { label: "Markdown", value: "markdown" },
@@ -88,6 +95,7 @@ const markdownContent = ref("");
 const editorLanguage = ref("markdown");
 const isSaving = ref(false);
 const errors = reactive({ name: "", markdown: "" });
+const baseline = reactive({ name: "", markdown: "" });
 
 const toastMessage = ref("");
 const toastVisible = ref(false);
@@ -95,6 +103,15 @@ const toastVisible = ref(false);
 const promptDraftStore = usePromptDraftStore();
 const selectedPrompt = computed(() => promptDraftStore.selectedPrompt);
 const isEditing = computed(() => Boolean(selectedPrompt.value));
+const isFullLayout = computed(() => props.layout === "full");
+
+const syncBaseline = () => {
+  baseline.name = name.value;
+  baseline.markdown = markdownContent.value;
+};
+
+const isDirty = () =>
+  name.value !== baseline.name || markdownContent.value !== baseline.markdown;
 
 const applyPrompt = (prompt) => {
   errors.name = "";
@@ -103,20 +120,22 @@ const applyPrompt = (prompt) => {
     name.value = "";
     markdownContent.value = "";
     editorLanguage.value = "markdown";
+    syncBaseline();
     return;
   }
 
   name.value = prompt.name || "";
   markdownContent.value = prompt.markdown || "";
+  syncBaseline();
 };
 
 const fetchPrompts = async () => {
   try {
-    const response = await listPromptDrafts({ pageSize: 50 });
-    const items = Array.isArray(response?.items) ? response.items : [];
-    promptDraftStore.replacePrompts(items);
+    await promptDraftStore.refreshPrompts({ pageSize: 50 });
+    return true;
   } catch (error) {
     console.warn("加载提示词列表失败", error);
+    return false;
   }
 };
 
@@ -130,36 +149,50 @@ const handleSubmit = async () => {
   errors.name = "";
   errors.markdown = "";
 
-  if (!name.value.trim()) {
+  const trimmedName = name.value.trim();
+  const trimmedMarkdown = markdownContent.value.trim();
+
+  if (!trimmedName) {
     errors.name = "提示词名称不能为空";
     return;
   }
-  if (!markdownContent.value.trim()) {
+  if (!trimmedMarkdown) {
     errors.markdown = "Markdown 内容不能为空";
     return;
   }
 
+  name.value = trimmedName;
+  markdownContent.value = trimmedMarkdown;
+
   try {
+    let targetPromptId = selectedPrompt.value?.id ?? null;
     isSaving.value = true;
     if (selectedPrompt.value) {
       await updatePromptDraft(selectedPrompt.value.id, {
-        name: name.value,
-        markdown: markdownContent.value,
+        name: trimmedName,
+        markdown: trimmedMarkdown,
       });
     } else {
       const created = await createPromptDraft({
-        name: name.value,
-        markdown: markdownContent.value,
+        name: trimmedName,
+        markdown: trimmedMarkdown,
       });
       if (created?.id) {
         promptDraftStore.setSelectedPrompt(created.id);
+        targetPromptId = created.id;
       }
     }
     await fetchPrompts();
     applyPrompt(promptDraftStore.selectedPrompt || null);
+    emit("saved", { promptId: targetPromptId || promptDraftStore.selectedPromptId || null });
     showToast(selectedPrompt.value ? "更新成功" : "保存成功");
   } catch (error) {
-    errors.markdown = error.message || "保存失败";
+    const message = error.message || "保存失败";
+    if (message.includes("名称")) {
+      errors.name = message;
+    } else {
+      errors.markdown = message;
+    }
   } finally {
     isSaving.value = false;
   }
@@ -200,7 +233,13 @@ watch(name, () => {
   }
 });
 
-defineExpose({ refresh: fetchPrompts, newEntry, handleSubmit });
+defineExpose({
+  refresh: fetchPrompts,
+  newEntry,
+  handleSubmit,
+  isDirty,
+  syncBaseline,
+});
 </script>
 
 <style scoped>
@@ -209,6 +248,13 @@ defineExpose({ refresh: fetchPrompts, newEntry, handleSubmit });
   flex-direction: column;
   gap: var(--space-3);
   width: 100%;
+  max-width: 720px;
+  margin: 0;
+}
+
+.prompt-editor--full {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .prompt-editor__header {
@@ -216,6 +262,12 @@ defineExpose({ refresh: fetchPrompts, newEntry, handleSubmit });
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+.prompt-editor__title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .prompt-editor__header h2 {
@@ -235,28 +287,17 @@ defineExpose({ refresh: fetchPrompts, newEntry, handleSubmit });
   gap: var(--space-2);
 }
 
-.prompt-editor__primary,
-.prompt-editor__ghost {
+.prompt-editor__primary {
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
   font-weight: 600;
   cursor: pointer;
   border: none;
-}
-
-.prompt-editor__primary {
   background: var(--color-accent-primary);
   color: #fff;
 }
 
-.prompt-editor__ghost {
-  background: var(--color-bg-muted);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border-subtle);
-}
-
-.prompt-editor__primary:disabled,
-.prompt-editor__ghost:disabled {
+.prompt-editor__primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -273,6 +314,17 @@ defineExpose({ refresh: fetchPrompts, newEntry, handleSubmit });
   opacity: 1;
   transform: translateY(0);
   color: var(--color-success);
+}
+
+.prompt-editor__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
 }
 
 .prompt-editor__form {

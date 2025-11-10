@@ -8,117 +8,89 @@ that render structured console output, rotating files, and alert panels.
 
 from __future__ import annotations
 
+import atexit
 import logging
+import os
+import shutil
+import sys
+import threading
+import time
 import traceback
+import zipfile
 from collections import OrderedDict
+from contextlib import suppress
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from project_utility.config.paths import get_log_root
+from project_utility.telemetry import setup_telemetry
+
+_SYNC_LOG_FILENAME = "current.log"
+_INFO_LOG_FILENAME = "rise-info.log"
+_ERROR_LOG_FILENAME = "rise-error.log"
+_ARCHIVE_DIRNAME = "archive"
+_GITKEEP = ".gitkeep"
+
+_workspace_lock = threading.RLock()
+_workspace_initialized = False
+_workspace_finalized = False
+_workspace_root: Optional[Path] = None
+_archive_dir: Optional[Path] = None
+_sync_log_path: Optional[Path] = None
+_atexit_registered = False
+_workspace_notes: List[Tuple[int, str, Dict[str, Any]]] = []
+
+
+def _record_workspace_note(level: int, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+    _workspace_notes.append((level, message, extra or {}))
+
+
+def _flush_workspace_notes() -> None:
+    if not _workspace_notes:
+        return
+    logger = logging.getLogger("project_utility.logging")
+    for level, message, extra in list(_workspace_notes):
+        logger.log(level, message, extra=extra)
+    _workspace_notes.clear()
+
+
+def _runtime_shutting_down() -> bool:
+    """
+    Detect whether the interpreter or workspace teardown has begun, so console handlers can stop.
+    """
+
+    return _workspace_finalized or getattr(logging, "_shutdown", False)
+
+_SYNC_CONTEXT_FIELDS = (
+    "request_id",
+    "convo_id",
+    "chat_id",
+    "task_id",
+)
+
+_WARNING_SUMMARIES = {
+    "task_runtime.disabled": "任务队列降级，Redis 未连接",
+}
+
+
+def _resolve_warning_summary(record: logging.LogRecord) -> Optional[str]:
+    message = record.getMessage()
+    return _WARNING_SUMMARIES.get(message)
+
+
+_ALERT_SUPPRESSION: Dict[str, Dict[str, Any]] = {}
+_ALERT_WINDOW_SECONDS = 60.0
 
 try:
     from rich.console import Console  # type: ignore[import]
     from rich.logging import RichHandler  # type: ignore[import]
-    from rich.panel import Panel  # type: ignore[import]
     from rich.text import Text  # type: ignore[import]
 except ImportError:  # pragma: no cover
     RichHandler = None  # type: ignore[assignment]
     Console = None  # type: ignore[assignment]
-    Panel = None  # type: ignore[assignment]
     Text = None  # type: ignore[assignment]
-
-
-class _MaxLevelFilter(logging.Filter):
-    def __init__(self, max_level: int) -> None:
-        super().__init__()
-        self.max_level = max_level
-
-    def filter(self, record: logging.LogRecord) -> bool:
-        return record.levelno <= self.max_level
-
-
-_LOG_RECORD_BASE_FIELDS = {
-    "name",
-    "msg",
-    "args",
-    "levelname",
-    "levelno",
-    "pathname",
-    "filename",
-    "module",
-    "exc_info",
-    "exc_text",
-    "stack_info",
-    "lineno",
-    "funcName",
-    "created",
-    "msecs",
-    "relativeCreated",
-    "thread",
-    "threadName",
-    "processName",
-    "process",
-    "asctime",
-    "color_message",
-}
-
-
-def _stringify_extra(value: Any) -> str:
-    if isinstance(value, str):
-        return value
-    if isinstance(value, (int, float, bool)):
-        return str(value)
-    return repr(value)
-
-
-def _collect_record_extras(
-    record: logging.LogRecord,
-    include: Sequence[str],
-) -> Tuple[List[Tuple[str, str]], Optional[str]]:
-    items: "OrderedDict[str, str]" = OrderedDict()
-    for key in include:
-        value = record.__dict__.get(key)
-        if value in (None, "", [], {}, ()):  # pragma: no cover - defensive
-            continue
-        items[key] = _stringify_extra(value)
-    for key, value in record.__dict__.items():
-        if key in _LOG_RECORD_BASE_FIELDS or key in items or key == "message":
-            continue
-        if value in (None, "", [], {}, ()):  # pragma: no cover - defensive
-            continue
-        items[key] = _stringify_extra(value)
-    error_text = items.pop("error", None)
-    return list(items.items()), error_text
-
-
-class _RichAlertHandler(logging.Handler):
-    def __init__(self, console: Console) -> None:  # type: ignore[type-arg]
-        super().__init__(level=logging.WARNING)
-        self._console = console
-
-    def emit(self, record: logging.LogRecord) -> None:
-        try:
-            message = self.format(record)
-            metadata_lines: List[str] = []
-            for key in ("request_id", "convo_id", "chat_id", "error", "status_code"):
-                value = getattr(record, key, None)
-                if value not in (None, "", []):
-                    metadata_lines.append(f"{key}: {value}")
-            body_parts = metadata_lines + [message]
-            if Text is not None and Panel is not None:
-                body = Text("\\n".join(body_parts))
-                border_style = "yellow" if record.levelno == logging.WARNING else "red"
-                title = f"{record.levelname} · {record.name}"
-                panel = Panel(body, title=title, border_style=border_style, expand=False)
-                self._console.print(panel)
-            else:  # pragma: no cover
-                border = "WARNING" if record.levelno == logging.WARNING else "ERROR"
-                formatted = " | ".join(body_parts)
-                self._console.print(f"[{border}]{record.levelname} {record.name}[/] {formatted}")
-        except Exception:
-            self.handleError(record)
 
 
 class _RichConsoleHandler(logging.Handler):
@@ -149,6 +121,8 @@ class _RichConsoleHandler(logging.Handler):
         if record.levelno >= logging.WARNING:
             return
         try:
+            if _runtime_shutting_down():
+                return
             message = self.format(record)
             segments = _extract_console_segments(record, message, self.EXTRA_KEYS)
             level_style = self.LEVEL_STYLES.get(record.levelno, "white")
@@ -168,6 +142,290 @@ class _RichConsoleHandler(logging.Handler):
             self.handleError(record)
 
 
+class _RichAlertHandler(logging.Handler):
+    EXTRA_FIELDS = (
+        "request_id",
+        "convo_id",
+        "chat_id",
+        "capability",
+        "router",
+        "status_code",
+        "error",
+    )
+
+    def __init__(self, console: Console) -> None:  # type: ignore[type-arg]
+        super().__init__(level=logging.WARNING)
+        self._console = console
+        self.setFormatter(logging.Formatter("%(message)s"))
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            if _runtime_shutting_down():
+                return
+            key = self._build_alert_key(record)
+            suppressed = self._register_alert(key)
+            if suppressed is None:
+                return
+            message = self.format(record)
+            summary = _resolve_warning_summary(record)
+            if summary:
+                message = f"{message} | {summary}"
+            if suppressed > 0:
+                message = f"{message} (+{suppressed} suppressed)"
+            metadata = self._collect_metadata(record)
+            line = Text()
+            line.append(datetime.utcnow().strftime("%H:%M:%S"), style="dim")
+            line.append(" ")
+            line.append(f"{record.levelname:<8}", style="bold yellow" if record.levelno >= logging.WARNING else "bold red")
+            line.append(" ")
+            line.append(f"[{record.name}]", style="bold white")
+            line.append(" ")
+            line.append(message, style="yellow" if record.levelno >= logging.WARNING else "red")
+            if metadata:
+                line.append(" :: ", style="dim")
+                line.append(" ".join(metadata))
+            self._console.print(line)
+        except Exception:
+            self.handleError(record)
+
+    def _collect_metadata(self, record: logging.LogRecord) -> List[str]:
+        pairs: List[str] = []
+        for field in self.EXTRA_FIELDS:
+            value = getattr(record, field, None)
+            if value not in (None, "", []):
+                pairs.append(f"{field}={value}")
+        return pairs
+
+    def _build_alert_key(self, record: logging.LogRecord) -> str:
+        return "|".join(
+            str(part)
+            for part in (
+                record.name,
+                record.getMessage(),
+                getattr(record, "capability", ""),
+                getattr(record, "request_id", ""),
+            )
+        )
+
+    def _register_alert(self, key: str) -> Optional[int]:
+        now = time.time()
+        entry = _ALERT_SUPPRESSION.get(key)
+        if entry and now - entry["ts"] < _ALERT_WINDOW_SECONDS:
+            entry["count"] += 1
+            return None
+        suppressed = entry["count"] if entry else 0
+        _ALERT_SUPPRESSION[key] = {"ts": now, "count": 0}
+        return suppressed
+
+
+class _MaxLevelFilter(logging.Filter):
+    """
+    Filter that allows records up to the provided maximum level (inclusive).
+    """
+
+    def __init__(self, max_level: int) -> None:
+        super().__init__()
+        self._max_level = max_level
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.levelno <= self._max_level
+
+
+class SyncLogHandler(logging.Handler):
+    """
+    Mirror log lines into `current.log` so external watchers can tail startup progress.
+    """
+
+    def __init__(self, path: Path) -> None:
+        super().__init__(level=logging.INFO)
+        self._path = path
+
+    def emit(self, record: logging.LogRecord) -> None:
+        if self._path is None:
+            return
+        try:
+            message = self.format(record)
+            line = f"{datetime.utcnow().isoformat()}Z {record.levelname:<8} {record.name} :: {message}"
+            with _workspace_lock:
+                self._path.parent.mkdir(parents=True, exist_ok=True)
+                with self._path.open("a", encoding="utf-8") as stream:
+                    stream.write(line + "\n")
+        except Exception:
+            self.handleError(record)
+
+
+def _iter_log_root_entries(root: Path) -> List[Path]:
+    entries: List[Path] = []
+    if not root.exists():
+        return entries
+    for child in root.iterdir():
+        if child.name in {_ARCHIVE_DIRNAME, _GITKEEP}:
+            continue
+        entries.append(child)
+    return entries
+
+
+def _next_archive_path() -> Path:
+    archive_dir = _archive_dir or (_workspace_root or get_log_root()) / _ARCHIVE_DIRNAME
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%SZ")
+    candidate = archive_dir / f"{stamp}.zip"
+    counter = 1
+    while candidate.exists():
+        counter += 1
+        candidate = archive_dir / f"{stamp}-{counter}.zip"
+    return candidate
+
+
+def _archive_entries(entries: Sequence[Path]) -> Optional[Path]:
+    files = [entry for entry in entries if entry.is_file()]
+    if not files:
+        return None
+    archive_path = _next_archive_path()
+    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for file_path in files:
+            try:
+                archive.write(file_path, arcname=file_path.name)
+            except FileNotFoundError:
+                continue
+    return archive_path
+
+
+def _safe_remove_path(target: Path) -> Optional[str]:
+    try:
+        if target.is_dir():
+            shutil.rmtree(target)
+        else:
+            target.unlink()
+        return None
+    except Exception as exc:  # pragma: no cover - filesystem specific
+        fallback = target.with_name(f"{target.name}.stale")
+        with suppress(Exception):
+            target.rename(fallback)
+        return repr(exc)
+
+
+def _clear_log_root(root: Path) -> List[Tuple[str, str]]:
+    errors: List[Tuple[str, str]] = []
+    for entry in _iter_log_root_entries(root):
+        error = _safe_remove_path(entry)
+        if error:
+            errors.append((str(entry), error))
+    (root / _ARCHIVE_DIRNAME).mkdir(parents=True, exist_ok=True)
+    return errors
+
+
+def initialize_log_workspace(*, log_root: Optional[Path] = None) -> Path:
+    """
+    Prepare `var/logs` for a fresh runtime session.
+    Archives the previous run, clears stray files, and seeds current.log.
+    """
+
+    global _workspace_initialized, _workspace_root, _archive_dir, _sync_log_path
+    with _workspace_lock:
+        if _workspace_initialized and _workspace_root:
+            return _workspace_root
+
+        root = (log_root or get_log_root()).resolve()
+        root.mkdir(parents=True, exist_ok=True)
+        archive_dir = root / _ARCHIVE_DIRNAME
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+        entries = _iter_log_root_entries(root)
+        archive_error: Optional[str] = None
+        archive_path: Optional[Path] = None
+        if entries:
+            try:
+                archive_path = _archive_entries(entries)
+            except Exception as exc:  # pragma: no cover - filesystem dependent
+                archive_error = repr(exc)
+                _record_workspace_note(
+                    logging.WARNING,
+                    "log_workspace.archive_failed",
+                    {"phase": "startup", "error": archive_error},
+                )
+        cleanup_errors = _clear_log_root(root)
+
+        sync_log = root / _SYNC_LOG_FILENAME
+        sync_log.write_text("", encoding="utf-8")
+        banner_lines: List[str] = []
+        if archive_path:
+            _record_workspace_note(
+                logging.INFO,
+                "log_workspace.archived",
+                {"phase": "startup", "path": str(archive_path)},
+            )
+        if archive_error:
+            banner_lines.append(f"[workspace] archive_failed: {archive_error}")
+        for failed_path, error in cleanup_errors:
+            banner_lines.append(f"[workspace] cleanup_failed: {failed_path} :: {error}")
+            _record_workspace_note(
+                logging.WARNING,
+                "log_workspace.cleanup_failed",
+                {"phase": "startup", "path": failed_path, "error": error},
+            )
+        if banner_lines:
+            sync_log.write_text("\n".join(banner_lines) + "\n", encoding="utf-8")
+
+        _workspace_initialized = True
+        _workspace_root = root
+        _archive_dir = archive_dir
+        _sync_log_path = sync_log
+
+        global _atexit_registered
+        if not _atexit_registered:
+            atexit.register(finalize_log_workspace)
+            _atexit_registered = True
+
+        return root
+
+
+def finalize_log_workspace(*, reason: str = "shutdown") -> None:
+    """Flush logging handlers and optionally clean runtime logs."""
+
+    global _workspace_finalized
+    with _workspace_lock:
+        if _workspace_finalized:
+            return
+        root = _workspace_root or get_log_root()
+        entries = _iter_log_root_entries(root)
+        logging.shutdown()
+        archive_path: Optional[Path] = None
+        if entries:
+            try:
+                archive_path = _archive_entries(entries)
+            except Exception as exc:  # pragma: no cover - filesystem dependent
+                _record_workspace_note(
+                    logging.WARNING,
+                    "log_workspace.archive_failed",
+                    {"phase": reason, "error": repr(exc)},
+                )
+        cleanup_mode_raw = (os.getenv("LOG_CLEANUP_MODE", "purge") or "purge").strip().lower()
+        cleanup_mode = cleanup_mode_raw if cleanup_mode_raw in ("purge", "retain") else "purge"
+        if cleanup_mode_raw not in ("purge", "retain"):
+            cleanup_mode = "purge"
+            _record_workspace_note(
+                logging.WARNING,
+                "log_workspace.cleanup_mode_invalid",
+                {"phase": reason, "mode": cleanup_mode_raw},
+            )
+        if cleanup_mode == "purge":
+            for entry in entries:
+                error = _safe_remove_path(entry)
+                if error:
+                    _record_workspace_note(
+                        logging.WARNING,
+                        "log_workspace.cleanup_failed",
+                        {"phase": reason, "path": str(entry), "error": error},
+                    )
+        if archive_path:
+            _record_workspace_note(
+                logging.INFO,
+                "log_workspace.archived",
+                {"phase": reason, "path": str(archive_path)},
+            )
+        _workspace_finalized = True
+
 class _ConsoleSegments:
     __slots__ = ("timestamp", "message", "extras", "error")
 
@@ -182,6 +440,22 @@ class _ConsoleSegments:
         self.message = message
         self.extras = extras
         self.error = error
+
+
+def _collect_record_extras(
+    record: logging.LogRecord,
+    extra_keys: Sequence[str],
+) -> Tuple[List[Tuple[str, str]], Optional[str]]:
+    extras: List[Tuple[str, str]] = []
+    for key in extra_keys:
+        value = getattr(record, key, None)
+        if value in (None, "", [], {}, ()):
+            continue
+        extras.append((key, str(value)))
+    error = getattr(record, "error", None)
+    if error is not None:
+        error = str(error)
+    return extras, error
 
 
 def _extract_console_segments(
@@ -293,14 +567,17 @@ def configure_logging(
     """
 
     logging.captureWarnings(True)
-    root = log_root or get_log_root()
-    root.mkdir(parents=True, exist_ok=True)
+    root = (log_root or get_log_root()).resolve()
+    initialize_log_workspace(log_root=root)
+    setup_telemetry(log_root=root)
 
     handlers = _build_rich_console_handlers()
-    info_log_path = root / "rise-info.log"
-    error_log_path = root / "rise-error.log"
+    info_log_path = root / _INFO_LOG_FILENAME
+    error_log_path = root / _ERROR_LOG_FILENAME
     handlers.append(_build_rotating_file_handler(info_log_path))
     handlers.append(_build_error_file_handler(error_log_path))
+    if _sync_log_path is not None:
+        handlers.append(SyncLogHandler(_sync_log_path))
 
     logging.basicConfig(
         level=logging.INFO,
@@ -316,7 +593,9 @@ def configure_logging(
             logger.addHandler(handler)
         configured[name] = logger
 
+    _flush_workspace_notes()
+
     return configured
 
 
-__all__ = ["configure_logging"]
+__all__ = ["configure_logging", "finalize_log_workspace", "initialize_log_workspace"]

@@ -42,8 +42,14 @@ def _fake_outbound(chunks: Any, _: Any) -> Dict[str, Any]:
 
 @pytest.fixture(autouse=True)
 def stub_contracts(monkeypatch):
-    monkeypatch.setattr("business_service.conversation.service.behavior_telegram_inbound", _fake_inbound)
-    monkeypatch.setattr("business_service.conversation.service.behavior_telegram_outbound", _fake_outbound)
+    monkeypatch.setattr(
+        "business_service.conversation.service.contracts_telegram_inbound",
+        _fake_inbound,
+    )
+    monkeypatch.setattr(
+        "business_service.conversation.service.contracts_telegram_outbound",
+        _fake_outbound,
+    )
     monkeypatch.setattr(
         "business_service.conversation.service.toolcalls.call_validate_output",
         lambda payload: payload,

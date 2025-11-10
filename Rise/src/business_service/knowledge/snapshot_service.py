@@ -47,6 +47,7 @@ class KnowledgeSnapshotService:
         redis_prefix: str = "rise:kb",
         redis_primary: Optional[bool] = None,
         redis_metadata: Optional[Mapping[str, Any]] = None,
+        capability_lookup: Optional[Callable[[str], Optional[Any]]] = None,
     ) -> None:
         self._base_path = Path(base_path).resolve()
         self._org_index_path = Path(org_index_path).resolve()
@@ -54,6 +55,9 @@ class KnowledgeSnapshotService:
         self._redis_prefix = redis_prefix
         self._redis_primary = redis_primary
         self._redis_metadata = dict(redis_metadata) if redis_metadata else None
+        self._capability_lookup = capability_lookup
+        self._redis_warning_status: Optional[str] = None
+        self._latest_snapshot: Optional[Dict[str, Any]] = None
 
     # --------------------------------------------------------------------- #
     # Public API
@@ -63,6 +67,7 @@ class KnowledgeSnapshotService:
         """Load knowledge snapshot and optionally publish it to Redis."""
 
         snapshot, missing = self._load_snapshot(agencies=agencies)
+        self._latest_snapshot = snapshot
         telemetry: Dict[str, Any] = {"stages": []}
         telemetry["stages"].append(
             {"stage": "initial_load", "status": "attention" if missing else "ready", "missing_agencies": list(missing)}
@@ -98,6 +103,7 @@ class KnowledgeSnapshotService:
         """Refresh snapshot and redis publish state."""
 
         snapshot, missing = self._load_snapshot()
+        self._latest_snapshot = snapshot
         redis_stage = self._sync_to_redis(snapshot, reason=reason)
 
         status: SnapshotStatus = "ready"
@@ -123,6 +129,15 @@ class KnowledgeSnapshotService:
         result.refresh = self.refresh
         result.loader = {"refresh": self.refresh}
         return result
+
+    def backfill_to_redis(self, *, reason: str = "backfill_after_recovery") -> _RedisStage:
+        """Re-publish the latest snapshot to Redis without reloading from disk."""
+
+        snapshot = self._latest_snapshot
+        if snapshot is None:
+            snapshot, _ = self._load_snapshot()
+            self._latest_snapshot = snapshot
+        return self._sync_to_redis(snapshot, reason=reason)
 
     @staticmethod
     def asset_guard(repo_root: Path | str) -> AssetGuardReport:
@@ -248,6 +263,16 @@ class KnowledgeSnapshotService:
             return _RedisStage(status="skipped", details=stage_details)
 
         stage_details["redis_url"] = self._redis_url
+        capability_status = self._redis_capability_status()
+        if capability_status and capability_status != "available":
+            stage_details.update(
+                status="skipped",
+                capability_status=capability_status,
+                error="redis_capability_guard",
+            )
+            self._record_redis_warning(capability_status, reason="capability_guard")
+            return _RedisStage(status="skipped", details=stage_details)
+
         if redis is None:
             stage_details.update(status="redis_unavailable", error="redis_dependency_missing")
             return _RedisStage(status="redis_unavailable", details=stage_details)
@@ -281,13 +306,16 @@ class KnowledgeSnapshotService:
                 metadata_key=metadata_key,
                 cached_at=cached_at,
             )
+            self._record_redis_warning("available", reason=reason)
             return _RedisStage(status="ready", details=stage_details)
         except RedisError as exc:  # type: ignore[misc]
             stage_details.update(status="redis_unavailable", error=str(exc))
+            self._record_redis_warning("unavailable", reason="redis_error")
             logger.warning("knowledge.redis_unavailable", extra={"reason": reason, "error": str(exc)})
             return _RedisStage(status="redis_unavailable", details=stage_details)
         except Exception as exc:  # pragma: no cover - defensive
             stage_details.update(status="redis_unavailable", error=str(exc))
+            self._record_redis_warning("unavailable", reason="redis_error")
             logger.exception("knowledge.redis_sync_failed", extra={"reason": reason})
             return _RedisStage(status="redis_unavailable", details=stage_details)
         finally:
@@ -310,6 +338,32 @@ class KnowledgeSnapshotService:
         if self._redis_metadata:
             redis_details["metadata"] = dict(self._redis_metadata)
         return redis_details
+
+    def _redis_capability_status(self) -> Optional[str]:
+        if self._capability_lookup is None:
+            return None
+        state = self._capability_lookup("redis")
+        if state is None:
+            return None
+        status = getattr(state, "status", None)
+        if status:
+            return str(status)
+        if isinstance(state, Mapping):
+            value = state.get("status")
+            return str(value) if value else None
+        return None
+
+    def _record_redis_warning(self, status: str, *, reason: str) -> None:
+        if status == "available":
+            self._redis_warning_status = None
+            return
+        if self._redis_warning_status == status:
+            return
+        self._redis_warning_status = status
+        logger.warning(
+            "knowledge.redis_degraded",
+            extra={"status": status, "reason": reason},
+        )
 
 
 __all__ = [

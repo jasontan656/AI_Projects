@@ -7,12 +7,11 @@ utility layer.
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass, field
 from time import perf_counter
 from typing import Any, Dict
 
-log = logging.getLogger("rise.trace")
+from project_utility.telemetry import emit as telemetry_emit
 
 
 @dataclass(slots=True)
@@ -23,12 +22,11 @@ class TraceSpan:
 
     async def __aenter__(self) -> "TraceSpan":
         self._start = perf_counter()
-        log.info(
+        telemetry_emit(
             "trace.start",
-            extra={
-                "span": self.name,
-                **self.attributes,
-            },
+            level="debug",
+            span=self.name,
+            payload={"attributes": dict(self.attributes)},
         )
         return self
 
@@ -40,8 +38,8 @@ class TraceSpan:
             **self.attributes,
         }
         if exc is not None:
-            payload.setdefault("error", str(exc))
-        log.info("trace.end", extra=payload)
+            payload["error"] = str(exc)
+        telemetry_emit("trace.end", level="debug", span=self.name, payload=payload, sensitive=["error"])
         return False
 
     def set_attribute(self, key: str, value: Any) -> None:

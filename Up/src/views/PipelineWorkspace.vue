@@ -34,13 +34,22 @@
           </div>
         </div>
         <div class="workspace-actions">
-          <el-button
-            v-if="activeNav === 'prompts'"
-            type="primary"
-            @click="handlePrimaryAction"
-          >
-            新建提示词
-          </el-button>
+          <template v-if="activeNav === 'prompts'">
+            <el-button
+              v-if="promptStage === 'manage'"
+              type="primary"
+              @click="handlePromptQuickCreate"
+            >
+              新建提示词
+            </el-button>
+            <el-button
+              v-else-if="promptStage === 'create'"
+              text
+              @click="enterPromptMenu"
+            >
+              返回提示词菜单
+            </el-button>
+          </template>
         </div>
       </el-header>
 
@@ -98,19 +107,43 @@
           </template>
         </section>
 
-        <section v-else-if="activeNav === 'prompts'" class="workspace-pane workspace-pane--two-column">
-          <PromptList
-            class="workspace-pane__sidebar"
-            @refresh="refreshPrompts"
-            @delete="handleDeletePrompt"
-          />
-          <div class="workspace-pane__content">
-            <PromptEditor ref="promptEditorRef" />
-          </div>
+        <section v-else-if="activeNav === 'prompts'" class="workspace-pane prompts-pane">
+          <template v-if="promptStage === 'menu'">
+            <PromptSubMenu :actions="promptActions" @select="handlePromptActionSelect" />
+          </template>
+
+          <template v-else-if="promptStage === 'create'">
+            <div class="prompts-toolbar">
+              <el-button text @click="enterPromptMenu">返回提示词菜单</el-button>
+            </div>
+            <div class="prompts-create">
+              <PromptEditor ref="promptEditorRef" layout="full" @saved="handlePromptSaved" />
+            </div>
+          </template>
+
+          <template v-else-if="promptStage === 'manage'">
+            <div class="prompts-toolbar prompts-toolbar--manage">
+              <el-button text @click="enterPromptMenu">返回提示词菜单</el-button>
+            </div>
+            <div class="workspace-pane workspace-pane--two-column prompts-manage">
+              <PromptList
+                class="workspace-pane__sidebar"
+                @refresh="refreshPrompts"
+                @delete="handleDeletePrompt"
+              />
+              <div class="workspace-pane__content">
+                <PromptEditor ref="promptEditorRef" layout="split" @saved="handlePromptSaved" />
+              </div>
+            </div>
+          </template>
+
+          <template v-else>
+            <el-empty description="当前阶段未定义" />
+          </template>
         </section>
 
-        <section v-else-if="activeNav === 'workflow'" class="workspace-pane">
-          <WorkflowCanvas />
+        <section v-else-if="activeNav === 'workflow'" class="workspace-pane workflow-pane">
+          <WorkflowBuilder ref="workflowBuilderRef" @navigate="handleWorkflowNavigate" />
         </section>
 
         <section v-else-if="activeNav === 'variables'" class="workspace-pane">
@@ -133,20 +166,21 @@
 </template>
 
 <script setup>
-import { computed, ref, nextTick, watch } from "vue";
+import { computed, ref, nextTick, watch, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 import NodeDraftForm from "../components/NodeDraftForm.vue";
 import NodeList from "../components/NodeList.vue";
 import PromptEditor from "../components/PromptEditor.vue";
 import PromptList from "../components/PromptList.vue";
-import WorkflowCanvas from "../components/WorkflowCanvas.vue";
 import VariablesPanel from "../components/VariablesPanel.vue";
 import LogsPanel from "../components/LogsPanel.vue";
 import NodeSubMenu from "../components/NodeSubMenu.vue";
+import PromptSubMenu from "../components/PromptSubMenu.vue";
+import WorkflowBuilder from "./WorkflowBuilder.vue";
 import { usePipelineDraftStore } from "../stores/pipelineDraft";
 import { usePromptDraftStore } from "../stores/promptDraft";
-import { deletePipelineNode } from "../services/pipelineService";
+import { deletePipelineNode, listPipelineNodes } from "../services/pipelineService";
 import { deletePrompt } from "../services/promptService";
 
 const pipelineStore = usePipelineDraftStore();
@@ -154,6 +188,7 @@ const promptStore = usePromptDraftStore();
 
 const nodeFormRef = ref(null);
 const promptEditorRef = ref(null);
+const workflowBuilderRef = ref(null);
 
 const navItems = [
   {
@@ -171,8 +206,8 @@ const navItems = [
   {
     id: "workflow",
     label: "Workflow",
-    title: "工作流画布",
-    description: "使用 VueFlow 预览节点连线与执行顺序。",
+    title: "Workflow 编排",
+    description: "组合节点与提示词，管理发布与回滚。",
   },
   {
     id: "variables",
@@ -198,6 +233,7 @@ const navItems = [
 const activeNav = ref("nodes");
 const nodesTab = ref("form");
 const nodesStage = ref("menu");
+const promptStage = ref("menu");
 
 const currentNav = computed(
   () => navItems.find((item) => item.id === activeNav.value) ?? navItems[0]
@@ -230,20 +266,194 @@ const nodeActions = computed(() => [
   },
 ]);
 
+const promptActions = computed(() => [
+  {
+    id: "create",
+    label: "新建提示词",
+    description: "从空白草稿开始撰写 Markdown 模板并同步契约。",
+    stage: "create",
+    ctaLabel: "开始创建",
+    ctaType: "primary",
+  },
+  {
+    id: "manage",
+    label: "管理提示词",
+    description: "查看已保存的模板，执行编辑、删除等维护操作。",
+    stage: "manage",
+    ctaLabel: "进入管理",
+    disabled: promptStore.promptCount === 0,
+    reason:
+      promptStore.promptCount === 0
+        ? "暂无提示词，请先创建一个模板。"
+        : "",
+  },
+]);
+
+const handleWorkflowNavigate = (destination) => {
+  if (destination === "nodes" || destination === "prompts") {
+    activeNav.value = destination;
+    if (destination === "nodes") {
+      nodesStage.value = "menu";
+    } else {
+      promptStage.value = "menu";
+    }
+  }
+};
+
+const primeNodes = async () => {
+  try {
+    const { data } = await listPipelineNodes({ pageSize: 50 });
+    const items = Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data)
+        ? data
+        : [];
+    pipelineStore.replaceNodes(items);
+  } catch (error) {
+    console.warn("加载节点失败", error);
+  }
+};
+
 const refreshNodes = async () => {
   return await nodeFormRef.value?.refresh?.();
 };
 
-const refreshPrompts = () => {
-  promptEditorRef.value?.refresh?.();
+const refreshPrompts = async ({ silent = false } = {}) => {
+  let result;
+  if (promptEditorRef.value?.refresh) {
+    result = await promptEditorRef.value.refresh();
+  } else {
+    try {
+      await promptStore.refreshPrompts();
+      result = true;
+    } catch (error) {
+      console.warn("加载提示词失败", error);
+      result = false;
+    }
+  }
+
+  if (result === false) {
+    if (!silent) {
+      ElMessage.error("加载提示词失败，请稍后重试");
+    }
+    return false;
+  }
+
+  if (!promptStore.promptCount && promptStage.value === "manage") {
+    await setPromptStage("menu", { force: true, skipLeaveGuard: true });
+    if (!silent) {
+      ElMessage.info("暂无提示词，请先创建一个提示词。");
+    }
+  }
+  return true;
 };
 
-const handlePrimaryAction = () => {
-  if (activeNav.value === "prompts") {
-    promptStore.resetSelection();
-    promptEditorRef.value?.newEntry?.();
+const ensureCanLeavePromptStage = async () => {
+  if (!["create", "manage"].includes(promptStage.value)) {
+    return true;
+  }
+  const editor = promptEditorRef.value;
+  const dirty = await editor?.isDirty?.();
+  if (!dirty) {
+    return true;
+  }
+  try {
+    await ElMessageBox.confirm(
+      "当前提示词草稿尚未保存，确定要离开该阶段？",
+      "未保存的更改",
+      {
+        confirmButtonText: "仍然离开",
+        cancelButtonText: "继续编辑",
+        type: "warning",
+      }
+    );
+    return true;
+  } catch {
+    return false;
   }
 };
+
+const applyPromptStageEntry = async (stage, meta = {}) => {
+  if (stage === "menu") {
+    promptStore.resetSelection();
+    return;
+  }
+  await nextTick();
+  if (stage === "create") {
+    promptStore.resetSelection();
+    await promptEditorRef.value?.newEntry?.();
+    await promptEditorRef.value?.syncBaseline?.();
+    return;
+  }
+  if (stage === "manage") {
+    await refreshPrompts();
+    if (meta?.promptId) {
+      promptStore.setSelectedPrompt(meta.promptId);
+    } else if (!promptStore.selectedPromptId && promptStore.prompts[0]?.id) {
+      promptStore.setSelectedPrompt(promptStore.prompts[0].id);
+    }
+    await promptEditorRef.value?.syncBaseline?.();
+  }
+};
+
+const setPromptStage = async (stage, options = {}) => {
+  const { force = false, skipLeaveGuard = false, meta = {} } = options;
+  if (!force && promptStage.value === stage) {
+    await applyPromptStageEntry(stage, meta);
+    return;
+  }
+  if (!skipLeaveGuard) {
+    const canLeave = await ensureCanLeavePromptStage(stage);
+    if (!canLeave) {
+      return;
+    }
+  }
+  promptStage.value = stage;
+  await applyPromptStageEntry(stage, meta);
+};
+
+const enterPromptMenu = async () => {
+  await setPromptStage("menu");
+};
+
+const startCreatePrompt = async () => {
+  await setPromptStage("create");
+};
+
+const startManagePrompts = async ({ promptId } = {}) => {
+  await setPromptStage("manage", { meta: { promptId } });
+};
+
+const handlePromptActionSelect = async (action) => {
+  if (!action?.stage) return;
+  if (action.stage === "create") {
+    await startCreatePrompt();
+    return;
+  }
+  if (action.stage === "manage") {
+    await startManagePrompts();
+    return;
+  }
+  await setPromptStage(action.stage);
+};
+
+const handlePromptSaved = async ({ promptId } = {}) => {
+  await startManagePrompts({ promptId });
+};
+
+const handlePromptQuickCreate = async () => {
+  if (promptStage.value === "manage") {
+    promptStore.resetSelection();
+    await promptEditorRef.value?.newEntry?.();
+    await promptEditorRef.value?.syncBaseline?.();
+  } else {
+    await startCreatePrompt();
+  }
+};
+
+onMounted(() => {
+  primeNodes();
+});
 
 const ensureCanLeaveStage = async (targetStage) => {
   if (nodesStage.value !== "create" || targetStage === "create") {
@@ -267,6 +477,14 @@ const ensureCanLeaveStage = async (targetStage) => {
   } catch {
     return false;
   }
+};
+
+const ensureCanLeaveWorkflow = async () => {
+  if (!workflowBuilderRef.value?.ensureCanLeave) {
+    return true;
+  }
+  const result = await workflowBuilderRef.value.ensureCanLeave();
+  return result !== false;
 };
 
 const applyStageEntry = async (stage, meta = {}) => {
@@ -343,22 +561,48 @@ const handleNodeActionSelect = async (action) => {
 };
 
 const handleMenuClick = async (id) => {
-  if (id === "nodes") {
-    if (activeNav.value !== "nodes") {
-      const canEnter = await ensureCanLeaveStage("menu");
-      if (!canEnter) return;
-      activeNav.value = "nodes";
+  if (activeNav.value === id) {
+    if (id === "nodes") {
+      await setNodesStage("menu", { force: true, skipLeaveGuard: true });
+    } else if (id === "prompts") {
+      await setPromptStage("menu", { force: true, skipLeaveGuard: true });
     }
-    await setNodesStage("menu", { force: true });
     return;
   }
+
   if (activeNav.value === "nodes") {
-    const canLeave = await ensureCanLeaveStage(id);
-    if (!canLeave) {
+    const canLeaveNodes = await ensureCanLeaveStage(id);
+    if (!canLeaveNodes) {
       return;
     }
   }
+
+  if (activeNav.value === "prompts") {
+    const canLeavePrompts = await ensureCanLeavePromptStage();
+    if (!canLeavePrompts) {
+      return;
+    }
+  }
+
+  if (activeNav.value === "workflow") {
+    const canLeaveWorkflow = await ensureCanLeaveWorkflow();
+    if (!canLeaveWorkflow) {
+      return;
+    }
+  }
+
   activeNav.value = id;
+
+  if (id === "nodes") {
+    await setNodesStage("menu", { force: true, skipLeaveGuard: true });
+    return;
+  }
+
+  if (id === "prompts") {
+    await setPromptStage("menu", { force: true, skipLeaveGuard: true });
+    return;
+  }
+
 };
 
 const handleNodeSaved = async ({ nodeId } = {}) => {
@@ -370,6 +614,10 @@ watch(
   async (val) => {
     if (val === "nodes") {
       await setNodesStage("menu", { force: true, skipLeaveGuard: true });
+    }
+    if (val === "prompts") {
+      await setPromptStage("menu", { force: true, skipLeaveGuard: true });
+      await refreshPrompts({ silent: true });
     }
   },
   { immediate: true }
@@ -415,19 +663,39 @@ const handleDeleteNode = async (node) => {
 
 const handleDeletePrompt = async (prompt) => {
   if (!prompt?.id) return;
-  if (typeof window !== "undefined" && !window.confirm("确认删除提示词？")) {
+  try {
+    await ElMessageBox.confirm(
+      "确认删除该提示词？此操作无法撤销。",
+      "删除提示词",
+      {
+        confirmButtonText: "确认删除",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    );
+  } catch {
     return;
   }
   try {
     await deletePrompt(prompt.id);
     promptStore.removePromptDraft(prompt.id);
-    if (promptStore.selectedPromptId === prompt.id) {
-      promptStore.resetSelection();
-      promptEditorRef.value?.newEntry?.();
+    await refreshPrompts({ silent: true });
+    if (!promptStore.promptCount) {
+      ElMessage.info("暂无提示词，请先创建一个提示词。");
+      return;
     }
-    refreshPrompts();
+    if (promptStore.selectedPromptId === prompt.id) {
+      const fallbackPrompt = promptStore.prompts[0];
+      if (fallbackPrompt?.id) {
+        promptStore.setSelectedPrompt(fallbackPrompt.id);
+      } else {
+        promptStore.resetSelection();
+      }
+    }
+    ElMessage.success("提示词已删除");
   } catch (error) {
     console.error("删除提示词失败", error);
+    ElMessage.error("删除提示词失败，请稍后重试");
   }
 };
 </script>
@@ -568,6 +836,10 @@ const handleDeletePrompt = async (prompt) => {
   gap: var(--space-4);
 }
 
+.prompts-pane {
+  gap: var(--space-4);
+}
+
 .nodes-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -583,7 +855,26 @@ const handleDeletePrompt = async (prompt) => {
   justify-content: center;
 }
 
+.prompts-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--space-2);
+}
+
+.prompts-toolbar .el-button {
+  padding: 0;
+}
+
 .nodes-manage {
+  align-items: stretch;
+}
+
+.prompts-create {
+  display: flex;
+  justify-content: center;
+}
+
+.prompts-manage {
   align-items: stretch;
 }
 

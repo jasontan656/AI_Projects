@@ -20,6 +20,7 @@ class PaginationMeta(BaseModel):
 class ApiMeta(BaseModel):
     request_id: str = Field(alias="requestId")
     pagination: Optional[PaginationMeta] = None
+    warnings: List[str] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
 
@@ -35,4 +36,3 @@ class ApiResponse(BaseModel, Generic[T]):
     errors: List[ApiError] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
-

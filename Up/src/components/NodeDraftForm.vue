@@ -30,6 +30,9 @@
             通过预定义动作拼接节点执行脚本。当允许访问大模型时，可引用提示词模板。
           </p>
         </div>
+        <p class="node-draft__notice">
+          提示：动作配置仅保存在前端草稿中，提交时将转化为 System Prompt。
+        </p>
         <NodeActionList
           v-model="form.actions"
           :allow-llm="form.allowLLM"
@@ -184,12 +187,8 @@ const populateForm = (node) => {
 
 const fetchNodes = async () => {
   try {
-    const response = await listPipelineNodes({ pageSize: 50 });
-    const items = Array.isArray(response?.items)
-      ? response.items
-      : Array.isArray(response)
-      ? response
-      : [];
+    const { data } = await listPipelineNodes({ pageSize: 50 });
+    const items = Array.isArray(data?.items) ? data.items : [];
     pipelineStore.replaceNodes(items);
   } catch (error) {
     console.warn("加载节点列表失败", error);
@@ -199,12 +198,8 @@ const fetchNodes = async () => {
 const ensurePromptTemplates = async () => {
   if (promptStore.prompts.length) return;
   try {
-    const response = await listPromptDrafts({ pageSize: 100 });
-    const items = Array.isArray(response?.items)
-      ? response.items
-      : Array.isArray(response)
-      ? response
-      : [];
+    const { data } = await listPromptDrafts({ pageSize: 100 });
+    const items = Array.isArray(data?.items) ? data.items : [];
     promptStore.replacePrompts(items);
   } catch (error) {
     console.warn("加载提示词模板失败", error);
@@ -246,6 +241,7 @@ const handleSubmit = async () => {
       pipelineId: selectedNode.value?.pipelineId,
       status: selectedNode.value?.status,
       strategy: selectedNode.value?.strategy,
+      createdAt: selectedNode.value?.createdAt,
     };
 
     if (selectedNode.value) {
@@ -402,6 +398,12 @@ defineExpose({ refresh: fetchNodes, newEntry, isDirty, syncBaseline });
   margin: 0;
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
+}
+
+.node-draft__notice {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
 }
 
 .node-draft__warning {

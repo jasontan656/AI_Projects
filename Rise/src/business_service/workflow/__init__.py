@@ -12,6 +12,7 @@ from business_service.workflow.repository import (
     WorkflowRepository,
 )
 from business_service.workflow.service import AsyncStageService, AsyncToolService, AsyncWorkflowService
+from business_service.workflow.observability import WorkflowObservabilityService
 
 __all__ = [
     "AsyncStageRepository",
@@ -23,6 +24,7 @@ __all__ = [
     "AsyncStageService",
     "AsyncToolService",
     "AsyncWorkflowService",
+    "WorkflowObservabilityService",
     "StageDefinition",
     "ToolDefinition",
     "WorkflowDefinition",

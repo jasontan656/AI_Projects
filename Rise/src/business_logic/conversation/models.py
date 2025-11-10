@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal, Mapping, MutableMapping, Optional
 
-ConversationMode = Literal["stream", "direct", "prompt", "refusal", "ignored"]
+ConversationMode = Literal["stream", "direct", "prompt", "refusal", "ignored", "queued"]
 ConversationStatus = Literal["handled", "ignored"]
 
 
@@ -34,3 +34,4 @@ __all__ = [
     "ConversationResult",
     "ConversationStatus",
 ]
+

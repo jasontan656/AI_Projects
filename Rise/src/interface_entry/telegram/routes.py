@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from time import perf_counter
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from aiogram import Dispatcher
 from fastapi import APIRouter, FastAPI, HTTPException, Request, Response, status
@@ -20,6 +20,7 @@ from foundational_service.contracts.telegram import (
     behavior_core_envelope,
 )
 from project_utility.context import ContextBridge
+from project_utility.telemetry import emit as telemetry_emit
 from project_utility.tracing import trace_span
 
 log = logging.getLogger(__name__)
@@ -71,10 +72,62 @@ def register_routes(
         else:
             buckets["+Inf"] = buckets.get("+Inf", 0) + 1
 
+    def _record_reject(
+        *,
+        request: Request,
+        request_id: Optional[str],
+        reason: str,
+        status_code: int,
+        detail: Any = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        payload: Dict[str, Any] = {
+            "reason": reason,
+            "status_code": status_code,
+            "path": request.url.path,
+        }
+        signature_status = getattr(request.state, "signature_status", "unknown")
+        if signature_status:
+            payload["signature_status"] = signature_status
+        signature_reason = getattr(request.state, "signature_reason", None)
+        if signature_reason:
+            payload["signature_reason"] = signature_reason
+        if detail is not None:
+            payload["detail"] = detail
+            request.state.reject_detail = detail
+        if extra:
+            payload.update(extra)
+        request.state.reject_reason = reason
+        telemetry_emit(
+            "telegram.webhook.reject",
+            level="warning" if status_code < 500 else "error",
+            request_id=request_id,
+            method=request.method,
+            payload=payload,
+        )
+
     @router.post(webhook_path)
     async def telegram_webhook(request: Request) -> Response:
         start = perf_counter()
         request_id = ContextBridge.request_id()
+        registry = getattr(request.app.state, "capabilities", None)
+        if registry is not None:
+            try:
+                registry.require("telegram_webhook", hard=False)
+            except HTTPException as exc:
+                detail = exc.detail
+                extra_payload: Dict[str, Any] = {}
+                if isinstance(detail, dict):
+                    extra_payload["capability"] = detail.get("capability")
+                _record_reject(
+                    request=request,
+                    request_id=request_id,
+                    reason="capability_unavailable",
+                    status_code=exc.status_code,
+                    detail=detail,
+                    extra=extra_payload,
+                )
+                raise
         async with trace_span("telegram.webhook", request_id=request_id) as span:
             payload = await request.json()
             log.debug(
@@ -92,6 +145,13 @@ def register_routes(
             except HTTPException as exc:
                 span.set_attribute("status_code", exc.status_code)
                 span.set_attribute("error", "invalid_signature")
+                _record_reject(
+                    request=request,
+                    request_id=request_id,
+                    reason="signature_invalid",
+                    status_code=exc.status_code,
+                    detail=exc.detail,
+                )
                 raise
 
         try:
@@ -125,6 +185,14 @@ def register_routes(
                     "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY,
                     "error_hint": str(exc),
                 },
+            )
+            _record_reject(
+                request=request,
+                request_id=request_id,
+                reason="core_schema_invalid",
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
+                extra={"update_type": next(iter(payload.keys()), "")},
             )
             toolcalls.call_emit_schema_alert(str(exc), channel="telegram")
             return Response(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)

@@ -5,28 +5,49 @@ import asyncio
 import json
 import logging
 import os
+import random
 import shutil
 from contextlib import asynccontextmanager, suppress
+from datetime import datetime, timezone
 from time import perf_counter
 from typing import Any, Awaitable, Callable, Dict, List, Optional
+from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response, status
 from starlette.middleware.cors import CORSMiddleware
 
-from aiohttp.client_exceptions import ClientConnectorError, ClientOSError
 from business_logic import KnowledgeSnapshotOrchestrator
 from business_service import KnowledgeSnapshotService
+from business_service.channel.events import ChannelBindingEvent, CHANNEL_BINDING_TOPIC
+from business_service.channel.registry import ChannelBindingRegistry
+from business_service.channel.repository import AsyncWorkflowChannelRepository
+from business_service.channel.service import WorkflowChannelService
+from business_service.conversation import service as conversation_service_module
+from business_service.workflow import AsyncWorkflowRepository
 from foundational_service.bootstrap.webhook import behavior_webhook_startup
 from foundational_service.contracts.registry import BehaviorContract, behavior_top_entry
 from project_utility.context import ContextBridge
 from project_utility.config.paths import get_log_root, get_repo_root
-from project_utility.logging import configure_logging
-from aiogram.exceptions import TelegramRetryAfter
-
+from project_utility.logging import (
+    configure_logging,
+    finalize_log_workspace,
+    initialize_log_workspace,
+)
 from interface_entry.config.manifest_loader import load_doc_context, load_top_entry_manifest
-from interface_entry.http.dependencies import application_lifespan
+from interface_entry.http.dependencies import (
+    application_lifespan,
+    get_mongo_client,
+    get_settings,
+    get_task_runtime,
+    get_task_runtime_if_enabled,
+    set_capability_registry,
+    set_channel_binding_registry,
+    shutdown_task_runtime,
+)
 from interface_entry.http.errors import http_exception_handler, unhandled_exception_handler
 from interface_entry.http.middleware import FastAPIRequestIDMiddleware, LoggingMiddleware
+from interface_entry.http.channels import get_router as get_channel_router
 from interface_entry.http.pipeline_nodes import get_router as get_pipeline_node_router
 from interface_entry.http.prompts import get_router as get_prompt_router
 from interface_entry.http.stages import get_router as get_stage_router
@@ -35,6 +56,15 @@ from interface_entry.http.workflows import get_router as get_workflow_router
 from interface_entry.middleware.signature import SignatureVerifyMiddleware
 from interface_entry.telegram.runtime import bootstrap_aiogram_service, get_bootstrap_metadata
 from interface_entry.telegram.routes import register_routes
+from foundational_service.persist.controllers import build_task_admin_router
+from foundational_service.persist.worker import TaskRuntime
+from foundational_service.telemetry.bus import TelemetryConsoleSubscriber, build_console_subscriber
+from foundational_service.telemetry.config import load_telemetry_config
+from interface_entry.runtime.capabilities import CapabilityProbe, CapabilityRegistry, CapabilityState
+from interface_entry.runtime.channel_binding_monitor import ChannelBindingMonitor
+from interface_entry.runtime.public_endpoint import PublicEndpointProbe
+from interface_entry.runtime.supervisors import RuntimeSupervisor
+from project_utility.db.redis import get_async_redis
 
 from dotenv import load_dotenv  # type: ignore[import]
 
@@ -55,6 +85,8 @@ DOC_CONTEXT = load_doc_context()
 DOC_ID = DOC_CONTEXT["doc_id"]
 DOC_COMMIT = DOC_CONTEXT["doc_commit"]
 
+_telemetry_console_subscriber: Optional[TelemetryConsoleSubscriber] = None
+
 
 class TelegramWebhookUnavailableError(RuntimeError):
     """Raised when Telegram webhook cannot be reached during startup."""
@@ -64,6 +96,125 @@ def _sanitize_endpoint(raw: str) -> str:
     if "@" in raw:
         return raw.split("@", 1)[1]
     return raw
+
+
+def _format_endpoint_detail(uri: Optional[str]) -> str:
+    return f"endpoint={_sanitize_endpoint(uri or 'unknown')}"
+
+
+def _override_uri_host(uri: str, host: str) -> str:
+    parsed = urlparse(uri)
+    hostname = parsed.hostname
+    if not hostname:
+        return uri
+    # Avoid touching multi-host connection strings.
+    if "," in parsed.netloc:
+        return uri
+    auth = ""
+    if parsed.username:
+        auth = parsed.username
+        if parsed.password:
+            auth += f":{parsed.password}"
+        auth += "@"
+    port_segment = f":{parsed.port}" if parsed.port else ""
+    host_literal = host
+    if ":" in host_literal and not host_literal.startswith("["):
+        host_literal = f"[{host_literal}]"
+    new_netloc = f"{auth}{host_literal}{port_segment}"
+    return urlunparse(parsed._replace(netloc=new_netloc))
+
+
+def _apply_host_override_env(env_key: str, override_host: Optional[str], *, service: str) -> None:
+    if not override_host:
+        return
+    uri = os.getenv(env_key)
+    if not uri:
+        return
+    try:
+        updated = _override_uri_host(uri, override_host)
+    except Exception as exc:  # pragma: no cover - defensive guard
+        logging.getLogger("interface_entry.app").warning(
+            "startup.service_host_override_failed",
+            extra={"service": service, "error": str(exc)},
+        )
+        return
+    if updated != uri:
+        os.environ[env_key] = updated
+        logging.getLogger("interface_entry.app").info(
+            "startup.service_host_override",
+            extra={"service": service, "host": override_host},
+        )
+
+
+from interface_entry.http.dependencies import (
+    application_lifespan,
+    get_mongo_client,
+    get_settings,
+    get_task_runtime,
+    get_task_runtime_if_enabled,
+    set_capability_registry,
+    set_channel_binding_registry,
+    shutdown_task_runtime,
+    get_telegram_client,
+)
+
+    settings = get_settings()
+    client = get_mongo_client()
+    database = client[settings.mongodb_database]
+    channel_repo = AsyncWorkflowChannelRepository(database["workflow_channels"])
+    workflow_repo = AsyncWorkflowRepository(database["workflows"])
+    service = WorkflowChannelService(repository=channel_repo, workflow_repository=workflow_repo)
+    registry = ChannelBindingRegistry(service=service)
+
+    async def _refresh() -> ChannelBindingRegistry:
+        await registry.refresh()
+        return registry
+
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(_refresh())
+    finally:
+        loop.close()
+
+
+async def _start_channel_binding_listener(app: FastAPI) -> None:
+    registry: ChannelBindingRegistry | None = getattr(app.state, "channel_binding_registry", None)
+    if registry is None:
+        return
+    redis = get_async_redis()
+    pubsub = redis.pubsub(ignore_subscribe_messages=True)
+    await pubsub.subscribe(CHANNEL_BINDING_TOPIC)
+
+    async def _runner() -> None:
+        try:
+            async for message in pubsub.listen():
+                if message.get("type") != "message":
+                    continue
+                try:
+                    event = ChannelBindingEvent.loads(message.get("data"))
+                except Exception:
+                    continue
+                await registry.handle_event(event)
+        finally:
+            await pubsub.close()
+
+    task = asyncio.create_task(_runner(), name="channel-binding-listener")
+    app.state.channel_binding_listener = {"task": task, "pubsub": pubsub}
+
+
+async def _stop_channel_binding_listener(app: FastAPI) -> None:
+    holder = getattr(app.state, "channel_binding_listener", None)
+    if not holder:
+        return
+    task = holder.get("task")
+    if task:
+        task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
+    pubsub = holder.get("pubsub")
+    if pubsub:
+        await pubsub.close()
+    app.state.channel_binding_listener = None
 
 
 def _release_logging_handlers() -> None:
@@ -81,12 +232,21 @@ def _release_logging_handlers() -> None:
 
 def _perform_clean_startup() -> None:
     _release_logging_handlers()
+    log_root = initialize_log_workspace()
     configure_logging()
     log.info("startup.clean.begin")
     issues: List[str] = []
 
+    log.info(
+        "startup.clean.segment.begin",
+        extra={"segment": "logs", "path": str(log_root)},
+    )
+    log.info(
+        "startup.clean.segment.ready",
+        extra={"segment": "logs", "path": str(log_root), "mode": "workspace"},
+    )
+
     directories = {
-        "logs": get_log_root(),
         "runtime_state": REPO_ROOT / "openai_agents" / "agent_contract" / "runtime_state",
     }
     for label, target in directories.items():
@@ -191,7 +351,10 @@ def _env(name: str, required: bool = True, default: Optional[str] = None) -> str
 
 
 def create_app() -> FastAPI:
+    initialize_log_workspace()
     configure_logging()
+    telemetry_config = load_telemetry_config()
+    subscriber = build_console_subscriber(telemetry_config)
     app = FastAPI(title="Rise Telegram Bridge", version="1.0.0")
     app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
@@ -204,17 +367,160 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    capability_registry = CapabilityRegistry(logger=log)
+    app.state.capabilities = capability_registry
+    set_capability_registry(capability_registry)
+    app.state.telemetry_console_subscriber = subscriber
+    global _telemetry_console_subscriber
+    _telemetry_console_subscriber = subscriber
+
+    docker_bridge_host = os.getenv("DOCKER_HOST_BRIDGE")
+    _apply_host_override_env("MONGODB_URI", os.getenv("MONGODB_HOST_OVERRIDE") or docker_bridge_host, service="mongo")
+    _apply_host_override_env("REDIS_URL", os.getenv("REDIS_HOST_OVERRIDE") or docker_bridge_host, service="redis")
+    _apply_host_override_env("RABBITMQ_URL", os.getenv("RABBITMQ_HOST_OVERRIDE") or docker_bridge_host, service="rabbitmq")
 
     token = _env("TELEGRAM_BOT_TOKEN")
     webhook_secret = _env("TELEGRAM_BOT_SECRETS")
     public_url = _env("WEB_HOOK")
     redis_url = os.getenv("REDIS_URL")
+    telegram_probe_mode = (os.getenv("TELEGRAM_PROBE_MODE") or "webhook").strip().lower()
+    allowed_probe_modes = {"webhook", "skip"}
+    if telegram_probe_mode not in allowed_probe_modes:
+        log.error(
+            "startup.telegram_probe_mode.invalid",
+            extra={"provided": telegram_probe_mode, "allowed": sorted(allowed_probe_modes)},
+        )
+        raise RuntimeError("unsupported TELEGRAM_PROBE_MODE")
+    telegram_proxy_url = os.getenv("TELEGRAM_PROXY_URL")
+    telegram_proxy_user = os.getenv("TELEGRAM_PROXY_USER")
+    telegram_proxy_pass = os.getenv("TELEGRAM_PROXY_PASS")
+    if telegram_proxy_url:
+        proxy_uri = telegram_proxy_url
+        if telegram_proxy_user or telegram_proxy_pass:
+            parsed = urlparse(telegram_proxy_url)
+            username = telegram_proxy_user or parsed.username or ""
+            password = telegram_proxy_pass or parsed.password or ""
+            hostname = parsed.hostname or ""
+            port_segment = f":{parsed.port}" if parsed.port else ""
+            auth_segment = ""
+            if username or password:
+                auth_segment = f"{username}:{password}@"
+            proxy_uri = urlunparse(
+                (
+                    parsed.scheme or "http",
+                    f"{auth_segment}{hostname}{port_segment}",
+                    parsed.path or "",
+                    parsed.params or "",
+                    parsed.query or "",
+                    parsed.fragment or "",
+                )
+            )
+        os.environ.setdefault("HTTPS_PROXY", proxy_uri)
+        os.environ.setdefault("HTTP_PROXY", proxy_uri)
     if not public_url.lower().startswith("https://"):
         log.error("startup.insecure_webhook", extra={"public_url": public_url})
         raise RuntimeError("bootstrap_refused_insecure_webhook")
 
     def _log_startup_step(step: str, description: str, **metadata: Any) -> None:
         log.info("startup.step", extra={"step": step, "description": description, **metadata})
+
+    async def _probe_mongo() -> CapabilityState:
+        mongo_uri = os.getenv("MONGODB_URI")
+        if not mongo_uri:
+            return CapabilityState(status="unavailable", detail="MONGODB_URI not configured", ttl_seconds=30.0)
+        from motor.motor_asyncio import AsyncIOMotorClient
+
+        endpoint_detail = _format_endpoint_detail(mongo_uri)
+        client = AsyncIOMotorClient(mongo_uri, tz_aware=True, serverSelectionTimeoutMS=3000)
+        try:
+            await asyncio.wait_for(client.admin.command("ping"), timeout=5.0)
+            return CapabilityState(status="available", ttl_seconds=60.0, detail=endpoint_detail)
+        except Exception as exc:  # pragma: no cover - network/env specific
+            return CapabilityState(status="unavailable", detail=f"{endpoint_detail}: {exc}", ttl_seconds=30.0)
+        finally:
+            client.close()
+
+    async def _probe_redis() -> CapabilityState:
+        redis_url = os.getenv("REDIS_URL")
+        if not redis_url:
+            return CapabilityState(status="unavailable", detail="REDIS_URL not configured", ttl_seconds=30.0)
+        from redis.asyncio import Redis  # type: ignore[import]
+
+        client = Redis.from_url(redis_url)
+        try:
+            await asyncio.wait_for(client.ping(), timeout=3.0)
+            return CapabilityState(status="available", ttl_seconds=30.0, detail=_format_endpoint_detail(redis_url))
+        except Exception as exc:  # pragma: no cover - network/env specific
+            return CapabilityState(
+                status="unavailable",
+                detail=f"{_format_endpoint_detail(redis_url)}: {exc}",
+                ttl_seconds=15.0,
+            )
+        finally:
+            with suppress(Exception):
+                await client.close()
+
+    async def _probe_rabbitmq() -> CapabilityState:
+        rabbit_url = os.getenv("RABBITMQ_URL")
+        if not rabbit_url:
+            return CapabilityState(status="unavailable", detail="RABBITMQ_URL not configured", ttl_seconds=30.0)
+        import aio_pika  # type: ignore[import]
+
+        endpoint_detail = _format_endpoint_detail(rabbit_url)
+        try:
+            connection = await aio_pika.connect_robust(rabbit_url, timeout=5)
+        except Exception as exc:  # pragma: no cover - network/env specific
+            return CapabilityState(status="unavailable", detail=f"{endpoint_detail}: {exc}", ttl_seconds=20.0)
+        else:
+            await connection.close()
+            return CapabilityState(status="available", ttl_seconds=45.0, detail=endpoint_detail)
+
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "mongo",
+            _probe_mongo,
+            hard=True,
+            retry_interval=60.0,
+            base_interval=45.0,
+            max_interval=300.0,
+            multiplier=1.5,
+        )
+    )
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "redis",
+            _probe_redis,
+            hard=True,
+            retry_interval=30.0,
+            base_interval=15.0,
+            max_interval=180.0,
+            multiplier=1.6,
+        )
+    )
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "rabbitmq",
+            _probe_rabbitmq,
+            hard=True,
+            retry_interval=45.0,
+            base_interval=30.0,
+            max_interval=240.0,
+            multiplier=1.4,
+        )
+    )
+
+    public_endpoint_probe = PublicEndpointProbe(url=public_url, timeout=3.0, logger=log)
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "public_endpoint",
+            public_endpoint_probe.check,
+            hard=False,
+            retry_interval=60.0,
+            base_interval=30.0,
+            max_interval=300.0,
+            multiplier=1.5,
+        )
+    )
 
     _log_startup_step(
         "bootstrap_aiogram.start",
@@ -260,6 +566,24 @@ def create_app() -> FastAPI:
     app.state.asset_guard = metadata.get("asset_guard")
     app.state.redis_runtime = redis_runtime
 
+    conversation_service_module.set_task_queue_accessors(
+        submitter_factory=lambda: get_task_runtime().submitter,
+        runtime_factory=get_task_runtime,
+    )
+    try:
+        channel_binding_registry = _prime_channel_binding_registry()
+    except Exception as exc:  # pragma: no cover - diagnostics only
+        log.warning(
+            "startup.channel_binding_registry_failed",
+            extra={"error": str(exc)},
+        )
+        channel_binding_registry = None
+    app.state.channel_binding_registry = channel_binding_registry
+    if channel_binding_registry is not None:
+        set_channel_binding_registry(channel_binding_registry)
+        conversation_service_module.set_channel_binding_provider(channel_binding_registry)
+        channel_binding_registry.attach_dispatcher(bootstrap_state.dispatcher)
+
     redis_primary_hint = bool(redis_url)
     _log_startup_step("memory_loader.start", "Loading KnowledgeBase snapshot")
     knowledge_service = KnowledgeSnapshotService(
@@ -269,10 +593,21 @@ def create_app() -> FastAPI:
         redis_prefix="rise:kb",
         redis_primary=redis_primary_hint,
         redis_metadata=redis_runtime,
+        capability_lookup=capability_registry.get_state,
     )
     knowledge_orchestrator = KnowledgeSnapshotOrchestrator(knowledge_service)
     snapshot_state = knowledge_orchestrator.load()
     app.state.knowledge_snapshot_orchestrator = knowledge_orchestrator
+
+    async def _redis_backfill(reason: str) -> None:
+        await asyncio.to_thread(knowledge_service.backfill_to_redis, reason=reason)
+
+    runtime_supervisor = RuntimeSupervisor(
+        registry=capability_registry,
+        redis_backfill=_redis_backfill,
+        logger=log,
+    )
+    app.state.runtime_supervisor = runtime_supervisor
 
     def _legacy_refresh(reason: str = "manual") -> Dict[str, Any]:
         refreshed_state = knowledge_orchestrator.refresh(reason)
@@ -323,6 +658,15 @@ def create_app() -> FastAPI:
     app.include_router(get_tool_router())
     app.include_router(get_stage_router())
     app.include_router(get_workflow_router())
+    app.include_router(get_channel_router())
+
+    app.add_event_handler("startup", lambda: _start_channel_binding_listener(app))
+    app.add_event_handler("shutdown", lambda: _stop_channel_binding_listener(app))
+
+    def _task_runtime_provider() -> Optional[TaskRuntime]:
+        return get_task_runtime_if_enabled()
+
+    app.include_router(build_task_admin_router(_task_runtime_provider))
 
     _log_startup_step(
         "bootstrap.complete",
@@ -331,209 +675,19 @@ def create_app() -> FastAPI:
         router=bootstrap_state.router.name,
     )
 
-    async def _prompt_yes_no(question: str, *, timeout: float = 30.0, default: bool = True) -> bool:
-        loop = asyncio.get_running_loop()
-        default_hint = "Y/n" if default else "y/N"
-        prompt_text = f"{question} [{default_hint}] "
-
-        def _ask() -> str:
-            try:
-                return input(prompt_text)
-            except EOFError:
-                return ""
-
+    async def _probe_telegram_webhook() -> CapabilityState:
+        mode = telegram_probe_mode
+        if mode == "skip":
+            log.warning(
+                "startup.telegram_webhook.skipped",
+                extra={"mode": mode, "reason": "probe explicitly disabled"},
+            )
+            return CapabilityState(status="degraded", detail="probe skipped", ttl_seconds=300.0)
+        public_state = capability_registry.get_state("public_endpoint")
+        if public_state and public_state.status != "available":
+            detail = f"blocked_by_public_endpoint:{public_state.detail or public_state.status}"
+            return CapabilityState(status="degraded", detail=detail, ttl_seconds=min(300.0, public_state.ttl_seconds))
         try:
-            raw = await asyncio.wait_for(loop.run_in_executor(None, _ask), timeout)
-        except asyncio.TimeoutError:
-            _log_startup_step(
-                "telegram_backlog.prompt_timeout",
-                "Backlog prompt timed out, using default",
-                default_selected=default,
-                timeout_seconds=timeout,
-            )
-            return default
-
-        normalized = (raw or "").strip().lower()
-        if not normalized:
-            _log_startup_step(
-                "telegram_backlog.prompt_default",
-                "Backlog prompt empty input, using default",
-                default_selected=default,
-            )
-            return default
-        if normalized in {"y", "yes", "是", "1", "true", "start"}:
-            return True
-        if normalized in {"n", "no", "否", "0", "false", "drop"}:
-            return False
-        _log_startup_step(
-            "telegram_backlog.prompt_unknown",
-            "Backlog prompt received unrecognized input, using default",
-            input_value=normalized,
-            default_selected=default,
-        )
-        return default
-
-    async def _verify_telegram_connectivity() -> None:
-        target_host = os.getenv("TELEGRAM_API_HOST", "api.telegram.org")
-        target_port = int(os.getenv("TELEGRAM_API_PORT", "443"))
-        timeout_seconds = max(1.0, float(os.getenv("TELEGRAM_PRECHECK_TIMEOUT", "3")))
-        _log_startup_step(
-            "telegram_precheck.start",
-            "Probing outbound connectivity to Telegram API",
-            host=target_host,
-            port=target_port,
-            timeout_seconds=timeout_seconds,
-        )
-        try:
-            reader, writer = await asyncio.wait_for(
-                asyncio.open_connection(target_host, target_port),
-                timeout=timeout_seconds,
-            )
-        except Exception as exc:  # pragma: no cover - network failures depend on env
-            log.error(
-                "startup.telegram_precheck.failed",
-                extra={
-                    "host": target_host,
-                    "port": target_port,
-                    "timeout_seconds": timeout_seconds,
-                    "public_url": public_url,
-                    "hint": "确保部署环境允许访问 api.telegram.org:443，必要时配置代理或开通出站白名单。",
-                    "error": repr(exc),
-                },
-            )
-            raise RuntimeError("telegram_network_precheck_failed") from exc
-        else:
-            writer.close()
-            with suppress(Exception):
-                await writer.wait_closed()
-            _log_startup_step(
-                "telegram_precheck.ok",
-                "Telegram API connectivity verified",
-                host=target_host,
-                port=target_port,
-                timeout_seconds=timeout_seconds,
-            )
-
-    async def _handle_pending_updates() -> Dict[str, Any]:
-        max_attempts = max(1, int(os.getenv("TELEGRAM_WEBHOOK_MAX_ATTEMPTS", "5")))
-        base_delay = max(0.1, float(os.getenv("TELEGRAM_WEBHOOK_RETRY_DELAY", "0.5")))
-        request_timeout = max(1.0, float(os.getenv("TELEGRAM_WEBHOOK_TIMEOUT", "10")))
-
-        delay = base_delay
-        attempt_used = 0
-        webhook_info = None
-        last_exc: Optional[Exception] = None
-
-        for attempt in range(1, max_attempts + 1):
-            try:
-                webhook_info = await bootstrap_state.bot.get_webhook_info(request_timeout=request_timeout)
-                attempt_used = attempt
-                break
-            except TelegramRetryAfter as exc:
-                wait_for = max(float(exc.retry_after), delay)
-                log.warning(
-                    "startup.telegram_backlog.retry_after",
-                    extra={"attempt": attempt, "retry_in": wait_for, "error": str(exc)},
-                )
-                await asyncio.sleep(wait_for)
-                last_exc = exc
-            except (ClientConnectorError, ClientOSError, asyncio.TimeoutError) as exc:
-                log.warning(
-                    "startup.telegram_backlog.retry",
-                    extra={"attempt": attempt, "backoff": delay, "error": repr(exc)},
-                )
-                await asyncio.sleep(delay)
-                delay = min(delay * 2, 10.0)
-                last_exc = exc
-            except Exception as exc:
-                log.error(
-                    "startup.telegram_backlog.unexpected_error",
-                    extra={"attempt": attempt, "error": repr(exc)},
-                )
-                last_exc = exc
-                break
-
-        if webhook_info is None:
-            log.error(
-                "startup.telegram_backlog.unreachable",
-                extra={
-                    "attempts": max_attempts,
-                    "error": repr(last_exc) if last_exc else "unknown",
-                    "public_url": public_url,
-                    "hint": "Confirm outbound network access to api.telegram.org or start ngrok with WEB_HOOK.",
-                },
-            )
-            message = (
-                "Unable to reach Telegram webhook after "
-                f"{max_attempts} attempts. Ensure the server can access api.telegram.org "
-                "and that WEB_HOOK/ngrok URL is reachable."
-            )
-            raise TelegramWebhookUnavailableError(message) from last_exc
-        if last_exc is not None and attempt_used > 1:
-            log.info(
-                "startup.telegram_backlog.recovered",
-                extra={"attempts": attempt_used},
-            )
-        _log_startup_step(
-            "telegram_backlog.check_begin",
-            "Checking Telegram backlog",
-            webhook_url=getattr(webhook_info, "url", ""),
-        )
-        pending = getattr(webhook_info, "pending_update_count", 0)
-        if not pending:
-            _log_startup_step("telegram_backlog.empty", "No Telegram backlog detected")
-            return {"pending_updates": 0, "drop_pending": False}
-
-        log.warning(
-            "startup.telegram_backlog.detected",
-            extra={
-                "pending_updates": pending,
-                "last_error_date": getattr(webhook_info, "last_error_date", None),
-                "last_error_message": getattr(webhook_info, "last_error_message", ""),
-            },
-        )
-        decision = await _prompt_yes_no(
-            f"检测到 Telegram 积压消息 {pending} 条，是否继续处理？",
-            timeout=30.0,
-            default=True,
-        )
-        decision_label = "keep" if decision else "drop"
-        drop_pending = False
-        if not decision:
-            try:
-                await bootstrap_state.bot.delete_webhook(drop_pending_updates=True)
-                _log_startup_step(
-                    "telegram_backlog.drop",
-                    "Dropped pending Telegram updates",
-                    pending_updates=pending,
-                )
-                drop_pending = True
-            except Exception as exc:  # pragma: no cover - surface caller-facing failures
-                log.error(
-                    "startup.telegram_backlog.drop_failed",
-                    extra={"error": str(exc), "pending_updates": pending},
-                )
-                raise
-        else:
-            _log_startup_step(
-                "telegram_backlog.keep",
-                "Keeping pending Telegram updates",
-                pending_updates=pending,
-            )
-        _log_startup_step(
-            "telegram_backlog.check_end",
-            "Backlog inspection finished",
-            decision=decision_label,
-            pending_updates=pending,
-        )
-        return {"pending_updates": pending, "drop_pending": drop_pending}
-
-    @asynccontextmanager
-    async def lifespan(_: FastAPI):
-        async with application_lifespan():
-            await _verify_telegram_connectivity()
-            _log_startup_step("telegram_backlog.check", "Begin backlog inspection")
-            backlog_meta = await _handle_pending_updates()
             _log_startup_step(
                 "behavior_webhook_startup.invoke",
                 "Registering webhook with Telegram",
@@ -542,7 +696,7 @@ def create_app() -> FastAPI:
                 bootstrap_state.bot,
                 f"{public_url.rstrip('/')}{WEBHOOK_PATH}",
                 webhook_secret,
-                drop_pending_updates=bool(backlog_meta.get("drop_pending")),
+                drop_pending_updates=False,
             )
             for prompt in startup_meta.get("prompt_events", []):
                 log.warning(
@@ -561,23 +715,146 @@ def create_app() -> FastAPI:
                 stages=startup_meta.get("telemetry", {}).get("stages", []),
                 bootstrapped_request_id=telemetry.get("request_id"),
             )
+            return CapabilityState(status="available", ttl_seconds=300.0)
+        except Exception as exc:  # pragma: no cover - network/env dependent
+            log.warning(
+                "startup.telegram_webhook.degraded",
+                extra={"mode": mode, "error": repr(exc)},
+            )
+            return CapabilityState(status="degraded", detail=str(exc), ttl_seconds=180.0)
 
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "telegram_webhook",
+            _probe_telegram_webhook,
+            hard=False,
+            retry_interval=300.0,
+            base_interval=180.0,
+            max_interval=600.0,
+            multiplier=1.2,
+        )
+    )
+
+    async def _run_initial_capability_checks() -> None:
+        await capability_registry.run_all_probes()
+        await runtime_supervisor.prime()
+
+    async def _start_capability_monitors(stop_event: asyncio.Event) -> List[asyncio.Task]:
+        tasks: List[asyncio.Task] = []
+        rng = random.Random()
+
+        async def _loop(probe: CapabilityProbe) -> None:
+            base_interval = max(5.0, probe.base_interval or probe.retry_interval or 30.0)
+            current_interval = base_interval
+            max_interval = max(base_interval, probe.max_interval or base_interval)
+            multiplier = probe.multiplier or 2.0
             try:
-                yield
-            finally:
-                state = getattr(app.state, "telegram", None)
-                if state:
-                    await state.bot.session.close()
-                log.info("shutdown.complete")
+                while not stop_event.is_set():
+                    jitter = rng.uniform(0.5, 1.5)
+                    await asyncio.sleep(max(5.0, current_interval * jitter))
+                    state = await capability_registry.run_probe(probe.name)
+                    if state.status == "available":
+                        current_interval = base_interval
+                    else:
+                        current_interval = min(current_interval * multiplier, max_interval)
+            except asyncio.CancelledError:
+                log.info(
+                    "capability_monitor.cancelled",
+                    extra={"probe": probe.name, "interval": current_interval},
+                )
+                return
+
+        for probe in capability_registry.iter_probes():
+            tasks.append(asyncio.create_task(_loop(probe), name=f"capability-probe-{probe.name}"))
+        return tasks
+
+    async def _refresh_capabilities() -> Dict[str, CapabilityState]:
+        return await capability_registry.run_all_probes()
+
+    app.state.capability_refresh = _refresh_capabilities
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        monitor_stop = asyncio.Event()
+        await _run_initial_capability_checks()
+        monitor_tasks = await _start_capability_monitors(monitor_stop)
+        try:
+            async with application_lifespan():
+                try:
+                    yield
+                except asyncio.CancelledError:
+                    log.info("shutdown.cancelled", extra={"origin": "lifespan"})
+        finally:
+            monitor_stop.set()
+            for task in monitor_tasks:
+                task.cancel()
+                with suppress(Exception):
+                    await task
+            await runtime_supervisor.shutdown()
+            state = getattr(app.state, "telegram", None)
+            if state:
+                await state.bot.session.close()
+            telemetry_subscriber = getattr(app.state, "telemetry_console_subscriber", None)
+            if telemetry_subscriber:
+                telemetry_subscriber.stop()
+            log.info("shutdown.complete")
+            finalize_log_workspace(reason="lifespan")
 
     app.router.lifespan_context = lifespan
 
+    def _capability_snapshot() -> Dict[str, Dict[str, object]]:
+        registry: Optional[CapabilityRegistry] = getattr(app.state, "capabilities", None)
+        if registry is None:
+            return {}
+        return registry.snapshot()
+
+    def _derive_health(snapshot: Dict[str, Dict[str, object]]) -> str:
+        if any(state.get("status") == "unavailable" for state in snapshot.values()):
+            return "unavailable"
+        if any(state.get("status") == "degraded" for state in snapshot.values()):
+            return "degraded"
+        return "ok" if snapshot else "unknown"
+
+    @app.get("/")
+    async def root_probe() -> Dict[str, object]:
+        snapshot = _capability_snapshot()
+        return {
+            "status": _derive_health(snapshot),
+            "public_url": public_url,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+    @app.head("/")
+    async def root_probe_head() -> Response:
+        return Response(status_code=status.HTTP_200_OK)
+
     @app.get("/healthz")
-    async def healthz() -> dict[str, str]:
+    async def healthz() -> Dict[str, object]:
+        snapshot = _capability_snapshot()
         state = getattr(app.state, "telegram", None)
         return {
-            "status": "ok",
+            "status": _derive_health(snapshot),
             "router": getattr(state.router, "name", "pending") if state else "pending",
+            "capabilities": snapshot,
+        }
+
+    @app.get("/healthz/startup")
+    async def startup_health() -> Dict[str, object]:
+        snapshot = _capability_snapshot()
+        return {
+            "status": _derive_health(snapshot),
+            "capabilities": snapshot,
+        }
+
+    @app.get("/healthz/readiness")
+    async def readiness_health() -> Dict[str, object]:
+        refresher = getattr(app.state, "capability_refresh", None)
+        if callable(refresher):
+            await refresher()
+        snapshot = _capability_snapshot()
+        return {
+            "status": _derive_health(snapshot),
+            "capabilities": snapshot,
         }
 
     @app.get("/internal/memory_health")

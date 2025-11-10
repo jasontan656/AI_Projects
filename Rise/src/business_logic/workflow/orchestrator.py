@@ -2,17 +2,16 @@ from __future__ import annotations
 
 """Workflow orchestrator for multi-stage conversations."""
 
-import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from time import perf_counter
 from typing import Any, List, Mapping, MutableMapping, Optional, Sequence
 
 from business_service.workflow import StageDefinition, StageRepository, WorkflowDefinition, WorkflowRepository
 from foundational_service.integrations.openai_bridge import behavior_agents_bridge
 from project_utility.context import ContextBridge
 from project_utility.db import append_chat_summary, get_mongo_database
-
-log = logging.getLogger("business_logic.workflow.orchestrator")
+from project_utility.telemetry import emit as telemetry_emit
 
 __all__ = [
     "WorkflowExecutionContext",
@@ -82,6 +81,7 @@ class WorkflowOrchestrator:
             if stage is None:
                 raise RuntimeError(f"workflow stage '{stage_id}' not found")
             prompt = self._compose_prompt(stage, context, stage_results)
+            stage_start = perf_counter()
             agent_request = {
                 "prompt": prompt,
                 "history": accumulated_history,
@@ -93,7 +93,22 @@ class WorkflowOrchestrator:
             output_text = raw.get("text", "").strip()
             if not output_text:
                 raise RuntimeError(f"stage '{stage_id}' returned empty response")
+            duration_ms = round((perf_counter() - stage_start) * 1000, 3)
             accumulated_history.append(output_text)
+            telemetry_emit(
+                "workflow.stage",
+                workflow_id=context.workflow_id,
+                request_id=context.request_id,
+                payload={
+                    "stage_id": stage.stage_id,
+                    "stage_name": stage.name,
+                    "duration_ms": duration_ms,
+                    "prompt_text": prompt,
+                    "output_text": output_text,
+                    "model": agent_request["model"],
+                },
+                sensitive=["prompt_text", "output_text"],
+            )
             stage_results.append(
                 WorkflowStageResult(
                     stage_id=stage.stage_id,
@@ -161,7 +176,13 @@ class WorkflowOrchestrator:
         try:
             await append_chat_summary(chat_id, summary_entry, max_entries=20, ttl_seconds=3600)
         except Exception:  # pragma: no cover - redis 失败仅记录日志
-            log.exception("chat_summary.append_failed", extra={"chat_id": chat_id})
+            telemetry_emit(
+                "workflow.chat_summary_failed",
+                level="warning",
+                workflow_id=context.workflow_id,
+                request_id=context.request_id,
+                payload={"chat_id": chat_id},
+            )
         try:
             database = get_mongo_database()
             database["chat_history"].update_one(
@@ -179,7 +200,13 @@ class WorkflowOrchestrator:
                 upsert=True,
             )
         except Exception:  # pragma: no cover - mongo失败仅记录日志
-            log.exception("chat_history.upsert_failed", extra={"chat_id": chat_id})
+            telemetry_emit(
+                "workflow.chat_history_failed",
+                level="warning",
+                workflow_id=context.workflow_id,
+                request_id=context.request_id,
+                payload={"chat_id": chat_id},
+            )
 
     def _compose_prompt(
         self,
@@ -198,7 +225,13 @@ class WorkflowOrchestrator:
             prompt = stage.prompt_template.format_map(_SafeDict(prompt_context))
         except KeyError as exc:
             missing = str(exc)
-            log.warning("workflow.prompt.placeholder_missing", extra={"placeholder": missing, "stage_id": stage.stage_id})
+            telemetry_emit(
+                "workflow.prompt.placeholder_missing",
+                level="warning",
+                workflow_id=context.workflow_id,
+                request_id=context.request_id,
+                payload={"placeholder": missing, "stage_id": stage.stage_id},
+            )
             prompt = stage.prompt_template
         return prompt
 
