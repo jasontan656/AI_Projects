@@ -38,13 +38,17 @@ class ChannelBindingRegistry:
         self._version = 0
         self._defaults = tuple(default_channels or ("telegram",))
         self._dispatchers: "weakref.WeakSet[object]" = weakref.WeakSet()
+        self._kill_switch: Dict[str, Dict[str, bool]] = {}
 
     async def refresh(
         self,
         channel: Optional[str] = None,
         *,
+        workflow_id: Optional[str] = None,
         binding_version: Optional[int] = None,
     ) -> _ChannelBindingState:
+        if workflow_id and not channel:
+            raise ValueError("workflow_id refresh requires channel")
         channels: Iterable[str]
         if channel:
             channels = (channel,)
@@ -52,34 +56,23 @@ class ChannelBindingRegistry:
             existing = tuple(self._cache.keys())
             channels = existing or self._defaults
         async with self._lock:
+            if workflow_id and channel:
+                state = await self._refresh_single(channel, workflow_id, binding_version)
+                if state is not None:
+                    return state
             state: Optional[_ChannelBindingState] = None
             for name in channels:
-                options = await self._service.list_binding_options(name)
-                option_map = {item.workflow_id: item for item in options}
-                active_option = self._select_active_option(options)
-                active_runtime: Optional[ChannelBindingRuntime] = None
-                version = binding_version or self._version + 1
-                if active_option and active_option.policy:
-                    active_runtime = ChannelBindingRuntime(
-                        workflow_id=active_option.workflow_id,
-                        channel=name,
-                        policy=active_option.policy,
-                        version=version,
-                    )
-                self._cache[name] = _ChannelBindingState(
-                    options=option_map,
-                    active=active_runtime,
-                    refreshed_at=datetime.now(timezone.utc),
-                    version=version,
-                )
-                self._version = max(self._version, version)
-                self._sync_dispatchers(name)
+                state = await self._refresh_channel(name, binding_version)
                 if channel and name == channel:
-                    state = self._cache[name]
+                    break
             return state or self._cache.get(channel or self._defaults[0], _ChannelBindingState())
 
     async def handle_event(self, event: ChannelBindingEvent) -> None:
-        await self.refresh(event.channel, binding_version=event.binding_version)
+        await self.refresh(
+            event.channel,
+            workflow_id=event.workflow_id,
+            binding_version=event.binding_version,
+        )
 
     async def get_active_binding(self, channel: str = "telegram") -> Optional[ChannelBindingRuntime]:
         await self._ensure_channel(channel)
@@ -122,12 +115,14 @@ class ChannelBindingRegistry:
         if state is None:
             return
         payload = {
+            "layer": "Interface",
             "version": state.version,
             "active": state.active.workflow_id if state.active else None,
             "options": {
                 workflow_id: {
                     "status": option.status,
                     "health": option.health,
+                    "killSwitch": option.kill_switch,
                     "policy": option.policy.to_document() if option.policy else None,
                 }
                 for workflow_id, option in state.options.items()
@@ -149,7 +144,10 @@ class ChannelBindingRegistry:
         candidates = [
             option
             for option in options
-            if option.policy is not None and option.is_enabled and option.status in {"bound", "degraded"}
+            if option.policy is not None
+            and option.is_enabled
+            and not option.kill_switch
+            and option.status in {"bound", "degraded"}
         ]
         if not candidates:
             return None
@@ -157,3 +155,68 @@ class ChannelBindingRegistry:
             candidates,
             key=lambda option: option.updated_at or datetime(1970, 1, 1, tzinfo=timezone.utc),
         )
+
+    async def _refresh_channel(
+        self,
+        channel: str,
+        binding_version: Optional[int],
+    ) -> _ChannelBindingState:
+        options = await self._service.list_binding_options(channel)
+        option_map = {item.workflow_id: item for item in options}
+        version = binding_version or self._version + 1
+        active_runtime = self._build_active_runtime(channel, options, version)
+        state = _ChannelBindingState(
+            options=option_map,
+            active=active_runtime,
+            refreshed_at=datetime.now(timezone.utc),
+            version=version,
+        )
+        self._cache[channel] = state
+        self._kill_switch[channel] = {opt.workflow_id: opt.kill_switch for opt in options}
+        self._version = max(self._version, version)
+        self._sync_dispatchers(channel)
+        return state
+
+    async def _refresh_single(
+        self,
+        channel: str,
+        workflow_id: str,
+        binding_version: Optional[int],
+    ) -> Optional[_ChannelBindingState]:
+        state = self._cache.get(channel)
+        if state is None:
+            return await self._refresh_channel(channel, binding_version)
+        try:
+            option = await self._service.get_binding_view(workflow_id, channel)
+        except KeyError:
+            state.options.pop(workflow_id, None)
+            if channel in self._kill_switch:
+                self._kill_switch[channel].pop(workflow_id, None)
+        else:
+            state.options[workflow_id] = option
+            bucket = self._kill_switch.setdefault(channel, {})
+            bucket[workflow_id] = option.kill_switch
+        version = binding_version or state.version + 1
+        state.version = version
+        state.refreshed_at = datetime.now(timezone.utc)
+        state.active = self._build_active_runtime(channel, tuple(state.options.values()), version)
+        self._cache[channel] = state
+        self._version = max(self._version, version)
+        self._sync_dispatchers(channel)
+        return state
+
+    def _build_active_runtime(
+        self,
+        channel: str,
+        options: Sequence[ChannelBindingOption],
+        version: int,
+    ) -> Optional[ChannelBindingRuntime]:
+        active_option = self._select_active_option(options)
+        if active_option and active_option.policy:
+            return ChannelBindingRuntime(
+                workflow_id=active_option.workflow_id,
+                channel=channel,
+                policy=active_option.policy,
+                version=version,
+            )
+        return None

@@ -1,5 +1,0 @@
-- [x] Audit references to `config/runtime_policy.json` across bootstrap, policy loading, asset guard, and tooling to confirm required removal points.
-- [x] Embed runtime policy defaults inside `foundational_service.policy.runtime`, keeping optional override parameters for custom deployments.
-- [x] Update bootstrap timeline, asset guard, knowledge snapshot checks, and any other diagnostics to stop requiring the JSON artefact.
-- [x] Delete the `config/runtime_policy.json` file and any related documentation, adjusting tests or fixtures to use the new defaults.
-- [x] Run targeted smoke tests (e.g., `python3 app.py --help`, policy loader unit) to confirm bootstrap still succeeds without the file, then execute `openspec validate remove-runtime-policy-config --strict`.

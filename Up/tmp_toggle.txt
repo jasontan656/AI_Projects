@@ -1,6 +1,0 @@
-const togglePreview = () => {
-  showPreview.value = !showPreview.value;
-  if (!showPreview.value) {
-    nextTick(() => updateEditor(markdownContent.value));
-  }
-};

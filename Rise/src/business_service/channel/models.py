@@ -115,10 +115,12 @@ class ChannelBindingOption:
     channel: str
     status: str
     is_enabled: bool
-    policy: Optional[WorkflowChannelPolicy]
+    is_bound: bool = False
+    policy: Optional[WorkflowChannelPolicy] = None
     health: Mapping[str, Any] = field(default_factory=dict)
     updated_at: Optional[datetime] = None
     updated_by: Optional[str] = None
+    kill_switch: bool = False
 
 
 @dataclass(slots=True)

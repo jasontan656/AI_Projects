@@ -1,5 +1,0 @@
-- [x] Audit repository to confirm only `app.py` defines Rich logging helpers and note any external references.
-- [x] Create `shared_utility/logging/rich_config.py` (or similar) containing the extracted handlers, filters, helpers, and `configure_logging()` entrypoint.
-- [x] Update `app.py` to import and call `configure_logging()`; remove inlined logging classes and utilities.
-- [x] Run formatting/linting if available, and perform a basic startup smoke test (e.g., `python app.py --help` or logging invocation) to ensure no import errors.
-- [x] Verify log files continue to land under `shared_utility/RichLogger/logs` (or configured log root) and document follow-up adjustments if needed.

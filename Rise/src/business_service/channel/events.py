@@ -8,6 +8,7 @@ import json
 from typing import Any, Mapping
 
 CHANNEL_BINDING_TOPIC = "channel_binding.updated"
+CHANNEL_BINDING_HEALTH_TOPIC = "channel_binding.health"
 
 
 @dataclass(slots=True)
@@ -59,4 +60,42 @@ class ChannelBindingEvent:
             payload=data.get("payload") or {},
             timestamp=data.get("timestamp")
             or datetime.now(timezone.utc).isoformat(),
+        )
+
+
+@dataclass(slots=True)
+class ChannelBindingHealthEvent:
+    channel: str
+    workflow_id: str
+    status: str
+    detail: Mapping[str, Any] = field(default_factory=dict)
+    checked_at: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
+
+    def dumps(self) -> str:
+        return json.dumps(
+            {
+                "channel": self.channel,
+                "workflowId": self.workflow_id,
+                "status": self.status,
+                "detail": dict(self.detail or {}),
+                "checkedAt": self.checked_at,
+            },
+            ensure_ascii=False,
+        )
+
+    @classmethod
+    def loads(cls, raw: Any) -> "ChannelBindingHealthEvent":
+        if isinstance(raw, (bytes, bytearray)):
+            raw = raw.decode("utf-8")
+        data = json.loads(raw)
+        return cls(
+            channel=str(data.get("channel", "telegram")),
+            workflow_id=str(data.get("workflowId", "")),
+            status=str(data.get("status", "unknown")),
+            detail=data.get("detail") or {},
+            checked_at=str(
+                data.get("checkedAt") or datetime.now(timezone.utc).isoformat()
+            ),
         )

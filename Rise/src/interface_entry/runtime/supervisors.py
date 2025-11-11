@@ -3,6 +3,7 @@ from __future__ import annotations
 """Runtime supervisors responsible for dependency self-healing."""
 
 import asyncio
+import contextlib
 import logging
 from collections import defaultdict
 from typing import Awaitable, Callable, Dict, List, Optional, Sequence, Tuple
@@ -15,6 +16,7 @@ from interface_entry.http.dependencies import (
     shutdown_task_runtime,
 )
 from interface_entry.runtime.capabilities import CapabilityRegistry, CapabilityState
+from interface_entry.runtime.channel_binding_event_replayer import ChannelBindingEventReplayer
 from project_utility.telemetry import emit as telemetry_emit
 
 
@@ -31,6 +33,8 @@ class RuntimeSupervisor:
         critical_capabilities: Sequence[str] = ("redis", "rabbitmq"),
         redis_backfill: Optional[RedisBackfillHook] = None,
         logger: Optional[logging.Logger] = None,
+        binding_replayer: ChannelBindingEventReplayer | None = None,
+        binding_replayer_interval: float = 5.0,
     ) -> None:
         self._registry = registry
         self._critical = tuple(critical_capabilities)
@@ -41,6 +45,10 @@ class RuntimeSupervisor:
         self._closed = False
         self._active_runtime: Optional[TaskRuntime] = None
         self._listener_names: List[str] = []
+        self._binding_replayer = binding_replayer
+        self._binding_replayer_interval = binding_replayer_interval
+        self._binding_replayer_task: Optional[asyncio.Task[None]] = None
+        self._binding_replayer_stop: Optional[asyncio.Event] = None
 
         for name in set(self._critical) | {"redis"}:
             registry.register_listener(name, self._handle_capability_event)
@@ -58,6 +66,7 @@ class RuntimeSupervisor:
         async with self._lock:
             await shutdown_task_runtime()
             self._active_runtime = None
+            await self._stop_binding_replayer()
         for waiters in self._waiters.values():
             for _, future in waiters:
                 if not future.done():
@@ -130,6 +139,7 @@ class RuntimeSupervisor:
                         payload={"reason": blocked},
                     )
                 self._active_runtime = None
+                await self._stop_binding_replayer()
                 return
 
             runtime = get_task_runtime_if_enabled()
@@ -144,6 +154,7 @@ class RuntimeSupervisor:
             if self._active_runtime is None:
                 telemetry_emit("task_runtime.enabled", payload={"consumer": runtime.worker._consumer_id})
             self._active_runtime = runtime
+            await self._start_binding_replayer()
 
     def _blocked_capability(self) -> Optional[str]:
         for name in self._critical:
@@ -164,6 +175,42 @@ class RuntimeSupervisor:
                 level="error",
                 payload={"reason": reason},
             )
+
+    async def _start_binding_replayer(self) -> None:
+        if self._binding_replayer is None or self._binding_replayer_task is not None:
+            return
+        stop_event = asyncio.Event()
+        self._binding_replayer_stop = stop_event
+
+        async def _runner() -> None:
+            try:
+                while not stop_event.is_set():
+                    try:
+                        await self._binding_replayer.replay_pending()  # type: ignore[union-attr]
+                    except Exception as exc:  # pragma: no cover - defensive
+                        self._logger.warning(
+                            "channel.binding.replay_failed",
+                            extra={"error": str(exc)},
+                        )
+                    try:
+                        await asyncio.wait_for(stop_event.wait(), timeout=self._binding_replayer_interval)
+                    except asyncio.TimeoutError:
+                        continue
+            except asyncio.CancelledError:
+                raise
+
+        self._binding_replayer_task = asyncio.create_task(_runner(), name="channel-binding-replayer")
+
+    async def _stop_binding_replayer(self) -> None:
+        if self._binding_replayer_task is None:
+            return
+        if self._binding_replayer_stop:
+            self._binding_replayer_stop.set()
+        self._binding_replayer_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await self._binding_replayer_task
+        self._binding_replayer_task = None
+        self._binding_replayer_stop = None
 
 
 __all__ = ["RuntimeSupervisor"]

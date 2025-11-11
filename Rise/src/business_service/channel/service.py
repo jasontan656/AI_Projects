@@ -62,11 +62,21 @@ class WorkflowChannelService:
         options: list[ChannelBindingOption] = []
         for workflow in workflows:
             is_enabled = self._is_channel_enabled(workflow, channel)
+            kill_switch = self._is_kill_switch_active(workflow, channel)
             policy = policy_map.get(workflow.workflow_id)
-            if not self._should_include_workflow(workflow, is_enabled, policy):
+            if not self._should_include_workflow(workflow, channel, policy):
                 continue
-            status = self._derive_status(policy)
-            options.append(self._build_binding_option(workflow, policy, channel, is_enabled, status))
+            status = self._derive_status(policy, kill_switch=kill_switch)
+            options.append(
+                self._build_binding_option(
+                    workflow,
+                    policy,
+                    channel,
+                    is_enabled and not kill_switch,
+                    status,
+                    kill_switch=kill_switch,
+                )
+            )
         return options
 
     async def get_binding_view(self, workflow_id: str, channel: str = "telegram") -> ChannelBindingOption:
@@ -131,6 +141,9 @@ class WorkflowChannelService:
             or (existing.timeout_message if existing else DEFAULT_TIMEOUT_MESSAGE)
         )
         metadata = self._normalize_metadata(payload.get("metadata"), existing.metadata if existing else None)
+        allowed_ids = metadata.get("allowedChatIds") if isinstance(metadata, Mapping) else None
+        if not allowed_ids:
+            raise ChannelValidationError("ALLOWED_CHAT_IDS_REQUIRED", "metadata.allowedChatIds must include at least one chat id")
         policy = WorkflowChannelPolicy.new(
             workflow_id=workflow_id,
             channel=channel,
@@ -197,6 +210,8 @@ class WorkflowChannelService:
         channel: str,
         is_enabled: bool,
         status: str,
+        *,
+        kill_switch: bool,
     ) -> ChannelBindingOption:
         return ChannelBindingOption(
             workflow_id=workflow.workflow_id,
@@ -205,10 +220,12 @@ class WorkflowChannelService:
             channel=channel,
             status=status,
             is_enabled=is_enabled,
+            is_bound=policy is not None,
             policy=policy,
             health=self._extract_health(policy),
             updated_at=policy.updated_at if policy else None,
             updated_by=policy.updated_by if policy else None,
+            kill_switch=kill_switch,
         )
 
     @staticmethod
@@ -220,7 +237,9 @@ class WorkflowChannelService:
             return dict(health)
         return {}
 
-    def _derive_status(self, policy: Optional[WorkflowChannelPolicy]) -> str:
+    def _derive_status(self, policy: Optional[WorkflowChannelPolicy], *, kill_switch: bool = False) -> str:
+        if kill_switch:
+            return "kill_switch"
         if policy is None:
             return "unbound"
         health = self._extract_health(policy)
@@ -230,15 +249,21 @@ class WorkflowChannelService:
         return "bound"
 
     @staticmethod
-    def _is_channel_enabled(workflow: WorkflowDefinition, channel: str) -> bool:
+    def _get_channel_metadata(workflow: WorkflowDefinition, channel: str) -> Mapping[str, Any]:
         metadata = workflow.metadata or {}
         channels_meta = metadata.get("channels")
         if isinstance(channels_meta, Mapping):
             channel_meta = channels_meta.get(channel)
             if isinstance(channel_meta, Mapping):
-                enabled = channel_meta.get("enabled")
-                if isinstance(enabled, bool):
-                    return enabled
+                return dict(channel_meta)
+        return {}
+
+    def _is_channel_enabled(self, workflow: WorkflowDefinition, channel: str) -> bool:
+        channel_meta = self._get_channel_metadata(workflow, channel)
+        enabled = channel_meta.get("enabled")
+        if isinstance(enabled, bool):
+            return enabled
+        metadata = workflow.metadata or {}
         camel_case = metadata.get(f"{channel}Enabled")
         if isinstance(camel_case, bool):
             return camel_case
@@ -247,14 +272,28 @@ class WorkflowChannelService:
             return legacy
         return True
 
+    def _is_kill_switch_active(self, workflow: WorkflowDefinition, channel: str) -> bool:
+        channel_meta = self._get_channel_metadata(workflow, channel)
+        kill_switch = channel_meta.get("killSwitch")
+        if isinstance(kill_switch, bool):
+            return kill_switch
+        return False
+
     def _should_include_workflow(
         self,
         workflow: WorkflowDefinition,
-        is_enabled: bool,
+        channel: str,
         policy: Optional[WorkflowChannelPolicy],
     ) -> bool:
-        status_allowed = workflow.status in {"published", "production", "active"}
-        return policy is not None or (is_enabled and status_allowed)
+        status_value = str(getattr(workflow, "status", "")).lower()
+        status_allowed = status_value in {"published", "production", "active"}
+        if not status_allowed:
+            return False
+        if not self._is_channel_enabled(workflow, channel):
+            return False
+        if policy is not None:
+            return True
+        return True
 
     async def set_channel_enabled(
         self,
@@ -271,8 +310,38 @@ class WorkflowChannelService:
         channels_meta = dict(metadata.get("channels") or {})
         channel_meta = dict(channels_meta.get(channel) or {})
         channel_meta["enabled"] = enabled
+        if "killSwitch" not in channel_meta:
+            channel_meta["killSwitch"] = False
         channel_meta["updatedAt"] = datetime.now(timezone.utc).isoformat()
         channel_meta["updatedBy"] = actor
+        channels_meta[channel] = channel_meta
+        metadata["channels"] = channels_meta
+        updates: MutableMapping[str, Any] = {"metadata": metadata}
+        if actor:
+            updates["updated_by"] = actor
+        return await self._workflow_repository.update(
+            workflow_id,
+            updates,
+            increment_version=False,
+        )
+
+    async def set_kill_switch_state(
+        self,
+        workflow_id: str,
+        channel: str,
+        *,
+        active: bool,
+        actor: Optional[str],
+    ) -> WorkflowDefinition:
+        workflow = await self._workflow_repository.get(workflow_id)
+        if workflow is None:
+            raise KeyError(workflow_id)
+        metadata = dict(workflow.metadata or {})
+        channels_meta = dict(metadata.get("channels") or {})
+        channel_meta = dict(channels_meta.get(channel) or {})
+        channel_meta["killSwitch"] = active
+        channel_meta["killSwitchUpdatedAt"] = datetime.now(timezone.utc).isoformat()
+        channel_meta["killSwitchUpdatedBy"] = actor
         channels_meta[channel] = channel_meta
         metadata["channels"] = channels_meta
         updates: MutableMapping[str, Any] = {"metadata": metadata}

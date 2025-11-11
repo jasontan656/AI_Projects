@@ -16,6 +16,7 @@ __all__ = [
     "TelegramTestResponse",
     "ChannelBindingOptionResponse",
     "ChannelBindingDetailResponse",
+    "ChannelBindingDiagnosticsResponse",
     "ChannelBindingUpsertRequest",
     "ChannelBindingHealth",
     "ChannelBindingConfig",
@@ -63,14 +64,26 @@ class ChannelBindingOptionResponse(BaseModel):
     channel: str
     status: str
     isChannelEnabled: bool = True
+    isBound: bool = False
     publishedVersion: int
     bindingUpdatedAt: Optional[datetime] = None
     bindingUpdatedBy: Optional[str] = None
     health: ChannelBindingHealth = Field(default_factory=ChannelBindingHealth)
+    killSwitch: bool = False
 
 
 class ChannelBindingDetailResponse(ChannelBindingOptionResponse):
     policy: Optional[WorkflowChannelResponse] = None
+
+
+class ChannelBindingDiagnosticsResponse(BaseModel):
+    channel: str
+    version: int
+    activeWorkflowId: Optional[str] = None
+    optionCount: int
+    lastRefreshAt: Optional[datetime] = None
+    queueLength: int
+    deadletterCount: int
 
 
 class ChannelBindingConfig(BaseModel):

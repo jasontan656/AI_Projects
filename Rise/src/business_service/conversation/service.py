@@ -11,6 +11,7 @@ import os
 from typing import Any, Callable, Dict, Mapping, MutableMapping, Optional, Protocol, Sequence
 
 from business_service.channel.models import ChannelBindingRuntime, WorkflowChannelPolicy
+from business_service.channel.health_store import ChannelBindingHealthStore
 from business_logic.workflow import WorkflowRunResult, WorkflowStageResult
 from business_service.conversation.models import ConversationServiceResult
 from business_service.conversation.primitives import AdapterBuilder
@@ -30,10 +31,16 @@ RAW_PAYLOAD_LIMIT_BYTES = int(os.getenv("TELEGRAM_RAW_PAYLOAD_MAX_BYTES", "26214
 _TASK_SUBMITTER_FACTORY: Optional[Callable[[], Optional[TaskSubmitter]]] = None
 _TASK_RUNTIME_FACTORY: Optional[Callable[[], Optional[TaskRuntime]]] = None
 _CHANNEL_BINDING_PROVIDER: Optional["ChannelBindingProvider"] = None
+_CHANNEL_HEALTH_STORE: Optional[ChannelBindingHealthStore] = None
+_BINDING_REFRESH_TIMEOUT_SECONDS = float(os.getenv("TELEGRAM_BINDING_REFRESH_TIMEOUT", "1.0"))
+_BINDING_FALLBACK_FLAG = os.getenv("TELEGRAM_BINDING_FALLBACK_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
 
 
 class ChannelBindingProvider(Protocol):
     async def get_active_binding(self, channel: str = "telegram") -> Optional[ChannelBindingRuntime]:
+        ...
+
+    async def refresh(self, channel: str = "telegram") -> Optional[ChannelBindingRuntime]:
         ...
 
 
@@ -54,6 +61,11 @@ def set_channel_binding_provider(provider: ChannelBindingProvider) -> None:
 
     global _CHANNEL_BINDING_PROVIDER
     _CHANNEL_BINDING_PROVIDER = provider
+
+
+def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None:
+    global _CHANNEL_HEALTH_STORE
+    _CHANNEL_HEALTH_STORE = store
 
 
 @dataclass(slots=True)
@@ -82,6 +94,7 @@ class _ConversationContext:
     entry_config: TelegramEntryConfig
     channel_payload: Mapping[str, Any]
     raw_payload_meta: Mapping[str, Any]
+    chat_id: Optional[str] = None
 
 
 @dataclass(slots=True)
@@ -120,7 +133,8 @@ class TelegramConversationService:
         request_id = ContextBridge.request_id()
         inbound = contracts_telegram_inbound(dict(update), policy)
         telemetry = dict(inbound.get("telemetry", {}))
-        binding_runtime = await self._get_binding_runtime()
+        binding_provider = self.binding_provider or _CHANNEL_BINDING_PROVIDER
+        binding_runtime = await self._get_binding_runtime(binding_provider)
 
         if inbound.get("response_status") == "ignored":
             ignored_payload = update.get("message") or {}
@@ -147,19 +161,45 @@ class TelegramConversationService:
             )
 
         context = self._build_context(update, policy, inbound, request_id, telemetry)
-        if binding_runtime:
-            self._apply_binding_entry_config(context, binding_runtime.policy)
-            binding_snapshot = dict(context.telemetry.get("binding") or {})
-            binding_snapshot.update(
-                {
-                    "version": binding_runtime.version,
-                    "workflow_id": binding_runtime.workflow_id,
-                }
+        if binding_runtime is None:
+            log.warning(
+                "telegram.binding.unavailable",
+                extra={"request_id": request_id, "update_type": telemetry.get("update_type")},
             )
-            context.telemetry["binding"] = binding_snapshot
-        workflow_id = binding_runtime.workflow_id if binding_runtime else _extract_workflow_id(update, policy)
-        workflow_status = "ready" if workflow_id else "pending"
-        pending_reason = None if workflow_id else "workflow_missing"
+            fallback_runtime = self._maybe_use_policy_fallback(context)
+            if fallback_runtime is None:
+                version_hint = self._binding_version_hint(binding_provider)
+                self._set_binding_snapshot(context, workflow_id=None, version=version_hint, status="missing")
+                return self._build_binding_missing_result(context)
+            binding_runtime = fallback_runtime
+
+        self._apply_binding_entry_config(context, binding_runtime.policy)
+        if not self._is_chat_allowed(context, binding_runtime.policy):
+            log.warning(
+                "telegram.binding.chat_not_allowed",
+                extra={
+                    "chat_id": context.chat_id,
+                    "workflow_id": binding_runtime.workflow_id,
+                },
+            )
+            self._schedule_health_error("telegram", binding_runtime.workflow_id, "chat_not_allowed")
+            self._set_binding_snapshot(
+                context,
+                workflow_id=binding_runtime.workflow_id,
+                version=binding_runtime.version,
+                status="blocked",
+                fallback=binding_runtime.version < 0,
+            )
+            return self._build_binding_missing_result(context)
+        self._set_binding_snapshot(
+            context,
+            workflow_id=binding_runtime.workflow_id,
+            version=binding_runtime.version,
+            fallback=binding_runtime.version < 0,
+        )
+        workflow_id = binding_runtime.workflow_id
+        workflow_status = "ready"
+        pending_reason: Optional[str] = None
 
         submitter = self._get_task_submitter()
         runtime = self._get_task_runtime()
@@ -256,6 +296,7 @@ class TelegramConversationService:
         core_envelope = dict(inbound.get("core_envelope", {}))
         legacy_envelope = inbound.get("envelope", core_envelope)
         payload_section = dict(core_envelope.get("payload", {}))
+        metadata_section = dict(core_envelope.get("metadata") or {})
         tokens_budget = policy.get("tokens_budget") or {
             "per_call_max_tokens": 3000,
             "per_flow_max_tokens": 6000,
@@ -285,6 +326,7 @@ class TelegramConversationService:
             entry_config=entry_config,
             channel_payload=channel_payload,
             raw_payload_meta=raw_meta,
+            chat_id=str(metadata_section["chat_id"]) if metadata_section.get("chat_id") is not None else None,
         )
 
     def _get_task_submitter(self) -> Optional[TaskSubmitter]:
@@ -299,15 +341,154 @@ class TelegramConversationService:
             return None
         return factory()
 
-    async def _get_binding_runtime(self) -> Optional[ChannelBindingRuntime]:
-        provider = self.binding_provider or _CHANNEL_BINDING_PROVIDER
+    async def _get_binding_runtime(
+        self,
+        provider: Optional[ChannelBindingProvider],
+    ) -> Optional[ChannelBindingRuntime]:
         if provider is None:
             return None
         try:
-            return await provider.get_active_binding("telegram")
+            binding = await provider.get_active_binding("telegram")
+            if binding:
+                return binding
+            refreshed = await self._attempt_binding_refresh(provider)
+            if refreshed:
+                return refreshed
+            return None
         except Exception as exc:  # pragma: no cover - defensive logging
             log.warning("telegram.binding.lookup_failed", extra={"error": str(exc)})
             return None
+
+    async def _attempt_binding_refresh(self, provider: ChannelBindingProvider) -> Optional[ChannelBindingRuntime]:
+        refresh_fn = getattr(provider, "refresh", None)
+        if refresh_fn is None:
+            return None
+        try:
+            await asyncio.wait_for(refresh_fn("telegram"), timeout=_BINDING_REFRESH_TIMEOUT_SECONDS)
+        except asyncio.TimeoutError:
+            log.warning("telegram.binding.refresh_timeout", extra={"timeout": _BINDING_REFRESH_TIMEOUT_SECONDS})
+            return None
+        except Exception as exc:
+            log.warning("telegram.binding.refresh_failed", extra={"error": str(exc)})
+            return None
+        return await provider.get_active_binding("telegram")
+
+    def _build_binding_missing_result(self, context: _ConversationContext) -> ConversationServiceResult:
+        telemetry_extra = {"workflow_status": "missing", "bindingFallback": False}
+        workflow_id = self._extract_policy_workflow(context.policy)
+        self._schedule_health_error("telegram", workflow_id, "workflow_missing")
+        return self._build_static_response(
+            context,
+            text=context.entry_config.workflow_missing_text,
+            status="ignored",
+            mode="ignored",
+            intent="workflow_missing",
+            audit_reason="workflow_missing",
+            error_hint="workflow_missing",
+            telemetry_extra=telemetry_extra,
+        )
+
+    def _maybe_use_policy_fallback(self, context: _ConversationContext) -> Optional[ChannelBindingRuntime]:
+        if not _BINDING_FALLBACK_FLAG:
+            return None
+        entrypoints = context.policy.get("entrypoints")
+        if not isinstance(entrypoints, Mapping):
+            return None
+        telegram_entry = entrypoints.get("telegram")
+        if not isinstance(telegram_entry, Mapping):
+            return None
+        workflow_id = telegram_entry.get("workflow_id") or telegram_entry.get("workflowId")
+        if not workflow_id:
+            return None
+        now = datetime.now(timezone.utc)
+        policy = WorkflowChannelPolicy(
+            workflow_id=str(workflow_id),
+            channel="telegram",
+            encrypted_bot_token="__fallback__",
+            bot_token_mask="__fallback__",
+            webhook_url=str(telegram_entry.get("webhook_url") or telegram_entry.get("webhookUrl") or ""),
+            wait_for_result=bool(telegram_entry.get("wait_for_result", True)),
+            workflow_missing_message=str(
+                telegram_entry.get("workflow_missing_text") or telegram_entry.get("workflowMissingText") or DEFAULT_WORKFLOW_MISSING_MESSAGE
+            ),
+            timeout_message=str(
+                telegram_entry.get("timeout_message") or telegram_entry.get("timeoutMessage") or DEFAULT_TIMEOUT_MESSAGE
+            ),
+            metadata={},
+            updated_by="binding_fallback",
+            updated_at=now,
+            secret_version=0,
+        )
+        runtime = ChannelBindingRuntime(
+            workflow_id=str(workflow_id),
+            channel="telegram",
+            policy=policy,
+            version=-1,
+        )
+        log.error(
+            "telegram.binding.policy_fallback_active",
+            extra={"workflow_id": runtime.workflow_id},
+        )
+        return runtime
+
+    @staticmethod
+    def _set_binding_snapshot(
+        context: _ConversationContext,
+        *,
+        workflow_id: Optional[str],
+        version: Optional[int],
+        status: Optional[str] = None,
+        fallback: bool = False,
+    ) -> None:
+        snapshot = dict(context.telemetry.get("binding") or {})
+        snapshot["workflow_id"] = workflow_id
+        snapshot["version"] = version if version is not None else snapshot.get("version", -1)
+        if fallback:
+            snapshot["fallback"] = True
+        if status:
+            snapshot["status"] = status
+        context.telemetry["binding"] = snapshot
+
+    def _binding_version_hint(self, provider: Optional[ChannelBindingProvider]) -> Optional[int]:
+        if provider is None:
+            return None
+        get_state = getattr(provider, "get_state", None)
+        if callable(get_state):
+            try:
+                state = get_state("telegram")
+            except TypeError:
+                try:
+                    state = get_state()
+                except Exception:
+                    state = None
+            if state is not None:
+                return getattr(state, "version", None)
+        snapshot_fn = getattr(provider, "snapshot", None)
+        if callable(snapshot_fn):
+            try:
+                snapshot = snapshot_fn()
+            except TypeError:
+                snapshot = snapshot_fn("telegram")
+            if isinstance(snapshot, Mapping):
+                data = snapshot.get("telegram")
+                if isinstance(data, Mapping):
+                    version = data.get("version")
+                    if isinstance(version, int):
+                        return version
+        return None
+
+    @staticmethod
+    def _is_chat_allowed(context: _ConversationContext, policy: WorkflowChannelPolicy) -> bool:
+        metadata = policy.metadata if isinstance(policy.metadata, Mapping) else {}
+        allowed = metadata.get("allowedChatIds")
+        if not isinstance(allowed, (list, tuple, set)):
+            return True
+        allowed_ids = {str(item) for item in allowed if item not in {None, ""}}
+        if not allowed_ids:
+            return True
+        if context.chat_id is None:
+            return False
+        return str(context.chat_id) in allowed_ids
 
     @staticmethod
     def _apply_binding_entry_config(context: _ConversationContext, policy: WorkflowChannelPolicy) -> None:
@@ -513,6 +694,7 @@ class TelegramConversationService:
             "workflow_id": envelope.payload.get("workflowId"),
             "task_id": envelope.task_id,
         }
+        self._schedule_health_error("telegram", envelope.payload.get("workflowId"), "enqueue_failed")
         return self._build_static_response(
             context,
             text=failure_text,
@@ -676,6 +858,28 @@ class TelegramConversationService:
             return None
         return str(message_id)
 
+    @staticmethod
+    def _extract_policy_workflow(policy: Mapping[str, Any]) -> Optional[str]:
+        entrypoints = policy.get("entrypoints")
+        if not isinstance(entrypoints, Mapping):
+            return None
+        telegram_entry = entrypoints.get("telegram")
+        if not isinstance(telegram_entry, Mapping):
+            return None
+        workflow_id = telegram_entry.get("workflow_id") or telegram_entry.get("workflowId")
+        if workflow_id:
+            return str(workflow_id)
+        return None
+
+    def _schedule_health_error(self, channel: str, workflow_id: Optional[str], error_type: str) -> None:
+        if _CHANNEL_HEALTH_STORE is None or not workflow_id:
+            return
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            return
+        loop.create_task(_CHANNEL_HEALTH_STORE.increment_error(channel, workflow_id, error_type))
+
 
     @staticmethod
     def _build_run_result_from_worker_payload(payload: Mapping[str, Any]) -> WorkflowRunResult:
@@ -765,21 +969,9 @@ __all__ = [
     "TelegramConversationService",
     "set_task_queue_accessors",
     "set_channel_binding_provider",
+    "set_channel_binding_health_store",
     "AsyncResultHandle",
 ]
-
-
-def _extract_workflow_id(update: Mapping[str, Any], policy: Mapping[str, Any]) -> Optional[str]:
-    candidates = [
-        policy.get("workflow_id"),
-        (policy.get("workflow") or {}).get("id") if isinstance(policy.get("workflow"), Mapping) else None,
-        update.get("workflowId"),
-        (update.get("workflow") or {}).get("id") if isinstance(update.get("workflow"), Mapping) else None,
-    ]
-    for candidate in candidates:
-        if isinstance(candidate, str) and candidate.strip():
-            return candidate.strip()
-    return None
 
 
 def _aggregate_usage(run_result: WorkflowRunResult) -> Mapping[str, Any]:

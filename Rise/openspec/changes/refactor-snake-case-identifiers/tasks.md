@@ -1,5 +1,0 @@
-- [x] Catalogue all modules, packages, and scripts that violate snake_case naming and map new names.
-- [x] Rename modules/packages to snake_case and update imports, dynamic loaders, and tooling references.
-- [x] Refactor non-constant functions, methods, and mutable identifiers to snake_case while keeping signatures stable.
-- [x] Normalise internal configuration keys (YAML/JSON/dicts) to snake_case where Rise owns the schema; document any exceptions.
-- [ ] Run style/type checks plus the existing validation scripts to confirm imports and configurations still resolve.

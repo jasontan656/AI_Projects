@@ -8,7 +8,7 @@
 # Whitelist: keep only the Kobe project
 !/Rise/
 !/Up/
-!/up/
+
 
 # Keep this file tracked (optional but safe)
 !/.gitignore

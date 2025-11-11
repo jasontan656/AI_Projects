@@ -13,10 +13,12 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection, Asyn
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from business_service.channel.command_service import ChannelBindingCommandService
 from business_service.channel.rate_limit import ChannelRateLimiter
 from business_service.channel.registry import ChannelBindingRegistry
 from business_service.channel.repository import AsyncWorkflowChannelRepository
 from business_service.channel.service import WorkflowChannelService
+from business_service.channel.test_runner import ChannelBindingTestRunner
 from business_service.pipeline.repository import AsyncMongoPipelineNodeRepository
 from business_service.pipeline.service import AsyncPipelineNodeService
 from business_service.workflow import (
@@ -226,6 +228,7 @@ _capabilities: Optional[CapabilityRegistry] = None
 _rabbit_publisher: Optional[RabbitPublisher] = None
 _rabbit_publisher_initialized = False
 _channel_rate_limiter: Optional[ChannelRateLimiter] = None
+_channel_binding_test_runner: Optional[ChannelBindingTestRunner] = None
 _telegram_client: Optional[TelegramClient] = None
 _channel_binding_registry: Optional[ChannelBindingRegistry] = None
 
@@ -353,6 +356,21 @@ def get_channel_rate_limiter() -> ChannelRateLimiter:
     return _channel_rate_limiter
 
 
+async def get_channel_binding_test_runner(
+    service: WorkflowChannelService = Depends(get_workflow_channel_service),
+    telegram_client: TelegramClient = Depends(get_telegram_client),
+    run_repository: WorkflowRunReadRepository = Depends(get_workflow_run_repository),
+) -> ChannelBindingTestRunner:
+    global _channel_binding_test_runner
+    if _channel_binding_test_runner is None:
+        _channel_binding_test_runner = ChannelBindingTestRunner(
+            service=service,
+            telegram_client=telegram_client,
+            run_repository=run_repository,
+        )
+    return _channel_binding_test_runner
+
+
 def get_telegram_client() -> TelegramClient:
     global _telegram_client
     if _telegram_client is None:
@@ -375,6 +393,15 @@ def set_channel_binding_registry(registry: ChannelBindingRegistry) -> None:
     _channel_binding_registry = registry
 
 
+async def get_channel_binding_command_service(
+    request: Request,
+    registry: ChannelBindingRegistry = Depends(get_channel_binding_registry),
+    service: WorkflowChannelService = Depends(get_workflow_channel_service),
+) -> ChannelBindingCommandService:
+    publisher = getattr(request.app.state, "channel_binding_event_publisher", None)
+    return ChannelBindingCommandService(service=service, registry=registry, publisher=publisher)
+
+
 async def shutdown_task_runtime() -> None:
     global _task_runtime
     if _task_runtime is None:
@@ -394,7 +421,7 @@ def clear_cached_dependencies() -> None:
         client.close()
     get_mongo_client.cache_clear()
     get_settings.cache_clear()
-    global _telegram_client, _channel_rate_limiter
+    global _telegram_client, _channel_rate_limiter, _channel_binding_test_runner
     if _telegram_client is not None:
         try:
             loop = asyncio.get_event_loop()
@@ -406,6 +433,7 @@ def clear_cached_dependencies() -> None:
             pass
         _telegram_client = None
     _channel_rate_limiter = None
+    _channel_binding_test_runner = None
     global _channel_binding_registry
     _channel_binding_registry = None
 
