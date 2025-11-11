@@ -1,0 +1,295 @@
+generated_at: '2025-11-11T16:04:45+00:00'
+projects:
+  rise:
+    meta:
+      root: D:\/AI_Projects/Rise
+      language: python
+      config:
+      - pyproject.toml
+      - requirements.lock
+      entrypoints:
+      - app.py
+      - src/interface_entry/bootstrap/app.py
+      dependencies:
+      - aiogram
+      - beautifulsoup4==4.12.3
+      - fastapi==0.111.0
+      - jsonschema==4.22.0
+      - openai==1.105.0
+      - pdfminer.six==20231228
+      - pydantic==2.8.2
+      - pydantic-settings==2.2.1
+      - aio-pika==9.4.2
+      - pymongo==4.6.3
+    structure:
+    - layer: Project Utility Layer
+      path: src/project_utility
+      ext:
+      - py(12)
+      files:
+      - src/project_utility/logging.py
+      - src/project_utility/telemetry.py
+    - layer: One-off Utility Layer
+      path: src/one_off
+      ext:
+      - py(18)
+      - md(3)
+      files:
+      - src/one_off/sources/service_crawler/BI_price.md
+      - src/one_off/sources/service_crawler/convert_yaml.py
+    - layer: Foundational Service Layer
+      path: src/foundational_service
+      ext:
+      - py(34)
+      files:
+      - src/foundational_service/telemetry/bus.py
+      - src/foundational_service/persist/redis_queue.py
+    - layer: Interface / Entry Layer
+      path: src/interface_entry
+      ext:
+      - py(47)
+      files:
+      - src/interface_entry/bootstrap/application_builder.py
+      - src/interface_entry/http/workflows/routes.py
+    - layer: Business Service Layer
+      path: src/business_service
+      ext:
+      - py(30)
+      files:
+      - src/business_service/conversation/service.py
+      - src/business_service/workflow/repository.py
+    - layer: Business Logic Layer
+      path: src/business_logic
+      ext:
+      - py(9)
+      files:
+      - src/business_logic/workflow/orchestrator.py
+      - src/business_logic/conversation/telegram_flow.py
+    graph:
+      src/business_logic/conversation/telegram_flow.py:
+        local:
+        - src/business_logic/conversation/models.py
+        - src/business_service/conversation/models.py
+        - src/business_service/conversation/service.py
+        external:
+        - __future__
+        - dataclasses
+        - typing
+      src/business_logic/workflow/orchestrator.py:
+        local:
+        - src/foundational_service/integrations/openai_bridge.py
+        - src/project_utility/context.py
+        - src/project_utility/telemetry.py
+        external:
+        - __future__
+        - business_service
+        - dataclasses
+        - datetime
+        - project_utility
+      src/business_service/conversation/service.py:
+        local:
+        - src/business_service/channel/health_store.py
+        - src/business_service/channel/models.py
+        - src/business_service/conversation/models.py
+        - src/business_service/conversation/primitives.py
+        - src/foundational_service/contracts/telegram.py
+        external:
+        - __future__
+        - asyncio
+        - business_logic
+        - dataclasses
+        - datetime
+      src/business_service/workflow/repository.py:
+        local:
+        - src/business_service/workflow/models.py
+        external:
+        - __future__
+        - datetime
+        - motor
+        - pymongo
+        - typing
+      src/foundational_service/persist/redis_queue.py:
+        local:
+        - src/project_utility/telemetry.py
+        external:
+        - __future__
+        - asyncio
+        - dataclasses
+        - json
+        - os
+      src/foundational_service/telemetry/bus.py:
+        local:
+        - src/project_utility/telemetry.py
+        external:
+        - __future__
+        - atexit
+        - io
+        - json
+        - pathlib
+      src/interface_entry/bootstrap/application_builder.py:
+        local:
+        - src/business_service/channel/health_store.py
+        - src/business_service/channel/repository.py
+        - src/business_service/channel/service.py
+        - src/business_service/conversation/service.py
+        - src/foundational_service/bootstrap/webhook.py
+        external:
+        - __future__
+        - aio_pika
+        - asyncio
+        - business_logic
+        - business_service
+      src/interface_entry/http/workflows/routes.py:
+        local:
+        - src/business_service/prompt/repository.py
+        - src/business_service/workflow/models.py
+        - src/business_service/workflow/observability.py
+        - src/business_service/workflow/repository.py
+        - src/foundational_service/persist/task_envelope.py
+        external:
+        - __future__
+        - asyncio
+        - business_service
+        - datetime
+        - fastapi
+      src/one_off/sources/service_crawler/BI_price.md:
+        local: []
+        external: []
+      src/one_off/sources/service_crawler/convert_yaml.py:
+        local: []
+        external:
+        - __future__
+        - concurrent
+        - dotenv
+        - openai
+        - os
+      src/project_utility/logging.py:
+        local:
+        - src/project_utility/config/paths.py
+        - src/project_utility/telemetry.py
+        external:
+        - __future__
+        - atexit
+        - collections
+        - contextlib
+        - datetime
+      src/project_utility/telemetry.py:
+        local:
+        - src/project_utility/config/paths.py
+        external:
+        - __future__
+        - datetime
+        - json
+        - os
+        - pathlib
+  up:
+    meta:
+      root: D:\/AI_Projects/Up
+      language: javascript
+      config:
+      - package.json
+      - vite.config.js
+      entrypoints:
+      - src/App.vue
+      - src/main.js
+      dependencies:
+      - '@codemirror/commands@^6.10.0'
+      - '@codemirror/lang-json@^6.0.2'
+      - '@codemirror/lang-markdown@^6.5.0'
+      - '@codemirror/lang-yaml@^6.1.2'
+      - '@codemirror/state@^6.5.2'
+      - '@codemirror/theme-one-dark@^6.1.3'
+      - '@codemirror/view@^6.38.6'
+      - '@vue-flow/core@^1.40.2'
+      - '@vueuse/core@^11.1.0'
+      - element-plus@^2.9.3
+    structure:
+    - layer: Project Utility Layer
+      path: src/utils
+      ext:
+      - js(1)
+      files:
+      - src/utils/nodeActions.js
+    - layer: Foundational Service Layer
+      path: src/services
+      ext:
+      - js(7)
+      files:
+      - src/services/pipelineService.js
+      - src/services/workflowService.js
+    - layer: Business Service Layer
+      path: src/stores
+      ext:
+      - js(4)
+      files:
+      - src/stores/workflowDraft.js
+      - src/stores/channelPolicy.js
+    - layer: Interface / Entry Layer
+      path: src/components
+      ext:
+      - vue(20)
+      files:
+      - src/components/WorkflowEditor.vue
+      - src/components/NodeActionList.vue
+    - layer: Interface / Entry Layer
+      path: src/views
+      ext:
+      - vue(2)
+      files:
+      - src/views/PipelineWorkspace.vue
+      - src/views/WorkflowBuilder.vue
+    graph:
+      src/components/NodeActionList.vue:
+        local:
+        - src/utils/nodeActions.js
+        external:
+        - uuid
+        - vue
+      src/components/WorkflowEditor.vue:
+        local: []
+        external:
+        - element-plus
+        - vue
+      src/services/pipelineService.js:
+        local:
+        - src/services/httpClient.js
+        - src/utils/nodeActions.js
+        external: []
+      src/services/workflowService.js:
+        local:
+        - src/services/httpClient.js
+        external: []
+      src/stores/channelPolicy.js:
+        local:
+        - src/services/channelService.js
+        external:
+        - pinia
+      src/stores/workflowDraft.js:
+        local:
+        - src/services/workflowService.js
+        external:
+        - pinia
+      src/utils/nodeActions.js:
+        local: []
+        external:
+        - uuid
+      src/views/PipelineWorkspace.vue:
+        local:
+        - src/components/LogsPanel.vue
+        - src/components/NodeDraftForm.vue
+        - src/components/NodeList.vue
+        - src/components/NodeSubMenu.vue
+        - src/components/PromptEditor.vue
+        external:
+        - element-plus
+        - vue
+      src/views/WorkflowBuilder.vue:
+        local:
+        - src/components/ChannelHealthCard.vue
+        - src/components/ChannelTestPanel.vue
+        - src/components/ToolCatalog.vue
+        - src/components/VariableCatalog.vue
+        - src/components/WorkflowCanvas.vue
+        external:
+        - element-plus
+        - vue

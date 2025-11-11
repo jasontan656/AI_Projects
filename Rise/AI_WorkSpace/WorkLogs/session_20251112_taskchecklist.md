@@ -1,0 +1,19 @@
+# session_20251112 Task Checklist
+- [ ] Step-01 新建 workflow 模型文件
+- [ ] Step-02 建立 WorkflowSummaryRepository
+- [ ] Step-03 Orchestrator 注入仓储
+- [ ] Step-04 DI / application_builder 调整
+- [ ] Step-05 TelegramEntryConfig 拆分
+- [ ] Step-06 RuntimeGateway 实现
+- [ ] Step-07 ChannelHealthReporter
+- [ ] Step-08 ConversationService 精简
+- [ ] Step-09 Runtime lifespan 拆分
+- [ ] Step-10 Channel/Workflow schema 抽离
+- [ ] Step-11 ChannelPolicyClient 服务
+- [ ] Step-12 ChannelHealthScheduler
+- [ ] Step-13 channelPolicy store 重写
+- [ ] Step-14 workflowDraftService
+- [ ] Step-15 useWorkflowBuilderController
+- [ ] Step-16 SSE 客户端抽象
+- [ ] Step-17 WorkflowBuilder 视图改造
+- [ ] Step-18 场景验证
