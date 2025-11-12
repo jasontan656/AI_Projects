@@ -6,6 +6,7 @@ import asyncio
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+import inspect
 import json
 import os
 from typing import Any, Callable, Dict, Mapping, MutableMapping, Optional, Protocol, Sequence
@@ -13,27 +14,44 @@ from typing import Any, Callable, Dict, Mapping, MutableMapping, Optional, Proto
 from business_service.channel.models import ChannelBindingRuntime, WorkflowChannelPolicy
 from business_service.channel.health_store import ChannelBindingHealthStore
 from business_logic.workflow import WorkflowRunResult, WorkflowStageResult
+from business_service.conversation.config import TelegramEntryConfig, resolve_entry_config
+from business_service.conversation.health import (
+    ChannelHealthReporter,
+    get_channel_health_reporter,
+    set_channel_health_reporter,
+)
 from business_service.conversation.models import ConversationServiceResult
 from business_service.conversation.primitives import AdapterBuilder
+from business_service.conversation.runtime_gateway import (
+    AsyncAckReservation,
+    AsyncResultHandle as RuntimeAsyncResultHandle,
+    AsyncResultHandleFactory,
+    EnqueueFailedError,
+    RuntimeGateway,
+    RuntimeDispatchOutcome,
+    set_task_queue_accessors,
+)
+from business_service.pipeline.service import AsyncPipelineNodeService
 from foundational_service.contracts import toolcalls
 from foundational_service.contracts.telegram import (
     behavior_telegram_inbound as contracts_telegram_inbound,
     behavior_telegram_outbound as contracts_telegram_outbound,
 )
 from foundational_service.persist.task_envelope import RetryState, TaskEnvelope, TaskStatus
-from foundational_service.persist.worker import TaskRuntime, TaskSubmitter
+from foundational_service.persist.worker import TaskRuntime
 from project_utility.context import ContextBridge
+from project_utility.db.redis import get_async_redis
 
 log = logging.getLogger("business_service.conversation.service")
 
 RAW_PAYLOAD_LIMIT_BYTES = int(os.getenv("TELEGRAM_RAW_PAYLOAD_MAX_BYTES", "262144"))
+_ASYNC_ACK_TTL_SECONDS = int(os.getenv("TELEGRAM_ASYNC_ACK_TIMEOUT_SECONDS", "86400") or "86400")
+_PIPELINE_GUARD_DECISION_TTL_SECONDS = int(os.getenv("PIPELINE_GUARD_DECISION_TTL_SECONDS", "3600") or "3600")
 
-_TASK_SUBMITTER_FACTORY: Optional[Callable[[], Optional[TaskSubmitter]]] = None
-_TASK_RUNTIME_FACTORY: Optional[Callable[[], Optional[TaskRuntime]]] = None
 _CHANNEL_BINDING_PROVIDER: Optional["ChannelBindingProvider"] = None
-_CHANNEL_HEALTH_STORE: Optional[ChannelBindingHealthStore] = None
 _BINDING_REFRESH_TIMEOUT_SECONDS = float(os.getenv("TELEGRAM_BINDING_REFRESH_TIMEOUT", "1.0"))
 _BINDING_FALLBACK_FLAG = os.getenv("TELEGRAM_BINDING_FALLBACK_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
+_PIPELINE_GUARD_FACTORY: Optional[Callable[[], Optional["PipelineGuardService"]]] = None
 
 
 class ChannelBindingProvider(Protocol):
@@ -44,18 +62,6 @@ class ChannelBindingProvider(Protocol):
         ...
 
 
-def set_task_queue_accessors(
-    *,
-    submitter_factory: Callable[[], Optional[TaskSubmitter]],
-    runtime_factory: Callable[[], Optional[TaskRuntime]],
-) -> None:
-    """Allow bootstrap层注入 TaskSubmitter / TaskRuntime 的工厂。"""
-
-    global _TASK_SUBMITTER_FACTORY, _TASK_RUNTIME_FACTORY
-    _TASK_SUBMITTER_FACTORY = submitter_factory
-    _TASK_RUNTIME_FACTORY = runtime_factory
-
-
 def set_channel_binding_provider(provider: ChannelBindingProvider) -> None:
     """Register the global channel binding provider used by conversation flows."""
 
@@ -64,18 +70,17 @@ def set_channel_binding_provider(provider: ChannelBindingProvider) -> None:
 
 
 def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None:
-    global _CHANNEL_HEALTH_STORE
-    _CHANNEL_HEALTH_STORE = store
+    """Compatibility shim to keep existing bootstrap wiring intact."""
+
+    reporter = ChannelHealthReporter(store=store, redis_client=get_async_redis())
+    set_channel_health_reporter(reporter)
 
 
-@dataclass(slots=True)
-class TelegramEntryConfig:
-    wait_for_result: bool = True
-    async_ack_text: str = "已收到消息，任务已排队，将在处理完成后答复。任务 ID: {task_id}"
-    enqueue_failure_text: str = "当前对话系统繁忙，请稍后重试。"
-    workflow_missing_text: str = "未找到对应流程，请联系管理员。"
-    async_failure_text: str = "处理遇到问题，已通知管理员，请稍后重试。任务 ID: {task_id}"
-    wait_timeout_seconds: Optional[float] = None
+def set_pipeline_service_factory(factory: Callable[[], Optional["PipelineGuardService"]]) -> None:
+    """Register the factory used to construct pipeline guard services."""
+
+    global _PIPELINE_GUARD_FACTORY
+    _PIPELINE_GUARD_FACTORY = factory
 
 
 @dataclass(slots=True)
@@ -97,27 +102,183 @@ class _ConversationContext:
     chat_id: Optional[str] = None
 
 
-@dataclass(slots=True)
 class AsyncResultHandle:
-    service: "TelegramConversationService"
-    context: _ConversationContext
-    runtime: TaskRuntime
-    waiter: asyncio.Future[Any]
-    task_id: str
-    entry_config: TelegramEntryConfig
+    """Async task handle exposed to interface layers."""
 
-    async def resolve(self) -> ConversationServiceResult:
+    __slots__ = ("_handle", "_task_id", "context", "_resolver")
+
+    def __init__(
+        self,
+        runtime: Optional[TaskRuntime] = None,
+        waiter: Optional[asyncio.Future[Any]] = None,
+        task_id: Optional[str] = None,
+        *,
+        runtime_handle: Optional[RuntimeAsyncResultHandle] = None,
+        context: Optional[_ConversationContext] = None,
+        resolver: Optional[Callable[[Mapping[str, Any]], Any]] = None,
+    ) -> None:
+        handle = runtime_handle
+        if handle is None and runtime is not None and waiter is not None and task_id is not None:
+            handle = RuntimeAsyncResultHandle(runtime=runtime, waiter=waiter, task_id=task_id)
+        self._handle = handle
+        self._task_id = task_id or (handle.task_id if handle is not None else "")
+        self.context: Optional[_ConversationContext] = context
+        self._resolver = resolver
+
+    def bind(
+        self,
+        *,
+        context: _ConversationContext,
+        resolver: Callable[[Mapping[str, Any]], Any],
+    ) -> "AsyncResultHandle":
+        self.context = context
+        self._resolver = resolver
+        return self
+
+    @property
+    def task_id(self) -> str:
+        return self._task_id
+
+    async def resolve(self) -> Mapping[str, Any] | ConversationServiceResult:
+        if self._handle is None:
+            raise RuntimeError("async_handle_unbound")
+        payload = await self._handle.resolve()
+        return await self._apply_resolver(payload)
+
+    async def discard(self) -> None:
+        if self._handle is None:
+            return
+        await self._handle.discard()
+
+    async def _apply_resolver(self, payload: Mapping[str, Any]) -> Any:
+        if self._resolver is None:
+            return payload
+        result = self._resolver(payload)
+        if inspect.isawaitable(result):
+            return await result
+        return result
+
+
+@dataclass(slots=True)
+class PipelineGuardDecision:
+    allow_llm: bool
+    manual_review: bool = False
+    profile: Optional[str] = None
+    reason: Optional[str] = None
+    degraded: bool = False
+
+
+class PipelineGuardService(Protocol):
+    async def evaluate(self, context: _ConversationContext, workflow_id: Optional[str]) -> PipelineGuardDecision:
+        ...
+
+
+class _DefaultPipelineGuardService:
+    async def evaluate(self, context: _ConversationContext, workflow_id: Optional[str]) -> PipelineGuardDecision:
+        entry = context.policy.get("entrypoints")
+        telegram_entry: Mapping[str, Any] = {}
+        guard_config: Mapping[str, Any] = {}
+        if isinstance(entry, Mapping):
+            candidate = entry.get("telegram")
+            if isinstance(candidate, Mapping):
+                telegram_entry = candidate
+                raw_guard = candidate.get("guard")
+                if isinstance(raw_guard, Mapping):
+                    guard_config = raw_guard
+        allow_llm = bool(guard_config.get("allow_llm", telegram_entry.get("allow_llm", True)))
+        manual_guard = bool(
+            guard_config.get("manual_guard", telegram_entry.get("manual_guard", context.entry_config.manual_guard))
+        )
+        profile = guard_config.get("manual_guard_profile") or guard_config.get("profile")
+        reason = guard_config.get("reason")
+        if not allow_llm or manual_guard:
+            return PipelineGuardDecision(
+                allow_llm=False,
+                manual_review=True,
+                profile=str(profile) if profile else None,
+                reason=reason or ("manual_guard" if manual_guard else "llm_blocked"),
+            )
+        return PipelineGuardDecision(
+            allow_llm=True,
+            manual_review=False,
+            profile=str(profile) if profile else None,
+            reason=reason,
+        )
+
+
+@dataclass(slots=True)
+class PipelineNodeGuardService(PipelineGuardService):
+    pipeline_service: AsyncPipelineNodeService
+    fallback: PipelineGuardService = field(default_factory=_DefaultPipelineGuardService)
+
+    async def evaluate(self, context: _ConversationContext, workflow_id: Optional[str]) -> PipelineGuardDecision:
+        node_decision = await self._evaluate_pipeline_node(context)
+        if node_decision is not None:
+            return node_decision
+        return await self.fallback.evaluate(context, workflow_id)
+
+    async def _evaluate_pipeline_node(self, context: _ConversationContext) -> Optional[PipelineGuardDecision]:
+        node_id = self._extract_pipeline_node_id(context.policy)
+        if not node_id:
+            return None
         try:
-            payload = await self.waiter
-        finally:
-            await self.runtime.results.discard(self.task_id, self.waiter)
-        return self.service._build_response_from_worker_payload(self.context, payload)
+            node = await self.pipeline_service.get_node(node_id)
+        except Exception as exc:  # pragma: no cover - diagnostics only
+            log.warning(
+                "telegram.pipeline.guard_lookup_failed",
+                extra={"node_id": node_id, "error": str(exc)},
+            )
+            return PipelineGuardDecision(
+                allow_llm=True,
+                manual_review=False,
+                profile="pipeline",
+                reason="pipeline_guard_error",
+                degraded=True,
+            )
+        if node is None:
+            return PipelineGuardDecision(
+                allow_llm=True,
+                manual_review=False,
+                profile="pipeline",
+                reason="pipeline_node_missing",
+            )
+        if not getattr(node, "allow_llm", True):
+            return PipelineGuardDecision(
+                allow_llm=False,
+                manual_review=True,
+                profile="pipeline",
+                reason="pipeline_node_blocked",
+            )
+        return PipelineGuardDecision(
+            allow_llm=True,
+            manual_review=False,
+            profile="pipeline",
+            reason="pipeline_node_allowed",
+        )
 
-    def format_ack_text(self, template: Optional[str] = None) -> str:
-        return self.service._format_ack_text(template or self.entry_config.async_ack_text, self.task_id)
-
-    def format_failure_text(self) -> str:
-        return self.service._format_ack_text(self.entry_config.async_failure_text, self.task_id)
+    @staticmethod
+    def _extract_pipeline_node_id(policy: Mapping[str, Any]) -> Optional[str]:
+        entrypoints = policy.get("entrypoints")
+        telegram_entry = entrypoints.get("telegram") if isinstance(entrypoints, Mapping) else None
+        guard_section = {}
+        if isinstance(telegram_entry, Mapping):
+            guard_candidate = telegram_entry.get("guard")
+            if isinstance(guard_candidate, Mapping):
+                guard_section = guard_candidate
+        candidate_keys = (
+            "pipeline_node_id",
+            "pipelineNodeId",
+            "node_id",
+            "nodeId",
+        )
+        for source in (guard_section, telegram_entry or {}, policy):
+            if not isinstance(source, Mapping):
+                continue
+            for key in candidate_keys:
+                value = source.get(key)
+                if value:
+                    return str(value)
+        return None
 
 
 @dataclass(slots=True)
@@ -125,9 +286,30 @@ class TelegramConversationService:
     """面向 Telegram 渠道的业务服务门面。"""
 
     adapter_builder: AdapterBuilder = field(default_factory=AdapterBuilder)
-    task_submitter_factory: Optional[Callable[[], Optional[TaskSubmitter]]] = None
-    task_runtime_factory: Optional[Callable[[], Optional[TaskRuntime]]] = None
+    task_submitter_factory: Optional[Callable[[], Optional[Any]]] = None
+    task_runtime_factory: Optional[Callable[[], Optional[Any]]] = None
     binding_provider: Optional[ChannelBindingProvider] = None
+    runtime_gateway: RuntimeGateway = field(default_factory=RuntimeGateway)
+    health_reporter: Optional[ChannelHealthReporter] = None
+    agent_delegator: Optional[Any] = None
+    pipeline_service_factory: Optional[Callable[[], Optional[PipelineGuardService]]] = None
+    async_handle_factory: Optional[AsyncResultHandleFactory] = None
+    _pipeline_guard_default: PipelineGuardService = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        if self.task_submitter_factory is not None or self.task_runtime_factory is not None:
+            self.runtime_gateway = RuntimeGateway(
+                submitter_factory=self.task_submitter_factory,
+                runtime_factory=self.task_runtime_factory,
+            )
+        object.__setattr__(self, "_pipeline_guard_default", _DefaultPipelineGuardService())
+        if self.async_handle_factory is None:
+            try:
+                self.async_handle_factory = AsyncResultHandleFactory(ttl_seconds=_ASYNC_ACK_TTL_SECONDS)
+            except Exception:  # pragma: no cover - defensive fallback
+                self.async_handle_factory = None
+        if self.pipeline_service_factory is None and _PIPELINE_GUARD_FACTORY is not None:
+            self.pipeline_service_factory = _PIPELINE_GUARD_FACTORY
 
     async def process_update(self, update: Mapping[str, Any], *, policy: Mapping[str, Any]) -> ConversationServiceResult:
         request_id = ContextBridge.request_id()
@@ -160,7 +342,15 @@ class TelegramConversationService:
                 legacy_envelope=inbound.get("envelope", inbound.get("core_envelope", {})),
             )
 
+        prompt_id = inbound.get("prompt_id")
+        if prompt_id:
+            raise RuntimeError(f"legacy prompt flow detected: {prompt_id}")
+
         context = self._build_context(update, policy, inbound, request_id, telemetry)
+        delegator_result = await self._maybe_dispatch_agent_delegator(context, inbound)
+        if delegator_result is not None:
+            return delegator_result
+
         if binding_runtime is None:
             log.warning(
                 "telegram.binding.unavailable",
@@ -197,14 +387,24 @@ class TelegramConversationService:
             version=binding_runtime.version,
             fallback=binding_runtime.version < 0,
         )
+
+        guard_decision = await self._evaluate_pipeline_guard(context, binding_runtime.workflow_id)
+        if not guard_decision.allow_llm:
+            log.info(
+                "telegram.pipeline.guard_blocked",
+                extra={
+                    "workflow_id": binding_runtime.workflow_id,
+                    "chat_id": context.chat_id,
+                    "profile": guard_decision.profile,
+                },
+            )
+            await self._record_guard_decision(context, binding_runtime.workflow_id, guard_decision)
+            return self._build_guard_block_result(context, guard_decision, binding_runtime.workflow_id)
+
         workflow_id = binding_runtime.workflow_id
         workflow_status = "ready"
         pending_reason: Optional[str] = None
 
-        submitter = self._get_task_submitter()
-        runtime = self._get_task_runtime()
-        if submitter is None or runtime is None:
-            raise RuntimeError("task_runtime_unavailable")
 
         envelope = self._build_task_envelope(
             context,
@@ -213,27 +413,40 @@ class TelegramConversationService:
             pending_reason=pending_reason,
         )
         wait_timeout = self._resolve_wait_timeout(context.entry_config, context.policy)
-        handle: Optional[AsyncResultHandle] = None
-        waiter: Optional[asyncio.Future[Any]] = None
-        if workflow_id:
-            waiter = await runtime.results.register(envelope.task_id)
-            handle = AsyncResultHandle(
-                service=self,
-                context=context,
-                runtime=runtime,
-                waiter=waiter,
-                task_id=envelope.task_id,
-                entry_config=context.entry_config,
+        await self._record_health_snapshot(context, workflow_id=workflow_id)
+
+        reservation = await self._reserve_async_task(context, envelope)
+        if not reservation.is_new:
+            log.info(
+                "telegram.queue.duplicate_message",
+                extra={
+                    "idempotency_key": reservation.idempotency_key,
+                    "task_id": reservation.task_id,
+                    "chat_id": context.chat_id,
+                },
+            )
+            return self._build_async_ack_result(
+                context,
+                envelope,
+                None,
+                telemetry_hint={"queue_status": "duplicate"},
+                task_id_override=reservation.task_id,
+                duplicate=True,
+                idempotency_key=reservation.idempotency_key,
             )
 
+        expects_result = bool(workflow_id)
         try:
-            await submitter.submit(envelope)
-        except Exception as exc:
-            if waiter is not None:
-                await runtime.results.discard(envelope.task_id, waiter)
+            outcome = await self.runtime_gateway.dispatch(
+                envelope=envelope,
+                expects_result=expects_result,
+                wait_for_result=context.entry_config.wait_for_result,
+                wait_timeout=wait_timeout,
+            )
+        except EnqueueFailedError as exc:
             log.exception(
                 "telegram.queue.enqueue_failed",
-                extra={"task_id": envelope.task_id, "error": str(exc)},
+                extra={"task_id": envelope.task_id, "error": str(exc.error)},
             )
             return self._build_enqueue_failure_result(context, envelope, context.entry_config)
 
@@ -250,33 +463,31 @@ class TelegramConversationService:
             },
         )
 
-        if workflow_id and context.entry_config.wait_for_result:
-            try:
-                result_payload = await asyncio.wait_for(waiter, timeout=wait_timeout)
-            except asyncio.TimeoutError:
-                log.warning(
-                    "telegram.task_result_timeout",
-                    extra={"task_id": envelope.task_id, "timeout_seconds": wait_timeout},
-                )
-                return self._build_async_ack_result(
-                    context,
-                    envelope,
-                    handle,
-                    telemetry_hint={"queue_status": "timeout"},
-                )
-            except Exception:
-                await runtime.results.discard(envelope.task_id, waiter)
-                raise
-
-            await runtime.results.discard(envelope.task_id, waiter)
-            return self._build_response_from_worker_payload(context, result_payload)
-
-        if workflow_id and handle is not None:
+        if outcome.status == "completed" and outcome.result_payload is not None:
+            return self._build_response_from_worker_payload(context, outcome.result_payload)
+        wrapped_handle = self._wrap_async_handle(outcome.handle, context, task_id=envelope.task_id)
+        if outcome.status == "timeout":
+            log.warning(
+                "telegram.task_result_timeout",
+                extra={"task_id": envelope.task_id, "timeout_seconds": wait_timeout},
+            )
+            await self._record_async_pending(context, envelope)
             return self._build_async_ack_result(
                 context,
                 envelope,
-                handle,
+                wrapped_handle,
+                telemetry_hint={"queue_status": "timeout"},
+                text_override=context.entry_config.degraded_text,
+                idempotency_key=reservation.idempotency_key,
+            )
+        if outcome.status == "async_ack":
+            await self._record_async_pending(context, envelope)
+            return self._build_async_ack_result(
+                context,
+                envelope,
+                wrapped_handle,
                 telemetry_hint={"queue_status": "async"},
+                idempotency_key=reservation.idempotency_key,
             )
 
         return self._build_pending_workflow_result(
@@ -301,7 +512,7 @@ class TelegramConversationService:
             "per_call_max_tokens": 3000,
             "per_flow_max_tokens": 6000,
         }
-        entry_config = self._resolve_entry_config(policy)
+        entry_config = resolve_entry_config(policy)
         channel_payload, raw_meta = self._build_channel_payload(update)
 
         history_chunks = [
@@ -328,18 +539,6 @@ class TelegramConversationService:
             raw_payload_meta=raw_meta,
             chat_id=str(metadata_section["chat_id"]) if metadata_section.get("chat_id") is not None else None,
         )
-
-    def _get_task_submitter(self) -> Optional[TaskSubmitter]:
-        factory = self.task_submitter_factory or _TASK_SUBMITTER_FACTORY
-        if factory is None:
-            return None
-        return factory()
-
-    def _get_task_runtime(self) -> Optional[TaskRuntime]:
-        factory = self.task_runtime_factory or _TASK_RUNTIME_FACTORY
-        if factory is None:
-            return None
-        return factory()
 
     async def _get_binding_runtime(
         self,
@@ -377,9 +576,14 @@ class TelegramConversationService:
         telemetry_extra = {"workflow_status": "missing", "bindingFallback": False}
         workflow_id = self._extract_policy_workflow(context.policy)
         self._schedule_health_error("telegram", workflow_id, "workflow_missing")
+        missing_text = (
+            context.entry_config.manual_review_text
+            if context.entry_config.manual_guard
+            else context.entry_config.workflow_missing_text
+        )
         return self._build_static_response(
             context,
-            text=context.entry_config.workflow_missing_text,
+            text=missing_text,
             status="ignored",
             mode="ignored",
             intent="workflow_missing",
@@ -492,9 +696,11 @@ class TelegramConversationService:
 
     @staticmethod
     def _apply_binding_entry_config(context: _ConversationContext, policy: WorkflowChannelPolicy) -> None:
-        context.entry_config.wait_for_result = policy.wait_for_result
-        context.entry_config.workflow_missing_text = policy.workflow_missing_message
-        context.entry_config.async_failure_text = policy.timeout_message
+        context.entry_config = resolve_entry_config(
+            context.policy,
+            binding_policy=policy,
+            defaults=context.entry_config,
+        )
 
     def _build_task_envelope(
         self,
@@ -592,50 +798,70 @@ class TelegramConversationService:
                 return min(timeout, 120.0)
         return 20.0
 
-    @staticmethod
-    @staticmethod
-    def _resolve_entry_config(policy: Mapping[str, Any]) -> TelegramEntryConfig:
-        defaults = TelegramEntryConfig()
-        entrypoints = policy.get("entrypoints")
-        telegram_entry: Mapping[str, Any] = {}
-        if isinstance(entrypoints, Mapping):
-            raw = entrypoints.get("telegram")
-            if isinstance(raw, Mapping):
-                telegram_entry = raw
+    async def _maybe_dispatch_agent_delegator(
+        self,
+        context: _ConversationContext,
+        inbound: Mapping[str, Any],
+    ) -> Optional[ConversationServiceResult]:
+        if self.agent_delegator is None:
+            return None
+        agent_request = inbound.get("agent_request")
+        if not agent_request:
+            return None
+        dispatch = getattr(self.agent_delegator, "dispatch", None)
+        if dispatch is None:
+            log.warning("telegram.agent_delegator.invalid_handler")
+            return None
+        try:
+            bridge_payload = await dispatch(agent_request)
+        except Exception as exc:  # pragma: no cover - defensive logging
+            log.exception("telegram.agent_delegator.failed", extra={"error": str(exc)})
+            raise
+        if not isinstance(bridge_payload, Mapping):
+            log.warning("telegram.agent_delegator.invalid_payload")
+            return self._build_static_response(
+                context,
+                text=context.user_text or "",
+                status="handled",
+                mode="direct",
+                intent="agent_bridge",
+                audit_reason="agent_bridge_invalid_payload",
+                error_hint="agent_bridge_invalid_payload",
+                agent_request_extra=agent_request,
+            )
+        return self._build_agent_bridge_response(context, agent_request, bridge_payload)
 
-        def _coerce_bool(value: Any, default: bool) -> bool:
-            if isinstance(value, bool):
-                return value
-            if isinstance(value, str):
-                lowered = value.strip().lower()
-                if lowered in {"false", "0", "off", "no"}:
-                    return False
-                if lowered in {"true", "1", "on", "yes"}:
-                    return True
-            if value is None:
-                return default
-            return bool(value)
-
-        def _coerce_text(value: Any, default: str) -> str:
-            if isinstance(value, str) and value.strip():
-                return value
-            return default
-
-        def _coerce_float(value: Any) -> Optional[float]:
-            if value is None:
-                return None
-            try:
-                return float(value)
-            except (TypeError, ValueError):
-                return None
-
-        return TelegramEntryConfig(
-            wait_for_result=_coerce_bool(telegram_entry.get("wait_for_result"), defaults.wait_for_result),
-            async_ack_text=_coerce_text(telegram_entry.get("async_ack_text"), defaults.async_ack_text),
-            enqueue_failure_text=_coerce_text(telegram_entry.get("enqueue_failure_text"), defaults.enqueue_failure_text),
-            workflow_missing_text=_coerce_text(telegram_entry.get("workflow_missing_text"), defaults.workflow_missing_text),
-            async_failure_text=_coerce_text(telegram_entry.get("async_failure_text"), defaults.async_failure_text),
-            wait_timeout_seconds=_coerce_float(telegram_entry.get("wait_timeout_seconds")),
+    def _build_agent_bridge_response(
+        self,
+        context: _ConversationContext,
+        agent_request: Mapping[str, Any],
+        payload: Mapping[str, Any],
+    ) -> ConversationServiceResult:
+        bridge_result = payload.get("agent_bridge_result") or {}
+        telemetry_extra = payload.get("telemetry") or {}
+        chunks = list(bridge_result.get("chunks") or [])
+        text = bridge_result.get("text") or "".join(chunks)
+        if not text:
+            text = context.user_text or ""
+        mode = bridge_result.get("mode") or "direct"
+        agent_response_extra = {
+            "chunks": chunks,
+            "tokens_usage": bridge_result.get("tokens_usage", {}),
+            "dispatch": "agent_bridge",
+        }
+        return self._build_static_response(
+            context,
+            text=text,
+            status="handled",
+            mode=mode,
+            intent=str(agent_request.get("prompt") or "agent_bridge"),
+            audit_reason="agent_bridge",
+            error_hint="agent_bridge",
+            telemetry_extra=telemetry_extra,
+            agent_response_extra=agent_response_extra,
+            agent_request_extra=agent_request,
+            chunks=chunks or None,
+            streaming_mode=mode,
         )
 
     @staticmethod
@@ -647,26 +873,56 @@ class TelegramConversationService:
         except Exception:
             return safe_template
 
+    def _wrap_async_handle(
+        self,
+        handle: Optional[RuntimeAsyncResultHandle | AsyncResultHandle],
+        context: _ConversationContext,
+        *,
+        task_id: Optional[str],
+    ) -> Optional[AsyncResultHandle]:
+        if handle is None:
+            return None
+        resolver = lambda payload: self._build_response_from_worker_payload(context, payload)
+        if isinstance(handle, AsyncResultHandle):
+            return handle.bind(context=context, resolver=resolver)
+        return AsyncResultHandle(runtime_handle=handle, context=context, resolver=resolver, task_id=task_id)
+
     def _build_async_ack_result(
         self,
         context: _ConversationContext,
         envelope: TaskEnvelope,
-        handle: AsyncResultHandle,
+        handle: Optional[AsyncResultHandle],
         *,
         telemetry_hint: Optional[Mapping[str, Any]] = None,
+        text_override: Optional[str] = None,
+        task_id_override: Optional[str] = None,
+        duplicate: bool = False,
+        idempotency_key: Optional[str] = None,
     ) -> ConversationServiceResult:
-        ack_text = handle.format_ack_text()
-        telemetry_extra = {"task_id": envelope.task_id, "queue_mode": "async"}
+        template = text_override or context.entry_config.async_ack_text
+        task_id = task_id_override or envelope.task_id
+        ack_text = self._format_ack_text(template, task_id)
+        telemetry_extra = {"task_id": task_id, "queue_mode": "async"}
         if telemetry_hint:
             telemetry_extra.update(telemetry_hint)
+        if duplicate:
+            telemetry_extra.setdefault("queue_status", "duplicate")
+        async_payload: Dict[str, Any] = {
+            "task_id": task_id,
+            "duplicate": duplicate,
+        }
+        if idempotency_key:
+            async_payload["idempotency_key"] = idempotency_key
+        if handle is not None:
+            async_payload["handle"] = handle
         agent_response_extra = {
-            "task_id": envelope.task_id,
-            "async_handle": handle,
+            "task_id": task_id,
+            "async_handle": async_payload,
             "dispatch": "async_ack",
         }
         agent_request_extra = {
             "workflow_id": envelope.payload.get("workflowId"),
-            "task_id": envelope.task_id,
+            "task_id": task_id,
         }
         return self._build_static_response(
             context,
@@ -721,8 +977,11 @@ class TelegramConversationService:
         telemetry_extra: Optional[Mapping[str, Any]] = None,
         agent_response_extra: Optional[Mapping[str, Any]] = None,
         agent_request_extra: Optional[Mapping[str, Any]] = None,
+        chunks: Optional[Sequence[str]] = None,
+        streaming_mode: str = "direct",
     ) -> ConversationServiceResult:
-        outbound = contracts_telegram_outbound([text], context.policy)
+        chunk_payload = list(chunks) if chunks else [text]
+        outbound = contracts_telegram_outbound(chunk_payload, context.policy)
         core_bundle = {
             "core_envelope": context.core_envelope,
             "telemetry": context.inbound.get("telemetry", {}),
@@ -736,7 +995,7 @@ class TelegramConversationService:
             adapter_contract,
             chunk_metrics=outbound.get("metrics", {}).get("chunk_metrics", []),
             response_text=text,
-            streaming_mode="direct",
+            streaming_mode=streaming_mode,
         )
         toolcalls.call_validate_telegram_adapter_contract(adapter_contract)
 
@@ -747,6 +1006,7 @@ class TelegramConversationService:
             "text": text,
             "response_id": ContextBridge.request_id(),
             "usage": {},
+            "chunks": chunk_payload,
         }
         if agent_response_extra:
             agent_response.update(agent_response_extra)
@@ -796,6 +1056,11 @@ class TelegramConversationService:
         *,
         pending_reason: str,
     ) -> ConversationServiceResult:
+        pending_text = (
+            context.entry_config.manual_review_text
+            if context.entry_config.manual_guard
+            else context.entry_config.workflow_missing_text
+        )
         telemetry_extra = {
             "workflow_status": "pending",
             "queue_status": "workflow_pending",
@@ -805,7 +1070,7 @@ class TelegramConversationService:
         agent_request_extra = {"task_id": envelope.task_id}
         return self._build_static_response(
             context,
-            text=context.entry_config.workflow_missing_text,
+            text=pending_text,
             status="handled",
             mode="queued",
             intent="workflow_pending",
@@ -872,13 +1137,152 @@ class TelegramConversationService:
         return None
 
     def _schedule_health_error(self, channel: str, workflow_id: Optional[str], error_type: str) -> None:
-        if _CHANNEL_HEALTH_STORE is None or not workflow_id:
+        reporter = self._get_health_reporter()
+        if reporter is None:
+            return
+        reporter.schedule_error(channel, workflow_id, error_type)
+
+    def _get_health_reporter(self) -> Optional[ChannelHealthReporter]:
+        return self.health_reporter or get_channel_health_reporter()
+
+    async def _record_health_snapshot(
+        self,
+        context: _ConversationContext,
+        *,
+        workflow_id: Optional[str],
+        pending: int = 0,
+    ) -> None:
+        reporter = self._get_health_reporter()
+        if reporter is None:
+            return
+        latency_value = context.telemetry.get("latency_ms")
+        try:
+            latency_ms = float(latency_value) if latency_value is not None else None
+        except (TypeError, ValueError):
+            latency_ms = None
+        await reporter.record_snapshot(
+            channel="telegram",
+            workflow_id=workflow_id,
+            mode=context.entry_config.mode.value,
+            pending=pending,
+            latency_ms=latency_ms,
+            manual_guard=context.entry_config.manual_guard,
+        )
+
+    async def _reserve_async_task(self, context: _ConversationContext, envelope: TaskEnvelope) -> AsyncAckReservation:
+        if context.entry_config.wait_for_result:
+            return AsyncAckReservation(is_new=True, task_id=envelope.task_id)
+        factory = self.async_handle_factory
+        idempotency_key = str(envelope.context.get("idempotencyKey") or "")
+        if not factory:
+            return AsyncAckReservation(
+                is_new=True,
+                task_id=envelope.task_id,
+                idempotency_key=idempotency_key or None,
+            )
+        return await factory.reserve(idempotency_key=idempotency_key or None, task_id=envelope.task_id)
+
+    async def _record_async_pending(self, context: _ConversationContext, envelope: TaskEnvelope) -> None:
+        factory = self.async_handle_factory
+        if factory is None or context.chat_id is None:
+            return
+        await factory.track_pending(chat_id=context.chat_id, task_id=envelope.task_id)
+
+    def _resolve_pipeline_guard(self) -> PipelineGuardService:
+        if self.pipeline_service_factory is None:
+            return self._pipeline_guard_default
+        try:
+            service = self.pipeline_service_factory()
+        except Exception:  # pragma: no cover - factory failures fallback
+            return self._pipeline_guard_default
+        if service is None:
+            return self._pipeline_guard_default
+        if hasattr(service, "evaluate"):
+            return service  # type: ignore[return-value]
+        if isinstance(service, AsyncPipelineNodeService) or hasattr(service, "get_node"):
+            return PipelineNodeGuardService(
+                pipeline_service=service,  # type: ignore[arg-type]
+                fallback=self._pipeline_guard_default,
+            )
+        return self._pipeline_guard_default
+
+    async def _evaluate_pipeline_guard(
+        self,
+        context: _ConversationContext,
+        workflow_id: Optional[str],
+    ) -> PipelineGuardDecision:
+        service = self._resolve_pipeline_guard()
+        try:
+            decision = await service.evaluate(context, workflow_id)
+        except Exception as exc:  # pragma: no cover - guard isolation
+            log.exception(
+                "telegram.pipeline.guard_failed",
+                extra={"error": str(exc), "workflow_id": workflow_id},
+            )
+            context.telemetry["guard_status"] = "degraded"
+            return PipelineGuardDecision(allow_llm=True, degraded=True, reason="guard_failed")
+        if decision.manual_review or not decision.allow_llm:
+            context.telemetry["guard_status"] = "blocked"
+            if decision.profile:
+                context.telemetry["guard_profile"] = decision.profile
+        else:
+            context.telemetry["guard_status"] = "allowed"
+            if decision.profile:
+                context.telemetry["guard_profile"] = decision.profile
+        return decision
+
+    async def _record_guard_decision(
+        self,
+        context: _ConversationContext,
+        workflow_id: Optional[str],
+        decision: PipelineGuardDecision,
+    ) -> None:
+        if context.chat_id is None:
             return
         try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
+            client = get_async_redis()
+        except Exception:
             return
-        loop.create_task(_CHANNEL_HEALTH_STORE.increment_error(channel, workflow_id, error_type))
+        payload = {
+            "chat_id": context.chat_id,
+            "workflow_id": workflow_id,
+            "decision": "allow" if decision.allow_llm else "block",
+            "manual_review": decision.manual_review,
+            "profile": decision.profile,
+        }
+        try:
+            await client.set(
+                f"rise:pipeline_guard:decision:{context.chat_id}",
+                json.dumps(payload, ensure_ascii=False),
+                ex=_PIPELINE_GUARD_DECISION_TTL_SECONDS,
+            )
+        except Exception:  # pragma: no cover - metrics best effort
+            return
+
+    def _build_guard_block_result(
+        self,
+        context: _ConversationContext,
+        decision: PipelineGuardDecision,
+        workflow_id: Optional[str],
+    ) -> ConversationServiceResult:
+        telemetry_extra = {
+            "guard_status": "blocked",
+            "queue_status": "guard_blocked",
+        }
+        if decision.profile:
+            telemetry_extra["guard_profile"] = decision.profile
+        error_hint = decision.reason or "llm_blocked"
+        self._schedule_health_error("telegram", workflow_id, "guard_blocked")
+        return self._build_static_response(
+            context,
+            text=context.entry_config.manual_review_text,
+            status="handled",
+            mode="manual",
+            intent="pipeline_guard_blocked",
+            audit_reason="llm_blocked",
+            error_hint=error_hint,
+            telemetry_extra=telemetry_extra,
+        )
 
 
     @staticmethod
@@ -970,7 +1374,9 @@ __all__ = [
     "set_task_queue_accessors",
     "set_channel_binding_provider",
     "set_channel_binding_health_store",
+    "set_pipeline_service_factory",
     "AsyncResultHandle",
+    "PipelineNodeGuardService",
 ]
 
 

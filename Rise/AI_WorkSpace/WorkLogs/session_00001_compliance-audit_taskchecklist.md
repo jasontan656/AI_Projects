@@ -1,0 +1,12 @@
+# session_00001_compliance-audit Task Checklist
+- [ ] Step-01 建立上行依赖守护脚本
+- [ ] Step-02 建立 foundational contracts 并替换 worker/import
+- [ ] Step-03 拆分 conversation/service.py
+- [ ] Step-04 去除 business_service→interface_entry 依赖
+- [ ] Step-05 拆分 PromptEditor 组件
+- [ ] Step-06 拆分 NodeDraftForm & WorkflowChannelForm
+- [ ] Step-07 Up 文档契约补全
+- [ ] Step-08 文件体量守护脚本
+- [ ] Step-09 循环依赖守护脚本
+- [ ] Step-10 API/日志金样本采集
+- [ ] Step-11 全量护栏 + 验收回归

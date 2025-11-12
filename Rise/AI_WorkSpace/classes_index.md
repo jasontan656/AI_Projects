@@ -1,6 +1,6 @@
 # 类索引
 
-_生成时间：2025-11-11T16:04:45+00:00_
+_生成时间：2025-11-12T18:16:42+00:00_
 
 ## rise-project-utility（rise）
 
@@ -39,12 +39,12 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/foundational_service/messaging/channel_binding_event_publisher.py` · `class ChannelBindingEventPublisher` · 144 行
   - 说明：Publish channel binding events with queue + deadletter fallbacks.
   - 片段：class ChannelBindingEventPublisher:     """Publish channel binding events with queue + deadletter fallbacks.""" 
+- `src/foundational_service/persist/workflow_summary_repository.py` · `class WorkflowSummaryRepository` · 96 行
+  - 说明：Persist workflow summaries to Redis (cache) and Mongo (archive).
+  - 片段：class WorkflowSummaryRepository:     """Persist workflow summaries to Redis (cache) and Mongo (archive).""" 
 - `src/foundational_service/persist/observability.py` · `class WorkflowRunReadRepository` · 92 行
   - 说明：Query helper over the workflow_runs collection for observability use cases.
   - 片段：class WorkflowRunReadRepository:     """Query helper over the workflow_runs collection for observability use cases.""" 
-- `src/foundational_service/persist/worker.py` · `class WorkflowTaskProcessor` · 85 行
-  - 说明：（无 docstring，参考片段）
-  - 片段：class WorkflowTaskProcessor:     def __init__(         self,
 
 ### Interface / Entry Layer
 
@@ -90,7 +90,7 @@ _生成时间：2025-11-11T16:04:45+00:00_
 
 ### Business Logic Layer
 
-- `src/business_logic/workflow/orchestrator.py` · `class WorkflowOrchestrator` · 174 行
+- `src/business_logic/workflow/orchestrator.py` · `class WorkflowOrchestrator` · 161 行
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowOrchestrator:     def __init__(         self,
 
@@ -101,15 +101,15 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/views/PipelineWorkspace.vue` · `VueComponent<PipelineWorkspace>` · 930 行
   - 说明：<el-container class="workspace-shell">
   - 片段：<template> <el-container class="workspace-shell"> <el-aside width="248px" class="workspace-aside">
-- `src/views/WorkflowBuilder.vue` · `VueComponent<WorkflowBuilder>` · 695 行
-  - 说明：<div class="workflow-builder">
-  - 片段：<template> <div class="workflow-builder"> <div class="workflow-builder__layout">
 - `src/components/NodeActionList.vue` · `VueComponent<NodeActionList>` · 506 行
   - 说明：<section class="node-action-list">
   - 片段：<template> <section class="node-action-list"> <div class="node-action-list__toolbar">
 - `src/components/WorkflowEditor.vue` · `VueComponent<WorkflowEditor>` · 505 行
   - 说明：<section class="workflow-editor">
   - 片段：<template> <section class="workflow-editor"> <header class="workflow-editor__header">
+- `src/components/PromptEditor.vue` · `VueComponent<PromptEditor>` · 495 行
+  - 说明：<section :class="['prompt-editor', { 'prompt-editor--full': isFullLayout }]">
+  - 片段：<template> <section :class="['prompt-editor', { 'prompt-editor--full': isFullLayout }]"> <header class="prompt-editor__header">
 - `src/components/NodeDraftForm.vue` · `VueComponent<NodeDraftForm>` · 454 行
   - 说明：<section :class="['node-draft', { 'node-draft--full': isFullLayout }]">
   - 片段：<template> <section :class="['node-draft', { 'node-draft--full': isFullLayout }]"> <header class="node-draft__header">
@@ -122,15 +122,15 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/views/PipelineWorkspace.vue` · `VueComponent<PipelineWorkspace>` · 930 行
   - 说明：<el-container class="workspace-shell">
   - 片段：<template> <el-container class="workspace-shell"> <el-aside width="248px" class="workspace-aside">
-- `src/views/WorkflowBuilder.vue` · `VueComponent<WorkflowBuilder>` · 695 行
-  - 说明：<div class="workflow-builder">
-  - 片段：<template> <div class="workflow-builder"> <div class="workflow-builder__layout">
 - `src/components/NodeActionList.vue` · `VueComponent<NodeActionList>` · 506 行
   - 说明：<section class="node-action-list">
   - 片段：<template> <section class="node-action-list"> <div class="node-action-list__toolbar">
 - `src/components/WorkflowEditor.vue` · `VueComponent<WorkflowEditor>` · 505 行
   - 说明：<section class="workflow-editor">
   - 片段：<template> <section class="workflow-editor"> <header class="workflow-editor__header">
+- `src/components/PromptEditor.vue` · `VueComponent<PromptEditor>` · 495 行
+  - 说明：<section :class="['prompt-editor', { 'prompt-editor--full': isFullLayout }]">
+  - 片段：<template> <section :class="['prompt-editor', { 'prompt-editor--full': isFullLayout }]"> <header class="prompt-editor__header">
 - `src/components/NodeDraftForm.vue` · `VueComponent<NodeDraftForm>` · 454 行
   - 说明：<section :class="['node-draft', { 'node-draft--full': isFullLayout }]">
   - 片段：<template> <section :class="['node-draft', { 'node-draft--full': isFullLayout }]"> <header class="node-draft__header">

@@ -60,7 +60,7 @@
 
 ## Documentation & Collaboration
 - Follow AI_WorkSpace naming (`session_<timestamp>_<topic>.md`) for notes/plans/logs. Store new proposals under `AI_WorkSpace/DevDoc/On` until shipped, then archive.
-- Before large UX/backbone shifts (new panes, tabs, or admin capabilities), produce/refresh a spec in `docs/ProjectDev` + AI_WorkSpace and reference `@/openspec/AGENTS.md`.
+- Before large UX/backbone shifts (new panes, tabs, or admin capabilities), produce/refresh a spec in `docs/ProjectDev` + AI_WorkSpace and reference the shared `@/AGENTS.md` guidelines.
 - Maintain bilingual strings (many sections already mix English + Simplified Chinese). When adding copy, mirror style or wire translations via `@/docs/ProjectDev`.
 
 ## Constraints & Tips
@@ -69,3 +69,8 @@
 - Prefer CSS tokens defined in `src/styles/tokens.css`; new components should reuse spacing/color variables for consistency.
 - Ensure any new long-running subscriptions or timers (`setTimeout`, SSE) are cleaned up in `onBeforeUnmount`/`stopPolling` to avoid resource leaks in the SPA.
 - When uncertain about backend expectations, inspect the matching FastAPI router in `Rise` and update both repos in lockstep.
+- Keep Vue components narrowly scoped; factor shared behaviors into composables/services. When a component starts owning multiple workflows (e.g., builder tabs + health views), split it into child components and document the contract.
+- Pinia stores should follow single-domain responsibilities (pipeline draft vs prompt draft vs channel policy). If a store begins to expose unrelated mutations, split it and migrate consumers.
+- Utility modules mirror backend layering: networking helpers vs serialization vs UI-only transforms should live in separate files/folders. Aim for “small plugin” modules that can be reasoned about independently.
+- Prompt/payload editors must group assets by business use case (visa, accreditation, etc.) rather than dumping all schema fragments into one file.
+- Any intentional “fat” module (e.g., WorkflowBuilder shell) must list its internal entrypoints and the child modules it orchestrates inside DevDoc/ProjectDev notes so future contributors know where to extract functionality.

@@ -1,34 +1,26 @@
 import { defineStore } from "pinia";
-
 import {
-  getChannelPolicy,
+  CHANNEL_HEALTH_DEFAULTS,
+  createChannelPolicy,
+  createTestThrottleState,
+  getTestCooldownUntil,
+  canSendTest,
+  recordTestAttempt,
+} from "../schemas/channelPolicy.js";
+import {
+  fetchChannelPolicy,
   saveChannelPolicy,
   deleteChannelPolicy,
   fetchChannelHealth,
   sendChannelTest,
-} from "../services/channelService";
+} from "../services/channelPolicyClient";
+import { createChannelHealthScheduler } from "../services/channelHealthScheduler";
 
-const createEmptyPolicy = () => ({
-  workflowId: null,
-  channel: "telegram",
-  botToken: "",
-  maskedBotToken: "",
-  webhookUrl: "",
-  waitForResult: true,
-  workflowMissingMessage: "",
-  timeoutMessage: "",
-  metadata: {
-    allowedChatIds: [],
-    rateLimitPerMin: 60,
-    locale: "zh-CN",
-  },
-  updatedAt: null,
-  updatedBy: null,
-});
+const TEST_HISTORY_LIMIT = 10;
 
 export const useChannelPolicyStore = defineStore("channelPolicy", {
   state: () => ({
-    policy: createEmptyPolicy(),
+    policy: createChannelPolicy(),
     health: null,
     testHistory: [],
     loading: false,
@@ -39,10 +31,12 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
     healthError: "",
     policyError: "",
     testError: "",
-    pollTimer: null,
-    pollIntervalMs: 30000,
-    failureCount: 0,
-    frequencyWindow: [],
+    healthState: {
+      paused: false,
+      failureCount: 0,
+      nextInterval: CHANNEL_HEALTH_DEFAULTS.baseIntervalMs,
+    },
+    testThrottle: createTestThrottleState(),
   }),
   getters: {
     isBound: (state) =>
@@ -50,30 +44,82 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
         state.policy?.workflowId &&
           (state.policy?.botToken || state.policy?.maskedBotToken)
       ),
+    cooldownUntil: (state) => getTestCooldownUntil(state.testThrottle),
+    healthPollingPaused: (state) => state.healthState.paused,
   },
   actions: {
     setPolicy(data) {
-      const empty = createEmptyPolicy();
-      const masked = data?.maskedBotToken || "";
-      this.policy = {
-        ...empty,
-        ...data,
-        botToken: data?.botToken || masked,
-        maskedBotToken: masked,
-        metadata: {
-          ...empty.metadata,
-          ...(data?.metadata || {}),
-        },
-      };
+      this.policy = createChannelPolicy(data);
     },
     resetPolicy() {
-      this.policy = createEmptyPolicy();
+      this.policy = createChannelPolicy();
+    },
+    ensureScheduler() {
+      if (this._scheduler) {
+        return;
+      }
+      this._scheduler = createChannelHealthScheduler({
+        poller: async (workflowId, { silent } = {}) => {
+          if (!silent) {
+            this.healthLoading = true;
+            this.healthError = "";
+          }
+          try {
+            const data = await fetchChannelHealth(workflowId, {
+              includeMetrics: true,
+            });
+            return data;
+          } finally {
+            if (!silent) {
+              this.healthLoading = false;
+            }
+          }
+        },
+        baseIntervalMs: CHANNEL_HEALTH_DEFAULTS.baseIntervalMs,
+        maxIntervalMs: CHANNEL_HEALTH_DEFAULTS.maxIntervalMs,
+        maxFailures: CHANNEL_HEALTH_DEFAULTS.maxFailures,
+      });
+    },
+    updateHealthState() {
+      if (!this._scheduler) {
+        this.healthState = {
+          paused: false,
+          failureCount: 0,
+          nextInterval: CHANNEL_HEALTH_DEFAULTS.baseIntervalMs,
+        };
+        return;
+      }
+      this.healthState = this._scheduler.getState();
     },
     stopPolling() {
-      if (this.pollTimer) {
-        clearTimeout(this.pollTimer);
-        this.pollTimer = null;
+      if (this._scheduler) {
+        this._scheduler.stop();
       }
+      this.updateHealthState();
+    },
+    startHealthMonitor(workflowId) {
+      if (!workflowId) {
+        this.stopPolling();
+        return;
+      }
+      this.ensureScheduler();
+      this._scheduler.start(workflowId, {
+        onSuccess: (data) => {
+          this.health = data;
+          this.healthError = "";
+          this.healthLoading = false;
+          this.updateHealthState();
+        },
+        onFailure: (error) => {
+          this.healthError = error?.message || "健康检查失败";
+          this.healthLoading = false;
+          this.updateHealthState();
+        },
+        onPause: (error) => {
+          this.healthError = error?.message || "健康检查失败";
+          this.updateHealthState();
+        },
+      });
     },
     async fetchPolicy(workflowId) {
       if (!workflowId) {
@@ -83,18 +129,15 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
       this.loading = true;
       this.policyError = "";
       try {
-        const policy = await getChannelPolicy(workflowId);
+        const policy = await fetchChannelPolicy(workflowId);
         if (policy) {
           this.setPolicy(policy);
         } else {
           this.resetPolicy();
         }
       } catch (error) {
-        if ((error.message || "").includes("404")) {
-          this.resetPolicy();
-        } else {
-          this.policyError = error.message || "加载渠道配置失败";
-        }
+        this.policyError = error.message || "加载渠道配置失败";
+        throw error;
       } finally {
         this.loading = false;
       }
@@ -123,6 +166,7 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
       try {
         await deleteChannelPolicy(workflowId);
         this.resetPolicy();
+        this.stopPolling();
       } catch (error) {
         this.policyError = error.message || "解绑渠道失败";
         throw error;
@@ -131,58 +175,25 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
       }
     },
     async fetchHealth(workflowId, { silent = false } = {}) {
-      if (!workflowId) return;
-      if (!silent) {
-        this.healthLoading = true;
-      }
-      this.healthError = "";
-      try {
-        const data = await fetchChannelHealth(workflowId);
-        this.health = data;
-        this.failureCount = 0;
-        if (!silent) {
-          this.healthLoading = false;
-        }
-        this.scheduleNextPoll(workflowId, true);
-      } catch (error) {
-        this.healthError = error.message || "健康检查失败";
-        this.failureCount += 1;
-        if (!silent) {
-          this.healthLoading = false;
-        }
-        this.scheduleNextPoll(workflowId, false);
-      }
-    },
-    scheduleNextPoll(workflowId, success) {
-      this.stopPolling();
-      if (!workflowId) return;
-      if (!success && this.failureCount >= 3) {
+      if (!workflowId) {
+        this.stopPolling();
         return;
       }
-      const base = 30000;
-      const interval = success
-        ? base
-        : Math.min(base * Math.pow(2, this.failureCount - 1), 120000);
-      this.pollIntervalMs = interval;
-      this.pollTimer = setTimeout(() => {
-        this.fetchHealth(workflowId, { silent: true });
-      }, interval);
+      this.startHealthMonitor(workflowId);
+      if (this._scheduler) {
+        await this._scheduler.refresh({ silent });
+        this.updateHealthState();
+      }
     },
     recordTestResult(result) {
       const items = [{ ...result }, ...this.testHistory];
-      this.testHistory = items.slice(0, 10);
-    },
-    cleanupFrequencyWindow(now = Date.now()) {
-      this.frequencyWindow = this.frequencyWindow.filter(
-        (timestamp) => now - timestamp < 60000
-      );
+      this.testHistory = items.slice(0, TEST_HISTORY_LIMIT);
     },
     canSendTest(now = Date.now()) {
-      this.cleanupFrequencyWindow(now);
-      return this.frequencyWindow.length < 3;
+      return canSendTest(this.testThrottle, now);
     },
-    markTestSent(now = Date.now()) {
-      this.frequencyWindow = [...this.frequencyWindow, now];
+    markTestSent(timestamp = Date.now()) {
+      recordTestAttempt(this.testThrottle, timestamp);
     },
     async sendTest(payload) {
       if (!this.canSendTest()) {
@@ -196,6 +207,7 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
         this.markTestSent(timestamp);
         this.recordTestResult({
           ...result,
+          status: "success",
           timestamp: new Date().toISOString(),
           chatId: payload.chatId,
         });

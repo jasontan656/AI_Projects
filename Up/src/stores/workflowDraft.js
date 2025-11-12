@@ -1,32 +1,19 @@
 import { defineStore } from "pinia";
-
 import {
-  listWorkflows,
-  getWorkflow,
-  createWorkflow,
-  updateWorkflow,
-  deleteWorkflow,
-  publishWorkflow,
-  rollbackWorkflow,
-} from "../services/workflowService";
-
-const createEmptyWorkflow = () => ({
-  id: null,
-  name: "",
-  status: "draft",
-  version: 0,
-  nodeSequence: [],
-  promptBindings: [],
-  strategy: { retryLimit: 0, timeoutMs: 0 },
-  metadata: { description: "", tags: [] },
-  history: [],
-});
+  fetchWorkflowList,
+  fetchWorkflowDetail,
+  saveWorkflowDraft,
+  removeWorkflowDraft,
+  publishWorkflowDraft,
+  rollbackWorkflowDraft,
+} from "../services/workflowDraftService";
+import { createWorkflowDraft } from "../schemas/workflowDraft";
 
 export const useWorkflowDraftStore = defineStore("workflowDraft", {
   state: () => ({
     workflows: [],
     selectedWorkflowId: null,
-    currentWorkflow: createEmptyWorkflow(),
+    currentWorkflow: createWorkflowDraft(),
     history: [],
     listLoading: false,
     detailLoading: false,
@@ -43,30 +30,35 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
     setError(message) {
       this.error = message || "";
     },
+    setCurrentWorkflow(workflow) {
+      this.currentWorkflow = createWorkflowDraft(workflow);
+      this.history = Array.isArray(this.currentWorkflow.history)
+        ? this.currentWorkflow.history
+        : [];
+    },
     async fetchList(params = {}) {
       this.listLoading = true;
       this.setError("");
       try {
-        const data = await listWorkflows(params);
-        const items = Array.isArray(data?.items) ? data.items : [];
+        const { items } = await fetchWorkflowList(params);
         this.workflows = items;
         if (!this.selectedWorkflowId && items[0]?.id) {
           await this.selectWorkflow(items[0].id);
-        }
-        if (this.selectedWorkflowId) {
-          const stillExists = items.some(
+        } else if (this.selectedWorkflowId) {
+          const exists = items.some(
             (item) => item.id === this.selectedWorkflowId
           );
-          if (!stillExists) {
+          if (!exists) {
             this.selectedWorkflowId = null;
-            this.currentWorkflow = createEmptyWorkflow();
+            this.setCurrentWorkflow(createWorkflowDraft());
           }
         }
         if (!this.selectedWorkflowId && !items.length) {
-          this.currentWorkflow = createEmptyWorkflow();
+          this.setCurrentWorkflow(createWorkflowDraft());
         }
       } catch (error) {
         this.setError(error.message || "加载 workflow 列表失败");
+        throw error;
       } finally {
         this.listLoading = false;
       }
@@ -74,8 +66,7 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
     async selectWorkflow(workflowId) {
       if (!workflowId) {
         this.selectedWorkflowId = null;
-        this.currentWorkflow = createEmptyWorkflow();
-        this.history = [];
+        this.setCurrentWorkflow(createWorkflowDraft());
         return;
       }
       this.selectedWorkflowId = workflowId;
@@ -86,39 +77,24 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
       this.detailLoading = true;
       this.setError("");
       try {
-        const data = await getWorkflow(workflowId);
-        if (data) {
-          this.currentWorkflow = {
-            history: data.history || [],
-            ...data,
-          };
-          this.history = Array.isArray(data.history) ? data.history : [];
-        }
+        const workflow = await fetchWorkflowDetail(workflowId);
+        this.setCurrentWorkflow(workflow);
       } catch (error) {
         this.setError(error.message || "加载 workflow 详情失败");
+        throw error;
       } finally {
         this.detailLoading = false;
       }
     },
     startNewWorkflow() {
       this.selectedWorkflowId = null;
-      this.currentWorkflow = createEmptyWorkflow();
-      this.history = [];
+      this.setCurrentWorkflow(createWorkflowDraft());
     },
     async saveCurrentWorkflow(payload) {
       this.saving = true;
       this.setError("");
       try {
-        if (!Array.isArray(payload?.nodeSequence) || payload.nodeSequence.length === 0) {
-          throw new Error("WORKFLOW_NODE_REQUIRED");
-        }
-
-        let saved;
-        if (this.currentWorkflow.id) {
-          saved = await updateWorkflow(this.currentWorkflow.id, payload);
-        } else {
-          saved = await createWorkflow(payload);
-        }
+        const saved = await saveWorkflowDraft(this.currentWorkflow, payload);
         if (saved?.id) {
           const exists = this.workflows.some((item) => item.id === saved.id);
           if (exists) {
@@ -129,7 +105,7 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
             this.workflows = [saved, ...this.workflows];
           }
           this.selectedWorkflowId = saved.id;
-          this.currentWorkflow = { history: saved.history || [], ...saved };
+          this.setCurrentWorkflow(saved);
         }
         return saved;
       } catch (error) {
@@ -148,10 +124,8 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
       this.deleting = true;
       this.setError("");
       try {
-        await deleteWorkflow(workflowId);
-        this.workflows = this.workflows.filter(
-          (item) => item.id !== workflowId
-        );
+        await removeWorkflowDraft(workflowId);
+        this.workflows = this.workflows.filter((item) => item.id !== workflowId);
         if (this.selectedWorkflowId === workflowId) {
           const fallback = this.workflows[0];
           if (fallback?.id) {
@@ -174,19 +148,14 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
       this.publishing = true;
       this.setError("");
       try {
-        const published = await publishWorkflow(this.selectedWorkflowId, meta);
-        if (published) {
-          this.currentWorkflow = {
-            history: published.history || [],
-            ...published,
-          };
-          this.history = Array.isArray(published.history)
-            ? published.history
-            : [];
-          this.workflows = this.workflows.map((item) =>
-            item.id === published.id ? published : item
-          );
-        }
+        const published = await publishWorkflowDraft(
+          this.selectedWorkflowId,
+          meta
+        );
+        this.setCurrentWorkflow(published);
+        this.workflows = this.workflows.map((item) =>
+          item.id === published.id ? published : item
+        );
         return published;
       } catch (error) {
         this.setError(error.message || "发布失败");
@@ -202,23 +171,15 @@ export const useWorkflowDraftStore = defineStore("workflowDraft", {
       this.rollingBack = true;
       this.setError("");
       try {
-        const rolledBack = await rollbackWorkflow(
+        const rolled = await rollbackWorkflowDraft(
           this.selectedWorkflowId,
           version
         );
-        if (rolledBack) {
-          this.currentWorkflow = {
-            history: rolledBack.history || [],
-            ...rolledBack,
-          };
-          this.history = Array.isArray(rolledBack.history)
-            ? rolledBack.history
-            : [];
-          this.workflows = this.workflows.map((item) =>
-            item.id === rolledBack.id ? rolledBack : item
-          );
-        }
-        return rolledBack;
+        this.setCurrentWorkflow(rolled);
+        this.workflows = this.workflows.map((item) =>
+          item.id === rolled.id ? rolled : item
+        );
+        return rolled;
       } catch (error) {
         this.setError(error.message || "回滚失败");
         throw error;

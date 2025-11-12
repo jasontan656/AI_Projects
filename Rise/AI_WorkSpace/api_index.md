@@ -1,6 +1,6 @@
 # API 索引
 
-_生成时间：2025-11-11T16:04:45+00:00_
+_生成时间：2025-11-12T18:16:42+00:00_
 
 ## 后端接口（FastAPI）
 
@@ -154,30 +154,30 @@ _生成时间：2025-11-11T16:04:45+00:00_
 
 ## 前端服务请求（Up）
 
-- `GET `/api/workflow-channels/${workflowId}?channel=telegram`` · `getChannelPolicy` · Up · src/services/channelService.js
-  - 说明：getChannelPolicy
+- `GET `/api/workflow-channels/${workflowId}?channel=telegram`` · `fetchChannelPolicy` · Up · src/services/channelPolicyClient.js
+  - 说明：fetchChannelPolicy
   - 片段：`/api/workflow-channels/${workflowId}?channel=telegram`,
     { method: "GET" }
 
-- `PUT `/api/workflow-channels/${workflowId}`` · `saveChannelPolicy` · Up · src/services/channelService.js
+- `PUT `/api/workflow-channels/${workflowId}`` · `saveChannelPolicy` · Up · src/services/channelPolicyClient.js
   - 说明：saveChannelPolicy
   - 片段：`/api/workflow-channels/${workflowId}`, {
     method: "PUT",
     body: JSON.stringify(body),
   }
 
-- `DELETE `/api/workflow-channels/${workflowId}?channel=telegram`` · `deleteChannelPolicy` · Up · src/services/channelService.js
+- `DELETE `/api/workflow-channels/${workflowId}?channel=telegram`` · `deleteChannelPolicy` · Up · src/services/channelPolicyClient.js
   - 说明：deleteChannelPolicy
   - 片段：`/api/workflow-channels/${workflowId}?channel=telegram`, {
     method: "DELETE",
   }
 
-- `GET `/api/channels/telegram/health?${query.toString()}`` · `fetchChannelHealth` · Up · src/services/channelService.js
+- `GET `/api/channels/telegram/health?${query.toString()}`` · `fetchChannelHealth` · Up · src/services/channelPolicyClient.js
   - 说明：fetchChannelHealth
   - 片段：`/api/channels/telegram/health?${query.toString()}`,
     { method: "GET" }
 
-- `POST "/api/channels/telegram/test"` · `sendChannelTest` · Up · src/services/channelService.js
+- `POST "/api/channels/telegram/test"` · `sendChannelTest` · Up · src/services/channelPolicyClient.js
   - 说明：sendChannelTest
   - 片段："/api/channels/telegram/test", {
     method: "POST",

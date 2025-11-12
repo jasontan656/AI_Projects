@@ -1,53 +1,8 @@
 import { requestJson } from "./httpClient";
-
-const normalizeWorkflowEntity = (data) => {
-  if (!data) return data;
-  const id = data.id || data.workflowId || null;
-  return {
-    ...data,
-    id,
-  };
-};
-
-const sanitizeWorkflowPayload = (payload = {}) => {
-  const nodeSequence = Array.isArray(payload.nodeSequence)
-    ? payload.nodeSequence.filter(Boolean)
-    : [];
-  if (!nodeSequence.length) {
-    throw new Error("WORKFLOW_NODE_REQUIRED");
-  }
-
-  const promptBindings = Array.isArray(payload.promptBindings)
-    ? payload.promptBindings
-        .filter((item) => item?.nodeId && nodeSequence.includes(item.nodeId))
-        .map((item) => ({
-          nodeId: item.nodeId,
-          promptId: item?.promptId || null,
-        }))
-    : [];
-
-  const normalized = {
-    name: payload.name?.trim() || "",
-    status: payload.status,
-    nodeSequence,
-    promptBindings,
-    strategy: {
-      retryLimit: Number.isFinite(payload.strategy?.retryLimit)
-        ? payload.strategy.retryLimit
-        : 0,
-      timeoutMs: Number.isFinite(payload.strategy?.timeoutMs)
-        ? payload.strategy.timeoutMs
-        : 0,
-    },
-    metadata: {
-      description: payload.metadata?.description || "",
-      tags: Array.isArray(payload.metadata?.tags)
-        ? payload.metadata.tags
-        : [],
-    },
-  };
-  return normalized;
-};
+import {
+  buildWorkflowPayload,
+  normalizeWorkflowEntity,
+} from "../schemas/workflowDraft";
 
 export async function listWorkflows(params = {}) {
   const query = new URLSearchParams();
@@ -82,7 +37,7 @@ export async function getWorkflow(workflowId) {
 }
 
 export async function createWorkflow(payload = {}) {
-  const body = sanitizeWorkflowPayload(payload);
+  const body = buildWorkflowPayload(payload);
   const response = await requestJson("/api/workflows", {
     method: "POST",
     body: JSON.stringify(body),
@@ -94,7 +49,7 @@ export async function updateWorkflow(workflowId, payload = {}) {
   if (!workflowId) {
     throw new Error("缺少 workflowId");
   }
-  const body = sanitizeWorkflowPayload(payload);
+  const body = buildWorkflowPayload(payload);
   const response = await requestJson(`/api/workflows/${workflowId}`, {
     method: "PUT",
     body: JSON.stringify(body),

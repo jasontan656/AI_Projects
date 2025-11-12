@@ -1,6 +1,6 @@
 # 函数索引
 
-_生成时间：2025-11-11T16:04:45+00:00_
+_生成时间：2025-11-12T18:16:42+00:00_
 
 ## rise-project-utility（rise）
 
@@ -69,7 +69,7 @@ _生成时间：2025-11-11T16:04:45+00:00_
 
 ### Interface / Entry Layer
 
-- `src/interface_entry/bootstrap/application_builder.py` · `def configure_application(app: FastAPI) -> FastAPI` · 481 行
+- `src/interface_entry/bootstrap/application_builder.py` · `def configure_application(app: FastAPI) -> FastAPI` · 528 行
   - 说明：（无 docstring，参考片段）
   - 片段：def configure_application(app: FastAPI) -> FastAPI:     initialize_log_workspace()     configure_logging()
 - `src/interface_entry/telegram/routes.py` · `def register_routes(app: FastAPI, dispatcher: Dispatcher, webhook_path: str, runtime_policy: dict[str, Any], webhook_secret: str) -> None` · 261 行
@@ -90,20 +90,33 @@ _生成时间：2025-11-11T16:04:45+00:00_
 
 ### Business Service Layer
 
-- `src/business_service/conversation/service.py` · `def set_task_queue_accessors(*, submitter_factory: Callable[[], Optional[TaskSubmitter]], runtime_factory: Callable[[], Optional[TaskRuntime]]) -> None` · 10 行
-  - 说明：Allow bootstrap层注入 TaskSubmitter / TaskRuntime 的工厂。
-  - 片段：def set_task_queue_accessors(     *,     submitter_factory: Callable[[], Optional[TaskSubmitter]],
+- `src/business_service/conversation/config.py` · `def resolve_entry_config(policy: Mapping[str, Any], *, binding_policy: Optional[WorkflowChannelPolicy]=None, defaults: Optional[TelegramEntryConfig]=None) -> TelegramEntryConfig` · 55 行
+  - 说明：Merge policy entrypoints + binding overrides into a resolved config.
+  - 片段：def resolve_entry_config(     policy: Mapping[str, Any],     *,
+- `src/business_service/conversation/config.py` · `def load_default_entry_config() -> TelegramEntryConfig` · 16 行
+  - 说明：Load defaults from environment to allow operator override.
+  - 片段：def load_default_entry_config() -> TelegramEntryConfig:     """Load defaults from environment to allow operator override.""" 
+- `src/business_service/conversation/runtime_gateway.py` · `def set_task_queue_accessors(*, submitter_factory: SubmitterFactory, runtime_factory: RuntimeFactory) -> None` · 10 行
+  - 说明：Register factories used by the default runtime gateway.
+  - 片段：def set_task_queue_accessors(     *,     submitter_factory: SubmitterFactory,
+- `src/business_service/conversation/health.py` · `def build_default_health_reporter(ttl_seconds: int=120) -> ChannelHealthReporter` · 6 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：def build_default_health_reporter(ttl_seconds: int = 120) -> ChannelHealthReporter:     return ChannelHealthReporter(         store=ChannelBindingHealthStore(),
+- `src/business_service/conversation/service.py` · `def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None` · 5 行
+  - 说明：Compatibility shim to keep existing bootstrap wiring intact.
+  - 片段：def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None:     """Compatibility shim to keep existing bootstrap wiring intact.""" 
 - `src/business_service/conversation/service.py` · `def set_channel_binding_provider(provider: ChannelBindingProvider) -> None` · 5 行
   - 说明：Register the global channel binding provider used by conversation flows.
   - 片段：def set_channel_binding_provider(provider: ChannelBindingProvider) -> None:     """Register the global channel binding provider used by conversation flows.""" 
-- `src/business_service/conversation/service.py` · `def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None` · 3 行
-  - 说明：（无 docstring，参考片段）
-  - 片段：def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None:     global _CHANNEL_HEALTH_STORE     _CHANNEL_HEALTH_STORE = store
 
 ## up（up）
 
 ### Foundational Service Layer
 
+- `src/services/logService.js` · `subscribeWorkflowLogs(workflowId,
+  { onMessage, onError, heartbeatMs } = {})` · 15 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function subscribeWorkflowLogs(   workflowId,   { onMessage, onError, heartbeatMs } = {}
 - `src/services/pipelineService.js` · `deletePipelineNode(nodeId)` · 13 行
   - 说明：（无 docstring，参考片段）
   - 片段：export async function deletePipelineNode(nodeId) {   if (!nodeId) {     throw new Error("缺少节点 ID");
@@ -119,6 +132,24 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/services/workflowService.js` · `listWorkflows(params = {})` · 12 行
   - 说明：（无 docstring，参考片段）
   - 片段：export async function listWorkflows(params = {}) {   const query = new URLSearchParams();   if (params.search) {
-- `src/services/channelService.js` · `saveChannelPolicy(workflowId, payload = {})` · 11 行
+
+### Unmapped
+
+- `src/schemas/workflowDraft.js` · `createWorkflowDraft(overrides = {})` · 13 行
   - 说明：（无 docstring，参考片段）
-  - 片段：export async function saveChannelPolicy(workflowId, payload = {}) {   if (!workflowId) {     throw new Error("缺少 workflowId");
+  - 片段：export function createWorkflowDraft(overrides = {}) {   return {     ...WORKFLOW_DEFAULT,
+- `src/schemas/channelPolicy.js` · `createChannelPolicy(overrides = {})` · 12 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function createChannelPolicy(overrides = {}) {   const merged = {     ...CHANNEL_POLICY_DEFAULT,
+- `src/schemas/channelPolicy.js` · `normalizeChannelPolicyResponse(response)` · 10 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function normalizeChannelPolicyResponse(response) {   if (!response) {     return createChannelPolicy();
+- `src/schemas/workflowDraft.js` · `buildWorkflowPayload(payload = {})` · 10 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function buildWorkflowPayload(payload = {}) {   const nodeSequence = normalizeNodeSequence(payload.nodeSequence);   if (!nodeSequence.length) {
+- `src/schemas/workflowDraft.js` · `normalizeWorkflowEntity(entity)` · 10 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function normalizeWorkflowEntity(entity) {   if (!entity) {     return createWorkflowDraft();
+- `src/schemas/channelPolicy.js` · `getTestCooldownUntil(state, now = Date.now()` · 9 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：export function getTestCooldownUntil(state, now = Date.now()) {   pruneTestAttempts(state, now);   if (state.attempts.length < CHANNEL_TEST_RULE.maxAttempts) {

@@ -1,25 +1,21 @@
+import { createWorkflowLogStream } from "./pipelineSseClient";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
-export function subscribeWorkflowLogs(workflowId, { onMessage, onError } = {}) {
-  if (!workflowId) {
-    throw new Error("缺少 workflowId");
-  }
-  const url = new URL(`${baseUrl}/api/workflows/${workflowId}/logs/stream`);
-  const source = new EventSource(url.toString(), { withCredentials: false });
-
-  source.onmessage = (event) => {
-    if (!event?.data) return;
-    try {
-      const payload = JSON.parse(event.data);
-      onMessage?.(payload);
-    } catch (error) {
-      console.warn("日志解析失败", error);
-    }
-  };
-  source.onerror = (event) => {
-    onError?.(event);
-  };
-  return () => source.close();
+export function subscribeWorkflowLogs(
+  workflowId,
+  { onMessage, onError, heartbeatMs } = {}
+) {
+  const stream = createWorkflowLogStream(
+    workflowId,
+    {
+      onMessage,
+      onError,
+    },
+    { heartbeatMs }
+  );
+  stream.start();
+  return () => stream.stop();
 }
 
 export async function fetchWorkflowLogs(workflowId, params = {}) {

@@ -1,4 +1,4 @@
-generated_at: '2025-11-11T16:04:45+00:00'
+generated_at: '2025-11-12T18:16:42+00:00'
 projects:
   rise:
     meta:
@@ -40,7 +40,7 @@ projects:
     - layer: Foundational Service Layer
       path: src/foundational_service
       ext:
-      - py(34)
+      - py(35)
       files:
       - src/foundational_service/telemetry/bus.py
       - src/foundational_service/persist/redis_queue.py
@@ -54,14 +54,14 @@ projects:
     - layer: Business Service Layer
       path: src/business_service
       ext:
-      - py(30)
+      - py(33)
       files:
       - src/business_service/conversation/service.py
       - src/business_service/workflow/repository.py
     - layer: Business Logic Layer
       path: src/business_logic
       ext:
-      - py(9)
+      - py(10)
       files:
       - src/business_logic/workflow/orchestrator.py
       - src/business_logic/conversation/telegram_flow.py
@@ -77,22 +77,23 @@ projects:
         - typing
       src/business_logic/workflow/orchestrator.py:
         local:
+        - src/business_logic/workflow/models.py
         - src/foundational_service/integrations/openai_bridge.py
+        - src/foundational_service/persist/workflow_summary_repository.py
         - src/project_utility/context.py
         - src/project_utility/telemetry.py
         external:
         - __future__
         - business_service
-        - dataclasses
-        - datetime
-        - project_utility
+        - time
+        - typing
       src/business_service/conversation/service.py:
         local:
         - src/business_service/channel/health_store.py
         - src/business_service/channel/models.py
+        - src/business_service/conversation/config.py
+        - src/business_service/conversation/health.py
         - src/business_service/conversation/models.py
-        - src/business_service/conversation/primitives.py
-        - src/foundational_service/contracts/telegram.py
         external:
         - __future__
         - asyncio
@@ -131,8 +132,8 @@ projects:
         - src/business_service/channel/health_store.py
         - src/business_service/channel/repository.py
         - src/business_service/channel/service.py
+        - src/business_service/conversation/health.py
         - src/business_service/conversation/service.py
-        - src/foundational_service/bootstrap/webhook.py
         external:
         - __future__
         - aio_pika
@@ -213,7 +214,7 @@ projects:
     - layer: Foundational Service Layer
       path: src/services
       ext:
-      - js(7)
+      - js(11)
       files:
       - src/services/pipelineService.js
       - src/services/workflowService.js
@@ -222,8 +223,8 @@ projects:
       ext:
       - js(4)
       files:
-      - src/stores/workflowDraft.js
       - src/stores/channelPolicy.js
+      - src/stores/workflowDraft.js
     - layer: Interface / Entry Layer
       path: src/components
       ext:
@@ -257,16 +258,20 @@ projects:
         external: []
       src/services/workflowService.js:
         local:
+        - src/schemas/workflowDraft.js
         - src/services/httpClient.js
         external: []
       src/stores/channelPolicy.js:
         local:
-        - src/services/channelService.js
+        - src/schemas/channelPolicy.js
+        - src/services/channelHealthScheduler.js
+        - src/services/channelPolicyClient.js
         external:
         - pinia
       src/stores/workflowDraft.js:
         local:
-        - src/services/workflowService.js
+        - src/schemas/workflowDraft.js
+        - src/services/workflowDraftService.js
         external:
         - pinia
       src/utils/nodeActions.js:
@@ -291,5 +296,4 @@ projects:
         - src/components/VariableCatalog.vue
         - src/components/WorkflowCanvas.vue
         external:
-        - element-plus
         - vue

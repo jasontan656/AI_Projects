@@ -23,6 +23,7 @@ class TelegramConversationFlow:
         *,
         service: "TelegramConversationService" | None = None,
         adapter_builder: Any | None = None,
+        agent_delegator: Any | None = None,
     ) -> None:
         if service is not None:
             self.service = service
@@ -33,6 +34,8 @@ class TelegramConversationFlow:
         service_kwargs: dict[str, Any] = {}
         if adapter_builder is not None:
             service_kwargs["adapter_builder"] = adapter_builder
+        if agent_delegator is not None:
+            service_kwargs["agent_delegator"] = agent_delegator
         self.service = _TelegramConversationService(**service_kwargs)
 
     async def process(self, update: Mapping[str, Any], *, policy: Mapping[str, Any]) -> ConversationResult:

@@ -1,6 +1,6 @@
 # Schema 索引
 
-_生成时间：2025-11-11T16:04:45+00:00_
+_生成时间：2025-11-12T18:16:42+00:00_
 
 ## rise-project-utility（rise）
 
@@ -51,9 +51,9 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/foundational_service/contracts/envelope.py` · `class ExtFlags(BaseModel)` · 15 行 · 基类: BaseModel
   - 说明：（无 docstring，参考片段）
   - 片段：class ExtFlags(BaseModel):     reply_to_bot: Optional[bool] = None     intent_hint: Optional[str] = None
-- `src/foundational_service/contracts/envelope.py` · `class Telemetry(BaseModel)` · 11 行 · 基类: BaseModel
-  - 说明：（无 docstring，参考片段）
-  - 片段：class Telemetry(BaseModel):     request_id: Optional[str] = None     trace_id: Optional[str] = None
+- `src/foundational_service/persist/workflow_summary_repository.py` · `class SummaryWriteResult` · 13 行 · 装饰器: dataclass
+  - 说明：Outcome flags for Redis + Mongo writes.
+  - 片段：class SummaryWriteResult:     """Outcome flags for Redis + Mongo writes.""" 
 
 ### Interface / Entry Layer
 
@@ -66,19 +66,19 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/interface_entry/runtime/capabilities.py` · `class CapabilityProbe` · 16 行 · 装饰器: dataclass
   - 说明：Descriptor for a capability checker coroutine.
   - 片段：class CapabilityProbe:     """Descriptor for a capability checker coroutine.""" 
+- `src/interface_entry/http/dependencies.py` · `class AppSettings(BaseSettings)` · 14 行 · 基类: BaseSettings
+  - 说明：（无 docstring，参考片段）
+  - 片段：class AppSettings(BaseSettings):     model_config = SettingsConfigDict(         extra="allow",
 - `src/interface_entry/http/workflows/dto.py` · `class WorkflowApplyRequest(BaseModel)` · 14 行 · 基类: BaseModel
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowApplyRequest(BaseModel):     workflowId: str = Field(..., description="目标 workflowId")     userText: str = Field("", description="用户输入内容")
 - `src/interface_entry/http/channels/dto.py` · `class ChannelBindingUpsertRequest(BaseModel)` · 13 行 · 基类: BaseModel
   - 说明：（无 docstring，参考片段）
   - 片段：class ChannelBindingUpsertRequest(BaseModel):     channel: str = Field(default="telegram")     enabled: bool = Field(default=True)
-- `src/interface_entry/http/pipeline_nodes/dto.py` · `class PipelineNodeSnapshot(BaseModel)` · 13 行 · 基类: BaseModel
-  - 说明：（无 docstring，参考片段）
-  - 片段：class PipelineNodeSnapshot(BaseModel):     id: str     name: str
 
 ### Business Service Layer
 
-- `src/business_service/conversation/service.py` · `class TelegramConversationService` · 843 行 · 装饰器: dataclass
+- `src/business_service/conversation/service.py` · `class TelegramConversationService` · 1086 行 · 装饰器: dataclass
   - 说明：面向 Telegram 渠道的业务服务门面。
   - 片段：class TelegramConversationService:     """面向 Telegram 渠道的业务服务门面。""" 
 - `src/business_service/workflow/service.py` · `class AsyncWorkflowService` · 164 行 · 装饰器: dataclass
@@ -93,30 +93,30 @@ _生成时间：2025-11-11T16:04:45+00:00_
 - `src/business_service/pipeline/models.py` · `class PipelineNode` · 75 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class PipelineNode:     node_id: str     name: str
-- `src/business_service/workflow/models.py` · `class StageDefinition` · 64 行 · 装饰器: dataclass
+- `src/business_service/conversation/service.py` · `class PipelineNodeGuardService(PipelineGuardService)` · 72 行 · 基类: PipelineGuardService; 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
-  - 片段：class StageDefinition:     stage_id: str     name: str
+  - 片段：class PipelineNodeGuardService(PipelineGuardService):     pipeline_service: AsyncPipelineNodeService     fallback: PipelineGuardService = field(default_factory=_DefaultPipelineGuardService)
 
 ### Business Logic Layer
 
-- `src/business_logic/conversation/telegram_flow.py` · `class TelegramConversationFlow` · 46 行 · 装饰器: dataclass
+- `src/business_logic/conversation/telegram_flow.py` · `class TelegramConversationFlow` · 49 行 · 装饰器: dataclass
   - 说明：委派到业务服务层进行会话编排。
   - 片段：class TelegramConversationFlow:     """委派到业务服务层进行会话编排。""" 
 - `src/business_logic/knowledge/snapshot_orchestrator.py` · `class KnowledgeSnapshotOrchestrator` · 29 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class KnowledgeSnapshotOrchestrator:     service: KnowledgeSnapshotService 
+- `src/business_logic/workflow/models.py` · `class WorkflowExecutionContext` · 25 行 · 装饰器: dataclass
+  - 说明：Normalized execution context passed into the orchestrator.
+  - 片段：class WorkflowExecutionContext:     """Normalized execution context passed into the orchestrator.""" 
 - `src/business_logic/knowledge/models.py` · `class KnowledgeSnapshotState` · 19 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class KnowledgeSnapshotState:     snapshot: Mapping[str, Any]     snapshot_dict: Mapping[str, Any]
-- `src/business_logic/workflow/orchestrator.py` · `class WorkflowExecutionContext` · 18 行 · 装饰器: dataclass
-  - 说明：（无 docstring，参考片段）
-  - 片段：class WorkflowExecutionContext:     workflow_id: str     request_id: str
 - `src/business_logic/conversation/models.py` · `class ConversationResult` · 17 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class ConversationResult:     status: ConversationStatus     mode: ConversationMode
-- `src/business_logic/workflow/orchestrator.py` · `class WorkflowStageResult` · 6 行 · 装饰器: dataclass
-  - 说明：（无 docstring，参考片段）
-  - 片段：class WorkflowStageResult:     stage_id: str     name: str
+- `src/business_logic/workflow/models.py` · `class WorkflowStageResult` · 8 行 · 装饰器: dataclass
+  - 说明：Represents the outcome of a single workflow stage execution.
+  - 片段：class WorkflowStageResult:     """Represents the outcome of a single workflow stage execution.""" 
 
 ## up（up）
 
@@ -124,7 +124,7 @@ _生成时间：2025-11-11T16:04:45+00:00_
 
 - `src/stores/channelPolicy.js` · `defineStore('channelPolicy')` · 15 行
   - 说明：（无 docstring，参考片段）
-  - 片段：defineStore("channelPolicy", {   state: () => ({     policy: createEmptyPolicy(),
+  - 片段：defineStore("channelPolicy", {   state: () => ({     policy: createChannelPolicy(),
 - `src/stores/workflowDraft.js` · `defineStore('workflowDraft')` · 15 行
   - 说明：（无 docstring，参考片段）
   - 片段：defineStore("workflowDraft", {   state: () => ({     workflows: [],

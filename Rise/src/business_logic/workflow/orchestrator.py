@@ -2,15 +2,21 @@ from __future__ import annotations
 
 """Workflow orchestrator for multi-stage conversations."""
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from time import perf_counter
 from typing import Any, List, Mapping, MutableMapping, Optional, Sequence
 
+from business_logic.workflow.models import (
+    WorkflowExecutionContext,
+    WorkflowRunResult,
+    WorkflowStageResult,
+)
 from business_service.workflow import StageDefinition, StageRepository, WorkflowDefinition, WorkflowRepository
 from foundational_service.integrations.openai_bridge import behavior_agents_bridge
+from foundational_service.persist.workflow_summary_repository import (
+    WorkflowSummaryPersistenceError,
+    WorkflowSummaryRepository,
+)
 from project_utility.context import ContextBridge
-from project_utility.db import append_chat_summary, get_mongo_database
 from project_utility.telemetry import emit as telemetry_emit
 
 __all__ = [
@@ -23,52 +29,17 @@ __all__ = [
 FALLBACK_MODEL = "gpt-4o-mini"
 
 
-@dataclass(slots=True)
-class WorkflowStageResult:
-    stage_id: str
-    name: str
-    prompt_used: str
-    output_text: str
-    raw_response: Mapping[str, Any]
-
-
-@dataclass(slots=True)
-class WorkflowRunResult:
-    final_text: str
-    stage_results: Sequence[WorkflowStageResult]
-    telemetry: Mapping[str, Any]
-
-
-@dataclass(slots=True)
-class WorkflowExecutionContext:
-    workflow_id: str
-    request_id: str
-    user_text: str
-    history_chunks: Sequence[str]
-    policy: Mapping[str, Any]
-    core_envelope: Mapping[str, Any]
-    telemetry: MutableMapping[str, Any]
-
-    def chat_id(self) -> Optional[str]:
-        metadata = self.core_envelope.get("metadata", {})
-        chat_id = metadata.get("chat_id") or metadata.get("conversation_id")
-        if chat_id is None:
-            inbound = self.core_envelope.get("inbound", {})
-            chat_id = inbound.get("chat_id")
-        if chat_id is None:
-            return None
-        return str(chat_id)
-
-
 class WorkflowOrchestrator:
     def __init__(
         self,
         *,
         workflow_repository: WorkflowRepository,
         stage_repository: StageRepository,
+        summary_repository: WorkflowSummaryRepository,
     ) -> None:
         self._workflow_repository = workflow_repository
         self._stage_repository = stage_repository
+        self._summary_repository = summary_repository
 
     async def execute(self, context: WorkflowExecutionContext) -> WorkflowRunResult:
         workflow = self._load_workflow(context.workflow_id)
@@ -174,38 +145,23 @@ class WorkflowOrchestrator:
             "request_id": context.request_id,
         }
         try:
-            await append_chat_summary(chat_id, summary_entry, max_entries=20, ttl_seconds=3600)
-        except Exception:  # pragma: no cover - redis 失败仅记录日志
+            await self._summary_repository.append_summary(
+                chat_id=chat_id,
+                summary_entry=summary_entry,
+                request_id=context.request_id,
+                workflow_id=context.workflow_id,
+            )
+        except WorkflowSummaryPersistenceError as exc:
             telemetry_emit(
-                "workflow.chat_summary_failed",
+                "workflow.summary.failed",
                 level="warning",
                 workflow_id=context.workflow_id,
                 request_id=context.request_id,
-                payload={"chat_id": chat_id},
-            )
-        try:
-            database = get_mongo_database()
-            database["chat_history"].update_one(
-                {"chat_id": chat_id},
-                {
-                    "$push": {
-                        "entries": {
-                            "$each": [summary_entry],
-                            "$position": 0,
-                            "$slice": 20,
-                        }
-                    },
-                    "$set": {"updated_at": datetime.now(timezone.utc)},
+                payload={
+                    "chat_id": chat_id,
+                    "redis_error": bool(exc.redis_error),
+                    "mongo_error": bool(exc.mongo_error),
                 },
-                upsert=True,
-            )
-        except Exception:  # pragma: no cover - mongo失败仅记录日志
-            telemetry_emit(
-                "workflow.chat_history_failed",
-                level="warning",
-                workflow_id=context.workflow_id,
-                request_id=context.request_id,
-                payload={"chat_id": chat_id},
             )
 
     def _compose_prompt(

@@ -14,7 +14,7 @@
 
 ## Technology Stack
 - 后端：FastAPI + Telemetry/Redis/Mongo/AIO-Pika（依据 `AI_WorkSpace/index.yaml` 与 `PROJECT_STRUCTURE.md`）。
-- 前端：Vue 3 + Vite 5 + Pinia + Element Plus；store 承担 API 协调（参考 `openspec/AGENTS.md`）。
+- 前端：Vue 3 + Vite 5 + Pinia + Element Plus；store 承担 API 协调（参考工程内 AGENTS.md 指南）。
 - 现状：前后端均缺少明确的 schema/服务分层文件夹，导致 entry/service/store 直接耦合底层工具与 API。
 
 ## Search Results / External Guidance

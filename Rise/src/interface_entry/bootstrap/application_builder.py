@@ -21,11 +21,16 @@ from business_service.channel.health_store import ChannelBindingHealthStore
 from business_service.channel.repository import AsyncWorkflowChannelRepository
 from business_service.channel.service import WorkflowChannelService
 from business_service.conversation import service as conversation_service_module
+from business_service.conversation.health import ChannelHealthReporter, set_channel_health_reporter
+from business_service.pipeline.repository import AsyncMongoPipelineNodeRepository
+from business_service.pipeline.service import AsyncPipelineNodeService
 from business_service.workflow import AsyncWorkflowRepository
 from foundational_service.bootstrap.webhook import behavior_webhook_startup
 from foundational_service.contracts.registry import BehaviorContract, behavior_top_entry
+from foundational_service.integrations.telegram_client import TelegramClientError
 from project_utility.context import ContextBridge
 from project_utility.config.paths import get_log_root, get_repo_root
+from project_utility.db.redis import get_async_redis
 from project_utility.logging import (
     configure_logging,
     finalize_log_workspace,
@@ -39,6 +44,7 @@ from interface_entry.http.dependencies import (
     get_task_runtime,
     get_task_runtime_if_enabled,
     get_telegram_client,
+    prime_telegram_client,
     set_capability_registry,
     set_channel_binding_registry,
     shutdown_task_runtime,
@@ -411,6 +417,27 @@ def configure_application(app: FastAPI) -> FastAPI:
             await connection.close()
             return CapabilityState(status="available", ttl_seconds=45.0, detail=endpoint_detail)
 
+    async def _probe_telegram() -> CapabilityState:
+        if telegram_probe_mode == "skip":
+            return CapabilityState(status="available", detail="probe_skipped", ttl_seconds=180.0)
+        if not token:
+            return CapabilityState(status="unavailable", detail="TELEGRAM_BOT_TOKEN missing", ttl_seconds=60.0)
+        try:
+            client = prime_telegram_client()
+        except Exception as exc:  # pragma: no cover - defensive logging
+            return CapabilityState(status="unavailable", detail=f"client_init_failed:{exc}", ttl_seconds=45.0)
+        trace_id = f"capability:telegram:{os.getpid()}"
+        try:
+            await client.get_bot_info(token, trace_id=trace_id)
+            return CapabilityState(status="available", ttl_seconds=45.0, detail="bot_ready")
+        except TelegramClientError as exc:
+            status_value = "degraded" if exc.code in {"RATE_LIMIT", "NETWORK_FAILURE"} else "unavailable"
+            ttl_seconds = 30.0 if status_value == "unavailable" else 45.0
+            detail = f"{exc.code}:{exc.message}"
+            return CapabilityState(status=status_value, detail=detail, ttl_seconds=ttl_seconds)
+        except Exception as exc:  # pragma: no cover - network/env specific
+            return CapabilityState(status="unavailable", detail=str(exc), ttl_seconds=30.0)
+
     capability_registry.register_probe(
         CapabilityProbe(
             "mongo",
@@ -442,6 +469,17 @@ def configure_application(app: FastAPI) -> FastAPI:
             base_interval=30.0,
             max_interval=240.0,
             multiplier=1.4,
+        )
+    )
+    capability_registry.register_probe(
+        CapabilityProbe(
+            "telegram",
+            _probe_telegram,
+            hard=False,
+            retry_interval=40.0,
+            base_interval=25.0,
+            max_interval=240.0,
+            multiplier=1.5,
         )
     )
 
@@ -515,7 +553,22 @@ def configure_application(app: FastAPI) -> FastAPI:
     channel_binding_registry.attach_dispatcher(bootstrap_state.dispatcher)
     channel_binding_health_store = ChannelBindingHealthStore()
     app.state.channel_binding_health_store = channel_binding_health_store
-    conversation_service_module.set_channel_binding_health_store(channel_binding_health_store)
+    channel_health_reporter = ChannelHealthReporter(
+        store=channel_binding_health_store,
+        redis_client=get_async_redis(),
+    )
+    app.state.channel_health_reporter = channel_health_reporter
+    set_channel_health_reporter(channel_health_reporter)
+
+    settings = get_settings()
+    mongo_client = get_mongo_client()
+    pipeline_collection = mongo_client[settings.mongodb_database]["pipeline_nodes"]
+    pipeline_repository = AsyncMongoPipelineNodeRepository(pipeline_collection)
+    pipeline_service = AsyncPipelineNodeService(repository=pipeline_repository)
+    app.state.pipeline_node_service = pipeline_service
+    conversation_service_module.set_pipeline_service_factory(
+        lambda: conversation_service_module.PipelineNodeGuardService(pipeline_service=pipeline_service)
+    )
 
     channel_binding_event_publisher = get_channel_binding_event_publisher()
     app.state.channel_binding_event_publisher = channel_binding_event_publisher

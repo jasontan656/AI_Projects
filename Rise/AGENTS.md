@@ -46,3 +46,10 @@ The assistant ultimately targets Philippine government services across multiple 
 - Redis (cache/memory backend, optional but recommended for production snapshots and rate control).
 - MongoDB (stores chat summaries and operational state initialised via dedicated One-off CLI utilities).
 - Optional: ngrok or equivalent reverse proxy for local HTTPS webhook exposure; uvicorn for local server hosting.
+
+## File Decomposition & Coupling Guardrails
+- Map every new module to the layered model in `AI_WorkSpace\PROJECT_STRUCTURE.md`; document the intended layer in DevDoc before adding code.
+- Shape files by domain intent, not sheer quantity. Prefer multiple small modules grouped by behavior (serialization, telemetry, validation) instead of “misc util” buckets.
+- Payloads/prompts/policies must live under domain-specific asset folders; mixing unrelated assets in a single file is discouraged unless they share the same lifecycle.
+- Large orchestrator files (e.g., webhook dispatcher) are acceptable only when they coordinate multiple submodules; annotate the DevDoc with the rationale and list sub-dependencies to keep future refactors tractable.
+- Temporary coupling or transitional glue must be recorded in session notes and task plans with a retirement plan so downstream prompts know when to untangle it.

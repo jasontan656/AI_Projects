@@ -46,20 +46,10 @@ def _build_workflow_run_repository() -> WorkflowRunReadRepository:
 
 
 def prime_channel_binding_registry() -> ChannelBindingRegistry:
-    """Create and refresh a ChannelBindingRegistry synchronously for bootstrap."""
+    """Create a ChannelBindingRegistry; actual refresh occurs during lifespan."""
 
     service = _build_channel_binding_service()
-    registry = ChannelBindingRegistry(service=service)
-
-    async def _refresh() -> ChannelBindingRegistry:
-        await registry.refresh()
-        return registry
-
-    loop = asyncio.new_event_loop()
-    try:
-        return loop.run_until_complete(_refresh())
-    finally:
-        loop.close()
+    return ChannelBindingRegistry(service=service)
 
 
 async def start_channel_binding_listener(app: FastAPI) -> None:
@@ -186,6 +176,13 @@ async def stop_channel_binding_validator(app: FastAPI) -> None:
 @asynccontextmanager
 async def channel_binding_lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Async lifespan hook that manages registry listener, monitor, and validator."""
+
+    registry: ChannelBindingRegistry | None = getattr(app.state, "channel_binding_registry", None)
+    if registry is not None:
+        try:
+            await registry.refresh()
+        except Exception as exc:  # pragma: no cover - defensive logging
+            _log.warning("channel.binding.refresh_failed", extra={"error": str(exc)})
 
     await start_channel_binding_listener(app)
     await start_channel_binding_monitor(app)

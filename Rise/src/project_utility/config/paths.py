@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-_REPO_MARKERS = ("src", "config", "openspec")
+_REPO_MARKERS = ("src", "config", "AI_WorkSpace")
 
 
 def get_repo_root() -> Path:

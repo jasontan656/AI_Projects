@@ -10,13 +10,21 @@
           type="button"
           class="prompt-editor__primary"
           @click="handleSubmit"
-          :disabled="isSaving"
+          :disabled="isSaving || isOffline"
         >
           {{ isSaving ? "保存中…" : isEditing ? "更新提示词" : "保存提示词" }}
         </button>
         <span class="prompt-editor__status" :class="{ 'prompt-editor__status--visible': toastVisible }">
           {{ toastMessage }}
         </span>
+      </div>
+      <div
+        v-if="isOffline"
+        class="prompt-editor__offline"
+        data-test="offline-banner"
+      >
+        <strong>{{ offlineCopy.primary }}</strong>
+        <span>{{ offlineCopy.secondary }}</span>
       </div>
     </header>
 
@@ -66,7 +74,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
 
 import PromptCodeEditor from "../components/PromptCodeEditor.vue";
 import { usePromptDraftStore } from "../stores/promptDraft";
@@ -99,11 +107,22 @@ const baseline = reactive({ name: "", markdown: "" });
 
 const toastMessage = ref("");
 const toastVisible = ref(false);
+const offlineCopy = {
+  primary: "离线模式 · Offline mode",
+  secondary: "请检查网络连接。Walang koneksyon, pakisuri ang iyong internet.",
+};
 
 const promptDraftStore = usePromptDraftStore();
 const selectedPrompt = computed(() => promptDraftStore.selectedPrompt);
 const isEditing = computed(() => Boolean(selectedPrompt.value));
 const isFullLayout = computed(() => props.layout === "full");
+const resolveIsOffline = () => {
+  if (typeof navigator === "undefined" || typeof navigator.onLine === "undefined") {
+    return false;
+  }
+  return navigator.onLine === false;
+};
+const isOffline = ref(resolveIsOffline());
 
 const syncBaseline = () => {
   baseline.name = name.value;
@@ -164,6 +183,11 @@ const handleSubmit = async () => {
   name.value = trimmedName;
   markdownContent.value = trimmedMarkdown;
 
+  if (isOffline.value) {
+    showToast("处于离线模式，无法保存。");
+    return;
+  }
+
   try {
     let targetPromptId = selectedPrompt.value?.id ?? null;
     isSaving.value = true;
@@ -186,6 +210,12 @@ const handleSubmit = async () => {
     applyPrompt(promptDraftStore.selectedPrompt || null);
     emit("saved", { promptId: targetPromptId || promptDraftStore.selectedPromptId || null });
     showToast(selectedPrompt.value ? "更新成功" : "保存成功");
+    recordTelemetry("prompt_editor.save", {
+      action: selectedPrompt.value ? "update" : "create",
+      promptId: targetPromptId || promptDraftStore.selectedPromptId || null,
+      offline: isOffline.value,
+      language: editorLanguage.value,
+    });
   } catch (error) {
     const message = error.message || "保存失败";
     if (message.includes("名称")) {
@@ -206,11 +236,46 @@ const showToast = (message) => {
   }, 1800);
 };
 
+const telemetryBucketKey = "__UP_TELEMETRY__";
+const recordTelemetry = (event, payload) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  const bucket = Array.isArray(window[telemetryBucketKey]) ? window[telemetryBucketKey] : [];
+  bucket.push({
+    event,
+    payload,
+    timestamp: Date.now(),
+  });
+  window[telemetryBucketKey] = bucket;
+};
+
+const handleOnline = () => {
+  isOffline.value = false;
+};
+
+const handleOffline = () => {
+  isOffline.value = true;
+};
+
 onMounted(async () => {
+  if (typeof window !== "undefined") {
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+  }
+  isOffline.value = resolveIsOffline();
   await fetchPrompts();
   if (!selectedPrompt.value && promptDraftStore.prompts.length) {
     promptDraftStore.setSelectedPrompt(promptDraftStore.prompts[0].id);
   }
+});
+
+onBeforeUnmount(() => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.removeEventListener("online", handleOnline);
+  window.removeEventListener("offline", handleOffline);
 });
 
 watch(
@@ -285,6 +350,17 @@ defineExpose({
   display: flex;
   align-items: center;
   gap: var(--space-2);
+}
+.prompt-editor__offline {
+  background: var(--color-alert-warning-bg, #fff4e5);
+  border: 1px solid var(--color-alert-warning-border, #ffd8a8);
+  color: var(--color-alert-warning-text, #d9480f);
+  border-radius: var(--radius-xs);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .prompt-editor__primary {

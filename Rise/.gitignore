@@ -35,3 +35,26 @@ test_data/
 
 # Agent/runtime state
 openai_agents/agent_contract/runtime_state/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node/Yarn
+node_modules/
+*.log
+*.pid
+
+# Local runtime/output
+VAR_OUT/
+var/
+**/.mongodb/
+**/.mongosh/
+*.sqlite3
+*.db
+*.pyc
+
+# OS/Editor
+.DS_Store
+*.code-workspace

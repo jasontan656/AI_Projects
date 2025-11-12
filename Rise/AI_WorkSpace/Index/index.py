@@ -115,12 +115,6 @@ class StorageRecord:
     context: str
 
 
-@dataclass(frozen=True)
-class TestRecord:
-    path: str
-    related_module: str
-    note: str
-
 
 PROJECTS: Dict[str, ProjectConfig] = {
     "rise": ProjectConfig(
@@ -182,7 +176,6 @@ API_INDEX_PATH = WORKSPACE_DIR / "api_index.md"
 EVENT_INDEX_PATH = WORKSPACE_DIR / "events_index.md"
 CONFIG_INDEX_PATH = WORKSPACE_DIR / "config_index.md"
 STORAGE_INDEX_PATH = WORKSPACE_DIR / "storage_index.md"
-TEST_INDEX_PATH = WORKSPACE_DIR / "tests_index.md"
 
 EXPORT_FUNCTION_RE = re.compile(r"export\s+(?:async\s+)?function\s+(\w+)\s*\(([^)]*)\)", re.MULTILINE)
 EXPORT_CONST_FUNC_RE = re.compile(r"export\s+const\s+(\w+)\s*=\s*(?:async\s*)?\(([^)]*)\s*=>", re.MULTILINE)
@@ -222,14 +215,12 @@ def main() -> None:
         event_records.extend(collect_event_records(key, config))
         storage_records.extend(collect_storage_records(key, config))
     config_records.extend(collect_config_records())
-    test_records = collect_test_records()
     write_yaml_index(index_data)
     write_markdown_indexes(symbol_buckets, generated_at)
     write_api_index(api_records, generated_at)
     write_event_index(event_records, generated_at)
     write_config_index(config_records, generated_at)
     write_storage_index(storage_records, generated_at)
-    write_test_index(test_records, generated_at)
 
 
 def build_project_index(config: ProjectConfig) -> Dict[str, object]:
@@ -352,23 +343,6 @@ def write_storage_index(records: List[StorageRecord], generated_at: str) -> None
                 )
             lines.append("")
     STORAGE_INDEX_PATH.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
-
-
-def write_test_index(records: List[TestRecord], generated_at: str) -> None:
-    lines = [
-        "# 测试覆盖索引",
-        "",
-        f"_生成时间：{generated_at}_",
-        "",
-    ]
-    if not records:
-        lines.append("（暂无测试记录）\n")
-    else:
-        for record in records:
-            lines.append(
-                f"- `{record.path}` · 关联：{record.related_module or '未知'} · {record.note}"
-            )
-    TEST_INDEX_PATH.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
 def collect_meta(config: ProjectConfig) -> Dict[str, object]:
@@ -786,32 +760,6 @@ def collect_storage_records(project_key: str, config: ProjectConfig) -> List[Sto
                         context="包含 redis 关键字",
                     )
                 )
-    return records
-
-
-def collect_test_records() -> List[TestRecord]:
-    records: List[TestRecord] = []
-    candidates = [
-        (RISE_ROOT / "tests", "Rise"),
-        (UP_ROOT / "tests", "Up"),
-    ]
-    for root, label in candidates:
-        if not root.exists():
-            continue
-        for file_path in root.rglob("*"):
-            if not file_path.is_file():
-                continue
-            if file_path.suffix not in {".py", ".js", ".ts"} and not file_path.name.endswith(".spec.js"):
-                continue
-            text = file_path.read_text(encoding="utf-8", errors="ignore")
-            related = infer_related_module(text)
-            records.append(
-                TestRecord(
-                    path=f"{label}:{rel_posix(file_path, root.parent)}",
-                    related_module=related,
-                    note="包含断言" if "assert" in text else "（可能为辅助脚本）",
-                )
-            )
     return records
 
 

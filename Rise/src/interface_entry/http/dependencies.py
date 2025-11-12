@@ -44,6 +44,7 @@ from foundational_service.persist.worker import (
     WorkflowTaskProcessor,
 )
 from foundational_service.persist.rabbit_bridge import RabbitConfig, RabbitPublisher
+from foundational_service.persist.workflow_summary_repository import WorkflowSummaryRepository
 from project_utility.db.mongo import get_mongo_database as get_sync_mongo_database
 from project_utility.db.redis import get_async_redis
 from interface_entry.runtime.capabilities import CapabilityRegistry, service_unavailable_error
@@ -61,6 +62,8 @@ class AppSettings(BaseSettings):
     mongodb_database: str = Field(..., alias="MONGODB_DATABASE")
     redis_url: Optional[str] = Field(default=None, alias="REDIS_URL")
     app_env: str = Field(default="development", alias="APP_ENV")
+    workflow_summary_ttl_seconds: Optional[int] = Field(default=3600, alias="WORKFLOW_SUMMARY_TTL_SECONDS")
+    workflow_summary_max_entries: int = Field(default=20, alias="WORKFLOW_SUMMARY_MAX_ENTRIES")
 
 
 @lru_cache(maxsize=1)
@@ -231,6 +234,7 @@ _channel_rate_limiter: Optional[ChannelRateLimiter] = None
 _channel_binding_test_runner: Optional[ChannelBindingTestRunner] = None
 _telegram_client: Optional[TelegramClient] = None
 _channel_binding_registry: Optional[ChannelBindingRegistry] = None
+_workflow_summary_repository: Optional[WorkflowSummaryRepository] = None
 
 
 def set_capability_registry(registry: CapabilityRegistry) -> None:
@@ -265,6 +269,21 @@ def _get_rabbit_publisher() -> Optional[RabbitPublisher]:
         return None
     _rabbit_publisher = RabbitPublisher(config)
     return _rabbit_publisher
+
+
+def get_workflow_summary_repository() -> WorkflowSummaryRepository:
+    global _workflow_summary_repository
+    if _workflow_summary_repository is None:
+        settings = get_settings()
+        redis_client = get_async_redis()
+        database = get_sync_mongo_database()
+        _workflow_summary_repository = WorkflowSummaryRepository(
+            redis_client=redis_client,
+            mongo_database=database,
+            max_entries=settings.workflow_summary_max_entries,
+            ttl_seconds=settings.workflow_summary_ttl_seconds,
+        )
+    return _workflow_summary_repository
 
 
 class DisabledTaskSubmitter:
@@ -309,7 +328,12 @@ def get_task_runtime() -> TaskRuntime | DisabledTaskRuntime:
         sync_database = get_sync_mongo_database()
         workflow_repo = WorkflowRepository(sync_database["workflows"])
         stage_repo = StageRepository(sync_database["workflow_stages"])
-        processor = WorkflowTaskProcessor(workflow_repository=workflow_repo, stage_repository=stage_repo)
+        summary_repo = get_workflow_summary_repository()
+        processor = WorkflowTaskProcessor(
+            workflow_repository=workflow_repo,
+            stage_repository=stage_repo,
+            summary_repository=summary_repo,
+        )
         storage = WorkflowRunStorage(sync_database)
         queue = RedisTaskQueue(redis_client)
         _task_runtime = TaskRuntime(
@@ -348,6 +372,25 @@ def get_task_results() -> TaskResultBroker:
     return runtime.results
 
 
+def _resolve_telegram_client(*, require_capability: bool) -> TelegramClient:
+    global _telegram_client
+    if require_capability:
+        _require_capability("telegram", hard=True)
+    if _telegram_client is None:
+        _telegram_client = TelegramClient()
+    return _telegram_client
+
+
+def get_telegram_client() -> TelegramClient:
+    return _resolve_telegram_client(require_capability=True)
+
+
+def prime_telegram_client() -> TelegramClient:
+    """Instantiate a Telegram client without capability enforcement."""
+
+    return _resolve_telegram_client(require_capability=False)
+
+
 def get_channel_rate_limiter() -> ChannelRateLimiter:
     global _channel_rate_limiter
     if _channel_rate_limiter is None:
@@ -369,13 +412,6 @@ async def get_channel_binding_test_runner(
             run_repository=run_repository,
         )
     return _channel_binding_test_runner
-
-
-def get_telegram_client() -> TelegramClient:
-    global _telegram_client
-    if _telegram_client is None:
-        _telegram_client = TelegramClient()
-    return _telegram_client
 
 
 async def get_channel_binding_registry(
@@ -436,6 +472,8 @@ def clear_cached_dependencies() -> None:
     _channel_binding_test_runner = None
     global _channel_binding_registry
     _channel_binding_registry = None
+    global _workflow_summary_repository
+    _workflow_summary_repository = None
 
 
 @asynccontextmanager
@@ -452,6 +490,13 @@ async def application_lifespan() -> AsyncIterator[None]:
     # Prime settings/client early so startup failures happen before accepting traffic.
     _ = get_settings()
     _ = get_mongo_client()
+    try:
+        prime_telegram_client()
+    except Exception as exc:  # pragma: no cover - best effort logging
+        logging.getLogger("interface_entry.dependency").warning(
+            "telegram.client.prime_failed",
+            extra={"error": str(exc)},
+        )
     runtime: Optional[TaskRuntime] = None
     runtime_enabled = _capabilities is None or (
         _capabilities.is_available("redis") and _capabilities.is_available("rabbitmq")

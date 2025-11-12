@@ -13,6 +13,7 @@ from business_logic.workflow import WorkflowExecutionContext, WorkflowOrchestrat
 from business_service.workflow import StageRepository, WorkflowRepository
 from project_utility.context import ContextBridge
 from project_utility.telemetry import emit as telemetry_emit
+from foundational_service.persist.workflow_summary_repository import WorkflowSummaryRepository
 
 from .rabbit_bridge import RabbitPublisher
 from .redis_queue import RedisTaskQueue, StreamTask
@@ -106,11 +107,13 @@ class WorkflowTaskProcessor:
         *,
         workflow_repository: WorkflowRepository,
         stage_repository: StageRepository,
+        summary_repository: WorkflowSummaryRepository,
         backoff_curve: Optional[Sequence[float]] = None,
     ) -> None:
         self._workflow_repository = workflow_repository
         self._stage_repository = stage_repository
         self._orchestrator: Optional[WorkflowOrchestrator] = None
+        self._summary_repository = summary_repository
         self._backoff_curve = backoff_curve or (15.0, 30.0, 60.0, 120.0, 180.0)
 
     async def process(self, envelope: TaskEnvelope) -> Mapping[str, Any]:
@@ -120,14 +123,17 @@ class WorkflowTaskProcessor:
         trace_id = envelope.context.get("traceId") or envelope.task_id
         ContextBridge.set_request_id(trace_id)
         try:
+            core_envelope = dict(envelope.payload.get("coreEnvelope") or {})
             context = WorkflowExecutionContext(
                 workflow_id=workflow_id,
                 request_id=envelope.context.get("requestId", envelope.task_id),
                 user_text=str(envelope.payload.get("userText", "")),
                 history_chunks=tuple(envelope.payload.get("historyChunks") or ()),
                 policy=dict(envelope.payload.get("policy") or {}),
-                core_envelope=dict(envelope.payload.get("coreEnvelope") or {}),
+                core_envelope=core_envelope,
                 telemetry=self._build_telemetry(envelope),
+                metadata=core_envelope.get("metadata"),
+                inbound=core_envelope.get("inbound"),
             )
             run_result = await self._get_orchestrator().execute(context)
         except ServerSelectionTimeoutError as exc:
@@ -153,6 +159,7 @@ class WorkflowTaskProcessor:
             self._orchestrator = WorkflowOrchestrator(
                 workflow_repository=self._workflow_repository,
                 stage_repository=self._stage_repository,
+                summary_repository=self._summary_repository,
             )
         return self._orchestrator
 
