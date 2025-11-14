@@ -1,5 +1,15 @@
 export const WORKFLOW_STATUSES = ["draft", "published"];
 
+const COVERAGE_DEFAULT = {
+  status: "unknown",
+  updatedAt: null,
+  scenarios: [],
+  mode: "webhook",
+  lastRunId: null,
+  lastError: null,
+  actorId: null,
+};
+
 const WORKFLOW_DEFAULT = {
   id: null,
   name: "",
@@ -7,9 +17,10 @@ const WORKFLOW_DEFAULT = {
   version: 0,
   nodeSequence: [],
   promptBindings: [],
-  strategy: { retryLimit: 0, timeoutMs: 0 },
+  strategy: { retryLimit: 2, timeoutMs: 0 },
   metadata: { description: "", tags: [] },
   history: [],
+  testCoverage: COVERAGE_DEFAULT,
 };
 
 const asArray = (value) => (Array.isArray(value) ? value : []);
@@ -28,6 +39,7 @@ const normalizePromptBindings = (bindings, nodeSequence) => {
 };
 
 export function createWorkflowDraft(overrides = {}) {
+  const normalizedNodeSequence = normalizeNodeSequence(overrides.nodeSequence);
   return {
     ...WORKFLOW_DEFAULT,
     ...overrides,
@@ -39,12 +51,13 @@ export function createWorkflowDraft(overrides = {}) {
       ...WORKFLOW_DEFAULT.metadata,
       ...(overrides.metadata || {}),
     },
-    nodeSequence: normalizeNodeSequence(overrides.nodeSequence),
+    nodeSequence: normalizedNodeSequence,
     promptBindings: normalizePromptBindings(
       overrides.promptBindings,
-      normalizeNodeSequence(overrides.nodeSequence)
+      normalizedNodeSequence
     ),
     history: asArray(overrides.history),
+    testCoverage: normalizeCoverage(overrides.testCoverage),
   };
 }
 
@@ -89,5 +102,17 @@ export function buildWorkflowPayload(payload = {}) {
     promptBindings,
     strategy,
     metadata,
+  };
+}
+
+function normalizeCoverage(coverage = null) {
+  if (!coverage) {
+    return { ...COVERAGE_DEFAULT };
+  }
+  return {
+    ...COVERAGE_DEFAULT,
+    ...coverage,
+    scenarios: asArray(coverage.scenarios),
+    updatedAt: coverage.updatedAt || null,
   };
 }

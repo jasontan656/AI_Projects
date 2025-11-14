@@ -1,0 +1,2 @@
+[mcp__chrome-devtools__take_snapshot http://localhost:5173/pipelines]
+Captured Up Ops Workspace menu + nodes panel 2025-11-14T01:56+08

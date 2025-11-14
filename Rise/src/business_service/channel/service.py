@@ -14,6 +14,7 @@ from business_service.channel.models import (
     ChannelBindingOption,
     WorkflowChannelPolicy,
 )
+from business_service.channel.policy import ChannelMode, evaluate_channel_mode
 from business_service.channel.repository import AsyncWorkflowChannelRepository
 from business_service.workflow import AsyncWorkflowRepository, WorkflowDefinition
 from project_utility.secrets import get_secret_box, mask_secret
@@ -85,10 +86,18 @@ class WorkflowChannelService:
             raise KeyError(workflow_id)
         policy = await self._repository.get(workflow_id, channel)
         is_enabled = self._is_channel_enabled(workflow, channel)
+        kill_switch = self._is_kill_switch_active(workflow, channel)
         status = self._derive_status(policy)
         if not is_enabled and policy is None:
             status = "unbound"
-        return self._build_binding_option(workflow, policy, channel, is_enabled, status)
+        return self._build_binding_option(
+            workflow,
+            policy,
+            channel,
+            is_enabled,
+            status,
+            kill_switch=kill_switch,
+        )
 
     async def record_health_snapshot(
         self,
@@ -127,10 +136,24 @@ class WorkflowChannelService:
         if not token and existing is None:
             raise ChannelValidationError("BOT_TOKEN_REQUIRED", "botToken is required for new channel policy")
         encrypted, mask, secret_version = await self._resolve_token(existing, token)
+        use_polling = bool(
+            payload.get(
+                "usePolling",
+                existing.mode == ChannelMode.POLLING if existing else False,
+            )
+        )
+        decision = evaluate_channel_mode(enabled=True, use_polling=use_polling)
         raw_webhook = payload.get("webhookUrl")
-        if not raw_webhook and existing is not None:
-            raw_webhook = existing.webhook_url
-        webhook_url = self._validate_webhook(raw_webhook or "")
+        if use_polling:
+            if raw_webhook:
+                raise ChannelValidationError("CHANNEL_MODE_CONFLICT", "webhookUrl must be omitted when usePolling=true")
+            webhook_url = ""
+        else:
+            if not raw_webhook and existing is not None and existing.mode is ChannelMode.WEBHOOK:
+                raw_webhook = existing.webhook_url
+            if not raw_webhook:
+                raise ChannelValidationError("WEBHOOK_REQUIRED", "webhookUrl is required when usePolling=false")
+            webhook_url = self._validate_webhook(raw_webhook or "")
         wait_for_result = bool(payload.get("waitForResult", existing.wait_for_result if existing else True))
         workflow_missing_message = str(
             payload.get("workflowMissingMessage")
@@ -156,6 +179,7 @@ class WorkflowChannelService:
             metadata=metadata,
             actor=actor,
             secret_version=secret_version,
+            mode=decision.mode,
         )
         return await self._repository.upsert(policy)
 

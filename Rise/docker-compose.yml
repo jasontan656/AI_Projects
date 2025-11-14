@@ -32,7 +32,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mongosh --quiet -u root -p changeme --authenticationDatabase admin --eval \"db.adminCommand({ ping: 1 })\" || exit 1",
+          "mongosh --quiet --port ${MONGODB_PORT:-27017} -u root -p changeme --authenticationDatabase admin --eval \"db.adminCommand({ ping: 1 })\" || exit 1",
         ]
       interval: 10s
       timeout: 10s
@@ -42,7 +42,7 @@ services:
       - rise-stack
 
   redis:
-    image: redis:7.2.4-alpine3.20
+    image: redis:7.2.4-alpine
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
     volumes:

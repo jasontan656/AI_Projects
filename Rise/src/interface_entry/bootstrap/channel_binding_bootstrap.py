@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager, suppress
 import logging
 from typing import AsyncIterator, Dict
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from business_service.channel.events import (
     CHANNEL_BINDING_HEALTH_TOPIC,
@@ -110,7 +110,14 @@ async def start_channel_binding_monitor(app: FastAPI) -> None:
     if registry is None:
         return
     service = _build_channel_binding_service()
-    telegram_client = get_telegram_client()
+    try:
+        telegram_client = get_telegram_client()
+    except HTTPException as exc:
+        _log.warning(
+            "channel.binding.monitor_disabled",
+            extra={"reason": exc.detail or "capability_unavailable"},
+        )
+        return
     publisher = getattr(app.state, "channel_binding_event_publisher", None)
     health_store = getattr(app.state, "channel_binding_health_store", None)
     run_repository = _build_workflow_run_repository()

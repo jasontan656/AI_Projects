@@ -1,0 +1,37 @@
+{
+  "generated_at": "2025-11-13T13:59:28.217457+00:00",
+  "repo_root": "D:\\AI_Projects\\Rise",
+  "scanned_files": 163,
+  "ci_mode": true,
+  "layer_order": {
+    "project_utility": 0,
+    "foundational_service": 1,
+    "business_service": 2,
+    "business_logic": 3,
+    "interface_entry": 4,
+    "one_off": 5
+  },
+  "allowlist_path": "D:\\AI_Projects\\Rise\\AI_WorkSpace\\Scripts\\session_00001_compliance-audit\\Step-01_import_guard_allowlist.json",
+  "violations": {
+    "new": [],
+    "allowlisted": [
+      {
+        "source": "src/business_service/conversation/primitives.py",
+        "lineno": 9,
+        "imported": "interface_entry.telegram.adapters",
+        "module_root": "interface_entry",
+        "layer_from": "business_service",
+        "layer_to": "interface_entry"
+      },
+      {
+        "source": "src/business_service/conversation/service.py",
+        "lineno": 16,
+        "imported": "business_logic.workflow",
+        "module_root": "business_logic",
+        "layer_from": "business_service",
+        "layer_to": "business_logic"
+      }
+    ]
+  },
+  "errors": []
+}

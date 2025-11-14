@@ -1,0 +1,1 @@
+控制台：GET /favicon.ico 404，/healthz 200；favicon 缺失为预期未配置，记录于 2025-11-14 09:12 GMT+8。

@@ -1,0 +1,26 @@
+{
+  "env": "staging",
+  "workflow": "2427173f-8aca-4c31-90c5-eff157395b27",
+  "channel": "telegram",
+  "baseUrl": "http://localhost:8000",
+  "actorId": "ops-cli",
+  "completedAt": "2025-11-14T11:38:25",
+  "overallStatus": "ok",
+  "steps": [
+    {
+      "name": "binding-refresh",
+      "status": "ok",
+      "durationSeconds": 0.71
+    },
+    {
+      "name": "telemetry-probe",
+      "status": "ok",
+      "durationSeconds": 3.45
+    },
+    {
+      "name": "workspace-nav",
+      "status": "ok",
+      "durationSeconds": 0.19
+    }
+  ]
+}

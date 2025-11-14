@@ -1,0 +1,1 @@
+关键网络请求：GET /pipelines (200)、静态组件 200 共 100+ 条，Chrome DevTools MCP 报告保存在 Step-03_up_snapshot.json，校验时间 2025-11-14 09:10 GMT+8。

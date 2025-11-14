@@ -1,18 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import os
-import random
-import shutil
-from contextlib import suppress
-from datetime import datetime, timezone
-from time import perf_counter
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, Optional
 from urllib.parse import urlparse, urlunparse
 
-from fastapi import FastAPI, HTTPException, Response, status
+from fastapi import FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
 
 from business_logic import KnowledgeSnapshotOrchestrator
@@ -25,18 +19,24 @@ from business_service.conversation.health import ChannelHealthReporter, set_chan
 from business_service.pipeline.repository import AsyncMongoPipelineNodeRepository
 from business_service.pipeline.service import AsyncPipelineNodeService
 from business_service.workflow import AsyncWorkflowRepository
-from foundational_service.bootstrap.webhook import behavior_webhook_startup
 from foundational_service.contracts.registry import BehaviorContract, behavior_top_entry
-from foundational_service.integrations.telegram_client import TelegramClientError
+from foundational_service.integrations.memory_loader import configure_knowledge_snapshot
 from project_utility.context import ContextBridge
-from project_utility.config.paths import get_log_root, get_repo_root
+from project_utility.config.paths import get_repo_root
 from project_utility.db.redis import get_async_redis
-from project_utility.logging import (
-    configure_logging,
-    finalize_log_workspace,
-    initialize_log_workspace,
-)
 from interface_entry.config.manifest_loader import load_doc_context, load_top_entry_manifest
+from interface_entry.bootstrap.capability_service import CapabilityService, CapabilityServiceConfig
+from interface_entry.bootstrap.channel_binding_bootstrap import (
+    channel_binding_lifespan,
+    prime_channel_binding_registry,
+)
+from interface_entry.bootstrap.health_routes import register_health_routes
+from interface_entry.bootstrap.runtime_lifespan import configure_runtime_lifespan
+from interface_entry.bootstrap.startup_housekeeping import (
+    apply_host_override_env,
+    prepare_logging_environment,
+    require_env,
+)
 from interface_entry.http.dependencies import (
     application_lifespan,
     get_mongo_client,
@@ -44,8 +44,6 @@ from interface_entry.http.dependencies import (
     get_task_runtime,
     get_task_runtime_if_enabled,
     get_telegram_client,
-    prime_telegram_client,
-    set_capability_registry,
     set_channel_binding_registry,
     shutdown_task_runtime,
 )
@@ -66,12 +64,10 @@ from interface_entry.telegram.runtime import bootstrap_aiogram_service, get_boot
 from interface_entry.telegram.routes import register_routes
 from foundational_service.persist.controllers import build_task_admin_router
 from foundational_service.persist.worker import TaskRuntime
-from foundational_service.telemetry.bus import TelemetryConsoleSubscriber, build_console_subscriber
+from foundational_service.telemetry.console_view import TelemetryConsoleSubscriber, build_console_subscriber
 from foundational_service.messaging.channel_binding_event_publisher import get_channel_binding_event_publisher
 from foundational_service.telemetry.config import load_telemetry_config
-from interface_entry.runtime.capabilities import CapabilityProbe, CapabilityRegistry, CapabilityState
 from interface_entry.runtime.channel_binding_event_replayer import ChannelBindingEventReplayer
-from interface_entry.runtime.public_endpoint import PublicEndpointProbe
 from interface_entry.runtime.supervisors import RuntimeSupervisor
 
 from dotenv import load_dotenv  # type: ignore[import]
@@ -84,8 +80,7 @@ load_dotenv(dotenv_path=str(REPO_ROOT / ".env"))
 
 log = logging.getLogger("interface_entry.app")
 
-REPO_ROOT = get_repo_root()
-load_dotenv(dotenv_path=str(REPO_ROOT / ".env"))
+configure_knowledge_snapshot(KnowledgeSnapshotService)
 
 WEBHOOK_PATH = "/telegram/webhook"
 TOP_ENTRY_MANIFEST = load_top_entry_manifest()
@@ -100,202 +95,8 @@ class TelegramWebhookUnavailableError(RuntimeError):
     """Raised when Telegram webhook cannot be reached during startup."""
 
 
-def _sanitize_endpoint(raw: str) -> str:
-    if "@" in raw:
-        return raw.split("@", 1)[1]
-    return raw
-
-
-def _format_endpoint_detail(uri: Optional[str]) -> str:
-    return f"endpoint={_sanitize_endpoint(uri or 'unknown')}"
-
-
-def _override_uri_host(uri: str, host: str) -> str:
-    parsed = urlparse(uri)
-    hostname = parsed.hostname
-    if not hostname:
-        return uri
-    # Avoid touching multi-host connection strings.
-    if "," in parsed.netloc:
-        return uri
-    auth = ""
-    if parsed.username:
-        auth = parsed.username
-        if parsed.password:
-            auth += f":{parsed.password}"
-        auth += "@"
-    port_segment = f":{parsed.port}" if parsed.port else ""
-    host_literal = host
-    if ":" in host_literal and not host_literal.startswith("["):
-        host_literal = f"[{host_literal}]"
-    new_netloc = f"{auth}{host_literal}{port_segment}"
-    return urlunparse(parsed._replace(netloc=new_netloc))
-
-
-def _apply_host_override_env(env_key: str, override_host: Optional[str], *, service: str) -> None:
-    if not override_host:
-        return
-    uri = os.getenv(env_key)
-    if not uri:
-        return
-    try:
-        updated = _override_uri_host(uri, override_host)
-    except Exception as exc:  # pragma: no cover - defensive guard
-        logging.getLogger("interface_entry.app").warning(
-            "startup.service_host_override_failed",
-            extra={"service": service, "error": str(exc)},
-        )
-        return
-    if updated != uri:
-        os.environ[env_key] = updated
-        logging.getLogger("interface_entry.app").info(
-            "startup.service_host_override",
-            extra={"service": service, "host": override_host},
-        )
-
-
-from interface_entry.bootstrap.channel_binding_bootstrap import (
-    channel_binding_lifespan,
-    prime_channel_binding_registry,
-)
-from interface_entry.bootstrap.runtime_lifespan import configure_runtime_lifespan
-
-def release_logging_handlers() -> None:
-    logging.shutdown()
-    logger_names = [None, *list(logging.root.manager.loggerDict.keys())]
-    for name in logger_names:
-        logger = logging.getLogger(name) if name else logging.getLogger()
-        for handler in list(logger.handlers):
-            with suppress(Exception):
-                handler.flush()
-            with suppress(Exception):
-                handler.close()
-            logger.removeHandler(handler)
-
-
-def perform_clean_startup() -> None:
-    release_logging_handlers()
-    log_root = initialize_log_workspace()
-    configure_logging()
-    log.info("startup.clean.begin")
-    issues: List[str] = []
-
-    log.info(
-        "startup.clean.segment.begin",
-        extra={"segment": "logs", "path": str(log_root)},
-    )
-    log.info(
-        "startup.clean.segment.ready",
-        extra={"segment": "logs", "path": str(log_root), "mode": "workspace"},
-    )
-
-    directories = {
-        "runtime_state": REPO_ROOT / "openai_agents" / "agent_contract" / "runtime_state",
-    }
-    for label, target in directories.items():
-        try:
-            log.info(
-                "startup.clean.segment.begin",
-                extra={"segment": label, "path": str(target)},
-            )
-            if target.exists():
-                log.info(
-                    "startup.clean.segment.removing",
-                    extra={"segment": label, "path": str(target)},
-                )
-                shutil.rmtree(target)
-                log.info(
-                    "startup.clean.segment.removed",
-                    extra={"segment": label, "path": str(target)},
-                )
-            target.mkdir(parents=True, exist_ok=True)
-            log.info(
-                "startup.clean.segment.ready",
-                extra={"segment": label, "path": str(target)},
-            )
-        except Exception as exc:  # pragma: no cover - surface filesystem failures immediately
-            issues.append(f"{label}: {exc}")
-            log.error(
-                "startup.clean.segment_failed",
-                extra={"segment": label, "error": repr(exc)},
-            )
-
-    def _execute(label: str, func: Callable[[], None]) -> None:
-        try:
-            log.info("startup.clean.segment.begin", extra={"segment": label})
-            func()
-            log.info("startup.clean.segment.ready", extra={"segment": label})
-        except Exception as exc:  # pragma: no cover - propagate external service errors
-            issues.append(f"{label}: {exc}")
-            log.error(
-                "startup.clean.segment_failed",
-                extra={"segment": label, "error": repr(exc)},
-            )
-
-    _execute("redis", _purge_redis_store)
-    _execute("mongodb", _purge_mongo_store)
-
-    final_status = "ok" if not issues else "failed"
-    log.info("startup.clean.status", extra={"status": final_status, "issues": issues})
-
-    if issues:
-        raise RuntimeError("startup_clean_failed: " + "; ".join(issues))
-
-    log.info("startup.clean.complete")
-
-
-def _purge_redis_store() -> None:
-    redis_url = os.getenv("REDIS_URL")
-    if not redis_url:
-        raise RuntimeError("REDIS_URL not configured")
-
-    from redis import Redis  # type: ignore[import]
-
-    redis_client = Redis.from_url(redis_url)
-    redis_client.flushall()
-    log.info("startup.clean.redis", extra={"endpoint": _sanitize_endpoint(redis_url)})
-
-
-def _purge_mongo_store() -> None:
-    mongo_uri = os.getenv("MONGODB_URI")
-    mongo_db = os.getenv("MONGODB_DATABASE")
-    if not mongo_uri or not mongo_db:
-        missing = "MONGODB_URI" if not mongo_uri else "MONGODB_DATABASE"
-        raise RuntimeError(f"{missing} not configured")
-
-    from pymongo import MongoClient  # type: ignore[import]
-
-    client = MongoClient(mongo_uri)
-    try:
-        db = client[mongo_db]
-        collections: List[str] = db.list_collection_names()
-        for collection_name in collections:
-            db[collection_name].delete_many({})
-        log.info(
-            "startup.clean.mongodb",
-            extra={
-                "endpoint": _sanitize_endpoint(mongo_uri),
-                "database": mongo_db,
-                "collections": collections,
-            },
-        )
-    finally:
-        with suppress(Exception):
-            client.close()
-
-
-def _env(name: str, required: bool = True, default: Optional[str] = None) -> str:
-    value = os.getenv(name, default)
-    if required and not value:
-        if name == "TELEGRAM_BOT_TOKEN":
-            raise RuntimeError("bootstrap_refused_missing_token")
-        raise RuntimeError(f"missing required environment variable: {name}")
-    return value or ""
-
-
 def configure_application(app: FastAPI) -> FastAPI:
-    initialize_log_workspace()
-    configure_logging()
+    prepare_logging_environment()
     telemetry_config = load_telemetry_config()
     subscriber = build_console_subscriber(telemetry_config)
     app.add_exception_handler(HTTPException, http_exception_handler)
@@ -309,21 +110,18 @@ def configure_application(app: FastAPI) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    capability_registry = CapabilityRegistry(logger=log)
-    app.state.capabilities = capability_registry
-    set_capability_registry(capability_registry)
     app.state.telemetry_console_subscriber = subscriber
     global _telemetry_console_subscriber
     _telemetry_console_subscriber = subscriber
 
     docker_bridge_host = os.getenv("DOCKER_HOST_BRIDGE")
-    _apply_host_override_env("MONGODB_URI", os.getenv("MONGODB_HOST_OVERRIDE") or docker_bridge_host, service="mongo")
-    _apply_host_override_env("REDIS_URL", os.getenv("REDIS_HOST_OVERRIDE") or docker_bridge_host, service="redis")
-    _apply_host_override_env("RABBITMQ_URL", os.getenv("RABBITMQ_HOST_OVERRIDE") or docker_bridge_host, service="rabbitmq")
+    apply_host_override_env("MONGODB_URI", os.getenv("MONGODB_HOST_OVERRIDE") or docker_bridge_host, service="mongo")
+    apply_host_override_env("REDIS_URL", os.getenv("REDIS_HOST_OVERRIDE") or docker_bridge_host, service="redis")
+    apply_host_override_env("RABBITMQ_URL", os.getenv("RABBITMQ_HOST_OVERRIDE") or docker_bridge_host, service="rabbitmq")
 
-    token = _env("TELEGRAM_BOT_TOKEN")
-    webhook_secret = _env("TELEGRAM_BOT_SECRETS")
-    public_url = _env("WEB_HOOK")
+    token = require_env("TELEGRAM_BOT_TOKEN")
+    webhook_secret = require_env("TELEGRAM_BOT_SECRETS")
+    public_url = require_env("WEB_HOOK")
     redis_url = os.getenv("REDIS_URL")
     telegram_probe_mode = (os.getenv("TELEGRAM_PROBE_MODE") or "webhook").strip().lower()
     allowed_probe_modes = {"webhook", "skip"}
@@ -366,135 +164,20 @@ def configure_application(app: FastAPI) -> FastAPI:
     def _log_startup_step(step: str, description: str, **metadata: Any) -> None:
         log.info("startup.step", extra={"step": step, "description": description, **metadata})
 
-    async def _probe_mongo() -> CapabilityState:
-        mongo_uri = os.getenv("MONGODB_URI")
-        if not mongo_uri:
-            return CapabilityState(status="unavailable", detail="MONGODB_URI not configured", ttl_seconds=30.0)
-        from motor.motor_asyncio import AsyncIOMotorClient
-
-        endpoint_detail = _format_endpoint_detail(mongo_uri)
-        client = AsyncIOMotorClient(mongo_uri, tz_aware=True, serverSelectionTimeoutMS=3000)
-        try:
-            await asyncio.wait_for(client.admin.command("ping"), timeout=5.0)
-            return CapabilityState(status="available", ttl_seconds=60.0, detail=endpoint_detail)
-        except Exception as exc:  # pragma: no cover - network/env specific
-            return CapabilityState(status="unavailable", detail=f"{endpoint_detail}: {exc}", ttl_seconds=30.0)
-        finally:
-            client.close()
-
-    async def _probe_redis() -> CapabilityState:
-        redis_url = os.getenv("REDIS_URL")
-        if not redis_url:
-            return CapabilityState(status="unavailable", detail="REDIS_URL not configured", ttl_seconds=30.0)
-        from redis.asyncio import Redis  # type: ignore[import]
-
-        client = Redis.from_url(redis_url)
-        try:
-            await asyncio.wait_for(client.ping(), timeout=3.0)
-            return CapabilityState(status="available", ttl_seconds=30.0, detail=_format_endpoint_detail(redis_url))
-        except Exception as exc:  # pragma: no cover - network/env specific
-            return CapabilityState(
-                status="unavailable",
-                detail=f"{_format_endpoint_detail(redis_url)}: {exc}",
-                ttl_seconds=15.0,
-            )
-        finally:
-            with suppress(Exception):
-                await client.close()
-
-    async def _probe_rabbitmq() -> CapabilityState:
-        rabbit_url = os.getenv("RABBITMQ_URL")
-        if not rabbit_url:
-            return CapabilityState(status="unavailable", detail="RABBITMQ_URL not configured", ttl_seconds=30.0)
-        import aio_pika  # type: ignore[import]
-
-        endpoint_detail = _format_endpoint_detail(rabbit_url)
-        try:
-            connection = await aio_pika.connect_robust(rabbit_url, timeout=5)
-        except Exception as exc:  # pragma: no cover - network/env specific
-            return CapabilityState(status="unavailable", detail=f"{endpoint_detail}: {exc}", ttl_seconds=20.0)
-        else:
-            await connection.close()
-            return CapabilityState(status="available", ttl_seconds=45.0, detail=endpoint_detail)
-
-    async def _probe_telegram() -> CapabilityState:
-        if telegram_probe_mode == "skip":
-            return CapabilityState(status="available", detail="probe_skipped", ttl_seconds=180.0)
-        if not token:
-            return CapabilityState(status="unavailable", detail="TELEGRAM_BOT_TOKEN missing", ttl_seconds=60.0)
-        try:
-            client = prime_telegram_client()
-        except Exception as exc:  # pragma: no cover - defensive logging
-            return CapabilityState(status="unavailable", detail=f"client_init_failed:{exc}", ttl_seconds=45.0)
-        trace_id = f"capability:telegram:{os.getpid()}"
-        try:
-            await client.get_bot_info(token, trace_id=trace_id)
-            return CapabilityState(status="available", ttl_seconds=45.0, detail="bot_ready")
-        except TelegramClientError as exc:
-            status_value = "degraded" if exc.code in {"RATE_LIMIT", "NETWORK_FAILURE"} else "unavailable"
-            ttl_seconds = 30.0 if status_value == "unavailable" else 45.0
-            detail = f"{exc.code}:{exc.message}"
-            return CapabilityState(status=status_value, detail=detail, ttl_seconds=ttl_seconds)
-        except Exception as exc:  # pragma: no cover - network/env specific
-            return CapabilityState(status="unavailable", detail=str(exc), ttl_seconds=30.0)
-
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "mongo",
-            _probe_mongo,
-            hard=True,
-            retry_interval=60.0,
-            base_interval=45.0,
-            max_interval=300.0,
-            multiplier=1.5,
-        )
+    capability_service = CapabilityService(
+        app=app,
+        log=log,
+        config=CapabilityServiceConfig(
+            public_url=public_url,
+            webhook_path=WEBHOOK_PATH,
+            webhook_secret=webhook_secret,
+            telegram_token=token,
+            telegram_probe_mode=telegram_probe_mode,
+            redis_url=redis_url,
+        ),
     )
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "redis",
-            _probe_redis,
-            hard=True,
-            retry_interval=30.0,
-            base_interval=15.0,
-            max_interval=180.0,
-            multiplier=1.6,
-        )
-    )
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "rabbitmq",
-            _probe_rabbitmq,
-            hard=True,
-            retry_interval=45.0,
-            base_interval=30.0,
-            max_interval=240.0,
-            multiplier=1.4,
-        )
-    )
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "telegram",
-            _probe_telegram,
-            hard=False,
-            retry_interval=40.0,
-            base_interval=25.0,
-            max_interval=240.0,
-            multiplier=1.5,
-        )
-    )
-
-    public_endpoint_probe = PublicEndpointProbe(url=public_url, timeout=3.0, logger=log)
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "public_endpoint",
-            public_endpoint_probe.check,
-            hard=False,
-            retry_interval=60.0,
-            base_interval=30.0,
-            max_interval=300.0,
-            multiplier=1.5,
-        )
-    )
+    capability_service.register_core_probes()
+    capability_registry = capability_service.registry
 
     _log_startup_step(
         "bootstrap_aiogram.start",
@@ -677,149 +360,12 @@ def configure_application(app: FastAPI) -> FastAPI:
         router=bootstrap_state.router.name,
     )
 
-    async def _probe_telegram_webhook() -> CapabilityState:
-        mode = telegram_probe_mode
-        if mode == "skip":
-            log.warning(
-                "startup.telegram_webhook.skipped",
-                extra={"mode": mode, "reason": "probe explicitly disabled"},
-            )
-            return CapabilityState(status="degraded", detail="probe skipped", ttl_seconds=300.0)
-        public_state = capability_registry.get_state("public_endpoint")
-        if public_state and public_state.status != "available":
-            detail = f"blocked_by_public_endpoint:{public_state.detail or public_state.status}"
-            return CapabilityState(status="degraded", detail=detail, ttl_seconds=min(300.0, public_state.ttl_seconds))
-        try:
-            _log_startup_step(
-                "behavior_webhook_startup.invoke",
-                "Registering webhook with Telegram",
-            )
-            startup_meta = await behavior_webhook_startup(
-                bootstrap_state.bot,
-                f"{public_url.rstrip('/')}{WEBHOOK_PATH}",
-                webhook_secret,
-                drop_pending_updates=False,
-            )
-            for prompt in startup_meta.get("prompt_events", []):
-                log.warning(
-                    "webhook.prompt.retry",
-                    extra={
-                        "prompt_id": prompt.get("prompt_id"),
-                        "prompt_text": prompt.get("prompt_text", ""),
-                        "request_id": ContextBridge.request_id(),
-                        "retry": prompt.get("prompt_variables", {}).get("retry"),
-                    },
-                )
-            _log_startup_step(
-                "startup.complete",
-                "Application ready",
-                router=bootstrap_state.router.name,
-                stages=startup_meta.get("telemetry", {}).get("stages", []),
-                bootstrapped_request_id=telemetry.get("request_id"),
-            )
-            return CapabilityState(status="available", ttl_seconds=300.0)
-        except Exception as exc:  # pragma: no cover - network/env dependent
-            log.warning(
-                "startup.telegram_webhook.degraded",
-                extra={"mode": mode, "error": repr(exc)},
-            )
-            return CapabilityState(status="degraded", detail=str(exc), ttl_seconds=180.0)
-
-    capability_registry.register_probe(
-        CapabilityProbe(
-            "telegram_webhook",
-            _probe_telegram_webhook,
-            hard=False,
-            retry_interval=300.0,
-            base_interval=180.0,
-            max_interval=600.0,
-            multiplier=1.2,
-        )
-    )
+    capability_service.register_webhook_probe(bootstrap_state)
 
 
 
 
-    def _capability_snapshot() -> Dict[str, Dict[str, object]]:
-        registry: Optional[CapabilityRegistry] = getattr(app.state, "capabilities", None)
-        if registry is None:
-            return {}
-        return registry.snapshot()
-
-    def _derive_health(snapshot: Dict[str, Dict[str, object]]) -> str:
-        if any(state.get("status") == "unavailable" for state in snapshot.values()):
-            return "unavailable"
-        if any(state.get("status") == "degraded" for state in snapshot.values()):
-            return "degraded"
-        return "ok" if snapshot else "unknown"
-
-    @app.get("/")
-    async def root_probe() -> Dict[str, object]:
-        snapshot = _capability_snapshot()
-        return {
-            "status": _derive_health(snapshot),
-            "public_url": public_url,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        }
-
-    @app.head("/")
-    async def root_probe_head() -> Response:
-        return Response(status_code=status.HTTP_200_OK)
-
-    @app.get("/healthz")
-    async def healthz() -> Dict[str, object]:
-        snapshot = _capability_snapshot()
-        state = getattr(app.state, "telegram", None)
-        return {
-            "status": _derive_health(snapshot),
-            "router": getattr(state.router, "name", "pending") if state else "pending",
-            "capabilities": snapshot,
-        }
-
-    @app.get("/healthz/startup")
-    async def startup_health() -> Dict[str, object]:
-        snapshot = _capability_snapshot()
-        return {
-            "status": _derive_health(snapshot),
-            "capabilities": snapshot,
-        }
-
-    @app.get("/healthz/readiness")
-    async def readiness_health() -> Dict[str, object]:
-        refresher = getattr(app.state, "capability_refresh", None)
-        if callable(refresher):
-            await refresher()
-        snapshot = _capability_snapshot()
-        return {
-            "status": _derive_health(snapshot),
-            "capabilities": snapshot,
-        }
-
-    @app.get("/internal/memory_health")
-    async def memory_health() -> Dict[str, Any]:
-        snapshot = getattr(app.state, "memory_snapshot", {})
-        status = getattr(app.state, "memory_snapshot_status", "unknown")
-        telemetry_state = getattr(app.state, "memory_snapshot_telemetry", {})
-        health = getattr(app.state, "memory_snapshot_health", {})
-        missing = getattr(app.state, "memory_snapshot_missing_agencies", [])
-        metadata = getattr(app.state, "memory_loader_metadata", {})
-        checksum_status = (
-            telemetry_state.get("checksum_status")
-            or health.get("checksum_status")
-            or snapshot.get("stats", {}).get("checksum_status")
-        )
-        return {
-            "status": status,
-            "snapshot_version": snapshot.get("snapshot_version"),
-            "snapshot_checksum": snapshot.get("checksum"),
-            "checksum_status": checksum_status,
-            "stats": snapshot.get("stats", {}),
-            "health": health,
-            "missing_agencies": missing,
-            "telemetry": telemetry_state,
-            "metadata": metadata,
-        }
-
+    register_health_routes(app, public_url=public_url)
     return app
 
 

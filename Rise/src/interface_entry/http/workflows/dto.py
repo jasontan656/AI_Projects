@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 __all__ = [
     "WorkflowApplyRequest",
     "WorkflowApplyResponse",
+    "WorkflowCoverageStatusResponse",
     "WorkflowRequest",
     "WorkflowResponse",
     "WorkflowPublishRequest",
@@ -18,6 +19,7 @@ __all__ = [
     "WorkflowVariablesResponse",
     "WorkflowToolDescriptor",
     "WorkflowToolsResponse",
+    "CoverageTestRequest",
 ]
 
 
@@ -54,6 +56,16 @@ class WorkflowPublishMeta(BaseModel):
     pendingChanges: bool
 
 
+class WorkflowCoverageStatusResponse(BaseModel):
+    status: str
+    updatedAt: datetime
+    scenarios: Sequence[str] = Field(default_factory=tuple)
+    mode: str = "webhook"
+    lastRunId: Optional[str] = None
+    lastError: Optional[str] = None
+    actorId: Optional[str] = None
+
+
 class WorkflowResponse(BaseModel):
     id: str = Field(..., alias="workflowId")
     name: str
@@ -67,10 +79,12 @@ class WorkflowResponse(BaseModel):
     version: int
     publishedVersion: int = Field(default=0, alias="publishedVersion")
     pendingChanges: bool = Field(default=True, alias="pendingChanges")
+    historyChecksum: str = Field(default="")
     publishHistory: Sequence[WorkflowPublishRecord] = Field(default_factory=tuple)
     publishMeta: WorkflowPublishMeta
     updatedAt: Any
     updatedBy: Optional[str] = None
+    testCoverage: Optional[WorkflowCoverageStatusResponse] = None
 
     class Config:
         populate_by_name = True
@@ -94,6 +108,11 @@ class WorkflowApplyResult(BaseModel):
     finalText: str = Field("", description="最终文本输出")
     stageResults: Sequence[WorkflowStageResult] = Field(default_factory=tuple)
     telemetry: Mapping[str, Any] = Field(default_factory=dict)
+
+
+class CoverageTestRequest(BaseModel):
+    scenarios: Sequence[str] = Field(default_factory=tuple)
+    mode: str = "webhook"
 
 
 class WorkflowApplyRequest(BaseModel):

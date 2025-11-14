@@ -1,0 +1,7 @@
+events:
+  - name: trace.start
+    fields:
+      span: telegram.webhook
+  - name: trace.end
+    fields:
+      span: telegram.webhook

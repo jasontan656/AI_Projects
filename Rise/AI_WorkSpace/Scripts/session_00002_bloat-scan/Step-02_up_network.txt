@@ -1,0 +1,2 @@
+Network: Up Admin http://localhost:5173/pipelines
+- 104 requests加载完成，多数 304/200 静态资源，Vite 热更新正常；未见失败 4xx/5xx。

@@ -1,0 +1,1 @@
+Chrome DevTools MCP 呈现 GET /api/channel-bindings/dummy-id → 401（Unauthenticated），验证 Step-04 依赖拆分后路由仍可响应。采集时间 2025-11-14 10:32 GMT+8。

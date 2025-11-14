@@ -1,6 +1,6 @@
 # 函数索引
 
-_生成时间：2025-11-12T18:16:42+00:00_
+_生成时间：2025-11-13T14:28:45+00:00_
 
 ## rise-project-utility（rise）
 
@@ -69,7 +69,7 @@ _生成时间：2025-11-12T18:16:42+00:00_
 
 ### Interface / Entry Layer
 
-- `src/interface_entry/bootstrap/application_builder.py` · `def configure_application(app: FastAPI) -> FastAPI` · 528 行
+- `src/interface_entry/bootstrap/application_builder.py` · `def configure_application(app: FastAPI) -> FastAPI` · 562 行
   - 说明：（无 docstring，参考片段）
   - 片段：def configure_application(app: FastAPI) -> FastAPI:     initialize_log_workspace()     configure_logging()
 - `src/interface_entry/telegram/routes.py` · `def register_routes(app: FastAPI, dispatcher: Dispatcher, webhook_path: str, runtime_policy: dict[str, Any], webhook_secret: str) -> None` · 261 行
@@ -99,15 +99,15 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/business_service/conversation/runtime_gateway.py` · `def set_task_queue_accessors(*, submitter_factory: SubmitterFactory, runtime_factory: RuntimeFactory) -> None` · 10 行
   - 说明：Register factories used by the default runtime gateway.
   - 片段：def set_task_queue_accessors(     *,     submitter_factory: SubmitterFactory,
+- `src/business_service/channel/policy.py` · `def evaluate_channel_mode(*, enabled: bool, use_polling: bool) -> ChannelModeDecision` · 8 行
+  - 说明：Decide channel mode and detect conflicts between webhook + polling.
+  - 片段：def evaluate_channel_mode(*, enabled: bool, use_polling: bool) -> ChannelModeDecision:     """Decide channel mode and detect conflicts between webhook + polling.""" 
 - `src/business_service/conversation/health.py` · `def build_default_health_reporter(ttl_seconds: int=120) -> ChannelHealthReporter` · 6 行
   - 说明：（无 docstring，参考片段）
   - 片段：def build_default_health_reporter(ttl_seconds: int = 120) -> ChannelHealthReporter:     return ChannelHealthReporter(         store=ChannelBindingHealthStore(),
 - `src/business_service/conversation/service.py` · `def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None` · 5 行
   - 说明：Compatibility shim to keep existing bootstrap wiring intact.
   - 片段：def set_channel_binding_health_store(store: ChannelBindingHealthStore) -> None:     """Compatibility shim to keep existing bootstrap wiring intact.""" 
-- `src/business_service/conversation/service.py` · `def set_channel_binding_provider(provider: ChannelBindingProvider) -> None` · 5 行
-  - 说明：Register the global channel binding provider used by conversation flows.
-  - 片段：def set_channel_binding_provider(provider: ChannelBindingProvider) -> None:     """Register the global channel binding provider used by conversation flows.""" 
 
 ## up（up）
 
@@ -135,10 +135,10 @@ _生成时间：2025-11-12T18:16:42+00:00_
 
 ### Unmapped
 
-- `src/schemas/workflowDraft.js` · `createWorkflowDraft(overrides = {})` · 13 行
+- `src/schemas/workflowDraft.js` · `createWorkflowDraft(overrides = {})` · 11 行
   - 说明：（无 docstring，参考片段）
-  - 片段：export function createWorkflowDraft(overrides = {}) {   return {     ...WORKFLOW_DEFAULT,
-- `src/schemas/channelPolicy.js` · `createChannelPolicy(overrides = {})` · 12 行
+  - 片段：export function createWorkflowDraft(overrides = {}) {   const normalizedNodeSequence = normalizeNodeSequence(overrides.nodeSequence);   return {
+- `src/schemas/channelPolicy.js` · `createChannelPolicy(overrides = {})` · 10 行
   - 说明：（无 docstring，参考片段）
   - 片段：export function createChannelPolicy(overrides = {}) {   const merged = {     ...CHANNEL_POLICY_DEFAULT,
 - `src/schemas/channelPolicy.js` · `normalizeChannelPolicyResponse(response)` · 10 行

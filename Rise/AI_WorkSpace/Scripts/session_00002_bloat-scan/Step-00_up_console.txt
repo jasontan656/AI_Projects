@@ -1,0 +1,1 @@
+No console messages reported for Up Admin during Stack Sync (Chrome DevTools MCP).

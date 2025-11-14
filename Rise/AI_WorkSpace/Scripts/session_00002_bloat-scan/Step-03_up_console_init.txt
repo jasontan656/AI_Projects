@@ -1,0 +1,1 @@
+无控制台报错；地址 http://localhost:5173/pipelines 已加载完毕，Chrome DevTools MCP 校验于 2025-11-14 09:10 GMT+8。

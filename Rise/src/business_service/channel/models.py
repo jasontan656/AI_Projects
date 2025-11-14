@@ -6,10 +6,13 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Mapping, MutableMapping, Optional
 
+from business_service.channel.policy import ChannelMode
+
 DEFAULT_WORKFLOW_MISSING_MESSAGE = "Workflow unavailable, please contact the operator."
 DEFAULT_TIMEOUT_MESSAGE = "Workflow timeout, please try again."
 
 __all__ = [
+    "ChannelMode",
     "WorkflowChannelPolicy",
     "ChannelBindingOption",
     "ChannelBindingRuntime",
@@ -34,6 +37,7 @@ class WorkflowChannelPolicy:
     updated_by: Optional[str] = None
     updated_at: datetime = field(default_factory=_now_utc)
     secret_version: int = 1
+    mode: ChannelMode = ChannelMode.WEBHOOK
 
     def to_document(self) -> MutableMapping[str, Any]:
         return {
@@ -49,6 +53,7 @@ class WorkflowChannelPolicy:
             "updated_by": self.updated_by,
             "updated_at": self.updated_at,
             "secret_version": self.secret_version,
+            "mode": self.mode.value,
         }
 
     @classmethod
@@ -68,6 +73,7 @@ class WorkflowChannelPolicy:
             updated_by=doc.get("updated_by"),
             updated_at=doc.get("updated_at") or _now_utc(),
             secret_version=int(doc.get("secret_version", 1)),
+            mode=ChannelMode(str(doc.get("mode") or ChannelMode.WEBHOOK.value)),
         )
 
     @classmethod
@@ -85,6 +91,7 @@ class WorkflowChannelPolicy:
         metadata: Mapping[str, Any],
         actor: Optional[str],
         secret_version: int,
+        mode: ChannelMode,
     ) -> "WorkflowChannelPolicy":
         now = _now_utc()
         return cls(
@@ -100,6 +107,7 @@ class WorkflowChannelPolicy:
             updated_by=actor,
             updated_at=now,
             secret_version=secret_version,
+            mode=mode,
         )
 
     @property

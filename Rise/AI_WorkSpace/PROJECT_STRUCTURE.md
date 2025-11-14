@@ -59,7 +59,7 @@
     submodules. Document the rationale, the submodules invoked, and the planned extraction points in
     DevDoc/notes so future work can split them when the feature stabilizes.
   - When accidental coupling is discovered (e.g., utility files mixing unrelated behaviors), log it in
-    the issue tracker and create explicit Steps in the task plan to refactor. Downstream prompts (02–06)
+    the issue tracker and create explicit Steps in the task plan (stored under `AI_WorkSpace/Tasks/`) to refactor. Downstream prompts (02–06)
     must see the note so refactoring can be scheduled.
   - Prefer composition over inheritance/monolithic exports. If two domains only share a subset of helpers,
     extract that subset into a new module instead of keeping both domains in the same file.

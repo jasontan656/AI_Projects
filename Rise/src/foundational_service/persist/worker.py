@@ -9,11 +9,13 @@ from uuid import uuid4
 
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 
-from business_logic.workflow import WorkflowExecutionContext, WorkflowOrchestrator, WorkflowRunResult
-from business_service.workflow import StageRepository, WorkflowRepository
+from foundational_service.contracts.workflow_exec import (
+    WorkflowExecutor,
+    WorkflowExecutionPayload,
+    WorkflowRunResultPayload,
+)
 from project_utility.context import ContextBridge
 from project_utility.telemetry import emit as telemetry_emit
-from foundational_service.persist.workflow_summary_repository import WorkflowSummaryRepository
 
 from .rabbit_bridge import RabbitPublisher
 from .redis_queue import RedisTaskQueue, StreamTask
@@ -105,15 +107,10 @@ class WorkflowTaskProcessor:
     def __init__(
         self,
         *,
-        workflow_repository: WorkflowRepository,
-        stage_repository: StageRepository,
-        summary_repository: WorkflowSummaryRepository,
+        workflow_executor: WorkflowExecutor,
         backoff_curve: Optional[Sequence[float]] = None,
     ) -> None:
-        self._workflow_repository = workflow_repository
-        self._stage_repository = stage_repository
-        self._orchestrator: Optional[WorkflowOrchestrator] = None
-        self._summary_repository = summary_repository
+        self._executor = workflow_executor
         self._backoff_curve = backoff_curve or (15.0, 30.0, 60.0, 120.0, 180.0)
 
     async def process(self, envelope: TaskEnvelope) -> Mapping[str, Any]:
@@ -124,18 +121,8 @@ class WorkflowTaskProcessor:
         ContextBridge.set_request_id(trace_id)
         try:
             core_envelope = dict(envelope.payload.get("coreEnvelope") or {})
-            context = WorkflowExecutionContext(
-                workflow_id=workflow_id,
-                request_id=envelope.context.get("requestId", envelope.task_id),
-                user_text=str(envelope.payload.get("userText", "")),
-                history_chunks=tuple(envelope.payload.get("historyChunks") or ()),
-                policy=dict(envelope.payload.get("policy") or {}),
-                core_envelope=core_envelope,
-                telemetry=self._build_telemetry(envelope),
-                metadata=core_envelope.get("metadata"),
-                inbound=core_envelope.get("inbound"),
-            )
-            run_result = await self._get_orchestrator().execute(context)
+            payload = self._build_execution_payload(envelope, workflow_id, core_envelope)
+            run_result = await self._executor.execute(payload)
         except ServerSelectionTimeoutError as exc:
             raise RetryTask(
                 "mongo_unavailable",
@@ -154,30 +141,40 @@ class WorkflowTaskProcessor:
             ContextBridge.clear()
         return self._serialize_result(run_result)
 
-    def _get_orchestrator(self) -> WorkflowOrchestrator:
-        if self._orchestrator is None:
-            self._orchestrator = WorkflowOrchestrator(
-                workflow_repository=self._workflow_repository,
-                stage_repository=self._stage_repository,
-                summary_repository=self._summary_repository,
-            )
-        return self._orchestrator
+    def _build_execution_payload(
+        self,
+        envelope: TaskEnvelope,
+        workflow_id: str,
+        core_envelope: Mapping[str, Any],
+    ) -> WorkflowExecutionPayload:
+        payload: WorkflowExecutionPayload = {
+            "workflow_id": workflow_id,
+            "request_id": envelope.context.get("requestId", envelope.task_id),
+            "user_text": str(envelope.payload.get("userText", "")),
+            "history_chunks": tuple(envelope.payload.get("historyChunks") or ()),
+            "policy": dict(envelope.payload.get("policy") or {}),
+            "core_envelope": core_envelope,
+            "telemetry": self._build_telemetry(envelope),
+            "metadata": core_envelope.get("metadata"),
+            "inbound": core_envelope.get("inbound"),
+        }
+        return payload
 
-    def _serialize_result(self, run_result: WorkflowRunResult) -> Mapping[str, Any]:
+    def _serialize_result(self, run_result: WorkflowRunResultPayload) -> Mapping[str, Any]:
         stage_results = [
             {
-                "stageId": result.stage_id,
-                "name": result.name,
-                "promptUsed": result.prompt_used,
-                "outputText": result.output_text,
-                "usage": result.raw_response.get("usage"),
+                "stageId": stage.get("stage_id", ""),
+                "name": stage.get("name", ""),
+                "promptUsed": stage.get("prompt_used", ""),
+                "outputText": stage.get("output_text", ""),
+                "usage": (stage.get("raw_response") or {}).get("usage"),
             }
-            for result in run_result.stage_results
+            for stage in run_result.get("stage_results", [])
         ]
         payload: Dict[str, Any] = {
-            "finalText": run_result.final_text,
+            "finalText": run_result.get("final_text"),
             "stageResults": stage_results,
-            "telemetry": dict(run_result.telemetry),
+            "telemetry": dict(run_result.get("telemetry") or {}),
         }
         return payload
 

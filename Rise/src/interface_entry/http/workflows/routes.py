@@ -14,6 +14,7 @@ from typing import Any, Mapping, Optional, Sequence
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from fastapi.responses import StreamingResponse
 
+from business_service.channel.coverage_status import CoverageStatusService, WorkflowCoverageStatus
 from business_service.prompt.repository import AsyncMongoPromptRepository
 from business_service.workflow import AsyncWorkflowService, AsyncStageService, WorkflowObservabilityService
 from business_service.workflow.models import WorkflowDefinition, PromptBinding as DomainPromptBinding
@@ -27,13 +28,16 @@ from business_service.workflow.observability import (
 )
 from foundational_service.persist.task_envelope import RetryState, TaskEnvelope, TaskStatus
 from foundational_service.persist.worker import TaskRuntime, TaskSubmitter
-from interface_entry.http.dependencies import (
+from interface_entry.http.dependencies.workflow import (
     get_workflow_service,
     get_stage_service,
-    get_task_runtime,
-    get_task_submitter,
     get_workflow_observability_service,
     get_prompt_repository,
+)
+from interface_entry.http.dependencies.telemetry import (
+    get_task_runtime,
+    get_task_submitter,
+    get_coverage_status_service,
 )
 from interface_entry.http.responses import ApiMeta, ApiResponse
 from interface_entry.http.security import ActorContext, get_actor_context
@@ -43,6 +47,7 @@ from interface_entry.http.workflows.dto import (
     WorkflowApplyRequest,
     WorkflowApplyResponse,
     WorkflowApplyResult,
+    WorkflowCoverageStatusResponse,
     WorkflowRequest,
     WorkflowResponse,
     WorkflowPublishMeta,
@@ -56,16 +61,29 @@ from interface_entry.http.workflows.dto import (
     WorkflowPublishRequest,
     WorkflowRollbackRequest,
     WorkflowPublishRecord,
+    CoverageTestRequest,
 )
 from project_utility.context import ContextBridge
+from foundational_service.telemetry.coverage_recorder import get_coverage_test_event_recorder
 
 router = APIRouter(prefix="/api/workflows", tags=["workflows"])
 
 
 @router.get("", response_model=ApiResponse[Sequence[WorkflowResponse]])
-async def list_workflows(service: AsyncWorkflowService = Depends(get_workflow_service)) -> ApiResponse[Sequence[WorkflowResponse]]:
+async def list_workflows(
+    service: AsyncWorkflowService = Depends(get_workflow_service),
+    coverage_service: CoverageStatusService = Depends(get_coverage_status_service),
+) -> ApiResponse[Sequence[WorkflowResponse]]:
     workflows = await service.list()
-    data = [_to_workflow_response(workflow) for workflow in workflows]
+    coverage_map: dict[str, WorkflowCoverageStatus] = {}
+    if workflows:
+        coverage_results = await asyncio.gather(
+            *(coverage_service.get_status(workflow.workflow_id) for workflow in workflows)
+        )
+        coverage_map = {workflow.workflow_id: status for workflow, status in zip(workflows, coverage_results)}
+    data = [
+        _to_workflow_response(workflow, coverage=coverage_map.get(workflow.workflow_id)) for workflow in workflows
+    ]
     meta = ApiMeta(requestId=ContextBridge.request_id())  # type: ignore[arg-type]
     return ApiResponse(data=data, meta=meta)
 
@@ -74,6 +92,7 @@ async def list_workflows(service: AsyncWorkflowService = Depends(get_workflow_se
 async def get_workflow(
     workflow_id: str,
     workflow_service: AsyncWorkflowService = Depends(get_workflow_service),
+    coverage_service: CoverageStatusService = Depends(get_coverage_status_service),
 ) -> ApiResponse[WorkflowResponse]:
     workflow = await workflow_service.get(workflow_id)
     if workflow is None:
@@ -82,7 +101,8 @@ async def get_workflow(
             detail={"code": "WORKFLOW_NOT_FOUND", "message": "Workflow definition not found"},
         )
     meta = ApiMeta(requestId=ContextBridge.request_id())  # type: ignore[arg-type]
-    data = _to_workflow_response(workflow)
+    coverage = await coverage_service.get_status(workflow.workflow_id)
+    data = _to_workflow_response(workflow, coverage=coverage)
     return ApiResponse(data=data, meta=meta)
 
 
@@ -235,6 +255,58 @@ async def publish_workflow(
     meta = ApiMeta(requestId=ContextBridge.request_id())  # type: ignore[arg-type]
     data = _to_workflow_response(updated)
     return ApiResponse(data=data, meta=meta)
+
+
+@router.post(
+    "/{workflow_id}/tests/run",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=ApiResponse[WorkflowCoverageStatusResponse],
+)
+async def trigger_workflow_tests(
+    workflow_id: str,
+    payload: CoverageTestRequest,
+    workflow_service: AsyncWorkflowService = Depends(get_workflow_service),
+    coverage_service: CoverageStatusService = Depends(get_coverage_status_service),
+    actor: ActorContext = Depends(get_actor_context),
+) -> ApiResponse[WorkflowCoverageStatusResponse]:
+    workflow = await workflow_service.get(workflow_id)
+    if workflow is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "WORKFLOW_NOT_FOUND", "message": "Workflow definition not found"},
+        )
+    scenarios = list(payload.scenarios) or ["golden_path"]
+    coverage = await coverage_service.mark_status(
+        workflow_id,
+        status="pending",
+        scenarios=scenarios,
+        mode=payload.mode,
+        actor_id=actor.actor_id,
+        metadata={"trigger": "manual"},
+    )
+    meta = ApiMeta(requestId=ContextBridge.request_id())  # type: ignore[arg-type]
+    data = _to_coverage_response(coverage)
+    return ApiResponse(data=data, meta=meta)
+
+
+@router.get(
+    "/{workflow_id}/tests/stream",
+)
+async def stream_workflow_tests(
+    workflow_id: str,
+    workflow_service: AsyncWorkflowService = Depends(get_workflow_service),
+    actor: ActorContext = Depends(get_actor_context),
+) -> StreamingResponse:
+    workflow = await workflow_service.get(workflow_id)
+    if workflow is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "WORKFLOW_NOT_FOUND", "message": "Workflow definition not found"},
+        )
+    # Ensure actor context is evaluated for auditing purposes.
+    _ = actor.actor_id
+    recorder = get_coverage_test_event_recorder()
+    return StreamingResponse(recorder.stream(workflow.workflow_id), media_type="text/event-stream")
 
 
 @router.post("/{workflow_id}/rollback", response_model=ApiResponse[WorkflowResponse])
@@ -567,7 +639,10 @@ def _to_tools_response(payload: WorkflowToolsPayload) -> WorkflowToolsResponse:
     return WorkflowToolsResponse(workflowId=payload.workflow_id, source=payload.source, tools=tools)
 
 
-def _to_workflow_response(workflow: WorkflowDefinition) -> WorkflowResponse:
+def _to_workflow_response(
+    workflow: WorkflowDefinition,
+    coverage: Optional[WorkflowCoverageStatus] = None,
+) -> WorkflowResponse:
     prompt_bindings = [
         PromptBindingDTO(nodeId=binding.node_id, promptId=binding.prompt_id) for binding in workflow.prompt_bindings
     ]
@@ -594,10 +669,28 @@ def _to_workflow_response(workflow: WorkflowDefinition) -> WorkflowResponse:
         version=workflow.version,
         publishedVersion=workflow.published_version,
         pendingChanges=workflow.pending_changes,
+        historyChecksum=workflow.history_checksum,
         publishHistory=publish_history,
         publishMeta=publish_meta,
         updatedAt=workflow.updated_at,
         updatedBy=workflow.updated_by,
+        testCoverage=_to_coverage_response(coverage),
+    )
+
+
+def _to_coverage_response(
+    coverage: Optional[WorkflowCoverageStatus],
+) -> Optional[WorkflowCoverageStatusResponse]:
+    if coverage is None:
+        return None
+    return WorkflowCoverageStatusResponse(
+        status=coverage.status,
+        updatedAt=coverage.updated_at,
+        scenarios=list(coverage.scenarios),
+        mode=coverage.mode,
+        lastRunId=coverage.last_run_id,
+        lastError=coverage.last_error,
+        actorId=coverage.actor_id,
     )
 
 

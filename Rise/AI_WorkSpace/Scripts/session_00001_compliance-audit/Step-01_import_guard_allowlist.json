@@ -1,0 +1,14 @@
+[
+  {
+    "source": "src/business_service/conversation/primitives.py",
+    "imported": "interface_entry.telegram.adapters",
+    "module_root": "interface_entry",
+    "note": "Legacy adapter usage pending Step-04"
+  },
+  {
+    "source": "src/business_service/conversation/service.py",
+    "imported": "business_logic.workflow",
+    "module_root": "business_logic",
+    "note": "Will be removed when service.py is slimmed in Step-03"
+  }
+]

@@ -4,6 +4,7 @@ import {
   cloneActions,
   normalizeActions,
 } from "../utils/nodeActions";
+import { listPipelineNodes } from "../services/pipelineService";
 
 const createInitialState = () => ({
   nodes: [],
@@ -69,6 +70,18 @@ export const usePipelineDraftStore = defineStore("pipelineDraft", {
     cloneSelectedActions() {
       const node = this.selectedNode;
       return node ? cloneActions(node.actions) : [];
+    },
+    async refreshNodes(options = {}) {
+      const page = options.page ?? 1;
+      const pageSize = options.pageSize ?? 50;
+      const { data } = await listPipelineNodes({ page, pageSize });
+      const items = Array.isArray(data?.items)
+        ? data.items
+        : Array.isArray(data)
+          ? data
+          : [];
+      this.replaceNodes(items);
+      return items;
     },
   },
 });

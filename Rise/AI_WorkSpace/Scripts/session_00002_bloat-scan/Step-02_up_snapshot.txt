@@ -1,0 +1,3 @@
+Snapshot: Up Admin http://localhost:5173/pipelines
+- Heading: Up Ops Workspace, 菜单包含 Nodes/Prompts/Workflow/Variables/Logs/Settings Soon
+- 主区域展示节点操作 CTA（新建/管理），文本与前一轮一致。

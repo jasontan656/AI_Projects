@@ -109,3 +109,90 @@ Generated at: 2025-11-12
 
 ## Notes
 - 本文件为 Assessment Focus，旨在“列出问题 + 证据 + 影响 + 优先级”。若需进入 Strategy Focus（方案与改造细化），请在聊天中明确指示，再进行后续写作。
+
+---
+
+## Strategy Requirements · Characterization Harness for `conversation/service.py` Refactor (2025-11-13)
+
+### Background
+- `AI_WorkSpace/Reports/session_00001_compliance-audit_issues.json`（Step-03）指出：在拆分 1,200+ 行的 `src/business_service/conversation/service.py` 前，缺乏 business_service 层级的 characterization 测试，无法证明 Telegram Webhook→Workflow Orchestrator→Runtime Gateway 全链路行为保持不变。
+- 现状：`tests/` 仅覆盖 foundational_service，`business_service`、`interface_entry/http/channels` 与 `WorkflowChannelForm` 的配置校验均无自动化护栏，Operators 无法在 Up Admin 中查看测试覆盖状态。
+- 目标：在不改动生产行为的前提下，交付一套“离线 Telegram 表征测试 + Admin 覆盖可视化 + 强约束 webhook 配置”的双仓（Rise+Up）需求，确保后续拆分可以在可重复的测试与审批流程下进行。
+
+### Roles
+- **Rise Runtime Maintainer**：维护 FastAPI/aiogram entrypoints、`TelegramConversationService` 拆分计划，并负责新增测试夹具与 dependency override。
+- **QA / Test Automation Engineer**：编写 `tests/business_service/conversation/*` 套件，管理 golden Telegram transcript、预期 orchestrator 输出、Redis/Mongo stub 数据。
+- **Up Admin Operator**：在 `WorkflowChannelForm`、`ChannelHealthCard` 中查看“测试覆盖/最新运行”状态，配置 webhook Secret/证书，阻止未覆盖工作流上线。
+- **SRE / Observability Engineer**：将测试结果写入 `TelemetryEmitter`、`channel_policy` 健康指标，并为 `workflow_run_coverage` Redis/Mongo 记录设置保鲜期、报警。
+- **Security Reviewer**：确保多 bot/webhook Secret 的隔离、TLS 证书有效性，避免 `treehook.dev` 指出的 secret 复用风险和 webhook 劫持。citeturn1search0
+
+### Scenarios
+1. **S1：Webhook 表征测试（离线）**
+   - 触发：QA 在本地或 CI 执行 `pytest tests/business_service/conversation/test_telegram_webhook.py::test_passport_status_dialog`.
+   - 参与：QA、TestClient (`fastapi.testclient.TestClient`)、`interface_entry/http/telegram/routes.py`、Redis/Mongo stubs。
+   - 前置：`fixtures/telegram/passport_status_inbound.json`、`fixtures/telegram/expected_runtime.json` 已建立；`ChannelBindingRuntime` 使用 stub。
+   - 步骤：① 通过 `TestClient` 向 `/telegram/webhook/{botToken}` POST Golden Update；② dependency override 注入 stub `RuntimeGateway` / `AsyncPipelineNodeService`；③ 捕获 `TelemetryEmitter` 输出并与 snapshot 对比；④ 清理 stub state。
+   - 数据变更：写入 `var/test_runs/<workflow_id>/<timestamp>.jsonl`、`redis://rise:test:coverage:<workflow_id>`；CI artifact 存档。
+   - 遥测：`CoverageTestCompleted` 事件（字段：workflowId/botUsername/testId/duration/assertions）。
+
+2. **S2：Runtime Gateway & Queue 守护测试**
+   - 触发：`pytest tests/business_service/conversation/test_runtime_gateway.py`.
+   - 参与：Runtime Maintainer、`RuntimeGateway`、`AsyncAckReservation`、`ChannelBindingHealthStore`、Redis stub。
+   - 前置：构造 `AsyncResultHandleFactory` stub 以注入 `RetryState`；准备 `WorkflowChannelPolicy` fixture（含速率限制）。
+   - 步骤：① 模拟 orchestrator 输出 `WorkflowStageResult`；② 断言 `RuntimeGateway.enqueue` 对 `ChannelBindingHealthStore` 的心跳写入；③ 验证异常路径（e.g., `EnqueueFailedError`）触发 retry 上限警报。
+   - Up 影响：在 `ChannelHealthCard` 新增“最新测试心跳”字段；当测试失败时，WorkflowBuilder 阻止发布。
+
+3. **S3：Admin 覆盖门禁**
+   - 触发：Operator 在 `WorkflowChannelForm` 勾选“启用 Telegram 绑定”并提交。
+   - 参与：Up Admin UI (`WorkflowChannelForm.vue`)、`channelPolicy` store、`WorkflowChannelService` API、Rise `/workflow-channels/{workflowId}`。
+   - 前置：Rise 暴露新只读字段 `testCoverage.status` 与 `testCoverage.updatedAt`，并提供 `POST /workflow-channels/{workflowId}/tests/run` 触发即时测试。
+   - 步骤：① UI 获取 coverage 状态并提示“最后成功运行时间”与“覆盖场景列表”；② 若 status != `green`，禁用“启用”按钮并显示原因；③ Operator 可点击“重新运行”调用 API，查看日志流。
+   - 数据：Up store 缓存 coverage 状态（Pinia），Rise 记录在 Redis `rise:coverage:workflow:<id>` + Mongo `workflow_run_coverage`。
+
+4. **S4：Webhook Secret/TLS 守护**
+   - 触发：Operator 在 Up 中更新 bot webhook Secret 或上传新的 TLS 证书。
+   - 前置：`treehook.dev`、blog.zelia.dev 建议每个渠道独立 Secret + 固定 IP/TLS 监控。citeturn1search0turn1search1
+   - 步骤：① Up 校验 Secret 未在其他 workflow 使用；② 将证书到期时间写入 Rise `PublicEndpointProbe`；③ Observability 作业每 6h 检查证书、Secret 使用频率，与 coverage 状态联动发警。
+   - 结果：当证书到期<14d 或 Secret 重复，`ChannelHealthCard`、`WorkflowLogStream` 显示警告；Rise API 拒绝启用请求。
+
+5. **S5：冲突模式检测**
+   - 场景：Operator 尝试同时启用 Telegram webhook 与 polling（Qiita 指出的冲突）。citeturn1search2
+   - 要求：Up 在 `channelPolicy` 中新增布尔字段 `usePolling`; 若为 true，则自动禁用 webhook + 显示提示“测试护栏无法覆盖 polling，需手动验证”；Rise API 拒绝 webhook & polling 同时启用。
+
+### Data / State
+- **测试夹具**：`tests/business_service/conversation/fixtures/<workflow>/<scenario>.json`（Telegram inbound）、`expected_outputs.json`（orchestrator output）、`runtime_side_effects.json`；需在 README 中描述格式与生成方法。
+- **Snapshot 资产**：`tests/business_service/conversation/snapshots/<workflow>/<scenario>.yml` 保存 `TelemetryEmitter` 行为、Redis key 修改，便于审查 diff。
+- **Coverage 状态存储**：
+  - Redis：`rise:coverage:workflow:<workflow_id>` 保存 `{"status":"green|yellow|red","last_run":"ISO8601","scenarios":["passport_status", ...]}`。
+  - Mongo：`workflow_run_coverage` 集合记录历史 run（workflowId, botUsername, gitSha, result, duration, assertions, operatorId）。
+- **Up Admin 状态**：Pinia `channelPolicy` store 增加 `coverageStatus`、`coverageLastRun`, `testScenarios`；`WorkflowBuilder.vue` 将其传给 `ChannelHealthCard` 与 `WorkflowChannelForm`.
+- **Secrets/Certs**：`workflow_channel` 文档扩展 `webhookSecretVersion`、`certExpiry`；Rise 通过 `PublicEndpointProbe` 写入 `app.state.webhook_security`.
+
+### Rules
+- 每个 workflow 至少需 3 条 Golden Telegram 对话：入站文本、含附件、含命令；高风险服务（签证/认证）需 5 条。默认 30 天需要刷新一次。
+- Characterization 测试必须走 FastAPI `TestClient` + dependency override，而非直接调用 service（符合 fastapi 官方建议，可验证 lifespan hook 与依赖覆盖）。citeturn2search0
+- Tests 禁止访问真实 Telegram/Redis/Mongo；统一使用 faker/stub，避免污染生产状态。
+- `WorkflowChannelForm` 在启用 webhook 前校验：coverage status = green、webhook Secret 未复用、证书>30 天；任一失败则 API 返回 409 并提示 UI。
+- 覆盖状态与 channel 健康强绑定：`ChannelHealthCard` 将覆盖失效视为 P1 告警；`channelPolicy.scheduleNextPoll` 在 coverage 过期时缩短轮询间隔以提醒 Operator。
+- 每次 `POST /workflow-channels/{workflowId}/tests/run` 结果需写入 Telemetry + `var/logs/test_runs`，并供 Up 立即拉取显示。
+- Observability 任务若发现 coverage >14 天未运行，自动在 Up 顶部 banner 展示“需要重新训练”的提示，且 `sendChannelTest` throttle 仍可使用但提示“结果不被记录”。
+- 微信?? (typo). Additionally, Slack/HTTP future channels must reuse same coverage interface once onboarded（document contract now）。
+
+### Exceptions
+- **Telegram API schema变更**：若表征测试因未知字段失败，Rise 需自动将 status 调为 yellow 并附带 diff；Operator 可设置 `overrideUntil`（<=72h）以临时允许 webhook 连通，同时触发人工审查。
+- **Redis/Mongo 不可用**：测试运行 fallback 到本地 JSON 缓存，status 设置为 red 并向 Operators 提示“数据源未写入，结果仅供参考”。
+- **Secret 轮换**：在 Secret 更新但未重新跑测试前，status 自动置为 yellow，Up 显示“请重新运行测试以验证新 Secret”。
+- **Polling 模式**：若运维出于紧急需要启用 polling，系统允许但 coverage 记录 `mode: polling` 并标注需手动验收；Webhook 测试暂停执行。
+
+### Acceptance
+- **A1** GIVEN workflow 缺少 `tests/business_service/conversation` 夹具 WHEN Operator 尝试启用 webhook THEN Rise API 返回 409，Up UI 提示“请先完成表征测试”。
+- **A2** GIVEN QA 使用 `pytest -m characterization` 运行所有场景 WHEN 测试通过 THEN Redis `rise:coverage:workflow:<id>` 更新为 green 且 Up 表单 5 秒内刷新状态；如失败，ChannelHealthCard 显示失败详情并保留 disable。
+- **A3** GIVEN Operator 在 Up 中点击“重新运行测试” WHEN Rise 完成后台执行 THEN `WorkflowLogStream` 输出 telemetry，Operator 可下载最新 `var/test_runs` JSON，监控中同时出现 `CoverageTestCompleted` 事件。
+- **监控期望**：Prometheus exporter 暴露 `rise_coverage_status{workflow_id=...}`，Grafana 面板展示红/黄/绿分布；Up SSE channel 在 status 变化时推送消息。
+
+### Open Questions (含默认值，不需用户补充)
+1. **Golden 数据来源**：默认取自最近 30 天真实对话脱敏记录；若敏感字段无法脱敏，则用合成输入并在 README 说明。
+2. **最小刷新频次**：默认每 7 天自动跑一次 characterization（由 Github Actions 调用 `/tests/run`），可通过环境变量 `COVERAGE_MAX_AGE_DAYS` 覆盖。
+3. **覆盖失败后的自动恢复**：默认连续 3 次失败才触发自动禁用 webhook；单次失败仅警告并要求人工确认。
+4. **跨渠道复用策略**：默认不同 Telegram bot 不能共用 webhook Secret；未来扩展 Slack/HTTP 时沿用同一接口与状态文档。
+5. **观测数据保留期**：Redis 记录 14 天、Mongo 180 天，满足审计追溯要求；可在 `config/observability.yaml` 参数化。

@@ -31,11 +31,22 @@ class TelegramChannelMetadata(BaseModel):
 
 class WorkflowChannelRequest(BaseModel):
     botToken: Optional[str] = Field(default=None, description="Telegram bot token (omit to reuse existing)")
-    webhookUrl: str = Field(..., description="HTTPS webhook endpoint")
+    webhookUrl: Optional[str] = Field(default=None, description="HTTPS webhook endpoint (required when usePolling=false)")
     waitForResult: bool = Field(default=True)
     workflowMissingMessage: str = Field(default="Workflow unavailable, please contact the operator.")
     timeoutMessage: str = Field(default="Workflow timeout, please try again.")
     metadata: TelegramChannelMetadata = Field(default_factory=TelegramChannelMetadata)
+    usePolling: bool = Field(default=False)
+
+    @model_validator(mode="after")
+    def _validate_mode(self) -> "WorkflowChannelRequest":
+        if self.usePolling:
+            if self.webhookUrl:
+                raise ValueError("webhookUrl must be omitted when usePolling=true")
+        else:
+            if not self.webhookUrl:
+                raise ValueError("webhookUrl is required when usePolling=false")
+        return self
 
 
 class WorkflowChannelResponse(BaseModel):
@@ -50,6 +61,7 @@ class WorkflowChannelResponse(BaseModel):
     secretVersion: int
     updatedAt: datetime
     updatedBy: Optional[str] = None
+    usePolling: bool = Field(default=False)
 
 
 class ChannelBindingHealth(BaseModel):
@@ -93,6 +105,17 @@ class ChannelBindingConfig(BaseModel):
     workflowMissingMessage: str = Field(default="Workflow unavailable, please contact the operator.")
     timeoutMessage: str = Field(default="Workflow timeout, please try again.")
     metadata: TelegramChannelMetadata = Field(default_factory=TelegramChannelMetadata)
+    usePolling: bool = Field(default=False)
+
+    @model_validator(mode="after")
+    def _validate_mode(self) -> "ChannelBindingConfig":
+        if self.usePolling:
+            if self.webhookUrl:
+                raise ValueError("webhookUrl must be omitted when usePolling=true")
+        else:
+            if not self.webhookUrl:
+                raise ValueError("webhookUrl is required when usePolling=false")
+        return self
 
 
 class ChannelBindingUpsertRequest(BaseModel):
@@ -105,8 +128,6 @@ class ChannelBindingUpsertRequest(BaseModel):
         if self.enabled:
             if self.config is None:
                 raise ValueError("config is required when enabled=true")
-            if not self.config.webhookUrl:
-                raise ValueError("webhookUrl is required when enabled=true")
         return self
 
 

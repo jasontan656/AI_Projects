@@ -1,4 +1,4 @@
-generated_at: '2025-11-12T18:16:42+00:00'
+generated_at: '2025-11-13T14:28:45+00:00'
 projects:
   rise:
     meta:
@@ -40,21 +40,21 @@ projects:
     - layer: Foundational Service Layer
       path: src/foundational_service
       ext:
-      - py(35)
+      - py(39)
       files:
       - src/foundational_service/telemetry/bus.py
       - src/foundational_service/persist/redis_queue.py
     - layer: Interface / Entry Layer
       path: src/interface_entry
       ext:
-      - py(47)
+      - py(48)
       files:
       - src/interface_entry/bootstrap/application_builder.py
       - src/interface_entry/http/workflows/routes.py
     - layer: Business Service Layer
       path: src/business_service
       ext:
-      - py(33)
+      - py(36)
       files:
       - src/business_service/conversation/service.py
       - src/business_service/workflow/repository.py
@@ -120,13 +120,14 @@ projects:
         - os
       src/foundational_service/telemetry/bus.py:
         local:
+        - src/project_utility/config/paths.py
         - src/project_utility/telemetry.py
         external:
         - __future__
+        - asyncio
         - atexit
+        - datetime
         - io
-        - json
-        - pathlib
       src/interface_entry/bootstrap/application_builder.py:
         local:
         - src/business_service/channel/health_store.py
@@ -142,11 +143,11 @@ projects:
         - business_service
       src/interface_entry/http/workflows/routes.py:
         local:
+        - src/business_service/channel/coverage_status.py
         - src/business_service/prompt/repository.py
         - src/business_service/workflow/models.py
         - src/business_service/workflow/observability.py
         - src/business_service/workflow/repository.py
-        - src/foundational_service/persist/task_envelope.py
         external:
         - __future__
         - asyncio
@@ -217,7 +218,7 @@ projects:
       - js(11)
       files:
       - src/services/pipelineService.js
-      - src/services/workflowService.js
+      - src/services/channelPolicyClient.js
     - layer: Business Service Layer
       path: src/stores
       ext:
@@ -228,10 +229,10 @@ projects:
     - layer: Interface / Entry Layer
       path: src/components
       ext:
-      - vue(20)
+      - vue(24)
       files:
+      - src/components/WorkflowChannelForm.vue
       - src/components/WorkflowEditor.vue
-      - src/components/NodeActionList.vue
     - layer: Interface / Entry Layer
       path: src/views
       ext:
@@ -240,26 +241,28 @@ projects:
       - src/views/PipelineWorkspace.vue
       - src/views/WorkflowBuilder.vue
     graph:
-      src/components/NodeActionList.vue:
+      src/components/WorkflowChannelForm.vue:
         local:
-        - src/utils/nodeActions.js
+        - src/components/channel-form/ChannelCoverageGate.vue
+        - src/components/channel-form/ChannelFieldsSecurity.vue
+        - src/components/channel-form/ChannelFormShell.vue
+        - src/components/channel-form/ChannelSubmitActions.vue
         external:
-        - uuid
         - vue
       src/components/WorkflowEditor.vue:
         local: []
         external:
         - element-plus
         - vue
+      src/services/channelPolicyClient.js:
+        local:
+        - src/schemas/channelPolicy.js
+        - src/services/httpClient.js
+        external: []
       src/services/pipelineService.js:
         local:
         - src/services/httpClient.js
         - src/utils/nodeActions.js
-        external: []
-      src/services/workflowService.js:
-        local:
-        - src/schemas/workflowDraft.js
-        - src/services/httpClient.js
         external: []
       src/stores/channelPolicy.js:
         local:

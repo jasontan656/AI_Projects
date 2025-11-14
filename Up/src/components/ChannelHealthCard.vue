@@ -51,6 +51,22 @@
     <p v-if="paused" class="health-card__paused">
       已暂停轮询，请检查网络或点击上方“立即刷新”恢复。
     </p>
+    <div v-if="coverage" class="coverage-card">
+      <p class="health-card__metric-label">覆盖测试</p>
+      <div class="coverage-card__status">
+        <span class="coverage-card__dot" :class="coverageStatusClass"></span>
+        <div>
+          <strong>{{ coverageStatusLabel }}</strong>
+          <p class="health-card__timestamp">{{ coverageUpdated }}</p>
+        </div>
+      </div>
+      <p v-if="coverageScenarios.length" class="coverage-card__scenarios">
+        场景：{{ coverageScenarios.join("、") }}
+      </p>
+      <p v-if="coverage?.lastError" class="coverage-card__error">
+        {{ coverage.lastError }}
+      </p>
+    </div>
   </section>
 </template>
 
@@ -69,6 +85,10 @@ const props = defineProps({
   paused: {
     type: Boolean,
     default: false,
+  },
+  coverage: {
+    type: Object,
+    default: () => null,
   },
 });
 
@@ -93,6 +113,30 @@ const formatDate = (value) => {
     return value;
   }
 };
+
+const coverageStatusLabelMap = {
+  green: "覆盖通过",
+  yellow: "需要关注",
+  red: "阻塞",
+  unknown: "未知",
+};
+
+const coverageStatusClass = computed(() =>
+  props.coverage ? `is-${props.coverage.status || "unknown"}` : ""
+);
+const coverageStatusLabel = computed(() =>
+  props.coverage
+    ? coverageStatusLabelMap[props.coverage.status] || "未知"
+    : "未知"
+);
+const coverageUpdated = computed(() => {
+  const value = props.coverage?.updatedAt;
+  if (!value) return "尚未运行";
+  return formatDate(value);
+});
+const coverageScenarios = computed(() =>
+  Array.isArray(props.coverage?.scenarios) ? props.coverage.scenarios : []
+);
 </script>
 
 <style scoped>
@@ -180,5 +224,50 @@ const formatDate = (value) => {
   margin: 0;
   font-size: var(--font-size-xs);
   color: #a45c00;
+}
+
+.coverage-card {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border-subtle);
+  background: var(--color-bg-muted);
+}
+
+.coverage-card__status {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.coverage-card__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.coverage-card__dot.is-green {
+  background: #12b76a;
+}
+
+.coverage-card__dot.is-yellow {
+  background: #f79009;
+}
+
+.coverage-card__dot.is-red {
+  background: #f04438;
+}
+
+.coverage-card__scenarios {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.coverage-card__error {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-xs);
+  color: #f04438;
 }
 </style>

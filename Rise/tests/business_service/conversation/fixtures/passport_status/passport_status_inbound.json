@@ -1,0 +1,27 @@
+{
+  "update_id": 900001,
+  "message": {
+    "message_id": 41,
+    "date": 1731475200,
+    "chat": {
+      "id": 999999,
+      "type": "private",
+      "first_name": "REDACTED",
+      "last_name": "REDACTED"
+    },
+    "from": {
+      "id": 999999,
+      "is_bot": false,
+      "language_code": "en",
+      "first_name": "REDACTED"
+    },
+    "text": "/passport_status",
+    "entities": [
+      {
+        "offset": 0,
+        "length": 16,
+        "type": "bot_command"
+      }
+    ]
+  }
+}

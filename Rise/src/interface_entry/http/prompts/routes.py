@@ -13,7 +13,7 @@ from interface_entry.http.prompts.dto import (
     PromptResponse,
     PromptUpdatePayload,
 )
-from interface_entry.http.dependencies import get_prompt_service
+from interface_entry.http.dependencies.workflow import get_prompt_service
 from interface_entry.http.responses import ApiMeta, ApiResponse, PaginationMeta
 from interface_entry.http.security import ActorContext, get_actor_context
 from foundational_service.contracts.toolcalls import call_record_audit

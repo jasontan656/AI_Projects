@@ -1,0 +1,7 @@
+[mcp__chrome-devtools__list_network_requests http://localhost:5173/workspace/workflow]
+reqid=21 GET http://localhost:5173/src/views/workspace/WorkflowView.vue?t=1763084637673 [200]
+reqid=25 GET http://localhost:5173/src/stores/workspaceNav.js [200]
+reqid=30 GET http://localhost:5173/src/components/NodeList.vue [200]
+reqid=35 GET http://localhost:5173/src/components/PromptEditor.vue [200]
+reqid=38 GET http://localhost:5173/src/stores/promptDraft.js [200]
+reqid=40 GET http://localhost:5173/src/views/workspace/PromptsView.vue?vue&type=style&index=0&scoped=f74fc6fa&lang.css [200]

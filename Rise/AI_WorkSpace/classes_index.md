@@ -1,6 +1,6 @@
 # 类索引
 
-_生成时间：2025-11-12T18:16:42+00:00_
+_生成时间：2025-11-13T14:28:45+00:00_
 
 ## rise-project-utility（rise）
 
@@ -33,18 +33,18 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/foundational_service/telemetry/bus.py` · `class TelemetryConsoleSubscriber` · 337 行
   - 说明：Subscribe to TelemetryEmitter events and render them with Rich.
   - 片段：class TelemetryConsoleSubscriber:     """Subscribe to TelemetryEmitter events and render them with Rich.""" 
+- `src/foundational_service/messaging/channel_binding_event_publisher.py` · `class ChannelBindingEventPublisher` · 159 行
+  - 说明：Publish channel binding events with queue + deadletter fallbacks.
+  - 片段：class ChannelBindingEventPublisher:     """Publish channel binding events with queue + deadletter fallbacks.""" 
 - `src/foundational_service/persist/worker.py` · `class TaskWorker` · 149 行
   - 说明：（无 docstring，参考片段）
   - 片段：class TaskWorker:     def __init__(         self,
-- `src/foundational_service/messaging/channel_binding_event_publisher.py` · `class ChannelBindingEventPublisher` · 144 行
-  - 说明：Publish channel binding events with queue + deadletter fallbacks.
-  - 片段：class ChannelBindingEventPublisher:     """Publish channel binding events with queue + deadletter fallbacks.""" 
-- `src/foundational_service/persist/workflow_summary_repository.py` · `class WorkflowSummaryRepository` · 96 行
-  - 说明：Persist workflow summaries to Redis (cache) and Mongo (archive).
-  - 片段：class WorkflowSummaryRepository:     """Persist workflow summaries to Redis (cache) and Mongo (archive).""" 
-- `src/foundational_service/persist/observability.py` · `class WorkflowRunReadRepository` · 92 行
-  - 说明：Query helper over the workflow_runs collection for observability use cases.
-  - 片段：class WorkflowRunReadRepository:     """Query helper over the workflow_runs collection for observability use cases.""" 
+- `src/foundational_service/observability/public_endpoint_probe.py` · `class PublicEndpointSecurityProbe` · 146 行
+  - 说明：Evaluate webhook TLS expiry and secret uniqueness.
+  - 片段：class PublicEndpointSecurityProbe:     """Evaluate webhook TLS expiry and secret uniqueness.""" 
+- `src/foundational_service/telemetry/bus.py` · `class CoverageTestEventRecorder` · 114 行
+  - 说明：Write coverage test run events to disk and fan out via SSE-friendly queues.
+  - 片段：class CoverageTestEventRecorder:     """Write coverage test run events to disk and fan out via SSE-friendly queues.""" 
 
 ### Interface / Entry Layer
 
@@ -69,12 +69,12 @@ _生成时间：2025-11-12T18:16:42+00:00_
 
 ### Business Service Layer
 
+- `src/business_service/channel/service.py` · `class WorkflowChannelService` · 335 行
+  - 说明：（无 docstring，参考片段）
+  - 片段：class WorkflowChannelService:     def __init__(         self,
 - `src/business_service/knowledge/snapshot_service.py` · `class KnowledgeSnapshotService` · 329 行
   - 说明：Business-layer service orchestrating knowledge snapshot lifecycle.
   - 片段：class KnowledgeSnapshotService:     """Business-layer service orchestrating knowledge snapshot lifecycle.""" 
-- `src/business_service/channel/service.py` · `class WorkflowChannelService` · 320 行
-  - 说明：（无 docstring，参考片段）
-  - 片段：class WorkflowChannelService:     def __init__(         self,
 - `src/business_service/workflow/observability.py` · `class WorkflowObservabilityService` · 241 行
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowObservabilityService:     def __init__(         self,
@@ -101,6 +101,9 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/views/PipelineWorkspace.vue` · `VueComponent<PipelineWorkspace>` · 930 行
   - 说明：<el-container class="workspace-shell">
   - 片段：<template> <el-container class="workspace-shell"> <el-aside width="248px" class="workspace-aside">
+- `src/components/WorkflowChannelForm.vue` · `VueComponent<WorkflowChannelForm>` · 611 行
+  - 说明：<ChannelFormShell
+  - 片段：<template> <ChannelFormShell :published="published"
 - `src/components/NodeActionList.vue` · `VueComponent<NodeActionList>` · 506 行
   - 说明：<section class="node-action-list">
   - 片段：<template> <section class="node-action-list"> <div class="node-action-list__toolbar">
@@ -113,15 +116,15 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/components/NodeDraftForm.vue` · `VueComponent<NodeDraftForm>` · 454 行
   - 说明：<section :class="['node-draft', { 'node-draft--full': isFullLayout }]">
   - 片段：<template> <section :class="['node-draft', { 'node-draft--full': isFullLayout }]"> <header class="node-draft__header">
-- `src/components/WorkflowChannelForm.vue` · `VueComponent<WorkflowChannelForm>` · 432 行
-  - 说明：<section class="channel-form" v-if="published">
-  - 片段：<template> <section class="channel-form" v-if="published"> <header class="channel-form__header">
 
 ### Interface / Entry Layer
 
 - `src/views/PipelineWorkspace.vue` · `VueComponent<PipelineWorkspace>` · 930 行
   - 说明：<el-container class="workspace-shell">
   - 片段：<template> <el-container class="workspace-shell"> <el-aside width="248px" class="workspace-aside">
+- `src/components/WorkflowChannelForm.vue` · `VueComponent<WorkflowChannelForm>` · 611 行
+  - 说明：<ChannelFormShell
+  - 片段：<template> <ChannelFormShell :published="published"
 - `src/components/NodeActionList.vue` · `VueComponent<NodeActionList>` · 506 行
   - 说明：<section class="node-action-list">
   - 片段：<template> <section class="node-action-list"> <div class="node-action-list__toolbar">
@@ -134,9 +137,6 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/components/NodeDraftForm.vue` · `VueComponent<NodeDraftForm>` · 454 行
   - 说明：<section :class="['node-draft', { 'node-draft--full': isFullLayout }]">
   - 片段：<template> <section :class="['node-draft', { 'node-draft--full': isFullLayout }]"> <header class="node-draft__header">
-- `src/components/WorkflowChannelForm.vue` · `VueComponent<WorkflowChannelForm>` · 432 行
-  - 说明：<section class="channel-form" v-if="published">
-  - 片段：<template> <section class="channel-form" v-if="published"> <header class="channel-form__header">
 
 ### Unmapped
 

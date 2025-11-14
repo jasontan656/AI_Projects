@@ -1,0 +1,2 @@
+[mcp__chrome-devtools__list_network_requests http://localhost:5173/pipelines]
+reqid21-40 sample 2025-11-14T03:34+08

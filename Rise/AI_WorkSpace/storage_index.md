@@ -1,15 +1,10 @@
 # 数据持久化索引
 
-_生成时间：2025-11-12T18:16:42+00:00_
-
-## RABBIT
-
-- `channel_binding.updated` · src/business_service/channel/events.py · Business Service Layer · ataclasses import dataclass, field
-- `channel_binding.health` · src/business_service/channel/events.py · Business Service Layer · mport datetime, timezone
+_生成时间：2025-11-13T14:28:45+00:00_
 
 ## REDIS
 
-- `events` · src/business_service/channel/events.py · Business Service Layer · 包含 redis 关键字
+- `coverage_status` · src/business_service/channel/coverage_status.py · Business Service Layer · 包含 redis 关键字
 - `health_store` · src/business_service/channel/health_store.py · Business Service Layer · 包含 redis 关键字
 - `rate_limit` · src/business_service/channel/rate_limit.py · Business Service Layer · 包含 redis 关键字
 - `health` · src/business_service/conversation/health.py · Business Service Layer · 包含 redis 关键字

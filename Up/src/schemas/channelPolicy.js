@@ -7,10 +7,16 @@ const CHANNEL_POLICY_DEFAULT = {
   waitForResult: true,
   workflowMissingMessage: "",
   timeoutMessage: "",
+  usePolling: false,
   metadata: {
     allowedChatIds: [],
     rateLimitPerMin: 60,
     locale: "zh-CN",
+  },
+  security: {
+    secret: "",
+    certificatePem: "",
+    certificateName: "",
   },
   updatedAt: null,
   updatedBy: null,
@@ -40,14 +46,52 @@ const normalizeChatIds = (ids) => {
 };
 
 export function createChannelPolicy(overrides = {}) {
+  const segmented = { ...overrides };
+  if (overrides?.credential) {
+    const credential = overrides.credential;
+    segmented.botToken = credential.botToken ?? overrides.botToken ?? "";
+    segmented.maskedBotToken =
+      credential.maskedBotToken ?? overrides.maskedBotToken ?? "";
+    segmented.webhookUrl =
+      credential.webhookUrl ?? overrides.webhookUrl ?? "";
+    segmented.waitForResult =
+      credential.waitForResult ?? overrides.waitForResult ?? true;
+    segmented.workflowMissingMessage =
+      credential.workflowMissingMessage ??
+      overrides.workflowMissingMessage ??
+      "";
+    segmented.timeoutMessage =
+      credential.timeoutMessage ?? overrides.timeoutMessage ?? "";
+    segmented.usePolling = Boolean(
+      credential.usePolling ?? overrides.usePolling ?? false,
+    );
+  }
+  if (overrides?.rateLimit) {
+    segmented.metadata = {
+      ...(overrides?.metadata || {}),
+      ...overrides.rateLimit,
+    };
+  }
+  if (overrides?.security) {
+    segmented.security = {
+      ...CHANNEL_POLICY_DEFAULT.security,
+      ...overrides.security,
+    };
+  }
+
   const merged = {
     ...CHANNEL_POLICY_DEFAULT,
-    ...overrides,
+    ...segmented,
     metadata: {
       ...CHANNEL_POLICY_DEFAULT.metadata,
-      ...(overrides?.metadata || {}),
+      ...(segmented?.metadata || {}),
+    },
+    security: {
+      ...CHANNEL_POLICY_DEFAULT.security,
+      ...(segmented?.security || {}),
     },
   };
+  merged.usePolling = Boolean(overrides?.usePolling ?? CHANNEL_POLICY_DEFAULT.usePolling);
   merged.metadata.allowedChatIds = normalizeChatIds(
     merged.metadata.allowedChatIds
   );
@@ -65,32 +109,96 @@ export function normalizeChannelPolicyResponse(response) {
   if (!response) {
     return createChannelPolicy();
   }
-  return createChannelPolicy({
+  const payload = {
     ...response,
     botToken: response.botToken || "",
     maskedBotToken: response.maskedBotToken || "",
     updatedAt: response.updatedAt || null,
     updatedBy: response.updatedBy || null,
-  });
+    usePolling: Boolean(response.usePolling),
+  };
+  if (response.credential) {
+    Object.assign(payload, {
+      botToken: response.credential.botToken || payload.botToken,
+      maskedBotToken:
+        response.credential.maskedBotToken || payload.maskedBotToken,
+      webhookUrl: response.credential.webhookUrl ?? payload.webhookUrl,
+      waitForResult:
+        response.credential.waitForResult ?? payload.waitForResult,
+      workflowMissingMessage:
+        response.credential.workflowMissingMessage ??
+        payload.workflowMissingMessage,
+      timeoutMessage:
+        response.credential.timeoutMessage ?? payload.timeoutMessage,
+      usePolling:
+        response.credential.usePolling ?? payload.usePolling ?? false,
+    });
+  }
+  if (response.rateLimit) {
+    payload.metadata = {
+      ...payload.metadata,
+      ...response.rateLimit,
+    };
+  }
+  if (response.security) {
+    payload.security = {
+      ...payload.security,
+      ...response.security,
+    };
+  }
+  return createChannelPolicy(payload);
 }
 
 export function buildChannelPolicyPayload(payload = {}) {
   const normalized = createChannelPolicy(payload);
-  const body = {
-    channel: normalized.channel,
-    webhookUrl: normalized.webhookUrl,
+  const credential = {
+    webhookUrl: normalized.usePolling ? "" : normalized.webhookUrl,
     waitForResult: Boolean(normalized.waitForResult),
     workflowMissingMessage: normalized.workflowMissingMessage,
     timeoutMessage: normalized.timeoutMessage,
-    metadata: {
-      allowedChatIds: normalized.metadata.allowedChatIds,
-      rateLimitPerMin: normalized.metadata.rateLimitPerMin,
-      locale: normalized.metadata.locale,
-    },
+    usePolling: Boolean(normalized.usePolling),
   };
   const trimmedToken = toCleanString(payload.botToken ?? normalized.botToken);
   if (trimmedToken) {
-    body.botToken = trimmedToken;
+    credential.botToken = trimmedToken;
+  }
+
+  const rateLimit = {
+    allowedChatIds: normalized.metadata.allowedChatIds
+      .map((id) => id.trim())
+      .filter((id) => id.length > 0),
+    rateLimitPerMin: normalized.metadata.rateLimitPerMin,
+    locale: normalized.metadata.locale,
+  };
+
+  const security = {
+    secret: normalized.security?.secret || "",
+    certificatePem: normalized.security?.certificatePem || "",
+    certificateName: normalized.security?.certificateName || "",
+  };
+
+  const body = {
+    channel: normalized.channel,
+    credential,
+    rateLimit,
+    security,
+  };
+
+  // Legacy fields kept for backward compatibility while backend migrates.
+  body.webhookUrl = credential.webhookUrl;
+  body.waitForResult = credential.waitForResult;
+  body.workflowMissingMessage = credential.workflowMissingMessage;
+  body.timeoutMessage = credential.timeoutMessage;
+  body.usePolling = credential.usePolling;
+  body.metadata = rateLimit;
+  if (credential.botToken) {
+    body.botToken = credential.botToken;
+  }
+  if (security.secret) {
+    body.webhookSecret = security.secret;
+  }
+  if (security.certificatePem) {
+    body.certificatePem = security.certificatePem;
   }
   return body;
 }

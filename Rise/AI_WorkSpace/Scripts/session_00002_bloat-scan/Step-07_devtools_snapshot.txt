@@ -1,0 +1,2 @@
+[mcp__chrome-devtools__take_snapshot http://localhost:5173/pipelines]
+Captured Channel Form view 2025-11-14T03:34+08

@@ -10,8 +10,8 @@ from fastapi import FastAPI
 from interface_entry.bootstrap.application_builder import (
     TelegramWebhookUnavailableError,
     configure_application,
-    perform_clean_startup,
 )
+from interface_entry.bootstrap.startup_housekeeping import perform_clean_startup
 
 log = logging.getLogger("interface_entry.app")
 

@@ -4,13 +4,14 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export function subscribeWorkflowLogs(
   workflowId,
-  { onMessage, onError, heartbeatMs } = {}
+  { onMessage, onError, onRetry, heartbeatMs } = {}
 ) {
   const stream = createWorkflowLogStream(
     workflowId,
     {
       onMessage,
       onError,
+      onRetry,
     },
     { heartbeatMs }
   );

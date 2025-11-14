@@ -1,3 +1,15 @@
+## 2025-11-13 20:30 (UTC+08) Build & Verify Session
+- Execution Focus：以审计合规验证为主（audit-heavy），本轮 Step-09~12 聚焦互斥策略、门禁脚本与守护验证，执行需同步证据闭环。
+- Stack & Tool Sync：
+  - Telegram setWebhook 文档提醒：一旦启用 webhook，将无法继续长期使用 getUpdates()，且需通过 secret_token 头校验来源。citeturn3search2
+  - Pinia 官方 Actions 指南建议在异步 action 中统一 try/catch，并借助 ().onError/after 记录错误与完成状态供 UI 使用。citeturn4search0
+  - FastAPI StreamingResponse 适合 SSE/日志推送，生成器可逐块写出并在 with 语句中自动关闭资源。citeturn6search10
+  - Schemathesis CLI st run 支持 header/auth/mode/max-examples 等参数，便于对本地 OpenAPI 做 fuzz 并集成 CI。citeturn1search0turn1search2turn1search3
+  - Madge CLI 支持 madge --circular src 与 .circular() API 生成循环依赖报告，可作为前端护栏。citeturn2search0
+- chromedevtoolmcp：成功访问 http://127.0.0.1:8000/docs 与 http://localhost:5173/pipelines，已保存 StackSync_http8000_snapshot.json / StackSync_http5173_snapshot.json 作为可用性证据。
+- Step-09：新增 ChannelMode policy + WorkflowChannelPolicy.mode 字段，WorkflowChannelRequest/ChannelBindingConfig/Response 携带 usePolling；保存逻辑阻止 webhook+pilling 冲突，并补充 test_channel_modes.py + pytest 记录（Step-09_pytest.log）。
+- Step-10：channelPolicy schema/store/client/前端组件接入 usePolling，ChannelCoverageGate/ChannelTestPanel/WorkflowChannelForm/WorkflowBuilder 展示 Polling 提示 + UI disable；Chrome snapshot + Vitest 日志保存在 Step-10_ui_snapshot.json 和 Step-10_vitest.log。
+
 # Session 00001 compliance-audit Notes
 
 ## 2025-11-12 10:24 (UTC-08) 初始化
@@ -93,3 +105,24 @@
 - **新增 Steps**：输出 Step-01~Step-11，覆盖 import 守护、contracts 重构、conversation/service 拆分、BS→IE 解耦、Up 三大组件拆分+文档、文件体量/循环检测脚本、API/日志金样本以及一键合规套件。
 - **风险速记**：旧违例与金样本漂移需要 allowlist+审批流程；前端拆分需依赖 Pinia/Story 佐证；madge/import-linter 需锁版本。
 - **待验证**：Step-03 需量化行数下降并在 Step-08 基线中体现；Step-10 金样本命令要确定稳定环境（dev vs sandbox）；Step-11 脚本需定义报告落盘路径供审计取证。
+
+## 2025-11-13 21:24 (UTC+08) Build & Verify Session
+- 执行聚焦：合规强化优先（Execution Focus = audit-heavy），因 Step-11/12 需落地覆盖事件/SSE 与 CI 护栏，强调验证与守护，但仍包含 Telemetry 新功能，需保持 Build & Verify 基准。
+- Stack & Tool Sync：
+  - FastAPI 官方示例通过 `StreamingResponse` + 生成器推送文本/SSE，强调 `yield` 分块与 `media_type='text/event-stream'`，用于 Step-11 SSE 接口实现。citeturn2search2
+  - Vue 3 可借助 @vueuse/core 的 `useEventSource` 在组件中管理 SSE 连接/重连与消息回调，适合 ChannelTestPanel 订阅覆盖事件。citeturn0search9
+  - Schemathesis CLI (`schemathesis run <openapi> --checks=all --stateful=links`) 提供 OpenAPI fuzz，适合作为 Step-12 CI 护栏。citeturn0search1
+  - import-linter 允许用 `.importlinter` 定义层级契约（e.g., forbidden 包依赖），`lint --config` 可在 CI 阶段阻断向上依赖。citeturn1search6
+  - madge `--circular src` 快速生成 JS/Vue 依赖环报告并可导出图表，是 Step-12 前端循环护栏的核心工具。citeturn1search2
+  - radon `cc` / `mi` 命令针对 Python 统计圈复杂度与可维护性指数，可在 Step-12 结合行数守护监测胖文件。citeturn1search0
+  - Vitest + Vue Test Utils 官方指南建议使用 `mount` + 组件事件断言来测试 UI 交互和副作用，Step-11/12 的 ChannelTestPanel/Vitest 证据据此执行。citeturn1search8
+- chromedevtoolmcp：已验证 http://127.0.0.1:8000/docs 与 http://localhost:5173/pipelines 可加载，待 Step-11/12 取快照/网络日志入库。
+- Step-11 实施：`CoverageTestEventRecorder` 将 Telemetry 事件写入 `var/logs/test_runs/<workflow>/<timestamp>.jsonl` 并提供 SSE 队列，`CoverageStatusService.mark_status` 在非 pending 状态触发 recorder，新增 `/api/workflows/{workflow_id}/tests/stream`；Up `ChannelTestPanel` 注入 workflowId + SSE 流、合并 liveHistory；新脚本 `Step-11_tail_telemetry.ps1` 帮助运维 tail 日志。
+- Step-11 验证：`PYTHONPATH=src pytest tests/business_service/channel/test_coverage_events.py tests/business_service/channel/test_coverage_status.py tests/interface_entry/http/test_workflow_coverage.py`、`VITEST_WORKSPACE_ROOT=tests VITEST_SETUP_PATH=tests/setup/vitest.setup.js C:\Users\HP\AppData\Roaming\npm\pnpm.cmd vitest run tests/unit/ChannelTestPanel.spec.ts`（`--runInBand` 在 vitest@2.1.9 中无效需移除，pnpm 需显式给出全路径）；Chromedev 采集 `Step-11_up_snapshot.png`、`Step-11_up_console.log`、`Step-11_up_network.log` 与 `Step-11_tests_stream.png/console.log/network.log`，SSE 端点因缺少身份返回 401 作为授权约束证据。
+- Step-12 实施：新建 `CI/scripts/check_characterization.sh` 串起 import guard → characterization pytest → coverage pytest → radon → `pnpm dlx madge --circular src` → schemathesis → Vitest，并在 `SCRIPT_DIR/Step-12_ci_guard.sh` 提供入口；.venv 安装 `radon==6.0.1`、`schemathesis==4.5.1`（已更新 requirements.lock），Windows 缺少 bash 因此本次以单条命令执行并记录日志（Step-12_import_guard.log/characterization_pytest.log/coverage_pytest.log/radon.log/madge.log/vitest.log）。
+- Step-12 验证：radon 报告 `ChannelBindingRegistry.refresh` 仍为 C 级需后续拆分；madge 未发现循环；schemathesis 在缺少 Actor header 时 55 个操作中 46 个因 401/404/500 失败（写入 Step-12_schemathesis.log，需未来接入测试账号或 mock）；Vitest 再跑 ChannelTestPanel 维持通过但 Element Plus 警告仍存在；CI shell 未来上线需运行在 bash 环境以充分利用 orchestrator。
+
+## 2025-11-13 22:15 (UTC+08) Requirements Update（Assessment）
+- 用户意图：要求在 Rise/Up 双仓中识别最亟需重构的臃肿文件，并按照职责混杂、耦合、抽象层缺失、复用困难等维度评分，输出根因与非代码级重构建议；属于 Assessment Focus，需写入既有 `session_00001_compliance-audit` 需求文档。
+- 资料复用：继续沿用 `AI_WorkSpace/Requirements/session_00001_compliance-audit.md`，禁止新建文件；将新增“臃肿文件治理”章节，结合 Index 里的行数/结构记录，扩展 Findings/Impact/Remediation。
+- Stack 参考：无需新增 Context7/Exa 搜索（现有条目已覆盖 FastAPI/Pinia/Schemathesis/Madge），本次专注于仓内静态脉络；若后续需要现代重构模式再补充搜索。

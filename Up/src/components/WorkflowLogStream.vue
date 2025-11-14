@@ -17,6 +17,13 @@
         <el-button size="small" @click="$emit('export')">导出最近 200 条</el-button>
       </div>
     </header>
+    <el-alert
+      v-if="!paused && retryIn > 0"
+      type="warning"
+      :title="retryCountdownLabel"
+      :closable="false"
+      class="log-stream__alert"
+    />
     <div class="log-stream__list" ref="listRef">
       <template v-if="logs.length">
         <article
@@ -54,6 +61,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  retryIn: {
+    type: Number,
+    default: 0,
+  },
+  retryMessage: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["toggle", "filter-change", "export"]);
@@ -62,8 +77,16 @@ const filters = ref({
   level: "",
 });
 
+const retryCountdownLabel = computed(() => {
+  if (props.retryIn <= 0) return "";
+  if (props.retryMessage) return props.retryMessage;
+  const seconds = Math.ceil(props.retryIn / 1000);
+  return `日志流已断开，系统将在 ${seconds}s 后重连`;
+});
+
 const connectionStatusLabel = computed(() => {
   if (props.paused) return "已暂停";
+  if (props.retryIn > 0) return retryCountdownLabel.value;
   return props.connected ? "已连接" : "重连中…";
 });
 
@@ -122,6 +145,10 @@ const formatDate = (value) => {
   display: flex;
   gap: var(--space-1);
   align-items: center;
+}
+
+.log-stream__alert {
+  margin: 0;
 }
 
 .log-stream__list {

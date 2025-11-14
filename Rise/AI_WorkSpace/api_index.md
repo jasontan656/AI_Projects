@@ -1,6 +1,6 @@
 # API 索引
 
-_生成时间：2025-11-12T18:16:42+00:00_
+_生成时间：2025-11-13T14:28:45+00:00_
 
 ## 后端接口（FastAPI）
 
@@ -112,6 +112,14 @@ _生成时间：2025-11-12T18:16:42+00:00_
   - 说明：（无说明）
   - 片段：async def publish_workflow(     workflow_id: str,     payload: WorkflowPublishRequest,
 
+- `POST /{workflow_id}/tests/run` · `trigger_workflow_tests` · Rise · src/interface_entry/http/workflows/routes.py
+  - 说明：（无说明）
+  - 片段：async def trigger_workflow_tests(     workflow_id: str,     payload: CoverageTestRequest,
+
+- `GET /{workflow_id}/tests/stream` · `stream_workflow_tests` · Rise · src/interface_entry/http/workflows/routes.py
+  - 说明：（无说明）
+  - 片段：async def stream_workflow_tests(     workflow_id: str,     workflow_service: AsyncWorkflowService = Depends(get_workflow_service),
+
 - `POST /{workflow_id}/rollback` · `rollback_workflow` · Rise · src/interface_entry/http/workflows/routes.py
   - 说明：（无说明）
   - 片段：async def rollback_workflow(     workflow_id: str,     payload: WorkflowRollbackRequest,
@@ -185,6 +193,21 @@ _生成时间：2025-11-12T18:16:42+00:00_
       workflowId: payload.workflowId,
       chatId: payload.chatId,
       paylo…
+
+- `POST `/api/workflows/${workflowId}/tests/run`` · `runCoverageTests` · Up · src/services/channelPolicyClient.js
+  - 说明：runCoverageTests
+  - 片段：`/api/workflows/${workflowId}/tests/run`, {
+    method: "POST",
+    body: JSON.stringify({
+      scenarios: Array.isArray(payload.scenarios) ? payload.scenario…
+
+- `POST "/api/channels/telegram/security/validate"` · `validateWebhookSecurity` · Up · src/services/channelPolicyClient.js
+  - 说明：validateWebhookSecurity
+  - 片段："/api/channels/telegram/security/validate",
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    }
 
 - `GET path` · `requestJson` · Up · src/services/httpClient.js
   - 说明：requestJson

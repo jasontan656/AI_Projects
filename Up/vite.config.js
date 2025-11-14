@@ -24,6 +24,7 @@ const testUtilsModule = resolve(
 );
 const elementPlusEntry = resolve(__dirname, "node_modules/element-plus/dist/index.full.mjs");
 const piniaEntry = resolve(__dirname, "node_modules/pinia/dist/pinia.mjs");
+const elementPlusCss = resolve(__dirname, "node_modules/element-plus/dist/index.css");
 
 export default defineConfig({
   plugins: [vue()],
@@ -36,7 +37,8 @@ export default defineConfig({
     alias: {
       "@up": resolve(__dirname, "src"),
       "@vue/test-utils": testUtilsModule,
-      "element-plus": elementPlusEntry,
+      "element-plus$": elementPlusEntry,
+      "element-plus/dist/index.css": elementPlusCss,
       pinia: piniaEntry,
     },
   },

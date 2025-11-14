@@ -7,7 +7,7 @@ from typing import Sequence
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from business_service.workflow import AsyncStageService
-from interface_entry.http.dependencies import get_stage_service
+from interface_entry.http.dependencies.workflow import get_stage_service
 from interface_entry.http.responses import ApiMeta, ApiResponse
 from interface_entry.http.security import ActorContext, get_actor_context
 from interface_entry.http.stages.dto import StageRequest, StageResponse

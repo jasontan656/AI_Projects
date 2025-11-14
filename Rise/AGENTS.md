@@ -20,7 +20,7 @@ The assistant ultimately targets Philippine government services across multiple 
 - `AI_WorkSpace/Requirements/` — canonical demand/requirements docs (`session_<timestamp>_<topic>.md`).
 - `AI_WorkSpace/DevDoc/On/` — active design/implementation docs (`session_<timestamp>_<topic>.md`).
 - `AI_WorkSpace/DevDoc/Archive/` — archived/fulfilled design docs.
-- `AI_WorkSpace/plans/` — task plans / step checklists (`session_<timestamp>_min_steps.md`).
+- `AI_WorkSpace/Tasks/` — task plans (`session_<timestamp>_min_steps.md`).
 - `AI_WorkSpace/WorkLogs/` — task checklists / execution logs (`session_<timestamp>_taskchecklist.md`).
 - `AI_WorkSpace/notes/` — per-session notes named `session_<timestamp>.md`, containing intent, repo context, tech stack, search findings.
 - `AI_WorkSpace/Temp*/` — temporary scripts, diagnostics, or scratch files (may be cleaned anytime).
@@ -52,4 +52,4 @@ The assistant ultimately targets Philippine government services across multiple 
 - Shape files by domain intent, not sheer quantity. Prefer multiple small modules grouped by behavior (serialization, telemetry, validation) instead of “misc util” buckets.
 - Payloads/prompts/policies must live under domain-specific asset folders; mixing unrelated assets in a single file is discouraged unless they share the same lifecycle.
 - Large orchestrator files (e.g., webhook dispatcher) are acceptable only when they coordinate multiple submodules; annotate the DevDoc with the rationale and list sub-dependencies to keep future refactors tractable.
-- Temporary coupling or transitional glue must be recorded in session notes and task plans with a retirement plan so downstream prompts know when to untangle it.
+- Temporary coupling or transitional glue must be recorded in session notes and task plans (stored under `AI_WorkSpace/Tasks/`) with a retirement plan so downstream prompts know when to untangle it.

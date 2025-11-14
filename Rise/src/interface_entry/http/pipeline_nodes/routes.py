@@ -8,7 +8,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status a
 
 from business_service.pipeline.repository import DuplicateNodeNameError
 from business_service.pipeline.service import AsyncPipelineNodeService
-from interface_entry.http.dependencies import get_pipeline_service
+from interface_entry.http.dependencies.workflow import get_pipeline_service
 from interface_entry.http.pipeline_nodes.dto import (
     PipelineNodeListResponse,
     PipelineNodeRequest,

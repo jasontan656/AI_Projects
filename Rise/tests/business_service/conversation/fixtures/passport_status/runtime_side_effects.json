@@ -1,0 +1,8 @@
+{
+  "redis_keys": [
+    "rise:coverage:workflow:bi_passport_status"
+  ],
+  "mongo_collections": [
+    "workflow_run_coverage"
+  ]
+}

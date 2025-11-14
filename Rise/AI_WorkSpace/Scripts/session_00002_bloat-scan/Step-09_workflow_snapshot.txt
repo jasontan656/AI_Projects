@@ -1,0 +1,58 @@
+uid=5_0 RootWebArea "Up Agent Workspace" url="http://localhost:5173/workspace/workflow"
+  uid=5_1 heading "Up Ops Workspace" level="1"
+  uid=5_2 StaticText "Workflow configuration for LLM pipelines"
+  uid=5_3 menubar orientation="horizontal"
+    uid=5_4 menuitem "Nodes"
+    uid=5_5 menuitem "Prompts"
+    uid=5_6 menuitem "Workflow"
+    uid=5_7 menuitem "Variables"
+    uid=5_8 menuitem "Logs"
+    uid=5_9 menuitem "Settings Soon"
+  uid=5_10 heading "Workflow 编排" level="2"
+  uid=5_11 StaticText "WORKFLOW"
+  uid=5_12 StaticText "组合节点与提示词，配置执行顺序与发布设置。"
+  uid=5_13 main
+    uid=5_14 heading "Workflow" level="3"
+    uid=5_15 StaticText "同步 Rise 编排记录"
+    uid=5_16 button "刷新"
+    uid=5_17 button "新建"
+    uid=5_18 generic
+      uid=5_19 textbox "搜索 Workflow"
+    uid=5_20 button "Demo Workflow 草稿 版本 v1 未知 · 11/14/2025, 6:21:27 AM"
+    uid=5_21 button "删除"
+    uid=5_22 button "Telegram Greeter Flow 已发布 版本 v2 qa-runner · 11/12/2025, 11:12:14 PM"
+    uid=5_23 button "删除" disableable disabled
+    uid=5_24 tab "编辑器" selectable selected
+    uid=5_25 tab "发布记录"
+    uid=5_26 tab "渠道设置"
+    uid=5_27 tab "可视化"
+    uid=5_28 tab "实时日志"
+    uid=5_29 tab "变量 / 工具"
+    uid=5_30 heading "编辑 Workflow" level="2"
+    uid=5_31 StaticText "选择节点顺序并绑定提示词，保存草稿以便发布。"
+    uid=5_32 button "放弃更改"
+    uid=5_33 button "保存草稿" disableable disabled
+    uid=5_34 StaticText "Workflow 名称"
+    uid=5_35 generic
+      uid=5_36 textbox "Workflow 名称" value="Demo Workflow"
+    uid=5_37 StaticText "描述"
+    uid=5_38 textbox "描述" multiline
+    uid=5_39 StaticText "节点执行顺序"
+    uid=5_40 generic
+      uid=5_41 combobox "节点执行顺序" haspopup="listbox"
+      uid=5_42 StaticText "按执行顺序选择节点"
+    uid=5_43 StaticText "选择顺序即执行顺序，可多选；如需移除节点，请在右侧删除对应提示词绑定。"
+    uid=5_44 heading "提示词绑定" level="3"
+    uid=5_45 StaticText "为每个节点指定提示词模板，未绑定将继承节点自带配置。"
+    uid=5_46 StaticText "请选择节点后再配置提示词。"
+    uid=5_47 heading "执行策略" level="3"
+    uid=5_48 StaticText "重试次数 (0-5)"
+    uid=5_49 button "decrease number"
+    uid=5_50 button "increase number"
+    uid=5_51 generic
+      uid=5_52 spinbutton "重试次数 (0-5)" value="0" valuemax="5" valuemin="0" valuetext="0"
+    uid=5_53 StaticText "超时 (ms)"
+    uid=5_54 button "decrease number"
+    uid=5_55 button "increase number"
+    uid=5_56 generic
+      uid=5_57 spinbutton "超时 (ms)" value="0" valuemax="9007199254740992" valuemin="0" valuetext="0"

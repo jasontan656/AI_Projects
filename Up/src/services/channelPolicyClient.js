@@ -71,3 +71,33 @@ export async function sendChannelTest(payload = {}) {
   });
   return response ?? null;
 }
+
+export async function runCoverageTests(workflowId, payload = {}) {
+  ensureWorkflowId(workflowId);
+  const response = await requestJson(`/api/workflows/${workflowId}/tests/run`, {
+    method: "POST",
+    body: JSON.stringify({
+      scenarios: Array.isArray(payload.scenarios) ? payload.scenarios : [],
+      mode: payload.mode || "webhook",
+    }),
+  });
+  return response?.data ?? response;
+}
+
+export async function validateWebhookSecurity(workflowId, payload = {}) {
+  ensureWorkflowId(workflowId);
+  const body = {
+    workflowId,
+    secretToken: payload.secretToken || payload.secret || "",
+    certificate: payload.certificate || "",
+    webhookUrl: payload.webhookUrl || "",
+  };
+  const response = await requestJson(
+    "/api/channels/telegram/security/validate",
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    }
+  );
+  return response?.data ?? response;
+}

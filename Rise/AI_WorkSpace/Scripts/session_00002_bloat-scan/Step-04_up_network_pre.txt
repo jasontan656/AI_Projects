@@ -1,0 +1,1 @@
+Step-04 pre-check：Up dev server返回 200 的组件静态资源请求（详见 DevTools 列表），采集时间 2025-11-14 10:08 GMT+8。

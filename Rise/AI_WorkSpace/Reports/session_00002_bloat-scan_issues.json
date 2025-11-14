@@ -1,0 +1,24 @@
+[
+  {
+    "id": "issue-20251114T101648932-Step-11",
+    "createdAt": "2025-11-14T10:16:48.9378439+08:00",
+    "stepId": "Step-11",
+    "summary": "Binding refresh API returns HTTP 500 for workflow channel refresh",
+    "details": "?? POST /api/channel-bindings/{workflow}/refresh?channel=telegram ???? wf-demo ? 2427173f-8aca-4c31-90c5-eff157395b27 ??? INTERNAL_ERROR?requestId=f5f846ec4605440a85f23ac1ebdd90c3/ad6623139f8f43de8e082401df7bf747??? Runbook ?????",
+    "evidence": [
+      "AI_WorkSpace/Scripts/session_00002_bloat-scan/Step-11_ops_matrix.log"
+    ],
+    "read": true
+  },
+  {
+    "id": "issue-20251114T103322232-docker",
+    "createdAt": "2025-11-14T10:33:22.2336874+08:00",
+    "stepId": "Env-Restore",
+    "summary": "??? docker.io ?? redis/mongo/rabbitmq ??",
+    "details": "?? 'docker compose pull' ????? redis/mongo/rabbitmq ????? production.cloudflare.docker.com EOF??????????????? Step-env_pull.log?? ???? docker.m.daocloud.io ????????",
+    "evidence": [
+      "AI_WorkSpace/Scripts/session_00002_bloat-scan/Step-env_pull.log"
+    ],
+    "read": true
+  }
+]

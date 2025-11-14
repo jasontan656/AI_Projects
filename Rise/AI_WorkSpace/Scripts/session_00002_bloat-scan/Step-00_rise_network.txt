@@ -1,0 +1,3 @@
+# Chrome Network - Rise Healthz (http://localhost:8000/healthz)
+reqid=1 GET http://localhost:8000/healthz [success - 200]
+reqid=2 GET http://localhost:8000/favicon.ico [failed - 404]

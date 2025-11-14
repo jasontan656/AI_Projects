@@ -7,4 +7,7 @@ __all__ = [
     "telegram",
     "registry",
     "toolcalls",
+    "workflow_exec",
+    "knowledge_io",
+    "channel_events",
 ]

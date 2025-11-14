@@ -1,0 +1,2 @@
+[mcp__chrome-devtools__take_snapshot http://localhost:8000/healthz]
+status=ok capabilities sample captured 2025-11-14T01:55+08

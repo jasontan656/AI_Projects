@@ -7,11 +7,13 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import List, Optional, Tuple
 
-from business_service.channel.events import (
+from foundational_service.contracts.channel_events import (
     CHANNEL_BINDING_HEALTH_TOPIC,
     CHANNEL_BINDING_TOPIC,
+    CHANNEL_WEBHOOK_CREDENTIAL_TOPIC,
     ChannelBindingEvent,
     ChannelBindingHealthEvent,
+    WebhookCredentialRotatedEvent,
 )
 from project_utility.db.mongo import get_mongo_database
 from project_utility.db.redis import get_async_redis
@@ -77,6 +79,21 @@ class ChannelBindingEventPublisher:
         """Backward compatible shim for existing callers."""
 
         return await self.publish_binding(event, replay=replay, retry_count=retry_count)
+
+    async def publish_webhook_credentials(
+        self,
+        event: WebhookCredentialRotatedEvent,
+        *,
+        replay: bool = False,
+        retry_count: int = 0,
+    ) -> PublishResult:
+        return await self._publish(
+            CHANNEL_WEBHOOK_CREDENTIAL_TOPIC,
+            event.dumps(),
+            workflow_id=event.workflow_id,
+            replay=replay,
+            retry_count=retry_count,
+        )
 
     async def _publish(
         self,

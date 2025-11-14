@@ -1,0 +1,1 @@
+Chrome console reported 1 error for http://localhost:8000/healthz: Failed to load resource (favicon.ico 404).

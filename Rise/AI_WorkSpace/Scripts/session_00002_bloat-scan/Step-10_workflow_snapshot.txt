@@ -1,0 +1,61 @@
+[mcp__chrome-devtools__take_snapshot http://localhost:5173/workspace/workflow]
+uid=1_0 RootWebArea "Up Agent Workspace" url="http://localhost:5173/workspace/workflow"
+  uid=1_1 heading "Up Ops Workspace" level="1"
+  uid=1_2 StaticText "Workflow configuration for LLM pipelines"
+  uid=1_3 menubar orientation="horizontal"
+    uid=1_4 menuitem "Nodes"
+    uid=1_5 menuitem "Prompts"
+    uid=1_6 menuitem "Workflow"
+    uid=1_7 menuitem "Variables"
+    uid=1_8 menuitem "Logs"
+    uid=1_9 menuitem "Settings Soon"
+  uid=1_10 heading "Workflow 编排" level="2"
+  uid=1_11 StaticText "WORKFLOW"
+  uid=1_12 StaticText "组合节点与提示词，配置执行顺序与发布设置。"
+  uid=1_13 main
+    uid=1_14 heading "Workflow" level="3"
+    uid=1_15 StaticText "同步 Rise 编排记录"
+    uid=1_16 button "刷新"
+    uid=1_17 button "新建"
+    uid=1_18 generic
+      uid=1_19 textbox "搜索 Workflow"
+    uid=1_20 button "Demo Workflow 草稿 版本 v1 未知 · 11/14/2025, 6:21:27 AM"
+    uid=1_21 button "删除"
+    uid=1_22 button "Telegram Greeter Flow 已发布 版本 v2 qa-runner · 11/12/2025, 11:12:14 PM"
+    uid=1_23 button "删除" disableable disabled
+    uid=1_24 tab "编辑器" selectable selected
+    uid=1_25 tab "发布记录"
+    uid=1_26 tab "渠道设置"
+    uid=1_27 tab "可视化"
+    uid=1_28 tab "实时日志"
+    uid=1_29 tab "变量 / 工具"
+    uid=1_30 heading "编辑 Workflow" level="2"
+    uid=1_31 StaticText "选择节点顺序并绑定提示词，保存草稿以便发布。"
+    uid=1_32 button "放弃更改"
+    uid=1_33 button "保存草稿" disableable disabled
+    uid=1_34 StaticText "Workflow 名称"
+    uid=1_35 generic
+      uid=1_36 textbox "Workflow 名称" value="Demo Workflow"
+    uid=1_37 StaticText "描述"
+    uid=1_38 textbox "描述" multiline
+    uid=1_39 StaticText "节点执行顺序"
+    uid=1_40 generic
+      uid=1_41 combobox "节点执行顺序" haspopup="listbox"
+      uid=1_42 StaticText "按执行顺序选择节点"
+    uid=1_43 StaticText "选择顺序即执行顺序，可多选；如需移除节点，请在右侧删除对应提示词绑定。"
+    uid=1_44 heading "提示词绑定" level="3"
+    uid=1_45 StaticText "为节点指定提示词模板，可通过批量绑定快速应用相同模板。"
+    uid=1_46 button "批量绑定" disableable disabled
+    uid=1_47 StaticText "请选择节点后再配置提示词。"
+    uid=1_48 heading "执行策略" level="3"
+    uid=1_49 StaticText "默认重试 2 次，可根据业务复杂度调整超时与重试次数。"
+    uid=1_50 StaticText "重试次数 (0-5)"
+    uid=1_51 button "decrease number"
+    uid=1_52 button "increase number"
+    uid=1_53 generic
+      uid=1_54 spinbutton "重试次数 (0-5)" value="2" valuemax="5" valuemin="0" valuetext="2"
+    uid=1_55 StaticText "超时 (ms)"
+    uid=1_56 button "decrease number"
+    uid=1_57 button "increase number"
+    uid=1_58 generic
+      uid=1_59 spinbutton "超时 (ms)" value="0" valuemax="9007199254740992" valuemin="0" valuetext="0"

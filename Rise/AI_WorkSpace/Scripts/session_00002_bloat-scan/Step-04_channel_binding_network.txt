@@ -1,0 +1,1 @@
+Chrome DevTools MCP 网络：GET http://localhost:8000/api/channel-bindings/dummy-id 401（缺少 actor header），用于 Step-04 验证依赖拆分后的 DI 链路。采集时间 2025-11-14 10:32 GMT+8。

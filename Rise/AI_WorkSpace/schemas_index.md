@@ -1,6 +1,6 @@
 # Schema 索引
 
-_生成时间：2025-11-12T18:16:42+00:00_
+_生成时间：2025-11-13T14:28:45+00:00_
 
 ## rise-project-utility（rise）
 
@@ -42,43 +42,43 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/foundational_service/persist/task_envelope.py` · `class TaskEnvelope` · 95 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class TaskEnvelope:     task_id: str     type: str
+- `src/foundational_service/contracts/channel_events.py` · `class ChannelBindingEvent` · 46 行 · 装饰器: dataclass
+  - 说明：（无 docstring，参考片段）
+  - 片段：class ChannelBindingEvent:     channel: str     workflow_id: str
+- `src/foundational_service/contracts/channel_events.py` · `class WebhookCredentialRotatedEvent` · 40 行 · 装饰器: dataclass
+  - 说明：（无 docstring，参考片段）
+  - 片段：class WebhookCredentialRotatedEvent:     workflow_id: str     channel: str
+- `src/foundational_service/contracts/channel_events.py` · `class ChannelBindingHealthEvent` · 31 行 · 装饰器: dataclass
+  - 说明：（无 docstring，参考片段）
+  - 片段：class ChannelBindingHealthEvent:     channel: str     workflow_id: str
 - `src/foundational_service/persist/rabbit_bridge.py` · `class RabbitConfig` · 31 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class RabbitConfig:     url: str     exchange: str = os.getenv("RABBITMQ_EXCHANGE", "rise.tasks.durable")
-- `src/foundational_service/persist/task_envelope.py` · `class RetryState` · 26 行 · 装饰器: dataclass
-  - 说明：（无 docstring，参考片段）
-  - 片段：class RetryState:     count: int = 0     max: int = 3
-- `src/foundational_service/contracts/envelope.py` · `class ExtFlags(BaseModel)` · 15 行 · 基类: BaseModel
-  - 说明：（无 docstring，参考片段）
-  - 片段：class ExtFlags(BaseModel):     reply_to_bot: Optional[bool] = None     intent_hint: Optional[str] = None
-- `src/foundational_service/persist/workflow_summary_repository.py` · `class SummaryWriteResult` · 13 行 · 装饰器: dataclass
-  - 说明：Outcome flags for Redis + Mongo writes.
-  - 片段：class SummaryWriteResult:     """Outcome flags for Redis + Mongo writes.""" 
 
 ### Interface / Entry Layer
 
 - `src/interface_entry/runtime/public_endpoint.py` · `class PublicEndpointProbe` · 47 行 · 装饰器: dataclass
   - 说明：Perform lightweight HEAD checks to confirm webhook reachability.
   - 片段：class PublicEndpointProbe:     """Perform lightweight HEAD checks to confirm webhook reachability.""" 
-- `src/interface_entry/http/workflows/dto.py` · `class WorkflowResponse(BaseModel)` · 20 行 · 基类: BaseModel
+- `src/interface_entry/http/workflows/dto.py` · `class WorkflowResponse(BaseModel)` · 21 行 · 基类: BaseModel
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowResponse(BaseModel):     id: str = Field(..., alias="workflowId")     name: str
+- `src/interface_entry/http/channels/dto.py` · `class ChannelBindingConfig(BaseModel)` · 18 行 · 基类: BaseModel
+  - 说明：（无 docstring，参考片段）
+  - 片段：class ChannelBindingConfig(BaseModel):     botToken: Optional[str] = Field(default=None, description="Telegram bot token (omit to reuse existing)")     webhookUrl: Optional[str] = Field(default=None,…
+- `src/interface_entry/http/channels/dto.py` · `class WorkflowChannelRequest(BaseModel)` · 18 行 · 基类: BaseModel
+  - 说明：（无 docstring，参考片段）
+  - 片段：class WorkflowChannelRequest(BaseModel):     botToken: Optional[str] = Field(default=None, description="Telegram bot token (omit to reuse existing)")     webhookUrl: Optional[str] = Field(default=Non…
 - `src/interface_entry/runtime/capabilities.py` · `class CapabilityProbe` · 16 行 · 装饰器: dataclass
   - 说明：Descriptor for a capability checker coroutine.
   - 片段：class CapabilityProbe:     """Descriptor for a capability checker coroutine.""" 
 - `src/interface_entry/http/dependencies.py` · `class AppSettings(BaseSettings)` · 14 行 · 基类: BaseSettings
   - 说明：（无 docstring，参考片段）
   - 片段：class AppSettings(BaseSettings):     model_config = SettingsConfigDict(         extra="allow",
-- `src/interface_entry/http/workflows/dto.py` · `class WorkflowApplyRequest(BaseModel)` · 14 行 · 基类: BaseModel
-  - 说明：（无 docstring，参考片段）
-  - 片段：class WorkflowApplyRequest(BaseModel):     workflowId: str = Field(..., description="目标 workflowId")     userText: str = Field("", description="用户输入内容")
-- `src/interface_entry/http/channels/dto.py` · `class ChannelBindingUpsertRequest(BaseModel)` · 13 行 · 基类: BaseModel
-  - 说明：（无 docstring，参考片段）
-  - 片段：class ChannelBindingUpsertRequest(BaseModel):     channel: str = Field(default="telegram")     enabled: bool = Field(default=True)
 
 ### Business Service Layer
 
-- `src/business_service/conversation/service.py` · `class TelegramConversationService` · 1086 行 · 装饰器: dataclass
+- `src/business_service/conversation/service.py` · `class TelegramConversationService` · 1087 行 · 装饰器: dataclass
   - 说明：面向 Telegram 渠道的业务服务门面。
   - 片段：class TelegramConversationService:     """面向 Telegram 渠道的业务服务门面。""" 
 - `src/business_service/workflow/service.py` · `class AsyncWorkflowService` · 164 行 · 装饰器: dataclass
@@ -87,7 +87,7 @@ _生成时间：2025-11-12T18:16:42+00:00_
 - `src/business_service/workflow/models.py` · `class WorkflowDefinition` · 96 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowDefinition:     workflow_id: str     name: str
-- `src/business_service/channel/models.py` · `class WorkflowChannelPolicy` · 84 行 · 装饰器: dataclass
+- `src/business_service/channel/models.py` · `class WorkflowChannelPolicy` · 89 行 · 装饰器: dataclass
   - 说明：（无 docstring，参考片段）
   - 片段：class WorkflowChannelPolicy:     workflow_id: str     channel: str
 - `src/business_service/pipeline/models.py` · `class PipelineNode` · 75 行 · 装饰器: dataclass

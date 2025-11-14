@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from typing import Any, Mapping, TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from business_service.conversation.binding_coordinator import BindingCoordinator
+    from business_service.conversation.context_factory import ConversationContextFactory
     from business_service.conversation.models import ConversationServiceResult
     from business_service.conversation.service import TelegramConversationService
 
@@ -24,6 +26,8 @@ class TelegramConversationFlow:
         service: "TelegramConversationService" | None = None,
         adapter_builder: Any | None = None,
         agent_delegator: Any | None = None,
+        context_factory: "ConversationContextFactory" | None = None,
+        binding_coordinator: "BindingCoordinator" | None = None,
     ) -> None:
         if service is not None:
             self.service = service
@@ -36,6 +40,10 @@ class TelegramConversationFlow:
             service_kwargs["adapter_builder"] = adapter_builder
         if agent_delegator is not None:
             service_kwargs["agent_delegator"] = agent_delegator
+        if context_factory is not None:
+            service_kwargs["context_factory"] = context_factory
+        if binding_coordinator is not None:
+            service_kwargs["binding_coordinator"] = binding_coordinator
         self.service = _TelegramConversationService(**service_kwargs)
 
     async def process(self, update: Mapping[str, Any], *, policy: Mapping[str, Any]) -> ConversationResult:

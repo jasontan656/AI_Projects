@@ -1,0 +1,12 @@
+{
+  "workflow_id": "bi_passport_status",
+  "run_id": "wf-passport-san-001",
+  "expected_stage": "passport_status",
+  "channel": "telegram",
+  "assertions": [
+    {
+      "type": "text_reply",
+      "value": "请提供护照号码或申请参考编号。"
+    }
+  ]
+}

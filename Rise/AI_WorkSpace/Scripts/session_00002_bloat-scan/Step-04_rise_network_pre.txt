@@ -1,0 +1,1 @@
+Step-04 pre-check：Rise 仅触发 GET /healthz 200 与 /favicon.ico 404。采集时间 2025-11-14 10:09 GMT+8。

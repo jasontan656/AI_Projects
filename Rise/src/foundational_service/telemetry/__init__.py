@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 __all__ = [
-    "bus",
+    "event_bus",
+    "console_view",
+    "coverage_recorder",
     "config",
 ]

@@ -1,0 +1,1 @@
+Step-04 pre-check：Rise /healthz 响应 200，console 记录 favicon 404（预期）。采集时间 2025-11-14 10:09 GMT+8。

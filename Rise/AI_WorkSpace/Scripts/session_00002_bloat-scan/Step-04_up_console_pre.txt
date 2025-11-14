@@ -1,0 +1,1 @@
+Step-04 pre-check：Up pipelines 页面加载成功，无 console 报错（Chrome DevTools MCP 2025-11-14 10:08 GMT+8）。

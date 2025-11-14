@@ -13,6 +13,8 @@ import {
   deleteChannelPolicy,
   fetchChannelHealth,
   sendChannelTest,
+  runCoverageTests,
+  validateWebhookSecurity,
 } from "../services/channelPolicyClient";
 import { createChannelHealthScheduler } from "../services/channelHealthScheduler";
 
@@ -37,6 +39,17 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
       nextInterval: CHANNEL_HEALTH_DEFAULTS.baseIntervalMs,
     },
     testThrottle: createTestThrottleState(),
+    coverageStatus: "unknown",
+    coverageUpdatedAt: null,
+    coverageScenarios: [],
+    coverageMode: "webhook",
+    coverageLastError: "",
+    coverageLoading: false,
+    coverageError: "",
+    securitySnapshot: null,
+    securityChecking: false,
+    securityError: "",
+    securityBlockingMessage: "",
   }),
   getters: {
     isBound: (state) =>
@@ -46,13 +59,30 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
       ),
     cooldownUntil: (state) => getTestCooldownUntil(state.testThrottle),
     healthPollingPaused: (state) => state.healthState.paused,
+    coverage: (state) => ({
+      status: state.coverageStatus,
+      updatedAt: state.coverageUpdatedAt,
+      scenarios: state.coverageScenarios,
+      mode: state.coverageMode,
+      lastError: state.coverageLastError,
+    }),
+    isCoverageGreen: (state) => state.coverageStatus === "green",
   },
   actions: {
     setPolicy(data) {
       this.policy = createChannelPolicy(data);
+      this.resetSecurityState();
     },
     resetPolicy() {
       this.policy = createChannelPolicy();
+      this.setCoverage(null);
+      this.resetSecurityState();
+    },
+    resetSecurityState() {
+      this.securitySnapshot = null;
+      this.securityChecking = false;
+      this.securityError = "";
+      this.securityBlockingMessage = "";
     },
     ensureScheduler() {
       if (this._scheduler) {
@@ -223,6 +253,81 @@ export const useChannelPolicyStore = defineStore("channelPolicy", {
         throw error;
       } finally {
         this.testing = false;
+      }
+    },
+    setCoverage(coverage) {
+      if (!coverage) {
+        this.coverageStatus = "unknown";
+        this.coverageUpdatedAt = null;
+        this.coverageScenarios = [];
+        this.coverageMode = "webhook";
+        this.coverageLastError = "";
+        return;
+      }
+      this.coverageStatus = coverage.status || "unknown";
+      this.coverageUpdatedAt = coverage.updatedAt || null;
+      this.coverageScenarios = Array.isArray(coverage.scenarios)
+        ? coverage.scenarios
+        : [];
+      this.coverageMode = coverage.mode || "webhook";
+      this.coverageLastError = coverage.lastError || "";
+    },
+    async runCoverageTests(workflowId, payload = {}) {
+      if (!workflowId) {
+        throw new Error("workflow 未发布，无法触发覆盖测试");
+      }
+      this.coverageLoading = true;
+      this.coverageError = "";
+      try {
+        const result = await runCoverageTests(workflowId, payload);
+        this.setCoverage(result);
+        return result;
+      } catch (error) {
+        this.coverageError = error.message || "触发覆盖测试失败";
+        throw error;
+      } finally {
+        this.coverageLoading = false;
+      }
+    },
+    async validateSecretUniqueness(workflowId, payload = {}) {
+      if (!workflowId) {
+        throw new Error("workflow 未发布，无法校验 Secret");
+      }
+      const secretToken = (payload.secret || payload.secretToken || "").trim();
+      if (!secretToken) {
+        throw new Error("Secret 不能为空");
+      }
+      this.securityChecking = true;
+      this.securityError = "";
+      try {
+        const result = await validateWebhookSecurity(workflowId, {
+          secretToken,
+          certificate: payload.certificate || "",
+          webhookUrl: payload.webhookUrl || this.policy.webhookUrl,
+        });
+        this.securitySnapshot = result ?? null;
+        const secretState = result?.secret;
+        const certificateState = result?.certificate;
+        if (secretState && secretState.isUnique === false) {
+          const conflicts = Array.isArray(secretState.conflicts)
+            ? secretState.conflicts.join(", ")
+            : "未知 workflow";
+          this.securityBlockingMessage = `Webhook Secret 已被 ${conflicts} 使用`;
+        } else if (
+          typeof certificateState?.daysRemaining === "number" &&
+          certificateState.daysRemaining < 30
+        ) {
+          this.securityBlockingMessage = "证书将在 30 天内到期，请尽快更换";
+        } else {
+          this.securityBlockingMessage = "";
+        }
+        return result;
+      } catch (error) {
+        this.securityError = error.message || "Secret/TLS 校验失败";
+        this.securityBlockingMessage = this.securityError;
+        throw error;
+      } finally {
+        this.securityChecking = false;
       }
     },
   },

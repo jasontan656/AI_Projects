@@ -1,0 +1,40 @@
+[
+  {
+    "id": "issue-20251112T223218Z-Step-03",
+    "createdAt": "2025-11-12T22:32:18.80856Z",
+    "stepId": "Step-03",
+    "summary": "缺乏回归护栏导致无法安全拆分 conversation/service.py",
+    "details": "Step-03 需要对 1,286 行的 conversation/service.py 进行多文件拆分，但仓库不存在任何 business_service 级别的 pytest/Vitest 回归（tests/business_service/* 不存在），无法建立金样本以验证 Telegram/Workflow 编排。继续改动会直接影响生产队列，违反 Requirements A1/A3 的“行为不变”约束，需先补充 characterization 护栏后再改动。",
+    "evidence": [
+      "AI_WorkSpace/Scripts/session_00001_compliance-audit/Step-03_service_linecount.log",
+      "AI_WorkSpace/Scripts/session_00001_compliance-audit/Step-03_no_business_service_tests.log"
+    ],
+    "read": true,
+    "resolution": "已在 session_00001_blocker-issue 中输出 characterization 测试需求，待按方案补齐测试后再重启 Step-03。"
+  },
+  {
+    "id": "issue-20251113T030500Z-Step-06",
+    "createdAt": "2025-11-13T03:05:00Z",
+    "stepId": "Step-06",
+    "summary": "缺少 pnpm CLI 无法执行 Up 覆盖门禁改造所需的构建与 Vitest",
+    "details": "Step-06 至 Step-10 依赖 Up 仓库（Vue + Pinia）拆分组件并运行 `pnpm vitest run …` / `pnpm dev` 作为验收指令。但当前开发环境未安装 pnpm，命令 `pnpm --version` 直接报错，无法触发既定前端测试与构建流程，也无法验证 ChannelCoverageGate 组件是否满足门禁要求。由于前端改造属于高风险 UI 变更，没有测试支撑无法继续执行 Step-06 之后的任务。",
+    "evidence": [
+      "AI_WorkSpace/Scripts/session_00001_compliance-audit/Step-06_pnpm_check.log",
+      "AI_WorkSpace/Scripts/session_00001_compliance-audit/Step-06_pnpm_install.log"
+    ],
+    "read": true,
+    "resolution": "已通过 `npm install -g pnpm@9 --force` 安装 pnpm（版本 9.15.9，命令输出记录于 Step-06_pnpm_install.log），后续命令使用 C:\\Users\\HP\\AppData\\Roaming\\npm 路径可正常执行 pnpm。"
+  },
+  {
+    "id": "issue-20251113T105900Z-Step-07",
+    "createdAt": "2025-11-13T10:59:00Z",
+    "stepId": "Step-07",
+    "summary": "Chrome DevTools 无法访问 8000/5173 Web 面",
+    "details": "按 Stack & Tool Sync 要求使用 chromedevtoolmcp 打开 http://127.0.0.1:8000/docs 与 http://127.0.0.1:5173/，均返回 net::ERR_CONNECTION_REFUSED。用户声明服务已由其启动，但当前沙箱无法连通，导致 Step-07 之后所有需浏览器验证的任务阻塞。",
+    "evidence": [
+      "AI_WorkSpace/Scripts/session_00001_compliance-audit/Step-07_browser_access.log"
+    ],
+    "read": true,
+    "resolution": "Patched channel_binding_monitor to skip startup when telegram capability is unavailable and added regression test; Vite alias now uses element-plus$ to preserve CSS import. Ready for re-run with user-managed uvicorn/pnpm dev."
+  }
+]

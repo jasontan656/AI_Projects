@@ -1,5 +1,8 @@
+import { createRequire } from "module";
 import { vi } from "vitest";
-import { config } from "@vue/test-utils";
+
+const require = createRequire(import.meta.url);
+const { config } = require("@vue/test-utils");
 
 const passthrough = {
   template: "<div><slot /></div>",
@@ -22,6 +25,23 @@ config.global.stubs = {
     template: "<div data-testid=\"el-tabs\"><slot /></div>",
   },
   ElTabPane: passthrough,
+  ElForm: passthrough,
+  ElFormItem: passthrough,
+  ElInput: {
+    props: ["modelValue"],
+    emits: ["update:modelValue"],
+    template:
+      "<input :value=\"modelValue\" data-testid=\"el-input\" @input=\"$emit('update:modelValue', $event.target.value)\" />",
+  },
+  ElInputNumber: {
+    props: ["modelValue"],
+    emits: ["update:modelValue"],
+    template:
+      "<input type=\"number\" :value=\"modelValue\" data-testid=\"el-input-number\" @input=\"$emit('update:modelValue', Number($event.target.value))\" />",
+  },
+  ElSelect: passthrough,
+  ElOption: passthrough,
+  ElPopover: passthrough,
   ElMenu: passthrough,
   ElMenuItem: {
     props: ["index"],

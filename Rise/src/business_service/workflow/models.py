@@ -164,6 +164,7 @@ class WorkflowDefinition:
     published_version: int = 0
     pending_changes: bool = True
     publish_history: Sequence[WorkflowPublishRecord] = field(default_factory=tuple)
+    history_checksum: str = ""
     created_at: datetime = field(default_factory=_now_utc)
     updated_at: datetime = field(default_factory=_now_utc)
     updated_by: Optional[str] = None
@@ -183,6 +184,7 @@ class WorkflowDefinition:
             "published_version": self.published_version,
             "pending_changes": self.pending_changes,
             "publish_history": [record.to_document() for record in self.publish_history],
+            "history_checksum": self.history_checksum,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "updated_by": self.updated_by,
@@ -209,6 +211,7 @@ class WorkflowDefinition:
                 WorkflowPublishRecord.from_document(item)
                 for item in (doc.get("publish_history") or doc.get("publishHistory") or [])
             ),
+            history_checksum=str(doc.get("history_checksum") or doc.get("historyChecksum") or ""),
             created_at=doc.get("created_at") or _now_utc(),
             updated_at=doc.get("updated_at") or _now_utc(),
             updated_by=doc.get("updated_by"),
@@ -242,6 +245,7 @@ class WorkflowDefinition:
             status=status,
             published_version=0,
             pending_changes=pending_changes,
+            history_checksum="",
             updated_by=actor,
             created_at=now,
             updated_at=now,

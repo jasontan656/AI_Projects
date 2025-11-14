@@ -7,7 +7,7 @@ from typing import Any, Mapping, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from business_service.channel.command_service import ChannelBindingCommandService
-from business_service.channel.models import WorkflowChannelPolicy
+from business_service.channel.models import ChannelMode, WorkflowChannelPolicy
 from business_service.channel.rate_limit import ChannelRateLimiter, RateLimitExceeded
 from business_service.channel.service import ChannelValidationError, WorkflowChannelService
 from business_service.channel.test_runner import ChannelBindingTestRunner
@@ -26,14 +26,16 @@ from interface_entry.http.channels.dto import (
     WorkflowChannelRequest,
     WorkflowChannelResponse,
 )
-from interface_entry.http.dependencies import (
-    get_channel_binding_command_service,
-    get_channel_binding_registry,
-    get_channel_rate_limiter,
-    get_telegram_client,
+from interface_entry.http.dependencies.workflow import (
     get_workflow_channel_service,
     get_workflow_run_repository,
+)
+from interface_entry.http.dependencies.channel import (
+    get_channel_binding_command_service,
+    get_channel_binding_registry,
     get_channel_binding_test_runner,
+    get_channel_rate_limiter,
+    get_telegram_client,
 )
 from interface_entry.http.responses import ApiMeta, ApiResponse
 from interface_entry.http.security import ActorContext, get_actor_context
@@ -353,6 +355,7 @@ def _policy_to_response(policy: WorkflowChannelPolicy) -> WorkflowChannelRespons
         secretVersion=policy.secret_version,
         updatedAt=policy.updated_at,
         updatedBy=policy.updated_by,
+        usePolling=policy.mode is ChannelMode.POLLING,
     )
 
 

@@ -1,0 +1,1 @@
+网络：GET http://localhost:8000/healthz 返回 200，GET /favicon.ico 返回 404（可忽略），Chrome DevTools MCP 校验于 2025-11-14 09:12 GMT+8。

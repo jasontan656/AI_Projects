@@ -16,7 +16,10 @@ from business_service.workflow.models import (
 from business_service.workflow.repository import (
     AsyncStageRepository,
     AsyncToolRepository,
+    AsyncWorkflowHistoryRepository,
     AsyncWorkflowRepository,
+    PUBLISH_HISTORY_LIMIT,
+    calculate_history_checksum,
 )
 from project_utility.telemetry import emit as telemetry_emit
 
@@ -140,6 +143,24 @@ def _emit_workflow_event(
 @dataclass(slots=True)
 class AsyncWorkflowService:
     repository: AsyncWorkflowRepository
+    history_repository: Optional[AsyncWorkflowHistoryRepository] = None
+
+    async def _load_history_slice(self, workflow: WorkflowDefinition) -> Sequence[WorkflowPublishRecord]:
+        if self.history_repository is not None:
+            return await self.history_repository.list_history(workflow.workflow_id, limit=PUBLISH_HISTORY_LIMIT)
+        return workflow.publish_history
+
+    async def _next_history_state(
+        self,
+        workflow: WorkflowDefinition,
+        new_record: Optional[WorkflowPublishRecord],
+    ) -> tuple[Sequence[WorkflowPublishRecord], str]:
+        history = list(await self._load_history_slice(workflow))
+        if new_record is not None:
+            history.append(new_record)
+        trimmed = tuple(history[-PUBLISH_HISTORY_LIMIT:])
+        checksum = calculate_history_checksum(trimmed)
+        return trimmed, checksum
 
     async def create(self, payload: Mapping[str, Any], actor: Optional[str]) -> WorkflowDefinition:
         workflow = WorkflowDefinition.new(
@@ -227,7 +248,9 @@ class AsyncWorkflowService:
     ) -> WorkflowDefinition:
         if workflow.status == "published" and not workflow.pending_changes:
             raise ValueError(f"workflow '{workflow.workflow_id}' has no pending changes")
+        history_slice = await self._load_history_slice(workflow)
         snapshot = workflow.to_document()
+        previous_snapshot = history_slice[-1].snapshot if history_slice else None
         publish_record = WorkflowPublishRecord(
             version=workflow.version + 1,
             action="publish",
@@ -235,8 +258,9 @@ class AsyncWorkflowService:
             comment=comment,
             timestamp=_now_utc(),
             snapshot=_build_publish_snapshot(snapshot),
-            diff=_build_diff(snapshot, workflow.publish_history[-1].snapshot if workflow.publish_history else None),
+            diff=_build_diff(snapshot, previous_snapshot),
         )
+        _, history_checksum = await self._next_history_state(workflow, publish_record)
         updated = await self.repository.update(
             workflow.workflow_id,
             {},
@@ -245,7 +269,10 @@ class AsyncWorkflowService:
             pending_changes=False,
             published_version=workflow.version + 1,
             publish_record=publish_record,
+            history_checksum=history_checksum,
         )
+        if self.history_repository is not None:
+            await self.history_repository.append(workflow.workflow_id, publish_record)
         _emit_workflow_event(
             "workflow.publish",
             workflow=updated,
@@ -263,7 +290,8 @@ class AsyncWorkflowService:
     ) -> WorkflowDefinition:
         if target_version >= workflow.version:
             raise ValueError("target version must be less than current version")
-        target_history = _find_publish_record(workflow.publish_history, target_version)
+        history_slice = await self._load_history_slice(workflow)
+        target_history = _find_publish_record(history_slice, target_version)
         if target_history is None:
             raise KeyError(f"workflow '{workflow.workflow_id}' version '{target_version}' not found")
         snapshot = dict(target_history.snapshot)
@@ -286,6 +314,7 @@ class AsyncWorkflowService:
             snapshot=_build_publish_snapshot(snapshot),
             diff={"rollbackToVersion": target_version},
         )
+        _, history_checksum = await self._next_history_state(workflow, publish_record)
         updated = await self.repository.update(
             workflow.workflow_id,
             updates,
@@ -294,7 +323,10 @@ class AsyncWorkflowService:
             pending_changes=False,
             published_version=workflow.version + 1,
             publish_record=publish_record,
+            history_checksum=history_checksum,
         )
+        if self.history_repository is not None:
+            await self.history_repository.append(workflow.workflow_id, publish_record)
         _emit_workflow_event(
             "workflow.rollback",
             workflow=updated,

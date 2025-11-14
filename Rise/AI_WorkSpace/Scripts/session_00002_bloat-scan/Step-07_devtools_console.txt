@@ -1,0 +1,2 @@
+[mcp__chrome-devtools__list_console_messages http://localhost:5173/pipelines]
+(no console messages)
